@@ -1,6 +1,7 @@
 package com.andrerinas.openheadunit.vehicle
 
 import android.os.SystemClock
+import com.andrerinas.openheadunit.App
 import com.andrerinas.openheadunit.aap.AapTransport
 import com.andrerinas.openheadunit.aap.protocol.messages.RawVehicleEnergyModelEvent
 import com.andrerinas.openheadunit.aap.protocol.messages.VehicleEnergyModelEvent
@@ -25,6 +26,8 @@ object Mg4EnergyReporter {
     private val transportRef = AtomicReference<AapTransport?>(null)
     private var tickFuture: ScheduledFuture<*>? = null
     private var lastSentElapsed = 0L
+    private var lastSkipLogMs = 0L
+    private const val SKIP_LOG_EVERY_MS = 30_000L
     private val executor = Executors.newSingleThreadScheduledExecutor { r ->
         Thread(r, "diauto-mg4-vem").apply { isDaemon = true }
     }
@@ -32,6 +35,12 @@ object Mg4EnergyReporter {
     @Synchronized
     fun bind(transport: AapTransport) {
         transportRef.set(transport)
+        // App.onCreate starts the provider only if the profile was already unlocked; a process born
+        // during the locked boot never does, and no reading ever reached the phone. A connection
+        // means the profile is unlocked, and start() is harmless when it is already running.
+        App.instance?.let { app ->
+            if (App.provide(app).settings.batteryForGoogleMaps) Mg4EnergyProvider.start(app)
+        }
         if (tickFuture == null) {
             tickFuture = executor.scheduleWithFixedDelay(::tick, 1_000L, 1_000L, TimeUnit.MILLISECONDS)
         }
@@ -64,7 +73,12 @@ object Mg4EnergyReporter {
         if (requestedTypes.isEmpty() && !force) return
         val transport = transportRef.get() ?: return
         val snap = Mg4EnergyProvider.snapshot() ?: run {
-            AppLog.i("$TAG VEM skip: no battery snapshot yet")
+            // Every second would fill the log; once in a while still shows it is waiting.
+            val now = SystemClock.elapsedRealtime()
+            if (now - lastSkipLogMs >= SKIP_LOG_EVERY_MS) {
+                lastSkipLogMs = now
+                AppLog.i("$TAG VEM skip: no battery snapshot yet")
+            }
             // Kick a poll so the next 1s tick can send without waiting for the 5s cadence.
             Mg4EnergyProvider.refresh()
             return
