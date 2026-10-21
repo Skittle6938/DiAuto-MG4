@@ -991,6 +991,8 @@ class AapService : Service(), UsbReceiver.Listener {
                         .setWillPauseWhenDucked(false)
                         .setOnAudioFocusChangeListener { focusChange ->
                             AppLog.d("AapService: Permanent audio focus changed: $focusChange")
+                            // The only focus held in static mode, so every change is the car's.
+                            commManager.onPermanentFocusChange(focusChange)
                         }
                         .build()
                 }
@@ -1082,9 +1084,9 @@ class AapService : Service(), UsbReceiver.Listener {
         requestPermanentAudioFocus()
 
         maybeSwitchCarToBtMusic()
-        // Wi‑Fi music: claim SAIC Android Auto source early (Allgo-style medya yayını) and
-        // keep it sticky; A2DP release below re-claims after the BT handoff settles.
-        startSaicAndroidAutoMediaPublication()
+        // Wi‑Fi music: the car's media source is taken when the phone starts playing, not here —
+        // a connection alone (or a probe that never becomes a session) must not stop the radio.
+        commManager.onMediaPlaybackStarted = { claimCarMediaSourceForAndroidAuto("music started") }
         maybeReleaseCarBtMediaForWifiAudio()
 
         // Start GpsLocationService and NightModeManager sensor tracking
@@ -1160,11 +1162,14 @@ class AapService : Service(), UsbReceiver.Listener {
                 )
                 delay(3_000L)
             }
-            // Radio keeps SAIC amp priority even while DiAuto decodes Wi‑Fi PCM. Pause the
-            // tuner, claim the Allgo-style AA media source (SRC_AA), then re-take Android
-            // focus now that A2DP is gone (AUTO skipped it earlier).
-            silenceSaicRadioForWifiAudio()
-            claimSaicAndroidAutoMediaSource()
+            // Radio keeps SAIC amp priority even while DiAuto decodes Wi‑Fi PCM. If music is
+            // already playing, pause the tuner and claim the Allgo-style AA media source (SRC_AA);
+            // otherwise leave the radio alone until it starts. Then re-take Android focus now that
+            // A2DP is gone (AUTO skipped it earlier).
+            if (CarMediaSourcePolicy.shouldClaim(settings.musicViaBluetooth, commManager.isMediaPlaying)) {
+                silenceSaicRadioForWifiAudio()
+                claimSaicAndroidAutoMediaSource()
+            }
             commManager.reclaimPlaybackFocusIfNeeded()
         }
     }
@@ -1197,28 +1202,18 @@ class AapService : Service(), UsbReceiver.Listener {
     }
 
     /**
-     * Allgo-style AA medya yayını for Wi‑Fi music: pause radio, claim SRC_AA immediately,
-     * then re-claim while the session stays up if the car drifts back to radio/BT.
+     * Pauses the radio and makes Android Auto the car's media source, once, when the phone starts
+     * playing music over Wi-Fi (see [CarMediaSourcePolicy]). If the user then picks the radio, the
+     * focus loss is passed on to the phone, which pauses; nothing here takes the radio back until
+     * the phone plays again.
      */
-    private fun startSaicAndroidAutoMediaPublication() {
+    private fun claimCarMediaSourceForAndroidAuto(reason: String) {
+        if (!CarMediaSourcePolicy.shouldClaim(settings.musicViaBluetooth, mediaPlaying = true)) return
         saicAaMediaClaimJob?.cancel()
-        if (settings.musicViaBluetooth) return
         saicAaMediaClaimJob = serviceScope.launch(Dispatchers.IO) {
+            AppLog.i("AapService: $reason — taking the car's media source for Android Auto")
             silenceSaicRadioForWifiAudio()
             claimSaicAndroidAutoMediaSource()
-            while (isActive) {
-                delay(8_000L)
-                if (settings.musicViaBluetooth) return@launch
-                when (commManager.connectionState.value) {
-                    is CommManager.ConnectionState.Disconnected,
-                    is CommManager.ConnectionState.Error -> return@launch
-                    else -> Unit
-                }
-                if (SaicMediaPlayer.isAndroidAutoSource()) continue
-                AppLog.i("AapService: SAIC source left Android Auto — re-claiming (Allgo-style publish)")
-                silenceSaicRadioForWifiAudio()
-                claimSaicAndroidAutoMediaSource()
-            }
         }
     }
 

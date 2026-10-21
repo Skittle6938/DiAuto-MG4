@@ -111,6 +111,7 @@ class AapTransport(
     @Volatile var onQuit: ((Boolean) -> Unit)? = null
     var isAssistantActive = false
     var onAudioFocusStateChanged: ((Boolean) -> Unit)? = null
+    var onMediaPlaybackStarted: (() -> Unit)? = null
     var onUpdateUiConfigReplyReceived: (() -> Unit)? = null
     private var pollHandler: Handler? = null
     private val pollHandlerCallback = Handler.Callback {
@@ -406,6 +407,8 @@ class AapTransport(
     init {
         micRecorder.listener = this
         aapAudio = AapAudio(audioDecoder, audioManager, settings, context)
+        aapAudio.onPhoneFocusState = { state -> sendCarFocusState(state) }
+        aapAudio.onMediaPlaybackStarted = { onMediaPlaybackStarted?.invoke() }
         aapVideo = AapVideo(videoDecoder, settings) {
             triggerFocusCycleRecovery(escalatable = false)
         }
@@ -776,6 +779,19 @@ class AapTransport(
         }
         lastSensorDropLogMs = now
         AppLog.i("AapTransport: dropping sensor events, isAlive=$isAlive startedSensors=$startedSensors droppedByType=$droppedSensorEvents")
+    }
+
+    /**
+     * Tells the phone the car took audio focus away or gave it back, as MG's own Android Auto does:
+     * on a loss the phone pauses its music, and it asks for focus again when the user presses play.
+     */
+    private fun sendCarFocusState(state: Control.AudioFocusNotification.AudioFocusStateType) {
+        val notification = Control.AudioFocusNotification.newBuilder()
+            .setFocusState(state)
+            .setUnsolicited(true)
+            .build()
+        send(AapMessage(Channel.ID_CTR, Control.ControlMsgType.MESSAGE_AUDIO_FOCUS_NOTIFICATION_VALUE, notification))
+        onAudioFocusStateChanged?.invoke(state == Control.AudioFocusNotification.AudioFocusStateType.STATE_GAIN)
     }
 
     fun send(message: AapMessage) {

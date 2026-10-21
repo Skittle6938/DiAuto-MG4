@@ -130,6 +130,9 @@ class CommManager(
     /** Callback for audio focus state changes (isPlaying). Set by AapService. */
     var onAudioFocusStateChanged: ((Boolean) -> Unit)? = null
 
+    /** The phone's music started playing over Wi-Fi. Set by AapService. */
+    var onMediaPlaybackStarted: (() -> Unit)? = null
+
     /** Now-playing metadata from the phone (AAP media channel). Set by AapService. */
     var onAaMediaMetadata: ((MediaPlayback.MediaMetaData) -> Unit)? = null
     /** Playback status from the phone (AAP media channel), includes current position. */
@@ -416,6 +419,7 @@ class CommManager(
                         }
                     }
                     _transport!!.onAudioFocusStateChanged = { isPlaying -> onAudioFocusStateChanged?.invoke(isPlaying) }
+                    _transport!!.onMediaPlaybackStarted = { onMediaPlaybackStarted?.invoke() }
                     _transport!!.onUpdateUiConfigReplyReceived = { onUpdateUiConfigReplyReceived?.invoke() }
                     com.andrerinas.openheadunit.vehicle.Mg4EnergyReporter.bind(_transport!!)
                 }
@@ -806,6 +810,15 @@ class CommManager(
     /** After Wi‑Fi AA drops A2DP, re-take system focus if media was already playing. */
     fun reclaimPlaybackFocusIfNeeded() {
         _transport?.aapAudio?.reclaimPlaybackFocusIfNeeded()
+    }
+
+    /** Whether the phone's music is playing over Wi-Fi right now. */
+    val isMediaPlaying: Boolean
+        get() = _transport?.aapAudio?.isMediaPlaying == true
+
+    /** Static audio focus: a change on AapService's permanent request, to pass on to the phone. */
+    fun onPermanentFocusChange(focusChange: Int) {
+        _transport?.aapAudio?.onPermanentFocusChange(focusChange)
     }
 
     // -----------------------------------------------------------------------------------------

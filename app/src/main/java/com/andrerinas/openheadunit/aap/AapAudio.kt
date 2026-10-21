@@ -62,6 +62,40 @@ internal class AapAudio(
     private var audioFocusRequest: AudioFocusRequest? = null
     private var legacyFocusListener: AudioManager.OnAudioFocusChangeListener? = null
 
+    /** Which focus changes come from the car and have to reach the phone (see [CarFocusTracker]). */
+    private val carFocus = CarFocusTracker()
+    private var audioFocusToken: Any? = null
+    @Volatile
+    private var playbackFocusToken: Any? = null
+
+    /** Set by [AapTransport]: tells the phone the car took (or gave back) audio focus. */
+    var onPhoneFocusState: ((Control.AudioFocusNotification.AudioFocusStateType) -> Unit)? = null
+
+    /** Set by [AapTransport]: the phone's music started playing over Wi-Fi. */
+    var onMediaPlaybackStarted: (() -> Unit)? = null
+
+    val isMediaPlaying: Boolean
+        get() = audioDecoder.getTrack(Channel.ID_AUD) != null
+
+    private fun trackedFocusListener(
+        token: Any,
+        inner: AudioManager.OnAudioFocusChangeListener
+    ) = AudioManager.OnAudioFocusChangeListener { focusChange ->
+        inner.onAudioFocusChange(focusChange)
+        carFocus.onFocusChange(token, focusChange)?.let { state ->
+            AppLog.i("AapAudio: the car changed audio focus ($focusChange) - telling the phone $state")
+            onPhoneFocusState?.invoke(state)
+        }
+    }
+
+    /** A change on the static path's permanent request, the only focus this app holds there. */
+    fun onPermanentFocusChange(focusChange: Int) {
+        carFocus.onUntrackedFocusChange(focusChange)?.let { state ->
+            AppLog.i("AapAudio: the car changed permanent audio focus ($focusChange) - telling the phone $state")
+            onPhoneFocusState?.invoke(state)
+        }
+    }
+
     @Volatile
     private var playbackFocusRequest: AudioFocusRequest? = null
     @Volatile
@@ -191,6 +225,8 @@ internal class AapAudio(
                     runCatching { audioManager.abandonAudioFocusRequest(it) }
                 }
                 audioFocusRequest = null
+                audioFocusToken?.let { carFocus.abandoned(it) }
+                audioFocusToken = null
                 result = AudioManager.AUDIOFOCUS_REQUEST_GRANTED
             } else {
                 val usage = when (stream) {
@@ -211,11 +247,14 @@ internal class AapAudio(
 
                 val focusAm =
                     if (usage == AudioAttributes.USAGE_MEDIA) mediaAudioManager else audioManager
+                val token = Any()
                 audioFocusRequest = AudioFocusRequest.Builder(effectiveFocus)
                         .setAudioAttributes(audioAttributes)
                         .setWillPauseWhenDucked(false)
-                        .setOnAudioFocusChangeListener(callback)
+                        .setOnAudioFocusChangeListener(trackedFocusListener(token, callback))
                         .build()
+                audioFocusToken = token
+                carFocus.requested(token, media = usage == AudioAttributes.USAGE_MEDIA)
 
                 result = focusAm.requestAudioFocus(audioFocusRequest!!)
                 AppLog.i("Audio focus request result: ${if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) "GRANTED" else "FAILED ($result)"}")
@@ -271,12 +310,15 @@ internal class AapAudio(
                 SaicCarAudioSource.mediaAttributes()
             }
             val focusAm = if (speech) audioManager else mediaAudioManager
+            val token = Any()
             val request = AudioFocusRequest.Builder(focusGain)
                     .setAudioAttributes(attrs)
                     .setWillPauseWhenDucked(false)
-                    .setOnAudioFocusChangeListener(playbackFocusListener)
+                    .setOnAudioFocusChangeListener(trackedFocusListener(token, playbackFocusListener))
                     .build()
             playbackFocusRequest = request
+            playbackFocusToken = token
+            carFocus.requested(token, media = !speech)
 
             val result = focusAm.requestAudioFocus(request)
             AppLog.i(
@@ -306,6 +348,8 @@ internal class AapAudio(
                 runCatching { audioManager.abandonAudioFocusRequest(it) }
             }
             playbackFocusRequest = null
+            playbackFocusToken?.let { carFocus.abandoned(it) }
+            playbackFocusToken = null
         } else {
             @Suppress("DEPRECATION")
             legacyPlaybackFocusListener?.let {
@@ -368,6 +412,9 @@ internal class AapAudio(
         focusAcquiredAtMs = 0L
         selfDefeatingStops = 0
         selfDefeatingLatched = false
+        carFocus.clear()
+        audioFocusToken = null
+        playbackFocusToken = null
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             audioFocusRequest?.let { mediaAudioManager.abandonAudioFocusRequest(it) }
             audioFocusRequest = null
@@ -450,6 +497,8 @@ internal class AapAudio(
             mediaBufferMillis = jitterMs,
         )
         onAudioPlaybackStarted(channel)
+        // The phone is playing music over Wi-Fi: the moment to take the car's media source.
+        if (channel == Channel.ID_AUD) onMediaPlaybackStarted?.invoke()
     }
 
     private fun onAudioPlaybackStarted(channel: Int) {
