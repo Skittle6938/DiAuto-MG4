@@ -229,24 +229,29 @@ internal class AapAudio(
                 audioFocusToken = null
                 result = AudioManager.AUDIOFOCUS_REQUEST_GRANTED
             } else {
-                val usage = when (stream) {
-                    AudioManager.STREAM_NOTIFICATION -> AudioAttributes.USAGE_NOTIFICATION
-                    AudioManager.STREAM_VOICE_CALL -> AudioAttributes.USAGE_VOICE_COMMUNICATION
-                    else -> AudioAttributes.USAGE_MEDIA
+                // One kind per request type, as MG's own Android Auto asks (see ProtocolFocusRoute).
+                val kind = ProtocolFocusRoute.kind(stream, effectiveFocus)
+                if (!ProtocolFocusRoute.asksSystem(kind, settings.musicViaBluetooth)) {
+                    AppLog.i("Audio Focus Request: music is on the car's Bluetooth - leaving system focus and source alone")
+                    return AudioManager.AUDIOFOCUS_REQUEST_GRANTED
                 }
-
-                val audioAttributes = if (usage == AudioAttributes.USAGE_MEDIA) {
+                val tagsSource = ProtocolFocusRoute.tagsCarSource(kind, settings.musicViaBluetooth)
+                val audioAttributes = if (tagsSource) {
                     // Tag MEDIA focus as AA (70) so MG4 eh32 amp leaves radio/BT for Wi‑Fi PCM.
                     SaicCarAudioSource.mediaAttributes()
                 } else {
                     AudioAttributes.Builder()
-                        .setUsage(usage)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                        .setUsage(kind.usage)
+                        .setContentType(
+                            if (kind == ProtocolFocusRoute.Kind.MEDIA) AudioAttributes.CONTENT_TYPE_MUSIC
+                            else AudioAttributes.CONTENT_TYPE_SPEECH
+                        )
                         .build()
                 }
+                AppLog.i("Audio Focus Request: ${kind.name} (usage=${kind.usage}, carSource=$tagsSource)")
+                val usage = kind.usage
 
-                val focusAm =
-                    if (usage == AudioAttributes.USAGE_MEDIA) mediaAudioManager else audioManager
+                val focusAm = if (tagsSource) mediaAudioManager else audioManager
                 val token = Any()
                 audioFocusRequest = AudioFocusRequest.Builder(effectiveFocus)
                         .setAudioAttributes(audioAttributes)
