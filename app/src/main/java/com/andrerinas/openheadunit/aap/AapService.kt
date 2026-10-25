@@ -1087,6 +1087,7 @@ class AapService : Service(), UsbReceiver.Listener {
         // Wi‑Fi music: the car's media source is taken when the phone starts playing, not here —
         // a connection alone (or a probe that never becomes a session) must not stop the radio.
         commManager.onMediaPlaybackStarted = { claimCarMediaSourceForAndroidAuto("music started") }
+        commManager.onSpeechEndedDuringMedia = { checkCarSourceAfterPrompt() }
         maybeReleaseCarBtMediaForWifiAudio()
 
         // Start GpsLocationService and NightModeManager sensor tracking
@@ -1202,10 +1203,31 @@ class AapService : Service(), UsbReceiver.Listener {
     }
 
     /**
+     * After a guidance or voice prompt the car is meant to go back to the source it played, but it
+     * sometimes stays elsewhere while the phone keeps playing: silence with "playing" on screen.
+     * Checked once, shortly after the prompt; a user who picked the radio has already paused the
+     * phone through the focus loss, so the music is no longer playing and nothing is re-claimed.
+     */
+    private fun checkCarSourceAfterPrompt() {
+        if (settings.musicViaBluetooth) return
+        serviceScope.launch(Dispatchers.IO) {
+            delay(PROMPT_SOURCE_CHECK_DELAY_MS)
+            if (!commManager.isMediaPlaying) return@launch
+            if (SaicMediaPlayer.isAndroidAutoSource()) return@launch
+            AppLog.i("AapService: the car stayed off Android Auto after a prompt while music plays")
+            claimCarMediaSourceForAndroidAuto("prompt ended")
+        }
+    }
+
+    /**
      * Pauses the radio and makes Android Auto the car's media source, once, when the phone starts
      * playing music over Wi-Fi (see [CarMediaSourcePolicy]). If the user then picks the radio, the
      * focus loss is passed on to the phone, which pauses; nothing here takes the radio back until
      * the phone plays again.
+     *
+     * The claim can report success while the car stays on its previous source (at connect time the
+     * Bluetooth media service is still letting go of the A2DP link), and the music then starts in
+     * silence. So the source is checked again a few seconds later, while the music still plays.
      */
     private fun claimCarMediaSourceForAndroidAuto(reason: String) {
         if (!CarMediaSourcePolicy.shouldClaim(settings.musicViaBluetooth, mediaPlaying = true)) return
@@ -1214,6 +1236,14 @@ class AapService : Service(), UsbReceiver.Listener {
             AppLog.i("AapService: $reason — taking the car's media source for Android Auto")
             silenceSaicRadioForWifiAudio()
             claimSaicAndroidAutoMediaSource()
+            for (checkDelayMs in CLAIM_CHECK_DELAYS_MS) {
+                delay(checkDelayMs)
+                if (!commManager.isMediaPlaying) return@launch
+                if (SaicMediaPlayer.isAndroidAutoSource()) continue
+                AppLog.i("AapService: $reason — the car is still not on Android Auto, claiming again")
+                silenceSaicRadioForWifiAudio()
+                claimSaicAndroidAutoMediaSource()
+            }
         }
     }
 
@@ -4078,6 +4108,8 @@ class AapService : Service(), UsbReceiver.Listener {
          *  poking while :5288 / hotspot are still down fails with a short wait. */
         private const val USER_EXIT_COOLDOWN_MS = 15_000L
         private const val DISCOVERY_BUSY_RECHECK_MS = 10_000L
+        private const val PROMPT_SOURCE_CHECK_DELAY_MS = 1_500L
+        private val CLAIM_CHECK_DELAYS_MS = longArrayOf(3_000L, 5_000L)
 
         /** Delay before AapService tries to handle a normal-mode USB attach as a fallback
          *  when UsbAttachedActivity doesn't fire (common on Chinese MediaTek headunits). */

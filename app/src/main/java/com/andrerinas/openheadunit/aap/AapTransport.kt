@@ -112,6 +112,7 @@ class AapTransport(
     var isAssistantActive = false
     var onAudioFocusStateChanged: ((Boolean) -> Unit)? = null
     var onMediaPlaybackStarted: (() -> Unit)? = null
+    var onSpeechEndedDuringMedia: (() -> Unit)? = null
     var onUpdateUiConfigReplyReceived: (() -> Unit)? = null
     private var pollHandler: Handler? = null
     private val pollHandlerCallback = Handler.Callback {
@@ -409,6 +410,7 @@ class AapTransport(
         aapAudio = AapAudio(audioDecoder, audioManager, settings, context)
         aapAudio.onPhoneFocusState = { state -> sendCarFocusState(state) }
         aapAudio.onMediaPlaybackStarted = { onMediaPlaybackStarted?.invoke() }
+        aapAudio.onSpeechEndedDuringMedia = { onSpeechEndedDuringMedia?.invoke() }
         aapVideo = AapVideo(videoDecoder, settings) {
             triggerFocusCycleRecovery(escalatable = false)
         }

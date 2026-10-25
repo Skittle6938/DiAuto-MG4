@@ -74,6 +74,9 @@ internal class AapAudio(
     /** Set by [AapTransport]: the phone's music started playing over Wi-Fi. */
     var onMediaPlaybackStarted: (() -> Unit)? = null
 
+    /** Set by [AapTransport]: a guidance or voice prompt ended while the music keeps playing. */
+    var onSpeechEndedDuringMedia: (() -> Unit)? = null
+
     val isMediaPlaying: Boolean
         get() = audioDecoder.getTrack(Channel.ID_AUD) != null
 
@@ -551,6 +554,11 @@ internal class AapAudio(
      * letting other local sources (e.g. the car radio) resume.
      */
     private fun onAudioPlaybackStopped(channel: Int) {
+        // The car may switch its source for a prompt and not come back to Android Auto; the
+        // service checks. Before the gates below: static focus mode has the same problem.
+        if ((channel == Channel.ID_AU1 || channel == Channel.ID_AU2) && isMediaPlaying) {
+            onSpeechEndedDuringMedia?.invoke()
+        }
         if (staticAudioFocus || !enableAudioSink || !Channel.isAudio(channel)) return
 
         val nowEmpty = synchronized(activeAudioChannels) {

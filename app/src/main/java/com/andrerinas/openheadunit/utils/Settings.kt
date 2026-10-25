@@ -175,11 +175,12 @@ class Settings(private val context: Context) {
         }
 
     var exporterLogLevel: LogExporter.LogLevel
-        // Default Silent. Key renamed so existing installs drop the old Info default
-        // and pick up Silent without a prefs migration.
+        // Default Info while this fork is in beta, written to a file in Downloads (see the
+        // log source / location / capture defaults below), so a lost-audio drive can be read back.
+        // Key renamed (v3) so existing installs pick it up without a prefs migration.
         get() = LogExporter.LogLevel.entries.getOrElse(
-            prefs.getInt(KEY_LOG_LEVEL, LogExporter.LogLevel.SILENT.ordinal)
-        ) { LogExporter.LogLevel.SILENT }
+            prefs.getInt(KEY_LOG_LEVEL, LogExporter.LogLevel.INFO.ordinal)
+        ) { LogExporter.LogLevel.INFO }
         set(value) { prefs.edit().putInt(KEY_LOG_LEVEL, value.ordinal).apply() }
 
     enum class LogSource {
@@ -193,16 +194,16 @@ class Settings(private val context: Context) {
     }
 
     var logSource: LogSource
-        get() = LogSource.entries.getOrElse(prefs.getInt(KEY_LOG_SOURCE, LogSource.LOGCAT.ordinal)) { LogSource.LOGCAT }
+        get() = LogSource.entries.getOrElse(prefs.getInt(KEY_LOG_SOURCE, LogSource.APPLOG_FILE.ordinal)) { LogSource.APPLOG_FILE }
         set(value) { prefs.edit().putInt(KEY_LOG_SOURCE, value.ordinal).apply() }
 
     var logLocation: LogLocation
-        get() = LogLocation.entries.getOrElse(prefs.getInt(KEY_LOG_LOCATION, LogLocation.DEFAULT.ordinal)) { LogLocation.DEFAULT }
+        get() = LogLocation.entries.getOrElse(prefs.getInt(KEY_LOG_LOCATION, LogLocation.DOWNLOADS.ordinal)) { LogLocation.DOWNLOADS }
         set(value) { prefs.edit().putInt(KEY_LOG_LOCATION, value.ordinal).apply() }
 
-    /** Whether log capture should be active across restarts. Default: false (disabled). */
+    /** Whether log capture should be active across restarts. Default: true while in beta. */
     var exporterCaptureEnabled: Boolean
-        get() = prefs.getBoolean(KEY_LOG_CAPTURE_ENABLED, false)
+        get() = prefs.getBoolean(KEY_LOG_CAPTURE_ENABLED, true)
         set(value) { prefs.edit().putBoolean(KEY_LOG_CAPTURE_ENABLED, value).apply() }
     val logLevel: Int get() = exporterLogLevel.logLevel
 
@@ -1158,9 +1159,9 @@ class Settings(private val context: Context) {
 
         /** SharedPreferences key; also used by [AapService] for change listener. */
         // Was "log-level" (default Info). Renamed so upgrades reset to Silent.
-        const val KEY_LOG_LEVEL = "log-level-v2"
-        const val KEY_LOG_SOURCE = "log-source"
-        const val KEY_LOG_LOCATION = "log-location"
+        const val KEY_LOG_LEVEL = "log-level-v3"
+        const val KEY_LOG_SOURCE = "log-source-v2"
+        const val KEY_LOG_LOCATION = "log-location-v2"
         // Was music-via-bluetooth / v2 (ON) / v3 (OFF) / v4 (ON). v5 resets upgrades to OFF: music over Android Auto.
         const val KEY_MUSIC_VIA_BLUETOOTH = "music-via-bluetooth-v5"
         // Was connection-modes (WiFi-only via NATIVE_AA default). v2 defaults to USB+WiFi.
@@ -1179,7 +1180,7 @@ class Settings(private val context: Context) {
         const val KEY_DPI_PIXEL_DENSITY = "dpi-pixel-density-allgo"
         const val KEY_FPS_LIMIT = "fps-limit-allgo"
         /** Persist whether log capture should be active across restarts. */
-        const val KEY_LOG_CAPTURE_ENABLED = "log-capture-enabled"
+        const val KEY_LOG_CAPTURE_ENABLED = "log-capture-enabled-v2"
 
         const val KEY_MEDIA_VOLUME_OFFSET = "media-volume-offset"
         const val KEY_ASSISTANT_VOLUME_OFFSET = "assistant-volume-offset"

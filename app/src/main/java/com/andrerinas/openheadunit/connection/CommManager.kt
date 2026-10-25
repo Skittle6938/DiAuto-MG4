@@ -133,6 +133,9 @@ class CommManager(
     /** The phone's music started playing over Wi-Fi. Set by AapService. */
     var onMediaPlaybackStarted: (() -> Unit)? = null
 
+    /** A prompt ended while the phone.s music keeps playing. Set by AapService. */
+    var onSpeechEndedDuringMedia: (() -> Unit)? = null
+
     /** Now-playing metadata from the phone (AAP media channel). Set by AapService. */
     var onAaMediaMetadata: ((MediaPlayback.MediaMetaData) -> Unit)? = null
     /** Playback status from the phone (AAP media channel), includes current position. */
@@ -420,6 +423,7 @@ class CommManager(
                     }
                     _transport!!.onAudioFocusStateChanged = { isPlaying -> onAudioFocusStateChanged?.invoke(isPlaying) }
                     _transport!!.onMediaPlaybackStarted = { onMediaPlaybackStarted?.invoke() }
+                    _transport!!.onSpeechEndedDuringMedia = { onSpeechEndedDuringMedia?.invoke() }
                     _transport!!.onUpdateUiConfigReplyReceived = { onUpdateUiConfigReplyReceived?.invoke() }
                     com.andrerinas.openheadunit.vehicle.Mg4EnergyReporter.bind(_transport!!)
                 }
