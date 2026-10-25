@@ -15,7 +15,7 @@ final class OtaCleanup {
     private static final FilenameFilter APK_FILTER = (dir, name) -> {
         if (name == null) return false;
         String lower = name.toLowerCase(Locale.US);
-        return (lower.startsWith("diauto-mg4_") || lower.startsWith("diauto_mg4_"))
+        return (lower.startsWith("mg4-aa_") || lower.startsWith("diauto-mg4_") || lower.startsWith("diauto_mg4_"))
                 && (lower.endsWith(".apk") || lower.endsWith(".apk.sha256"));
     };
 

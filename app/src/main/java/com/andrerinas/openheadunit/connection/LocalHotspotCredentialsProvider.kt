@@ -108,7 +108,7 @@ class LocalHotspotCredentialsProvider(private val context: Context, private val 
             try {
                 val builder = SoftApConfiguration.Builder()
                 SoftApConfiguration.Builder::class.java.getMethod("setSsid", String::class.java)
-                    .invoke(builder, "DiAuto-${UUID.randomUUID().toString().take(6)}")
+                    .invoke(builder, "MG4AA-${UUID.randomUUID().toString().take(6)}")
                 SoftApConfiguration.Builder::class.java.getMethod("setPassphrase", String::class.java, Int::class.javaPrimitiveType)
                     .invoke(builder, UUID.randomUUID().toString().replace("-", "").take(20), SoftApConfiguration.SECURITY_TYPE_WPA2_PSK)
                 @Suppress("DEPRECATION")

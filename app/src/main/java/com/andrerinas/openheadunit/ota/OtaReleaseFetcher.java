@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 final class OtaReleaseFetcher {
 
     private static final String GITHUB_RELEASES_URL =
-            "https://api.github.com/repos/Skittle6938/DiAuto-MG4/releases?per_page=20";
+            "https://api.github.com/repos/Skittle6938/MG4-AA/releases?per_page=20";
 
     private OtaReleaseFetcher() {
     }

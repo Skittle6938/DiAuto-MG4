@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DiAuto</string>
+    <string name="app_name">MG4 AA</string>
     <string name="menu">Меню</string>
     <string name="settings">Настройки</string>
 
@@ -12,7 +12,7 @@
     <string name="video">Android Auto</string>
     <string name="self_mode">Автономный режим</string>
     <string name="to_android_auto">В Android Auto</string>
-    <string name="title">DiAuto</string>
+    <string name="title">MG4 AA</string>
     <string name="remove">Удалить</string>
     <string name="usb">USB</string>
     <string name="wifi">Wi‑Fi</string>
@@ -164,8 +164,8 @@
 
     <string name="listen_for_usb_devices_label">Реагировать на USB-устройства</string>
     <string name="listen_for_usb_devices_description">Показывать системный запрос Android при подключении USB-устройства.</string>
-    <string name="block_oem_android_auto_label">Блокировать OEM Android Auto, пока работает DiAuto</string>
-    <string name="block_oem_android_auto_description">Останавливает заводской AllGo Android Auto (com.allgo.app.androidauto / caradapter), пока работает DiAuto, чтобы кабель сначала открывал DiAuto. CarPlay и общий сервис AllGo RUI не затрагиваются. Не постоянно — после удаления DiAuto OEM Android Auto снова работает.</string>
+    <string name="block_oem_android_auto_label">Блокировать OEM Android Auto, пока работает MG4 AA</string>
+    <string name="block_oem_android_auto_description">Останавливает заводской AllGo Android Auto (com.allgo.app.androidauto / caradapter), пока работает MG4 AA, чтобы кабель сначала открывал MG4 AA. CarPlay и общий сервис AllGo RUI не затрагиваются. Не постоянно — после удаления MG4 AA OEM Android Auto снова работает.</string>
     <string name="show_toast_messages">Показывать всплывающие уведомления (Toast)</string>
     <string name="show_toast_messages_description">Отображать всплывающие сообщения о статусе при подключении, отключении и смене режима.</string>
     <string name="auto_start_usb_label">Автозапуск при USB</string>
@@ -869,7 +869,7 @@
     <string name="playback_focus_mode_always_hint">Всегда приостанавливать другой звук во время Android Auto. Если при включённом Bluetooth музыка останавливается через секунду-две, вернитесь к автоматическому режиму.</string>
     <string name="playback_focus_mode_never_hint">Не изменять аудиофокус системы. Другой звук может продолжать играть поверх Android Auto.</string>
     <string name="playback_focus_mode_static_hint">При статическом аудиофокусе это действует с момента подключения телефона всю сессию, а не только во время воспроизведения.</string>
-    <string name="github_issues_url">https://github.com/shihabal3amri/DiAuto/issues</string>
+    <string name="github_issues_url">https://github.com/shihabal3amri/MG4 AA/issues</string>
     <string name="support_rules_english_title">All posts in English</string>
     <string name="boot_loop_paused_title">Беспроводной запуск приостановлен</string>
     <string name="boot_loop_paused_generic">Устройство три раза подряд перезагрузилось вскоре после запуска беспроводного подключения Open Headunit, поэтому в этот раз оно отключено. USB работает. Откройте приложение, чтобы включить подключение снова.</string>
@@ -903,7 +903,7 @@
     <string name="setup_wi_fi_direct">Wi-Fi Direct</string>
     <string name="setup_wifi_direct_hint">Другой вариант · Включите Wi-Fi автомобиля. На частоте 2,4 ГГц возможны прерывания.</string>
     <string name="setup_configure_hotspot">2 · Настройте точку доступа автомобиля</string>
-    <string name="setup_hotspot_instructions">Включите точку доступа в настройках автомобиля и по возможности выберите 5 ГГц. Точно скопируйте имя и пароль. Не выключайте точку доступа при подключении. Подключать телефон к ней вручную не нужно: DiAuto передаст данные по Bluetooth после нажатия «Подключить телефон».</string>
+    <string name="setup_hotspot_instructions">Включите точку доступа в настройках автомобиля и по возможности выберите 5 ГГц. Точно скопируйте имя и пароль. Не выключайте точку доступа при подключении. Подключать телефон к ней вручную не нужно: MG4 AA передаст данные по Bluetooth после нажатия «Подключить телефон».</string>
     <string name="setup_hotspot_on">Точка доступа включена · Проверьте, что выбрано 5 ГГц.</string>
     <string name="setup_hotspot_off">Точка доступа выключена · Включите её перед подключением.</string>
     <string name="setup_hotspot_unknown">Состояние точки доступа недоступно · Проверьте настройки автомобиля.</string>
@@ -920,12 +920,12 @@
     <string name="setup_prepare_car">2 · Подготовьте автомобиль</string>
     <string name="setup_wifi_direct_instructions">Включите Wi-Fi автомобиля. Разрешите доступ к местоположению и устройствам поблизости и включите геолокацию по запросу Android. При прерываниях попробуйте точку доступа автомобиля на 5 ГГц.</string>
     <string name="setup_pair_and_connect">3 · Выполните сопряжение и подключитесь</string>
-    <string name="setup_pair_instructions">Оставьте Bluetooth и Wi-Fi телефона включёнными. Выполните сопряжение с автомобилем. Вернитесь в DiAuto, нажмите «Подключить телефон» и выберите телефон. Примите запросы Android Auto на телефоне. Интернет-тариф для автомобиля не нужен; мобильные данные зависят от сетевых настроек телефона.</string>
+    <string name="setup_pair_instructions">Оставьте Bluetooth и Wi-Fi телефона включёнными. Выполните сопряжение с автомобилем. Вернитесь в MG4 AA, нажмите «Подключить телефон» и выберите телефон. Примите запросы Android Auto на телефоне. Интернет-тариф для автомобиля не нужен; мобильные данные зависят от сетевых настроек телефона.</string>
     <string name="setup_open_bluetooth_settings">Открыть настройки Bluetooth</string>
     <string name="setup_review_app_permissions">Проверить разрешения приложения</string>
-    <string name="setup_done_return_to_diauto">Готово · Вернуться в DiAuto</string>
+    <string name="setup_done_return_to_diauto">Готово · Вернуться в MG4 AA</string>
     <string name="setup_prefer_a_cable">Предпочитаете кабель?</string>
-    <string name="setup_usb_instructions">Используйте USB-кабель и USB-порт автомобиля с передачей данных. Разблокируйте телефон и нажмите «Подключить по USB» на главном экране DiAuto. Настраивать точку доступа не нужно.</string>
+    <string name="setup_usb_instructions">Используйте USB-кабель и USB-порт автомобиля с передачей данных. Разблокируйте телефон и нажмите «Подключить по USB» на главном экране MG4 AA. Настраивать точку доступа не нужно.</string>
     <string name="setup_hotspot_copy_hint">Скопируйте имя и пароль из настроек точки доступа автомобиля. Сохранение здесь не меняет её настройки.</string>
     <string name="setup_hotspot_name">Имя точки доступа</string>
     <string name="setup_hotspot_password">Пароль точки доступа</string>
@@ -953,13 +953,13 @@
     <string name="da_connection_setup_hint">Выберите подключение и настройте точку доступа автомобиля.</string>
     <string name="da_diagnostics">Диагностика</string>
     <string name="da_diagnostics_hint">Сохраните отчёт о подключении или поделитесь им.</string>
-    <string name="diagnostic_report_instructions">Воспроизведите проблему подключения и сохраните отчёт. Он содержит последние журналы приложения и настройки подключения без сохранённых паролей. На Android 10 и новее отчёты сохраняются в Downloads/DiAuto.</string>
+    <string name="diagnostic_report_instructions">Воспроизведите проблему подключения и сохраните отчёт. Он содержит последние журналы приложения и настройки подключения без сохранённых паролей. На Android 10 и новее отчёты сохраняются в Downloads/MG4 AA.</string>
     <string name="save_diagnostic_report">Сохранить диагностический отчёт</string>
     <string name="choose_report_location">Выбрать место сохранения</string>
     <string name="native_local_hotspot_wifi_settings">Открыть настройки Wi-Fi автомобиля</string>
     <string name="native_local_hotspot_wifi_settings_unavailable">Откройте Wi-Fi в настройках автомобиля.</string>
     <string name="native_ap_transport_local_hotspot">Локальная точка доступа</string>
-    <string name="native_ap_transport_local_hotspot_hint">Экспериментально. DiAuto использует отдельную локальную точку доступа для Android Auto; интернет-тариф автомобиля не нужен. Старые версии Android должны позволять приложению проверять частоту 5 ГГц через драйвер Wi-Fi. Если карты или музыка прерываются на DiLink 5.1, попробуйте выключить Wi-Fi в настройках автомобиля. Оставьте Bluetooth и Wi-Fi телефона включёнными. Совместимость зависит от автомобиля.</string>
+    <string name="native_ap_transport_local_hotspot_hint">Экспериментально. MG4 AA использует отдельную локальную точку доступа для Android Auto; интернет-тариф автомобиля не нужен. Старые версии Android должны позволять приложению проверять частоту 5 ГГц через драйвер Wi-Fi. Если карты или музыка прерываются на DiLink 5.1, попробуйте выключить Wi-Fi в настройках автомобиля. Оставьте Bluetooth и Wi-Fi телефона включёнными. Совместимость зависит от автомобиля.</string>
     <string name="audio_queue_unbounded">Без ограничения (старый режим)</string>
     <string name="audio_queue_chunks">Аудиоблоков: %1$d</string>
     <string name="audio_queue_low">10 блоков (малая задержка)</string>
@@ -998,9 +998,9 @@
     <string name="battery_live_unavailable">Not available (need platform-signed MG4 car install / live telemetry)</string>
     <string name="battery_live_refresh">Refresh from car</string>
     <string name="launcher_aa_click_label">Open on launcher Android Auto tap</string>
-    <string name="launcher_aa_click_description">When the OEM home-screen Android Auto icon is inactive (USB connect toast), tapping it opens DiAuto instead.</string>
-    <string name="launcher_aa_click_service_label">DiAuto launcher Android Auto shortcut</string>
-    <string name="launcher_aa_click_service_description">Opens DiAuto when the inactive Android Auto button on the MG4 launcher is tapped.</string>
+    <string name="launcher_aa_click_description">When the OEM home-screen Android Auto icon is inactive (USB connect toast), tapping it opens MG4 AA instead.</string>
+    <string name="launcher_aa_click_service_label">MG4 AA launcher Android Auto shortcut</string>
+    <string name="launcher_aa_click_service_description">Opens MG4 AA when the inactive Android Auto button on the MG4 launcher is tapped.</string>
     <string name="check_ota_beta">Also check beta releases</string>
     <string name="check_ota_beta_description">Include GitHub pre-release builds when checking for updates.</string>
     <string name="btn_ota_check">Check for updates</string>

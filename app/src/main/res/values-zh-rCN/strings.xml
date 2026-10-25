@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DiAuto</string>
+    <string name="app_name">MG4 AA</string>
     <string name="menu">菜单</string>
     <string name="settings">设置</string>
     <string name="title_activity_settings">设置行为</string>
@@ -11,7 +11,7 @@
     <string name="video">Android Auto</string>
     <string name="self_mode">自我模式</string>
     <string name="to_android_auto">到 Android Auto</string>
-    <string name="title">DiAuto</string>
+    <string name="title">MG4 AA</string>
     <string name="remove">移除</string>
     <string name="usb">USB</string>
     <string name="wifi">WiFi</string>
@@ -163,8 +163,8 @@
 
     <string name="listen_for_usb_devices_label">监听 USB 设备</string>
     <string name="listen_for_usb_devices_description">在插入 USB 设备时显示 Android 系统提示。</string>
-    <string name="block_oem_android_auto_label">DiAuto 运行时阻止 OEM Android Auto</string>
-    <string name="block_oem_android_auto_description">DiAuto 运行时停止原厂 AllGo Android Auto（com.allgo.app.androidauto / caradapter），使数据线优先打开 DiAuto。不影响 CarPlay 和共享的 AllGo RUI 服务。非永久——卸载 DiAuto 后 OEM Android Auto 会恢复。</string>
+    <string name="block_oem_android_auto_label">MG4 AA 运行时阻止 OEM Android Auto</string>
+    <string name="block_oem_android_auto_description">MG4 AA 运行时停止原厂 AllGo Android Auto（com.allgo.app.androidauto / caradapter），使数据线优先打开 MG4 AA。不影响 CarPlay 和共享的 AllGo RUI 服务。非永久——卸载 MG4 AA 后 OEM Android Auto 会恢复。</string>
     <string name="show_toast_messages">显示 Toast 吐司消息</string>
     <string name="show_toast_messages_description">在连接、中断连接及切换模式时显示状态吐司快显消息。</string>
     <string name="auto_start_usb_label">USB 自动启动</string>
@@ -869,7 +869,7 @@
     <string name="playback_focus_mode_always_hint">Android Auto 播放时始终暂停其他音频。如果开启蓝牙后音乐在一两秒内停止，请切回自动模式。</string>
     <string name="playback_focus_mode_never_hint">从不更改系统音频焦点。车机上的其他音频可能与 Android Auto 同时播放。</string>
     <string name="playback_focus_mode_static_hint">启用固定音频焦点后，此设置从手机连接起持续整个会话，而非仅在播放音频时生效。</string>
-    <string name="github_issues_url">https://github.com/shihabal3amri/DiAuto/issues</string>
+    <string name="github_issues_url">https://github.com/shihabal3amri/MG4 AA/issues</string>
     <string name="support_rules_english_title">All posts in English</string>
     <string name="boot_loop_paused_title">无线启动已暂停</string>
     <string name="boot_loop_paused_generic">设备连续三次在 Open Headunit 启动无线连接后不久重启，因此本次未启用无线连接。USB 仍可使用。打开应用可重新启用无线连接。</string>
@@ -903,7 +903,7 @@
     <string name="setup_wi_fi_direct">Wi-Fi Direct</string>
     <string name="setup_wifi_direct_hint">备选方式 · 需要打开车辆 Wi-Fi 开关。2.4 GHz 连接可能卡顿。</string>
     <string name="setup_configure_hotspot">2 · 设置车载热点</string>
-    <string name="setup_hotspot_instructions">在车辆设置中打开热点，如支持则选择 5 GHz。准确复制名称和密码，连接时保持热点开启。无需在手机上手动加入热点；点击连接手机后，DiAuto 会通过蓝牙发送连接信息。</string>
+    <string name="setup_hotspot_instructions">在车辆设置中打开热点，如支持则选择 5 GHz。准确复制名称和密码，连接时保持热点开启。无需在手机上手动加入热点；点击连接手机后，MG4 AA 会通过蓝牙发送连接信息。</string>
     <string name="setup_hotspot_on">车载热点已开启 · 请确认车辆设置中已选择 5 GHz。</string>
     <string name="setup_hotspot_off">车载热点已关闭 · 请在连接前开启。</string>
     <string name="setup_hotspot_unknown">无法获取热点状态 · 请在车辆设置中检查。</string>
@@ -920,12 +920,12 @@
     <string name="setup_prepare_car">2 · 准备车辆</string>
     <string name="setup_wifi_direct_instructions">打开车辆 Wi-Fi 开关。按提示允许位置信息和附近设备权限，并在 Android 要求时开启定位。如播放卡顿，请尝试 5 GHz 车载热点。</string>
     <string name="setup_pair_and_connect">3 · 配对并连接</string>
-    <string name="setup_pair_instructions">保持 Android 手机的蓝牙和 Wi-Fi 开启，与车辆蓝牙配对。返回 DiAuto，点击连接手机并选择手机。在手机上接受 Android Auto 提示。不需要车辆流量套餐；移动数据取决于手机的网络设置。</string>
+    <string name="setup_pair_instructions">保持 Android 手机的蓝牙和 Wi-Fi 开启，与车辆蓝牙配对。返回 MG4 AA，点击连接手机并选择手机。在手机上接受 Android Auto 提示。不需要车辆流量套餐；移动数据取决于手机的网络设置。</string>
     <string name="setup_open_bluetooth_settings">打开蓝牙设置</string>
     <string name="setup_review_app_permissions">检查应用权限</string>
-    <string name="setup_done_return_to_diauto">完成 · 返回 DiAuto</string>
+    <string name="setup_done_return_to_diauto">完成 · 返回 MG4 AA</string>
     <string name="setup_prefer_a_cable">更喜欢有线连接？</string>
-    <string name="setup_usb_instructions">使用 USB 数据线和车辆的数据 USB 接口。解锁手机，在 DiAuto 主屏幕点击通过 USB 连接。无需设置热点。</string>
+    <string name="setup_usb_instructions">使用 USB 数据线和车辆的数据 USB 接口。解锁手机，在 MG4 AA 主屏幕点击通过 USB 连接。无需设置热点。</string>
     <string name="setup_hotspot_copy_hint">从车辆热点设置中复制名称和密码。在此保存不会更改车载热点设置。</string>
     <string name="setup_hotspot_name">热点名称</string>
     <string name="setup_hotspot_password">热点密码</string>
@@ -953,13 +953,13 @@
     <string name="da_connection_setup_hint">选择连接方式并设置车载热点。</string>
     <string name="da_diagnostics">诊断</string>
     <string name="da_diagnostics_hint">保存或分享连接报告。</string>
-    <string name="diagnostic_report_instructions">重现连接问题后保存报告。报告包含近期应用日志和连接设置，不包含已保存的凭据。在 Android 10 或更新版本，报告保存到 Downloads/DiAuto。</string>
+    <string name="diagnostic_report_instructions">重现连接问题后保存报告。报告包含近期应用日志和连接设置，不包含已保存的凭据。在 Android 10 或更新版本，报告保存到 Downloads/MG4 AA。</string>
     <string name="save_diagnostic_report">保存诊断报告</string>
     <string name="choose_report_location">选择保存位置</string>
     <string name="native_local_hotspot_wifi_settings">打开车辆 Wi-Fi 设置</string>
     <string name="native_local_hotspot_wifi_settings_unavailable">请从车辆设置应用打开 Wi-Fi。</string>
     <string name="native_ap_transport_local_hotspot">本地热点</string>
-    <string name="native_ap_transport_local_hotspot_hint">实验功能。DiAuto 使用独立的本地热点连接 Android Auto，无需车辆流量套餐。较旧的 Android 版本必须允许应用通过 Wi-Fi 驱动验证热点是否使用 5 GHz。如 DiLink 5.1 上地图或音乐卡顿，请尝试在车辆设置中关闭 Wi-Fi 开关。保持蓝牙和手机 Wi-Fi 开启。兼容性取决于车辆。</string>
+    <string name="native_ap_transport_local_hotspot_hint">实验功能。MG4 AA 使用独立的本地热点连接 Android Auto，无需车辆流量套餐。较旧的 Android 版本必须允许应用通过 Wi-Fi 驱动验证热点是否使用 5 GHz。如 DiLink 5.1 上地图或音乐卡顿，请尝试在车辆设置中关闭 Wi-Fi 开关。保持蓝牙和手机 Wi-Fi 开启。兼容性取决于车辆。</string>
     <string name="audio_queue_unbounded">无限制（旧模式）</string>
     <string name="audio_queue_chunks">音频块数：%1$d</string>
     <string name="audio_queue_low">10 个音频块（低延迟）</string>
@@ -998,9 +998,9 @@
     <string name="battery_live_unavailable">Not available (need platform-signed MG4 car install / live telemetry)</string>
     <string name="battery_live_refresh">Refresh from car</string>
     <string name="launcher_aa_click_label">Open on launcher Android Auto tap</string>
-    <string name="launcher_aa_click_description">When the OEM home-screen Android Auto icon is inactive (USB connect toast), tapping it opens DiAuto instead.</string>
-    <string name="launcher_aa_click_service_label">DiAuto launcher Android Auto shortcut</string>
-    <string name="launcher_aa_click_service_description">Opens DiAuto when the inactive Android Auto button on the MG4 launcher is tapped.</string>
+    <string name="launcher_aa_click_description">When the OEM home-screen Android Auto icon is inactive (USB connect toast), tapping it opens MG4 AA instead.</string>
+    <string name="launcher_aa_click_service_label">MG4 AA launcher Android Auto shortcut</string>
+    <string name="launcher_aa_click_service_description">Opens MG4 AA when the inactive Android Auto button on the MG4 launcher is tapped.</string>
     <string name="check_ota_beta">Also check beta releases</string>
     <string name="check_ota_beta_description">Include GitHub pre-release builds when checking for updates.</string>
     <string name="btn_ota_check">Check for updates</string>

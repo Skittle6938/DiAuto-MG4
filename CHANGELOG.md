@@ -1,3 +1,7 @@
+# MG4 AA 1.9.7-beta5
+
+- The app is now called **MG4 AA** (package `app.mg4aa`, repository Skittle6938/MG4-AA). It installs as a new app: uninstall DiAuto MG4 (`com.drivehub.diauto.mg4`) first; its settings are not carried over.
+
 # DiAuto-MG4 1.9.7-beta4
 
 - Music over Android Auto: when the music starts, DiAuto checks 3 s and 8 s later that the car really switched to the Android Auto source, and claims it again if not (the music could start in silence).

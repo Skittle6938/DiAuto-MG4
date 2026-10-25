@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="da_brand">DiAuto</string>
+    <string name="da_brand">MG4 AA</string>
     <string name="da_tagline">ВАШ ТЕЛЕФОН. ВАША ДОРОГА.</string>
     <string name="da_headline">Всё знакомо — даже в дороге.</string>
     <string name="da_description">Ваши карты, музыка и разговоры.\nAndroid Auto прямо на экране автомобиля.</string>
@@ -30,10 +30,10 @@
     <string name="da_display_hint">Размер изображения, частота кадров и настройки звука.</string>
     <string name="da_permissions">Разрешения</string>
     <string name="da_permissions_hint">Проверьте доступ к Bluetooth, микрофону и местоположению.</string>
-    <string name="da_about">О DiAuto</string>
+    <string name="da_about">О MG4 AA</string>
     <string name="da_about_hint">Версия, лицензии и благодарности авторам открытого ПО.</string>
     <string name="da_saved_hint">Изменения настроек видео вступят в силу при следующем подключении.</string>
     <string name="da_settings_subtitle">Настройте экран, звук и подключение.</string>
     <string name="da_bluetooth_music">Музыка через Bluetooth автомобиля</string>
-    <string name="da_bluetooth_music_hint">Оставьте музыку в Bluetooth-проигрывателе автомобиля. DiAuto не меняет его аудиофокус; звук навигации и ассистента остаётся доступен. После изменения переподключите Android Auto.</string>
+    <string name="da_bluetooth_music_hint">Оставьте музыку в Bluetooth-проигрывателе автомобиля. MG4 AA не меняет его аудиофокус; звук навигации и ассистента остаётся доступен. После изменения переподключите Android Auto.</string>
 </resources>

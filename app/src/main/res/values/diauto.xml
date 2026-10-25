@@ -6,7 +6,7 @@
     <color name="da_accent">#A6C8FF</color>
     <color name="da_text">#F1F5FC</color>
     <color name="da_muted">#A8B6CA</color>
-    <string name="da_brand">DiAuto</string>
+    <string name="da_brand">MG4 AA</string>
     <string name="da_tagline">YOUR PHONE. YOUR DRIVE.</string>
     <string name="da_headline">A familiar drive.</string>
     <string name="da_description">Your maps, music and conversations.\nAndroid Auto, right here on your car display.</string>
@@ -36,7 +36,7 @@
     <string name="da_display_hint">Picture size, frame rate and audio settings.</string>
     <string name="da_permissions">Permissions</string>
     <string name="da_permissions_hint">Check Bluetooth, microphone and location access.</string>
-    <string name="da_about">About DiAuto</string>
+    <string name="da_about">About MG4 AA</string>
     <string name="da_about_hint">Version, licenses and open-source credits.</string>
     <string name="da_saved_hint">Changes to video settings apply on your next connection.</string>
     <string name="da_settings_subtitle">Tune your display, sound and connection.</string>
@@ -44,7 +44,7 @@
     <string name="da_bluetooth_music_hint">Video over Wi‑Fi, music over car Bluetooth. Off by default — music stays on Android Auto Wi‑Fi. Turn on if Wi‑Fi music stutters. Keep the phone paired to car Bluetooth. Reconnect Android Auto after changing this.</string>
     <string name="da_hybrid_bt_music_needed">Connect the phone to the car Bluetooth for music and calls (hybrid mode). Otherwise they may stay on the phone.</string>
     <string name="da_hybrid_bt_calls_hint">Hybrid needs car Bluetooth (A2DP + phone/HFP). If Bluetooth is off, music, calls and Gemini can stay on the phone while Android Auto video still works. Assistant/nav audio still use Android Auto (not Wi‑Fi music).</string>
-    <string name="da_wifi_music_trial_hint">Trying music over Wi‑Fi: DiAuto disconnects car Bluetooth music (A2DP) so it does not mix with Wi‑Fi audio. Turn on AAC, raise the Wi‑Fi media buffer (1000–1500 ms), and keep a moderate frame rate. If it still stutters, switch back to Music through car Bluetooth.</string>
+    <string name="da_wifi_music_trial_hint">Trying music over Wi‑Fi: MG4 AA disconnects car Bluetooth music (A2DP) so it does not mix with Wi‑Fi audio. Turn on AAC, raise the Wi‑Fi media buffer (1000–1500 ms), and keep a moderate frame rate. If it still stutters, switch back to Music through car Bluetooth.</string>
     <string name="da_force_bt_music_on_connect">Switch car to BT Music on connect</string>
     <string name="da_force_bt_music_on_connect_hint">Test: when Android Auto connects (hybrid on), ask the car media service to select Bluetooth Music — same as the home-screen music card. SAIC / MG. Off by default.</string>
 </resources>
