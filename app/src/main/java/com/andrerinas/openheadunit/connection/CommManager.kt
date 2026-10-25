@@ -894,7 +894,7 @@ class CommManager(
         val connection = _connection
         _transport = null
         _connection = null
-        com.andrerinas.openheadunit.vehicle.Mg4EnergyReporter.unbind()
+        com.andrerinas.openheadunit.vehicle.Mg4EnergyReporter.unbind(transport)
         keyStates.clear()
         btMediaLinkCached = null
         btMediaLinkCheckedAt = null

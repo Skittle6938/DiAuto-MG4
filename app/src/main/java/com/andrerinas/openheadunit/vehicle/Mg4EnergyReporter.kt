@@ -47,7 +47,12 @@ object Mg4EnergyReporter {
     }
 
     @Synchronized
-    fun unbind() {
+    fun unbind(transport: AapTransport?) {
+        // The cleanup of a session that ended can run after the next one has bound (it runs on
+        // its own coroutine, and a second re-entrant pass sees no transport at all). Clearing then
+        // dropped the sensors the new session's phone had just asked for, and Maps never got the
+        // battery for the whole trip. Only the transport that is bound may unbind.
+        if (transport == null || transportRef.get() !== transport) return
         transportRef.set(null)
         requestedTypes.clear()
         vemEverSent.set(false)

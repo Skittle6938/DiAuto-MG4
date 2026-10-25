@@ -1,3 +1,8 @@
+# DiAuto-MG4 1.9.7-beta3
+
+- Battery at arrival in Google Maps: the car battery reading now starts when the phone connects, also when DiAuto was started during the car's locked boot (from damienhoareau's fork).
+- The cleanup of a session that ended can no longer drop the battery sensors the next session's phone just asked for.
+
 # DiAuto-MG4 1.9.7-beta2
 
 - Music now goes over Android Auto by default (the Bluetooth "hybrid" mode is off, existing installs included); it can still be turned back on in the audio settings.
