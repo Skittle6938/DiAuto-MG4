@@ -848,6 +848,16 @@ class AapService : Service(), UsbReceiver.Listener {
         }
         wifiDirectManager?.setNativeSessionConnectedProvider { commManager.isConnected }
         wifiDirectManager?.setNativeGroupInvalidatedListener { nativeAaHandshakeManager?.invalidateCredentials() }
+        // WifiDirectManager opens its P2P channel as soon as it is created, but only some modes use
+        // it; initWifiMode stops it otherwise, which never ran while wireless was paused. Next to the
+        // hotspot the MT2712 then toggled P2P tens of times a second (43,000 log lines in 7 minutes on
+        // 2026-10-25). From DaniCastroDev's fork.
+        App.provide(this).settings.let { s ->
+            if (!WifiModePolicy.usesWifiDirect(s.wifiConnectionMode, s.helperConnectionStrategy, nativeTransport())) {
+                AppLog.i("AapService: WiFi mode ${s.wifiConnectionMode} does not use WiFi Direct - closing its P2P channel at start")
+                wifiDirectManager?.stop()
+            }
+        }
         softApCredentialsProvider?.setCredentialsListener { ssid, psk, ip, bssid ->
             onNativeCredentials(ssid, psk, ip, bssid)
         }
@@ -3479,6 +3489,17 @@ class AapService : Service(), UsbReceiver.Listener {
      * written, so it needs nothing from the start intent and can run here in onCreate.
      */
     private fun applyBootLoopGuard(): Boolean {
+        // MG4: the guard was written for an MT8163 unit whose Wi-Fi stack crashed the system. On the
+        // MG4 a short drive, an install or a head-unit restart are ordinary boots under 30 s, and
+        // they piled up until wireless stayed off for good (2026-10-25: "boot-start #7"). Never
+        // pause here, and lift a pause left by an earlier version.
+        if (BOOT_LOOP_GUARD_DISABLED) {
+            if (Settings.isWirelessPausedByBootLoop(this) || Settings.getBootLoopStrikes(this) > 0) {
+                AppLog.i("AapService: boot-loop guard is off on the MG4 — clearing its strikes and pause")
+                Settings.clearBootLoopState(this)
+            }
+            return false
+        }
         if (Settings.isWirelessPausedByBootLoop(this)) {
             AppLog.w("AapService: Wireless is still paused from an earlier boot loop. Open the app to re-enable it.")
             notifyBootLoopPause()
@@ -4176,6 +4197,7 @@ class AapService : Service(), UsbReceiver.Listener {
         private const val USER_EXIT_COOLDOWN_MS = 15_000L
         private const val DISCOVERY_BUSY_RECHECK_MS = 10_000L
         private const val PROMPT_SOURCE_CHECK_DELAY_MS = 1_500L
+        private const val BOOT_LOOP_GUARD_DISABLED = true
         private const val TRACK_SKIP_FLUSH_DELAY_MS = 250L
         private val CLAIM_CHECK_DELAYS_MS = longArrayOf(3_000L, 5_000L)
 

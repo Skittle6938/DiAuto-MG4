@@ -1,3 +1,8 @@
+# DiAuto MG4+ 2.0.0-beta5
+
+- Wireless no longer stops connecting after a day of short drives or head-unit restarts: the boot-loop guard (written for another head unit) is off on the MG4, and a pause it left is lifted (as in DaniCastroDev's fork).
+- The unused Wi-Fi Direct channel is closed at start when the mode does not use it; it made the car toggle Wi-Fi P2P tens of times a second (from DaniCastroDev's fork).
+
 # DiAuto MG4+ 2.0.0-beta4
 
 - Faster track changes: after next / previous, the old track's audio still buffered in DiAuto (1–2 s on Wi-Fi) is dropped, so the new track is heard as soon as the phone sends it.
