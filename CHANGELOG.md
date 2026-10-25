@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.0.0-beta6
+
+- DiAuto now takes the sound under AllGo's Android Auto name (com.allgo.app.androidauto, source type 70). The stock launcher then knows the source is Android Auto and stops sending the steering-wheel arrows to the radio.
+
 # DiAuto MG4+ 2.0.0-beta5
 
 - Wireless no longer stops connecting after a day of short drives or head-unit restarts: the boot-loop guard (written for another head unit) is off on the MG4, and a pause it left is lifted (as in DaniCastroDev's fork).

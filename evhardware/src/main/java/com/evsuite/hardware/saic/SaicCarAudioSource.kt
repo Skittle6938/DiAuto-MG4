@@ -1,6 +1,7 @@
 package com.evsuite.hardware.saic
 
 import android.content.Context
+import android.content.ContextWrapper
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
@@ -85,8 +86,33 @@ object SaicCarAudioSource {
         }
     }
 
-    fun audioManager(context: Context): AudioManager? =
-        attributionContext(context).getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+    @Volatile
+    private var allgoAudioManager: AudioManager? = null
+
+    /**
+     * An AudioManager whose focus requests carry AllGo's package name. A package context alone is
+     * not enough: AudioManager sends [Context.getOpPackageName], which createPackageContext keeps as
+     * this app's, so the car's MEDIA.SOURCE saw `com.drivehub.diauto.mg4` and the stock launcher
+     * saved source type -1 (not Android Auto) and sent the steering-wheel arrows to the radio.
+     * AllGo shares the system uid with this app, so AudioService accepts the name.
+     */
+    fun audioManager(context: Context): AudioManager? {
+        allgoAudioManager?.let { return it }
+        val base = attributionContext(context)
+        val am = try {
+            val identity = object : ContextWrapper(base) {
+                override fun getPackageName(): String = PKG_ALLGO_ANDROID_AUTO
+                override fun getOpPackageName(): String = PKG_ALLGO_ANDROID_AUTO
+                override fun getApplicationContext(): Context = this
+            }
+            AudioManager::class.java.getConstructor(Context::class.java).newInstance(identity)
+        } catch (e: Exception) {
+            AppLogger.w(TAG, "AllGo-named AudioManager unavailable (${e.message}); using this app's name")
+            base.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+        }
+        allgoAudioManager = am
+        return am
+    }
 
     /**
      * MEDIA / music attributes tagged with a car source id so the head-unit
@@ -123,7 +149,7 @@ object SaicCarAudioSource {
         // One request on one AudioManager for the whole process: a new client on every claim made
         // the previous one lose focus (change=-1) to this app itself.
         val am = aaFocusAudioManager
-            ?: (attributionContext(context).getSystemService(Context.AUDIO_SERVICE) as? AudioManager)
+            ?: audioManager(context)
             ?: return false
         return try {
             val request = aaFocusRequest ?: AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
