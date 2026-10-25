@@ -42,6 +42,8 @@ class AudioTrackWrapper(
     companion object {
         private const val AUDIO_BUFFER_POOL_LIMIT = 16
         private const val MIN_POOLED_AUDIO_BUFFER_SIZE = 4096
+        private const val INPUT_BUFFER_POLL_MS = 100L
+        private const val INPUT_BUFFER_WAIT_MAX_MS = 1_500L
     }
 
     private val audioTrack: AudioTrack?
@@ -362,7 +364,15 @@ class AudioTrackWrapper(
         try {
             // Wait for input buffer (with timeout to avoid deadlock if codec dies)
             // Restore to 200ms to prevent dropping frames under load
-            val inputIndex = freeInputBuffers.poll(200, TimeUnit.MILLISECONDS)
+            // The phone sends music in bursts at stream start; while the AudioTrack is full the
+            // codec holds its buffers back. Waiting it out (the queue in front absorbs the burst)
+            // is better than dropping frames, which was the stutter heard at every start.
+            var inputIndex: Int? = null
+            var waitedMs = 0L
+            while (inputIndex == null && isRunning && waitedMs < INPUT_BUFFER_WAIT_MAX_MS) {
+                inputIndex = freeInputBuffers.poll(INPUT_BUFFER_POLL_MS, TimeUnit.MILLISECONDS)
+                waitedMs += INPUT_BUFFER_POLL_MS
+            }
 
             if (inputIndex != null && inputIndex >= 0) {
                 val inputBuffer = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -376,7 +386,7 @@ class AudioTrackWrapper(
                 inputBuffer?.put(inputData, 0, size)
                 decoder?.queueInputBuffer(inputIndex, 0, size, 0, 0)
             } else {
-                AppLog.w("AAC Input Buffer timeout (200ms) - dropping frame")
+                AppLog.w("AAC Input Buffer timeout (${INPUT_BUFFER_WAIT_MAX_MS}ms) - dropping frame")
             }
         } catch (e: InterruptedException) {
             throw e

@@ -85,6 +85,7 @@ internal class AapAudio(
         inner: AudioManager.OnAudioFocusChangeListener
     ) = AudioManager.OnAudioFocusChangeListener { focusChange ->
         inner.onAudioFocusChange(focusChange)
+        if (isOwnFocusChurn(focusChange)) return@OnAudioFocusChangeListener
         carFocus.onFocusChange(token, focusChange)?.let { state ->
             AppLog.i("AapAudio: the car changed audio focus ($focusChange) - telling the phone $state")
             onPhoneFocusState?.invoke(state)
@@ -94,6 +95,33 @@ internal class AapAudio(
     @Volatile
     private var lastOwnFocusRequestMs = 0L
 
+    /** Called before the service claims the car source, so the losses that claim causes stay here. */
+    fun markOwnFocusRequest() {
+        lastOwnFocusRequestMs = SystemClock.elapsedRealtime()
+    }
+
+    /** When the car or the user last took the audio focus away and the phone was told. */
+    @Volatile
+    var lastCarFocusLossMs = 0L
+        private set
+
+    /**
+     * A loss right after one of this app's own focus requests (the phone's, the playback one, or
+     * the car-source claim) is that request taking over, not the car: passing it on paused the
+     * phone 0.1 s after its music started. Losses that do reach the phone are timestamped.
+     */
+    private fun isOwnFocusChurn(focusChange: Int): Boolean {
+        if (focusChange >= 0) return false
+        val own = SystemClock.elapsedRealtime() - lastOwnFocusRequestMs < OWN_REQUEST_GRACE_MS ||
+            com.evsuite.hardware.saic.SaicCarAudioSource.claimedWithin(OWN_REQUEST_GRACE_MS)
+        if (own) {
+            AppLog.i("AapAudio: focus change $focusChange comes from this app's own request - not telling the phone")
+        } else {
+            lastCarFocusLossMs = SystemClock.elapsedRealtime()
+        }
+        return own
+    }
+
     /**
      * A change on the car-source request ([com.evsuite.hardware.saic.SaicCarAudioSource]). It is
      * the only focus held once the phone's own requests are released, so when the car or a
@@ -101,7 +129,7 @@ internal class AapAudio(
      * A loss right after one of our own requests is that request taking over, not the car.
      */
     fun onCarSourceFocusChange(focusChange: Int) {
-        if (SystemClock.elapsedRealtime() - lastOwnFocusRequestMs < OWN_REQUEST_GRACE_MS) return
+        if (isOwnFocusChurn(focusChange)) return
         carFocus.onUntrackedFocusChange(focusChange)?.let { state ->
             AppLog.i("AapAudio: the car changed the Android Auto source focus ($focusChange) - telling the phone $state")
             onPhoneFocusState?.invoke(state)

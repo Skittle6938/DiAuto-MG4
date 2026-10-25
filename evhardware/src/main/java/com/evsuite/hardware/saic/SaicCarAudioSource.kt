@@ -6,6 +6,7 @@ import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
 import com.evsuite.hardware.AppLogger
 
 /**
@@ -39,6 +40,16 @@ object SaicCarAudioSource {
 
     @Volatile
     private var aaFocusGranted = false
+
+    @Volatile
+    private var lastClaimElapsedMs = 0L
+
+    /**
+     * Whether [claimAndroidAuto] ran in the last [windowMs]. A focus loss the app sees right then
+     * comes from that claim taking over its own other requests, not from the car or the user.
+     */
+    fun claimedWithin(windowMs: Long): Boolean =
+        SystemClock.elapsedRealtime() - lastClaimElapsedMs < windowMs
 
     /**
      * Every focus change of the car-source request. Once the phone's own requests are released,
@@ -109,11 +120,13 @@ object SaicCarAudioSource {
      */
     fun claimAndroidAuto(context: Context): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return false
-        val focusCtx = attributionContext(context)
-        val am = focusCtx.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+        // One request on one AudioManager for the whole process: a new client on every claim made
+        // the previous one lose focus (change=-1) to this app itself.
+        val am = aaFocusAudioManager
+            ?: (attributionContext(context).getSystemService(Context.AUDIO_SERVICE) as? AudioManager)
             ?: return false
         return try {
-            val request = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+            val request = aaFocusRequest ?: AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
                 .setAudioAttributes(mediaAttributes(SRC_ANDROID_AUTO))
                 .setWillPauseWhenDucked(false)
                 .setAcceptsDelayedFocusGain(true)
@@ -121,6 +134,7 @@ object SaicCarAudioSource {
                 .build()
             aaFocusRequest = request
             aaFocusAudioManager = am
+            lastClaimElapsedMs = SystemClock.elapsedRealtime()
             val result = am.requestAudioFocus(request)
             aaFocusGranted = result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
             val lastOk = setLastSource(am, SRC_ANDROID_AUTO)
@@ -128,7 +142,7 @@ object SaicCarAudioSource {
             AppLogger.i(
                 TAG,
                 "claimAndroidAuto focus=$result granted=$aaFocusGranted " +
-                    "pkg=${focusCtx.packageName} setLastSource=$lastOk " +
+                    "setLastSource=$lastOk " +
                     "currentSourceType=$current",
             )
             aaFocusGranted || current == SRC_ANDROID_AUTO || lastOk

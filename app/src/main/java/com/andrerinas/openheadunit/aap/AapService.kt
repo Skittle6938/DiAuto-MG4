@@ -1182,7 +1182,20 @@ class AapService : Service(), UsbReceiver.Listener {
      * Claim Android Auto as the car media source so the amp leaves radio/BT.
      * SWI68 CPAA binder when present; on eh32 [SaicCarAudioSource] AudioFocus + type 70.
      */
+    /**
+     * Picking the Bluetooth source in a launcher reconnects the phone's A2DP link in the middle of
+     * a Wi-Fi music session; the phone then hops between A2DP and Android Auto and the music cuts.
+     * The music plays over Android Auto, so the link is dropped again, as at connect time.
+     */
+    private fun releaseReturnedCarBtMedia(reason: String) {
+        val state = BluetoothHelper.a2dpMediaLinkState(this)
+        if (settings.musicViaBluetooth || state != true) return
+        val asked = BluetoothHelper.releaseCarBluetoothMediaLink(this, settings.bluetoothAddress)
+        AppLog.i("AapService: $reason — car Bluetooth music link is back (a2dp=$state), releasing it: asked=$asked")
+    }
+
     private suspend fun claimSaicAndroidAutoMediaSource() {
+        commManager.markOwnFocusRequest()
         try {
             SaicMediaPlayer.connectProjection(this)
             repeat(12) { attempt ->
@@ -1213,9 +1226,12 @@ class AapService : Service(), UsbReceiver.Listener {
      */
     private fun checkCarSourceAfterPrompt() {
         if (settings.musicViaBluetooth) return
+        val lossBefore = commManager.lastCarFocusLossMs
         serviceScope.launch(Dispatchers.IO) {
             delay(PROMPT_SOURCE_CHECK_DELAY_MS)
             if (!commManager.isMediaPlaying) return@launch
+            // The user (or the car) picked another source meanwhile; that choice stands.
+            if (commManager.lastCarFocusLossMs != lossBefore) return@launch
             if (SaicMediaPlayer.isAndroidAutoSource()) return@launch
             AppLog.i("AapService: the car stayed off Android Auto after a prompt while music plays")
             claimCarMediaSourceForAndroidAuto("prompt ended")
@@ -1237,11 +1253,15 @@ class AapService : Service(), UsbReceiver.Listener {
         saicAaMediaClaimJob?.cancel()
         saicAaMediaClaimJob = serviceScope.launch(Dispatchers.IO) {
             AppLog.i("AapService: $reason — taking the car's media source for Android Auto")
+            releaseReturnedCarBtMedia(reason)
             silenceSaicRadioForWifiAudio()
             claimSaicAndroidAutoMediaSource()
+            val lossBefore = commManager.lastCarFocusLossMs
             for (checkDelayMs in CLAIM_CHECK_DELAYS_MS) {
                 delay(checkDelayMs)
                 if (!commManager.isMediaPlaying) return@launch
+                // A source the user picked since the claim is theirs to keep.
+                if (commManager.lastCarFocusLossMs != lossBefore) return@launch
                 if (SaicMediaPlayer.isAndroidAutoSource()) continue
                 AppLog.i("AapService: $reason — the car is still not on Android Auto, claiming again")
                 silenceSaicRadioForWifiAudio()

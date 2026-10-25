@@ -821,6 +821,14 @@ class CommManager(
         get() = _transport?.aapAudio?.isMediaPlaying == true
 
     /** Static audio focus: a change on AapService's permanent request, to pass on to the phone. */
+    fun markOwnFocusRequest() {
+        _transport?.aapAudio?.markOwnFocusRequest()
+    }
+
+    /** When the car or the user last took the audio focus away and the phone was told. */
+    val lastCarFocusLossMs: Long
+        get() = _transport?.aapAudio?.lastCarFocusLossMs ?: 0L
+
     fun onCarSourceFocusChange(focusChange: Int) {
         _transport?.aapAudio?.onCarSourceFocusChange(focusChange)
     }

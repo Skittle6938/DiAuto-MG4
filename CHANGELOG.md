@@ -1,3 +1,11 @@
+# DiAuto MG4+ 2.0.0-beta2
+
+- Music no longer stops 0.1 s after it starts: the focus loss caused by DiAuto's own claim of the Android Auto source was passed on to the phone as if the car had taken the sound.
+- The car-source claim reuses one focus request instead of a new one each time, so repeated claims no longer make DiAuto lose focus to itself.
+- Less stutter at music start: when the phone sends a burst, the AAC decoder waits for room (up to 1.5 s) instead of dropping frames.
+- After you pick another source (radio, Bluetooth), DiAuto no longer takes the Android Auto source back on its follow-up checks; if the phone's Bluetooth music link comes back during a Wi-Fi music session, it is dropped again.
+- The in-app issue link points to this repository.
+
 # DiAuto MG4+ 2.0.0-beta1
 
 - **DiAuto MG4+**: this fork now shows its own name (DiAuto MG4+), starts its own version line at 2.0.0 and says on the About screen that it is a community fork. The package stays com.drivehub.diauto.mg4, so it installs over DiAuto-MG4 and keeps its settings (the short-lived "MG4 AA" rename of beta5 is undone).
