@@ -1,8 +1,12 @@
+# DiAuto-MG4 1.9.7-beta1
+
+- After an update, the app no longer forces a recompile of itself: on the MG4 that failed while the app was running and deleted the compiled code made at install time, so the app ran slower from the APK.
+
 # DiAuto-MG4 1.9.7-beta0
 
 - Settings > update now checks this fork's releases (with or without betas), downloads, verifies and installs them.
 - A beta now sees its final version as an update (1.9.7-beta0 < 1.9.7), and the "-debug" build suffix no longer affects the comparison.
-- After an update the app recompiles itself and restarts its service, so Android Auto comes back without a car restart.
+- After an update the app restarts its service, so Android Auto comes back without a car restart.
 
 # DiAuto-MG4 1.9.6-fix.1 — fork of merthankaraman/DiAuto-MG4 1.9.6
 
