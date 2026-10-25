@@ -1,3 +1,9 @@
+# DiAuto-MG4 1.9.7-beta2
+
+- Music now goes over Android Auto by default (the Bluetooth "hybrid" mode is off, existing installs included); it can still be turned back on in the audio settings.
+- The car's media source switches to Android Auto when the phone starts playing, and the radio is given back when you pick it: the 8 s re-claim loop is gone, and the phone is told when the car takes audio focus, so it pauses (from DaniCastroDev's fork).
+- A notification or a navigation prompt no longer switches the car from the radio to Android Auto (from DaniCastroDev's fork).
+
 # DiAuto-MG4 1.9.7-beta1
 
 - After an update, the app no longer forces a recompile of itself: on the MG4 that failed while the app was running and deleted the compiled code made at install time, so the app ran slower from the APK.

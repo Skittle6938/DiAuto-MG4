@@ -708,10 +708,10 @@ class Settings(private val context: Context) {
 
     /**
      * Hybrid: AA video over Wi‑Fi, music on car Bluetooth/A2DP (MEDIA sink omitted — Wi‑Fi
-     * media PCM stutters on MG4). Key bumped to v4 so upgrades pick up default ON.
+     * media PCM stutters on MG4). Default OFF since v5: music goes over Android Auto like the stock app.
      */
     var musicViaBluetooth: Boolean
-        get() = prefs.getBoolean(KEY_MUSIC_VIA_BLUETOOTH, true)
+        get() = prefs.getBoolean(KEY_MUSIC_VIA_BLUETOOTH, false)
         set(value) { prefs.edit().putBoolean(KEY_MUSIC_VIA_BLUETOOTH, value).apply() }
 
     /**
@@ -1161,8 +1161,8 @@ class Settings(private val context: Context) {
         const val KEY_LOG_LEVEL = "log-level-v2"
         const val KEY_LOG_SOURCE = "log-source"
         const val KEY_LOG_LOCATION = "log-location"
-        // Was music-via-bluetooth / v2 (ON) / v3 (OFF). v4 resets upgrades to ON (hybrid default).
-        const val KEY_MUSIC_VIA_BLUETOOTH = "music-via-bluetooth-v4"
+        // Was music-via-bluetooth / v2 (ON) / v3 (OFF) / v4 (ON). v5 resets upgrades to OFF: music over Android Auto.
+        const val KEY_MUSIC_VIA_BLUETOOTH = "music-via-bluetooth-v5"
         // Was connection-modes (WiFi-only via NATIVE_AA default). v2 defaults to USB+WiFi.
         const val KEY_CONNECTION_MODES = "connection-modes-v2"
         // Was stretch_to_fill (default ON). v2 resets upgrades to OFF.
