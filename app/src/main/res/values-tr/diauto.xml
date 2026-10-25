@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="da_brand">MG4 AA</string>
+    <string name="da_brand">DiAuto</string>
     <string name="da_tagline">TELEFONUN. YOLUN.</string>
     <string name="da_headline">Bildik bir sürüş.</string>
     <string name="da_description">Haritaların, müziğin ve konuşmaların.\nAndroid Auto, aracının ekranında.</string>
@@ -30,7 +30,7 @@
     <string name="da_display_hint">Görüntü boyutu, kare hızı ve ses ayarları.</string>
     <string name="da_permissions">İzinler</string>
     <string name="da_permissions_hint">Bluetooth, mikrofon ve konum erişimini kontrol et.</string>
-    <string name="da_about">MG4 AA hakkında</string>
+    <string name="da_about">DiAuto hakkında</string>
     <string name="da_about_hint">Sürüm, lisanslar ve açık kaynak katkıları.</string>
     <string name="da_saved_hint">Görüntü ayarı değişiklikleri bir sonraki bağlantıda uygulanır.</string>
     <string name="da_settings_subtitle">Ekran, ses ve bağlantıyı ayarla.</string>
@@ -38,7 +38,7 @@
     <string name="da_bluetooth_music_hint">Görüntü Wi‑Fi, müzik araç Bluetooth. Varsayılan kapalı — müzik Android Auto Wi‑Fi’de kalır. Wi‑Fi müzik kasıyorsa aç. Telefon araç Bluetooth’una bağlı kalsın. Değişiklikten sonra Android Auto’yu yeniden bağla.</string>
     <string name="da_hybrid_bt_music_needed">Müzik ve aramalar için telefonu araç Bluetooth’una bağla (hibrit mod). Yoksa telefonda kalabilir.</string>
     <string name="da_hybrid_bt_calls_hint">Hibrit mod araç Bluetooth’u ister (A2DP + telefon/HFP). Bluetooth kapalıysa müzik, arama ve Gemini telefonda kalabilir; Android Auto görüntüsü yine çalışır. Asistan/nav sesi Android Auto üzerinden gelir (Wi‑Fi müzik değil).</string>
-    <string name="da_wifi_music_trial_hint">Müziği Wi‑Fi’den deniyorsan: MG4 AA araç Bluetooth müziğini (A2DP) keser ki Wi‑Fi sesiyle karışmasın. AAC aç, Wi‑Fi medya tamponunu yükselt (1000–1500 ms), fps’i abartma. Hâlâ kasıyorsa “Müzik araç Bluetooth’undan”a dön.</string>
+    <string name="da_wifi_music_trial_hint">Müziği Wi‑Fi’den deniyorsan: DiAuto araç Bluetooth müziğini (A2DP) keser ki Wi‑Fi sesiyle karışmasın. AAC aç, Wi‑Fi medya tamponunu yükselt (1000–1500 ms), fps’i abartma. Hâlâ kasıyorsa “Müzik araç Bluetooth’undan”a dön.</string>
     <string name="da_force_bt_music_on_connect">Bağlanınca araçta BT Müzik’e geç</string>
     <string name="da_force_bt_music_on_connect_hint">Test: hibrit açıkken Android Auto bağlanınca aracın medya servisine Bluetooth Müzik kaynağını seçtirir (ana ekran müzik kartı gibi). SAIC / MG. Varsayılan kapalı.</string>
 </resources>

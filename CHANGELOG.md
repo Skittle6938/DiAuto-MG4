@@ -1,7 +1,7 @@
-# MG4 AA 1.9.7-beta5
+# DiAuto-MG4 1.9.7-beta6
 
+- The short-lived "MG4 AA" rename (beta5) is undone: the app keeps the name DiAuto MG4 and the package com.drivehub.diauto.mg4.
 - Upstream PRs merged: #6 (hotspot kept on 5 GHz while the car Wi-Fi is on 2.4 GHz), #7 (720p margins and top bar), #9 (steering-wheel voice key to the assistant, arrows no longer highlight Android Auto), #10 (cabin mic reaches Android Auto), #12 (no empty diagnostic report on a USB stick), #14 (60 fps by default, no decoder toast) and #16 (Android Auto guidance on the instrument cluster, BYD navigation output removed).
-- The app is now called **MG4 AA** (package `app.mg4aa`, repository Skittle6938/MG4-AA). It installs as a new app: uninstall DiAuto MG4 (`com.drivehub.diauto.mg4`) first; its settings are not carried over.
 
 # DiAuto-MG4 1.9.7-beta4
 

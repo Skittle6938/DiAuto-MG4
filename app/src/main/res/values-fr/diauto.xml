@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="da_brand">MG4 AA</string>
+    <string name="da_brand">DiAuto</string>
     <string name="da_tagline">VOTRE TÉLÉPHONE. VOTRE CONDUITE.</string>
     <string name="da_headline">Une conduite familière.</string>
     <string name="da_description">Vos cartes, votre musique et vos conversations.\nAndroid Auto, directement sur l’écran de la voiture.</string>
@@ -30,10 +30,10 @@
     <string name="da_display_hint">Taille d’image, cadence et réglages audio.</string>
     <string name="da_permissions">Autorisations</string>
     <string name="da_permissions_hint">Vérifiez Bluetooth, micro et localisation.</string>
-    <string name="da_about">À propos de MG4 AA</string>
+    <string name="da_about">À propos de DiAuto</string>
     <string name="da_about_hint">Version, licences et crédits open source.</string>
     <string name="da_saved_hint">Les changements vidéo s’appliquent à la prochaine connexion.</string>
     <string name="da_settings_subtitle">Réglez l’affichage, le son et la connexion.</string>
     <string name="da_bluetooth_music">Musique via le Bluetooth de la voiture</string>
-    <string name="da_bluetooth_music_hint">Gardez la musique sur le lecteur Bluetooth de la voiture. MG4 AA ne touche pas à son focus audio ; navigation et assistant restent disponibles. Reconnectez Android Auto après ce changement.</string>
+    <string name="da_bluetooth_music_hint">Gardez la musique sur le lecteur Bluetooth de la voiture. DiAuto ne touche pas à son focus audio ; navigation et assistant restent disponibles. Reconnectez Android Auto après ce changement.</string>
 </resources>

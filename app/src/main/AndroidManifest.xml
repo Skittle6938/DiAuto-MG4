@@ -88,7 +88,7 @@
         android:name=".App"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="MG4 AA"
+        android:label="DiAuto MG4"
         android:largeHeap="true"
         android:supportsRtl="true"
         android:localeConfig="@xml/locales_config"

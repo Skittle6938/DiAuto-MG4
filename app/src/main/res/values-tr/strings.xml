@@ -1,6 +1,6 @@
 
 <resources>
-    <string name="app_name">MG4 AA</string>
+    <string name="app_name">DiAuto MG4</string>
     <string name="menu">Menü</string>
     <string name="settings">Ayarlar</string>
 
@@ -13,7 +13,7 @@
     <string name="video">Android Auto</string>
     <string name="self_mode">Dahili Mod</string>
     <string name="to_android_auto">Android Auto\'ya Geç</string>
-    <string name="title">MG4 AA</string>
+    <string name="title">DiAuto</string>
     <string name="remove">Kaldır</string>
     <string name="usb">USB</string>
     <string name="wifi">WiFi</string>
@@ -201,7 +201,7 @@
     <string name="usb_auto_connect">USB Otomatik Bağlan</string>
     <string name="usb_auto_connect_description">Uygulama açıldığında bilinen bir USB cihazına otomatik olarak bağlan.</string>
     <string name="auto_start_bt_label">Bluetooth ile otomatik başlat</string>
-    <string name="auto_start_bt_description">Telefon arabaya Bluetooth ile bağlanınca MG4 AA kablosuz Android Auto\'yu kendisi başlatır — ekrandan telefon seçmeye gerek yok. İlk başarılı Bağlan da telefonu buraya kaydeder.</string>
+    <string name="auto_start_bt_description">Telefon arabaya Bluetooth ile bağlanınca DiAuto kablosuz Android Auto\'yu kendisi başlatır — ekrandan telefon seçmeye gerek yok. İlk başarılı Bağlan da telefonu buraya kaydeder.</string>
     <string name="auto_start_wifi_label">WiFi ile otomatik başlat</string>
     <string name="auto_start_wifi_description">Belirli bir WiFi SSID\'sine bağlandığında Open Headunit\'ı otomatik olarak aç.</string>
     <string name="auto_start_wifi_ssid_label">WiFi SSID</string>
@@ -212,16 +212,16 @@
 
     <string name="listen_for_usb_devices_label">USB Cihazlarını Dinle</string>
     <string name="listen_for_usb_devices_description">Bir USB cihazı takıldığında Android sistem istemini göster.</string>
-    <string name="block_oem_android_auto_label">MG4 AA açıkken OEM Android Auto\'yu engelle</string>
-    <string name="block_oem_android_auto_description">MG4 AA çalışırken fabrika AllGo Android Auto (com.allgo.app.androidauto / caradapter) durdurulur; kablo önce MG4 AA\'yu açar. CarPlay ve ortak AllGo RUI servisine dokunulmaz. Kalıcı değil — MG4 AA silinirse OEM Android Auto yine çalışır.</string>
+    <string name="block_oem_android_auto_label">DiAuto açıkken OEM Android Auto\'yu engelle</string>
+    <string name="block_oem_android_auto_description">DiAuto çalışırken fabrika AllGo Android Auto (com.allgo.app.androidauto / caradapter) durdurulur; kablo önce DiAuto\'yu açar. CarPlay ve ortak AllGo RUI servisine dokunulmaz. Kalıcı değil — DiAuto silinirse OEM Android Auto yine çalışır.</string>
     <string name="show_toast_messages">Toast Bildirimlerini Göster</string>
     <string name="show_toast_messages_description">Bağlantı, kopma ve mod değiştirme durumlarında durum bildirimi göster.</string>
     <string name="auto_start_usb_label">USB ile otomatik başlat</string>
     <string name="auto_start_usb_description">Bir USB cihazı takıldığında uygulamayı otomatik olarak aç ve bağlanmayı dene</string>
     <string name="launcher_aa_click_label">Launcher Android Auto tuşuyla aç</string>
-    <string name="launcher_aa_click_description">Ana ekrandaki Android Auto ikonu deaktifken (USB bağlayın uyarısı) tıklanınca MG4 AA açılsın. SAIC launcher\'lar (hmi.launcher ve launcher) desteklenir.</string>
-    <string name="launcher_aa_click_service_label">MG4 AA launcher Android Auto kısayolu</string>
-    <string name="launcher_aa_click_service_description">Araba launcher\'ındaki deaktif Android Auto tuşuna basılınca MG4 AA\'yu açar.</string>
+    <string name="launcher_aa_click_description">Ana ekrandaki Android Auto ikonu deaktifken (USB bağlayın uyarısı) tıklanınca DiAuto açılsın. SAIC launcher\'lar (hmi.launcher ve launcher) desteklenir.</string>
+    <string name="launcher_aa_click_service_label">DiAuto launcher Android Auto kısayolu</string>
+    <string name="launcher_aa_click_service_description">Araba launcher\'ındaki deaktif Android Auto tuşuna basılınca DiAuto\'yu açar.</string>
     <string name="auto_start_settings">Otomatik başlatma ayarları</string>
     <string name="auto_start_settings_description">Uygulamanın ne zaman otomatik başlayacağını yapılandırın</string>
     <string name="auto_start_oem_warning">Bu cihaz, otomatik başlatmanın etkinleştirilmesini ve bu uygulama için pil optimizasyonunun veya arka plan kısıtlamalarının kaldırılmasını gerektirebilir.\n\nQuick Boot (hızlı önyükleme) özelliğine sahip multimedya sistemlerinde otomatik başlatma çalışmayabilir. Sistem ayarlarınızda \"DuraSpeed\" seçeneğini arayın ve bu uygulamayı orada etkinleştirin. Bazı sistemlerde DuraSpeed gizlidir; bulmak için \"Hidden Settings\" gibi bir uygulamaya ihtiyacınız olabilir. DuraSpeed yoksa, Quick Boot\'u devre dışı bırakmayı deneyin.</string>
@@ -534,7 +534,7 @@
     <string name="vehicle_info_restart_note">Bu veriler her bağlandığınızda Android Auto\'ya gönderilir.</string>
 
     <string name="auto_enable_hotspot">Araç erişim noktasını otomatik aç</string>
-    <string name="auto_enable_hotspot_description">Kablosuz Android Auto için MG4 AA gerektiğinde araç Wi‑Fi erişim noktasını açar. MG4’te varsayılan açık.</string>
+    <string name="auto_enable_hotspot_description">Kablosuz Android Auto için DiAuto gerektiğinde araç Wi‑Fi erişim noktasını açar. MG4’te varsayılan açık.</string>
     <string name="hotspot_warning_title">Deneysel Özellik</string>
     <string name="hotspot_warning_message">Bu özellik yansıma (reflection) kullanır ve tüm cihazlarda çalışmayabilir. Ayrıca \"Sistem ayarlarını değiştir\" izninin manuel olarak verilmesini gerektirebilir.</string>
     <string name="hotspot_permission_title">İzin Gerekli</string>
@@ -947,7 +947,7 @@
     <string name="playback_focus_mode_always_hint">Always pauses other audio while Android Auto plays. If your music stops after a second or two whenever Bluetooth is on, switch back to Automatic.</string>
     <string name="playback_focus_mode_never_hint">Never touches system audio focus. Other audio on the headunit may keep playing over Android Auto.</string>
     <string name="playback_focus_mode_static_hint">With Static Audio Focus on, this applies from the moment the phone connects and lasts the whole session, rather than only while audio is playing.</string>
-    <string name="github_issues_url">https://github.com/shihabal3amri/MG4 AA/issues</string>
+    <string name="github_issues_url">https://github.com/shihabal3amri/DiAuto/issues</string>
     <string name="support_rules_english_title">All posts in English</string>
     <string name="boot_loop_paused_title">Wireless start-up paused</string>
     <string name="boot_loop_paused_generic">This device restarted three times in a row shortly after Open Headunit started wireless, so wireless was left off this time. USB still works. Open the app to turn it back on.</string>
@@ -976,12 +976,12 @@
     <string name="native_local_hotspot_wifi_settings">Araç Wi‑Fi ayarlarını aç</string>
     <string name="native_local_hotspot_wifi_settings_unavailable">Wi‑Fi’yi aracın Ayarlar uygulamasından aç.</string>
     <string name="native_ap_transport_local_hotspot">Yerel erişim noktası</string>
-    <string name="native_ap_transport_local_hotspot_hint">Deneysel. MG4 AA, Android Auto için ayrı bir yerel erişim noktası kullanır; araç internet paketi gerekmez. Eski Android sürümlerinde uygulamanın Wi‑Fi sürücüsünden 5 GHz erişim noktasını doğrulamasına izin verilmelidir. DiLink 5.1’de harita veya müzik takılırsa araç ayarlarından Wi‑Fi anahtarını kapatmayı dene. Bluetooth ve telefon Wi‑Fi’si açık kalsın. Uyumluluk araca bağlıdır.</string>
+    <string name="native_ap_transport_local_hotspot_hint">Deneysel. DiAuto, Android Auto için ayrı bir yerel erişim noktası kullanır; araç internet paketi gerekmez. Eski Android sürümlerinde uygulamanın Wi‑Fi sürücüsünden 5 GHz erişim noktasını doğrulamasına izin verilmelidir. DiLink 5.1’de harita veya müzik takılırsa araç ayarlarından Wi‑Fi anahtarını kapatmayı dene. Bluetooth ve telefon Wi‑Fi’si açık kalsın. Uyumluluk araca bağlıdır.</string>
     <string name="da_connection_setup">Bağlantı kurulumu</string>
     <string name="da_connection_setup_hint">Bir bağlantı seç ve araç erişim noktasını ayarla.</string>
     <string name="da_diagnostics">Tanılama</string>
     <string name="da_diagnostics_hint">Bağlantı raporunu kaydet, sonra tek tuşla gönder.</string>
-    <string name="diagnostic_report_instructions">Bağlantı sorununu yeniden üret, sonra bir rapor kaydet. Raporlar son uygulama günlüklerini ve bağlantı ayarlarını içerir; kayıtlı kimlik bilgileri çıkarılır. Android 10 ve üzerinde raporlar İndirilenler/MG4 AA klasörüne kaydedilir. Gönder’e basınca rapor yüklenir.</string>
+    <string name="diagnostic_report_instructions">Bağlantı sorununu yeniden üret, sonra bir rapor kaydet. Raporlar son uygulama günlüklerini ve bağlantı ayarlarını içerir; kayıtlı kimlik bilgileri çıkarılır. Android 10 ve üzerinde raporlar İndirilenler/DiAuto klasörüne kaydedilir. Gönder’e basınca rapor yüklenir.</string>
     <string name="save_diagnostic_report">Tanılama raporunu kaydet</string>
     <string name="choose_report_location">Kayıt konumunu seç</string>
     <string name="setup_edit_hotspot">Kayıtlı erişim noktasını düzenle · %1$s</string>
@@ -994,7 +994,7 @@
     <string name="setup_wi_fi_direct">Wi‑Fi Direct</string>
     <string name="setup_wifi_direct_hint">Alternatif kurulum · Aracın Wi‑Fi anahtarı açık olmalı. 2,4 GHz bağlantı takılabilir.</string>
     <string name="setup_configure_hotspot">2 · Araç erişim noktasını ayarla</string>
-    <string name="setup_hotspot_instructions">Araç ayarlarından erişim noktasını aç ve varsa 5 GHz seç. Adını ve parolasını aynen kopyala. Bağlanırken erişim noktası açık kalsın. Telefonda elle bağlanmana gerek yok; Telefonu bağla’ya bastıktan sonra MG4 AA bilgileri Bluetooth üzerinden gönderir.</string>
+    <string name="setup_hotspot_instructions">Araç ayarlarından erişim noktasını aç ve varsa 5 GHz seç. Adını ve parolasını aynen kopyala. Bağlanırken erişim noktası açık kalsın. Telefonda elle bağlanmana gerek yok; Telefonu bağla’ya bastıktan sonra DiAuto bilgileri Bluetooth üzerinden gönderir.</string>
     <string name="setup_hotspot_on">Araç erişim noktası açık · Araç ayarlarında 5 GHz seçili olduğundan emin ol.</string>
     <string name="setup_hotspot_off">Araç erişim noktası kapalı · Bağlanmadan önce aç.</string>
     <string name="setup_hotspot_unknown">Erişim noktası durumu alınamadı · Araç ayarlarından kontrol et.</string>
@@ -1011,12 +1011,12 @@
     <string name="setup_prepare_car">2 · Arabayı hazırla</string>
     <string name="setup_wifi_direct_instructions">Aracın Wi‑Fi anahtarını aç. İstendiğinde Konum / Yakındaki cihazlara izin ver ve Android sorduğunda Konumu etkinleştir. Oynatma takılırsa yerleşik araç erişim noktasını 5 GHz ile dene.</string>
     <string name="setup_pair_and_connect">3 · Eşleştir ve bağlan</string>
-    <string name="setup_pair_instructions">Android telefonunda Bluetooth ve Wi‑Fi açık kalsın. Aracın Bluetooth’u ile eşleştir. MG4 AA’ya dön, Telefonu bağla’ya bas ve telefonunu seç. Telefondaki Android Auto istemlerini kabul et. Araç internet paketi gerekmez; mobil veri telefonunun ağ ayarlarına bağlıdır.</string>
+    <string name="setup_pair_instructions">Android telefonunda Bluetooth ve Wi‑Fi açık kalsın. Aracın Bluetooth’u ile eşleştir. DiAuto’ya dön, Telefonu bağla’ya bas ve telefonunu seç. Telefondaki Android Auto istemlerini kabul et. Araç internet paketi gerekmez; mobil veri telefonunun ağ ayarlarına bağlıdır.</string>
     <string name="setup_open_bluetooth_settings">Bluetooth ayarlarını aç</string>
     <string name="setup_review_app_permissions">Uygulama izinlerini gözden geçir</string>
-    <string name="setup_done_return_to_diauto">Bitti · MG4 AA’ya dön</string>
+    <string name="setup_done_return_to_diauto">Bitti · DiAuto’ya dön</string>
     <string name="setup_prefer_a_cable">Kablo tercih eder misin?</string>
-    <string name="setup_usb_instructions">USB veri kablosu ve aracın USB veri portunu kullan. Telefonunun kilidini aç ve MG4 AA ana ekranında USB ile bağlan’a dokun. Erişim noktası kurulumu gerekmez.</string>
+    <string name="setup_usb_instructions">USB veri kablosu ve aracın USB veri portunu kullan. Telefonunun kilidini aç ve DiAuto ana ekranında USB ile bağlan’a dokun. Erişim noktası kurulumu gerekmez.</string>
     <string name="setup_hotspot_copy_hint">Adı ve parolayı aracın erişim noktası ayarlarından kopyala. Buraya kaydetmek aracın erişim noktasını değiştirmez.</string>
     <string name="setup_hotspot_name">Erişim noktası adı</string>
     <string name="setup_hotspot_password">Erişim noktası parolası</string>

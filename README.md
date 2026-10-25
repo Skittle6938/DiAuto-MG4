@@ -1,4 +1,4 @@
-# MG4 AA
+# DiAuto-MG4
 
 Wireless / USB **Android Auto** for the MG4 Android head unit (SWI69), with live
 battery SoC forwarded into Google Maps via Android Auto `VehicleEnergyModel`
@@ -8,7 +8,7 @@ battery SoC forwarded into Google Maps via Android Auto `VehicleEnergyModel`
 > MG4 telemetry: vendored [EVHardware](https://github.com/fatihdonmezdev/MG4ABRP) in `evhardware/`.
 > For Apple CarPlay on the same car, use **DiPlay-MG4** separately — do not run both at once.
 
-> **MG4 AA** (app `app.mg4aa`) is a fork of [merthankaraman/DiAuto-MG4](https://github.com/merthankaraman/DiAuto-MG4) 1.9.6
+> **This fork** is [merthankaraman/DiAuto-MG4](https://github.com/merthankaraman/DiAuto-MG4) 1.9.6
 > plus upstream PRs #4 (reconnection, user exit, Headunit Server mode), #5 (wireless session
 > teardown loop) and #13 (captive-portal retries). Its main fix: the second connection after the
 > service was stopped once in the same process never cleaned up, because `CommManager.destroy()`

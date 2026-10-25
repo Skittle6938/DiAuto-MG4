@@ -4,7 +4,7 @@ set -euo pipefail
 CAR="${1:?Usage: install.sh CAR_IP:5555 PATH_TO_APK}"
 APK="${2:?Provide an APK path}"
 ADB="${ADB:-adb}"
-PKG=app.mg4aa
+PKG=com.drivehub.diauto.mg4
 [[ -f "$APK" ]] || { echo "APK not found: $APK" >&2; exit 1; }
 "$ADB" connect "$CAR"
 adb_car() { "$ADB" -s "$CAR" "$@"; }

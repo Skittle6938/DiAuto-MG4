@@ -95,7 +95,7 @@ final class OtaReleaseAssets {
         String lower = name.toLowerCase(Locale.US);
         int score = 0;
         if (lower.endsWith(".apk")) score += 10;
-        if (lower.contains("mg4-aa") || lower.contains("mg4_aa") || lower.contains("diauto")) score += 6;
+        if (lower.contains("diauto-mg4") || lower.contains("diauto_mg4") || lower.contains("diauto")) score += 6;
         if (lower.contains("release")) score += 5;
         if (lower.contains("platform")) score += 4;
         if (lower.contains("debug")) score -= 8;

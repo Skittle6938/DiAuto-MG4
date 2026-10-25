@@ -67,11 +67,11 @@ android {
 
     defaultConfig {
         // MG4 fork — separate id from upstream DiAuto / stock AA hosts.
-        applicationId = "app.mg4aa"
+        applicationId = "com.drivehub.diauto.mg4"
         minSdk = 28
         targetSdk = 36
-        versionCode = 32
-        versionName = "1.9.7-beta5"
+        versionCode = 33
+        versionName = "1.9.7-beta6"
         setProperty("archivesBaseName", "${applicationId}_${versionName}")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true

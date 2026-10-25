@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="fr">
-    <string name="app_name">MG4 AA</string>
+    <string name="app_name">DiAuto</string>
     <string name="menu">Menu</string>
     <string name="settings">Paramètres</string>
 
@@ -19,7 +19,7 @@
     <string name="onb_next">Next</string>
     <string name="onb_skip">Skip</string>
     <string name="onb_ready_finish">Finish</string>
-    <string name="onb_welcome_title">Welcome to MG4 AA</string>
+    <string name="onb_welcome_title">Welcome to DiAuto</string>
     <string name="onb_welcome_body">Connect your Android phone wirelessly to your car. First, review the essentials and enable permissions. You can tune your display and sound later in Settings.</string>
     <string name="onb_safety_title">Safety first</string>
     <string name="onb_safety_accept">I have read and accept the terms</string>
@@ -183,7 +183,7 @@
     <string name="video">Android Auto</string>
     <string name="self_mode">Self Mode</string>
     <string name="to_android_auto">To Android Auto</string>
-    <string name="title">MG4 AA</string>
+    <string name="title">DiAuto</string>
     <string name="remove">Remove</string>
     <string name="usb">USB</string>
     <string name="wifi">WiFi</string>
@@ -382,16 +382,16 @@
     <string name="auto_start_bt_description">Automatically open Open Headunit when a specific Bluetooth device connects.</string>
     <string name="listen_for_usb_devices_label">Listen for USB Devices</string>
     <string name="listen_for_usb_devices_description">Show the Android system prompt when a USB device is plugged in.</string>
-    <string name="block_oem_android_auto_label">Bloquer l\'Android Auto OEM tant que MG4 AA tourne</string>
-    <string name="block_oem_android_auto_description">Arrête l\'Android Auto AllGo d\'usine (com.allgo.app.androidauto / caradapter) pendant que MG4 AA tourne pour que le câble ouvre d\'abord MG4 AA. Ne touche ni CarPlay ni le service AllGo RUI partagé. Pas permanent — désinstallez MG4 AA et l\'Android Auto OEM refonctionne.</string>
+    <string name="block_oem_android_auto_label">Bloquer l\'Android Auto OEM tant que DiAuto tourne</string>
+    <string name="block_oem_android_auto_description">Arrête l\'Android Auto AllGo d\'usine (com.allgo.app.androidauto / caradapter) pendant que DiAuto tourne pour que le câble ouvre d\'abord DiAuto. Ne touche ni CarPlay ni le service AllGo RUI partagé. Pas permanent — désinstallez DiAuto et l\'Android Auto OEM refonctionne.</string>
     <string name="show_toast_messages">Show Toast Messages</string>
     <string name="show_toast_messages_description">Display status toast popups on connection, disconnect, and mode switching.</string>
     <string name="auto_start_usb_label">Auto-start on USB</string>
     <string name="auto_start_usb_description">Automatically open the app and attempt connection when a USB device is plugged in</string>
     <string name="launcher_aa_click_label">Open on launcher Android Auto tap</string>
-    <string name="launcher_aa_click_description">When the OEM home-screen Android Auto icon is inactive (USB connect toast), tapping it opens MG4 AA instead.</string>
-    <string name="launcher_aa_click_service_label">MG4 AA launcher Android Auto shortcut</string>
-    <string name="launcher_aa_click_service_description">Opens MG4 AA when the inactive Android Auto button on the MG4 launcher is tapped.</string>
+    <string name="launcher_aa_click_description">When the OEM home-screen Android Auto icon is inactive (USB connect toast), tapping it opens DiAuto instead.</string>
+    <string name="launcher_aa_click_service_label">DiAuto launcher Android Auto shortcut</string>
+    <string name="launcher_aa_click_service_description">Opens DiAuto when the inactive Android Auto button on the MG4 launcher is tapped.</string>
     <string name="auto_start_settings">Auto-start settings</string>
     <string name="auto_start_settings_description">Configure when the app starts automatically</string>
     <string name="auto_start_oem_warning">This device may require enabling auto-start and removing battery optimization or background restrictions for this app.\n\nOn head units with Quick Boot (fast boot), auto-start may not work. Look for \"DuraSpeed\" in your system settings and enable this app there. On some head units, DuraSpeed is hidden and you may need an app like \"Hidden Settings\" to find it. If you don\'t have DuraSpeed, try disabling Quick Boot.</string>
@@ -540,7 +540,7 @@
     <string name="support_open_issues">Open the GitHub issues page</string>
     <string name="support_scan_qr">Or scan this QR code to open the issues list on another device.</string>
     <string name="support_github_account_warning">Note: you need a free GitHub account to create an issue.</string>
-    <string name="github_issues_url" translatable="false">https://github.com/shihabal3amri/MG4 AA/issues</string>
+    <string name="github_issues_url" translatable="false">https://github.com/shihabal3amri/DiAuto/issues</string>
 
     <!-- Reporting rules modal (shown from a button under the QR on the Support screen) -->
     <string name="support_rules_button">Reporting rules</string>
@@ -930,7 +930,7 @@
     <string name="native_local_hotspot_wifi_settings">Open car Wi-Fi settings</string>
     <string name="native_local_hotspot_wifi_settings_unavailable">Open Wi-Fi from the car’s Settings app.</string>
     <string name="native_ap_transport_local_hotspot">Local hotspot</string>
-    <string name="native_ap_transport_local_hotspot_hint">Experimental. MG4 AA uses a separate local hotspot for Android Auto; no car internet plan is needed. Older Android versions must let the app verify a 5 GHz hotspot from the Wi-Fi driver. If maps or music stutter on DiLink 5.1, try turning off the car’s Wi-Fi switch in car settings. Keep Bluetooth and your phone’s Wi-Fi on. Compatibility depends on the car.</string>
+    <string name="native_ap_transport_local_hotspot_hint">Experimental. DiAuto uses a separate local hotspot for Android Auto; no car internet plan is needed. Older Android versions must let the app verify a 5 GHz hotspot from the Wi-Fi driver. If maps or music stutter on DiLink 5.1, try turning off the car’s Wi-Fi switch in car settings. Keep Bluetooth and your phone’s Wi-Fi on. Compatibility depends on the car.</string>
     <string name="native_ap_transport_hint">Experimental. The phone joins this device\'s own hotspot instead of a WiFi Direct group. Switch the hotspot on yourself before connecting, and set it to 5 GHz if you can - over 2.4 GHz the phone connects and then drops the session repeatedly without any picture, unless you lower the resolution and frame rate. If the network name cannot be read automatically, enter it below.</string>
     <string name="hotspot_interface_override">Hotspot network interface</string>
     <string name="hotspot_interface_override_message">Leave blank to work it out automatically. Set this if the log says more than one interface could be the access point, or picks the wrong one. The name is the one the log reports after &quot;Providing credentials from&quot;, or the entry holding your hotspot\'s address in &quot;ip -brief addr&quot; from a shell. Common names: ap0, wlan0, wlan1, wlan2, softap0, ra0.</string>
@@ -1028,7 +1028,7 @@
     <string name="da_connection_setup_hint">Choose a connection and set up your car hotspot.</string>
     <string name="da_diagnostics">Diagnostics</string>
     <string name="da_diagnostics_hint">Save or share a connection report.</string>
-    <string name="diagnostic_report_instructions">Reproduce the connection issue, then save a report. Reports include recent app logs and connection settings, with saved credentials omitted. On Android 10 or newer, reports save to Downloads/MG4 AA.</string>
+    <string name="diagnostic_report_instructions">Reproduce the connection issue, then save a report. Reports include recent app logs and connection settings, with saved credentials omitted. On Android 10 or newer, reports save to Downloads/DiAuto.</string>
     <string name="save_diagnostic_report">Save diagnostic report</string>
     <string name="choose_report_location">Choose save location</string>
     <string name="setup_edit_hotspot">Edit saved hotspot · %1$s</string>
@@ -1041,7 +1041,7 @@
     <string name="setup_wi_fi_direct">Wi-Fi Direct</string>
     <string name="setup_wifi_direct_hint">Alternative setup · Requires the car’s Wi-Fi switch on. A 2.4 GHz link may stutter.</string>
     <string name="setup_configure_hotspot">2 · Set up the car hotspot</string>
-    <string name="setup_hotspot_instructions">Turn on the hotspot in the car settings and select 5 GHz if available. Copy its name and password exactly. Leave the hotspot on when connecting. You do not need to join it manually on your phone; MG4 AA sends the details over Bluetooth after you tap Connect phone.</string>
+    <string name="setup_hotspot_instructions">Turn on the hotspot in the car settings and select 5 GHz if available. Copy its name and password exactly. Leave the hotspot on when connecting. You do not need to join it manually on your phone; DiAuto sends the details over Bluetooth after you tap Connect phone.</string>
     <string name="setup_hotspot_on">Car hotspot is on · Check that 5 GHz is selected in car settings.</string>
     <string name="setup_hotspot_off">Car hotspot is off · Turn it on before connecting.</string>
     <string name="setup_hotspot_unknown">Hotspot status unavailable · Check it in car settings.</string>
@@ -1058,12 +1058,12 @@
     <string name="setup_prepare_car">2 · Prepare the car</string>
     <string name="setup_wifi_direct_instructions">Turn the car’s Wi-Fi switch on. Allow Location / Nearby devices when requested and enable Location when Android asks. If playback stutters, try the built-in car hotspot at 5 GHz.</string>
     <string name="setup_pair_and_connect">3 · Pair and connect</string>
-    <string name="setup_pair_instructions">Keep Bluetooth and Wi-Fi on your Android phone. Pair with the car’s Bluetooth. Return to MG4 AA, tap Connect phone and select your phone. Accept the Android Auto prompts on the phone. A car internet plan is not required; mobile data depends on your phone’s network settings.</string>
+    <string name="setup_pair_instructions">Keep Bluetooth and Wi-Fi on your Android phone. Pair with the car’s Bluetooth. Return to DiAuto, tap Connect phone and select your phone. Accept the Android Auto prompts on the phone. A car internet plan is not required; mobile data depends on your phone’s network settings.</string>
     <string name="setup_open_bluetooth_settings">Open Bluetooth settings</string>
     <string name="setup_review_app_permissions">Review app permissions</string>
-    <string name="setup_done_return_to_diauto">Done · Return to MG4 AA</string>
+    <string name="setup_done_return_to_diauto">Done · Return to DiAuto</string>
     <string name="setup_prefer_a_cable">Prefer a cable?</string>
-    <string name="setup_usb_instructions">Use a USB data cable and the car’s USB data port. Unlock your phone and tap Connect with USB on MG4 AA’s home screen. No hotspot setup is needed.</string>
+    <string name="setup_usb_instructions">Use a USB data cable and the car’s USB data port. Unlock your phone and tap Connect with USB on DiAuto’s home screen. No hotspot setup is needed.</string>
     <string name="setup_hotspot_copy_hint">Copy the name and password from the car’s hotspot settings. Saving here does not change the car’s hotspot.</string>
     <string name="setup_hotspot_name">Hotspot name</string>
     <string name="setup_hotspot_password">Hotspot password</string>

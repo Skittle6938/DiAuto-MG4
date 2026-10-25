@@ -314,7 +314,7 @@ final class OtaInstaller {
                 File[] files = downloads.listFiles((d, name) -> {
                     if (name == null) return false;
                     String lower = name.toLowerCase(java.util.Locale.US);
-                    return (lower.startsWith("mg4-aa_") || lower.startsWith("diauto-mg4_") || lower.startsWith("diauto_mg4_"))
+                    return (lower.startsWith("diauto-mg4_") || lower.startsWith("diauto_mg4_"))
                             && lower.endsWith(".apk");
                 });
                 if (files != null && files.length > 0) {
