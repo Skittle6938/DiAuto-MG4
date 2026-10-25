@@ -49,6 +49,14 @@ class CarFocusTracker {
         held.removeAll { it.token === token }
     }
 
+    /** The phone was told of a loss that the user now overrides; returns whether there was one. */
+    @Synchronized
+    fun takeBackAfterLoss(): Boolean {
+        if (lastSent == null) return false
+        lastSent = null
+        return true
+    }
+
     @Synchronized
     fun clear() {
         held.clear()

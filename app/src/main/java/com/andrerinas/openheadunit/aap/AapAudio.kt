@@ -130,10 +130,55 @@ internal class AapAudio(
      */
     fun onCarSourceFocusChange(focusChange: Int) {
         if (isOwnFocusChurn(focusChange)) return
+        if (focusChange < 0) {
+            // The stock launcher sends the steering-wheel arrows to the radio's session, which grabs
+            // focus for a moment until a launcher hands the source back with PLAY. Passing that
+            // loss on at once stopped the phone, and a PLAY alone never restarted it. Wait.
+            pendingCarLoss?.let { handler.removeCallbacks(it) }
+            val forward = Runnable {
+                pendingCarLoss = null
+                forwardCarSourceFocusChange(focusChange)
+            }
+            pendingCarLoss = forward
+            handler.postDelayed(forward, CAR_LOSS_DEBOUNCE_MS)
+            return
+        }
+        pendingCarLoss?.let {
+            handler.removeCallbacks(it)
+            pendingCarLoss = null
+            AppLog.i("AapAudio: the car gave the Android Auto source focus back before the phone was told")
+        }
+        forwardCarSourceFocusChange(focusChange)
+    }
+
+    private fun forwardCarSourceFocusChange(focusChange: Int) {
         carFocus.onUntrackedFocusChange(focusChange)?.let { state ->
             AppLog.i("AapAudio: the car changed the Android Auto source focus ($focusChange) - telling the phone $state")
             onPhoneFocusState?.invoke(state)
         }
+    }
+
+    @Volatile
+    private var pendingCarLoss: Runnable? = null
+
+    /**
+     * The user (a steering-wheel key, a launcher's PLAY) wants this app's music again. A car loss
+     * still waiting is dropped; one the phone was already told is undone with a GAIN, since after
+     * STATE_LOSS the phone ignores a PLAY key on its own. Returns whether anything was taken back.
+     */
+    fun resumeFromUser(): Boolean {
+        var resumed = false
+        pendingCarLoss?.let {
+            handler.removeCallbacks(it)
+            pendingCarLoss = null
+            resumed = true
+        }
+        if (carFocus.takeBackAfterLoss()) {
+            AppLog.i("AapAudio: play asked after a car focus loss - telling the phone STATE_GAIN")
+            onPhoneFocusState?.invoke(Control.AudioFocusNotification.AudioFocusStateType.STATE_GAIN)
+            resumed = true
+        }
+        return resumed
     }
 
     /** A change on the static path's permanent request, the only focus this app holds there. */
@@ -460,6 +505,8 @@ internal class AapAudio(
 
     fun releaseAllFocus() {
         AppLog.i("AapAudio: Releasing all audio focus.")
+        pendingCarLoss?.let { handler.removeCallbacks(it) }
+        pendingCarLoss = null
         synchronized(activeAudioChannels) { activeAudioChannels.clear() }
         // The latch is a property of one connection, not of the head unit: re-arm it so a session
         // that reconnects with Bluetooth off gets the car-radio behaviour back.
@@ -707,5 +754,6 @@ internal class AapAudio(
         private const val DUCK_VOLUME_FACTOR = 0.4f
         private const val UNDUCK_DELAY_MS = 1500L
         private const val OWN_REQUEST_GRACE_MS = 1_000L
+        private const val CAR_LOSS_DEBOUNCE_MS = 1_500L
     }
 }

@@ -821,6 +821,9 @@ class CommManager(
         get() = _transport?.aapAudio?.isMediaPlaying == true
 
     /** Static audio focus: a change on AapService's permanent request, to pass on to the phone. */
+    /** See [com.andrerinas.openheadunit.aap.AapAudio.resumeFromUser]. */
+    fun resumeAudioFromUser(): Boolean = _transport?.aapAudio?.resumeFromUser() == true
+
     fun markOwnFocusRequest() {
         _transport?.aapAudio?.markOwnFocusRequest()
     }

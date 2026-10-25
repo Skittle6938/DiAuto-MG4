@@ -1,3 +1,8 @@
+# DiAuto MG4+ 2.0.0-beta3
+
+- Music resumes after the steering-wheel arrows: the stock launcher sends them to the radio, which grabs the sound for a moment; DiAuto now waits 1.5 s before telling the phone, so the music keeps playing when a launcher hands the source back.
+- A PLAY after a real loss (from the steering wheel or a launcher) now tells the phone it has the sound again and takes the Android Auto source back; before, the phone ignored the PLAY.
+
 # DiAuto MG4+ 2.0.0-beta2
 
 - Music no longer stops 0.1 s after it starts: the focus loss caused by DiAuto's own claim of the Android Auto source was passed on to the phone as if the car had taken the sound.

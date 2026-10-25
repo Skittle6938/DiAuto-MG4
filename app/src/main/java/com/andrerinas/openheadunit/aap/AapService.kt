@@ -1248,6 +1248,17 @@ class AapService : Service(), UsbReceiver.Listener {
      * Bluetooth media service is still letting go of the A2DP link), and the music then starts in
      * silence. So the source is checked again a few seconds later, while the music still plays.
      */
+    /**
+     * A PLAY aimed at this app (steering wheel, launcher handing the source back): undo a car focus
+     * loss the phone was told about, and take the car's source back, so the phone restarts at once.
+     */
+    private fun resumeForUserPlay(reason: String) {
+        if (commManager.resumeAudioFromUser()) {
+            AppLog.i("AapService: $reason after a car focus loss — resuming Android Auto music")
+            claimCarMediaSourceForAndroidAuto(reason)
+        }
+    }
+
     private fun claimCarMediaSourceForAndroidAuto(reason: String) {
         if (!CarMediaSourcePolicy.shouldClaim(settings.musicViaBluetooth, mediaPlaying = true)) return
         saicAaMediaClaimJob?.cancel()
@@ -1382,6 +1393,10 @@ class AapService : Service(), UsbReceiver.Listener {
                         // Physical double triggers are handled by CommManager.sendKey deduplication.
                         if (keyEvent.action == android.view.KeyEvent.ACTION_DOWN && keyEvent.repeatCount == 0) {
                             AppLog.i("MediaButtonEvent: Processing key ${keyEvent.keyCode}")
+                            if (keyEvent.keyCode == android.view.KeyEvent.KEYCODE_MEDIA_PLAY ||
+                                keyEvent.keyCode == android.view.KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE) {
+                                resumeForUserPlay("media button ${keyEvent.keyCode}")
+                            }
                             // Send a complete click sequence (press + release) immediately
                             commManager.sendKey(keyEvent.keyCode, true, keyEvent.downTime, "mediasession")
                             commManager.sendKey(keyEvent.keyCode, false, keyEvent.downTime, "mediasession")
@@ -1405,6 +1420,7 @@ class AapService : Service(), UsbReceiver.Listener {
 
                 override fun onPlay() {
                     AppLog.i("MediaSession: Processing transport control action = KEYCODE_MEDIA_PLAY")
+                    resumeForUserPlay("play")
                     commManager.sendKey(android.view.KeyEvent.KEYCODE_MEDIA_PLAY, true, null, "transport-control")
                     commManager.sendKey(android.view.KeyEvent.KEYCODE_MEDIA_PLAY, false, null, "transport-control")
                 }
