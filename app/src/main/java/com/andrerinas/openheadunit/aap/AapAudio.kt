@@ -91,6 +91,23 @@ internal class AapAudio(
         }
     }
 
+    @Volatile
+    private var lastOwnFocusRequestMs = 0L
+
+    /**
+     * A change on the car-source request ([com.evsuite.hardware.saic.SaicCarAudioSource]). It is
+     * the only focus held once the phone's own requests are released, so when the car or a
+     * launcher switches to the radio the phone was never told and kept "playing" in silence.
+     * A loss right after one of our own requests is that request taking over, not the car.
+     */
+    fun onCarSourceFocusChange(focusChange: Int) {
+        if (SystemClock.elapsedRealtime() - lastOwnFocusRequestMs < OWN_REQUEST_GRACE_MS) return
+        carFocus.onUntrackedFocusChange(focusChange)?.let { state ->
+            AppLog.i("AapAudio: the car changed the Android Auto source focus ($focusChange) - telling the phone $state")
+            onPhoneFocusState?.invoke(state)
+        }
+    }
+
     /** A change on the static path's permanent request, the only focus this app holds there. */
     fun onPermanentFocusChange(focusChange: Int) {
         carFocus.onUntrackedFocusChange(focusChange)?.let { state ->
@@ -206,6 +223,7 @@ internal class AapAudio(
     }
 
     fun requestFocusChange(stream: Int, focusRequest: Int, callback: AudioManager.OnAudioFocusChangeListener): Int {
+        lastOwnFocusRequestMs = SystemClock.elapsedRealtime()
         // Notification/voice GAIN_TRANSIENT pauses A2DP (AVRCP) on this HU; duck instead.
         val effectiveFocus =
             if (focusRequest == Control.AudioFocusRequestNotification.AudioFocusRequestType.GAIN_TRANSIENT_VALUE &&
@@ -296,6 +314,7 @@ internal class AapAudio(
     }
 
     private fun requestPlaybackFocus(channel: Int) {
+        lastOwnFocusRequestMs = SystemClock.elapsedRealtime()
         val speech = channel == Channel.ID_AU1 || channel == Channel.ID_AU2
         // Speech/notification must MAY_DUCK so hybrid A2DP music is not AVRCP-paused.
         val focusGain = if (speech) {
@@ -659,5 +678,6 @@ internal class AapAudio(
         private const val AUDIO_BUFS_SIZE = 65536 * 4  // Up to 256 Kbytes
         private const val DUCK_VOLUME_FACTOR = 0.4f
         private const val UNDUCK_DELAY_MS = 1500L
+        private const val OWN_REQUEST_GRACE_MS = 1_000L
     }
 }

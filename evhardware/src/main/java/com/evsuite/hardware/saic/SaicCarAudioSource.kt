@@ -40,8 +40,17 @@ object SaicCarAudioSource {
     @Volatile
     private var aaFocusGranted = false
 
+    /**
+     * Every focus change of the car-source request. Once the phone's own requests are released,
+     * this is the only focus the app holds, so a source the car (or a launcher) picks shows up
+     * here and nowhere else.
+     */
+    @Volatile
+    var onFocusChange: ((Int) -> Unit)? = null
+
     private val quietListener = AudioManager.OnAudioFocusChangeListener { change ->
         AppLogger.i(TAG, "car-source AA focus change=$change")
+        onFocusChange?.invoke(change)
         if (change == AudioManager.AUDIOFOCUS_LOSS ||
             change == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT
         ) {

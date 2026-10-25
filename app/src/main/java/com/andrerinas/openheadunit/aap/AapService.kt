@@ -1088,6 +1088,9 @@ class AapService : Service(), UsbReceiver.Listener {
         // a connection alone (or a probe that never becomes a session) must not stop the radio.
         commManager.onMediaPlaybackStarted = { claimCarMediaSourceForAndroidAuto("music started") }
         commManager.onSpeechEndedDuringMedia = { checkCarSourceAfterPrompt() }
+        com.evsuite.hardware.saic.SaicCarAudioSource.onFocusChange = { change ->
+            commManager.onCarSourceFocusChange(change)
+        }
         maybeReleaseCarBtMediaForWifiAudio()
 
         // Start GpsLocationService and NightModeManager sensor tracking

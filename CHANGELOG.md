@@ -2,6 +2,7 @@
 
 - Music over Android Auto: when the music starts, DiAuto checks 3 s and 8 s later that the car really switched to the Android Auto source, and claims it again if not (the music could start in silence).
 - Music over Android Auto: after a guidance or voice prompt, if the car stayed on another source while the phone keeps playing, DiAuto takes the Android Auto source back.
+- When the car or a launcher switches away from Android Auto (to the radio, for example), the phone is now told and pauses, instead of showing "playing" in silence.
 - Beta diagnostics: logs at Info level are written to a file in Downloads/OpenHeadunitLogs by default, so a lost-audio drive can be read back.
 
 # DiAuto-MG4 1.9.7-beta3

@@ -821,6 +821,10 @@ class CommManager(
         get() = _transport?.aapAudio?.isMediaPlaying == true
 
     /** Static audio focus: a change on AapService's permanent request, to pass on to the phone. */
+    fun onCarSourceFocusChange(focusChange: Int) {
+        _transport?.aapAudio?.onCarSourceFocusChange(focusChange)
+    }
+
     fun onPermanentFocusChange(focusChange: Int) {
         _transport?.aapAudio?.onPermanentFocusChange(focusChange)
     }
