@@ -1,3 +1,11 @@
+# DiAuto-MG4 1.9.6-fix.1 — fork of merthankaraman/DiAuto-MG4 1.9.6
+
+- Reconnection on the next trip: `CommManager` is app-wide, but the service's `onDestroy()` cancelled its scope, so after the first stop every later disconnect cleanup was a no-op and the phone could not connect again in the same process (upstream PR #4).
+- A user exit from inside Android Auto is no longer read as an unexpected drop, and connection errors are no longer recorded as user exits (PR #4).
+- Bluetooth auto-start no longer overwrites the chosen connection mode; Headunit Server mode brings up the hotspot and scans every subnet (PR #4).
+- Wireless sessions no longer loop on "connection lost": the Bluetooth channel is held for the session and the Wi-Fi credentials go out without a 1 s delay (PR #5).
+- The captive-portal helper stops retrying once the head unit refuses its iptables redirect (PR #13).
+
 # DiAuto 0.3.11 — 2026-10-01
 
 - Recover when the built-in car hotspot is enabled after DiAuto opens, without restarting the app.

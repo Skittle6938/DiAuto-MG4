@@ -8,6 +8,12 @@ battery SoC forwarded into Google Maps via Android Auto `VehicleEnergyModel`
 > MG4 telemetry: vendored [EVHardware](https://github.com/fatihdonmezdev/MG4ABRP) in `evhardware/`.
 > For Apple CarPlay on the same car, use **DiPlay-MG4** separately — do not run both at once.
 
+> **This fork** is [merthankaraman/DiAuto-MG4](https://github.com/merthankaraman/DiAuto-MG4) 1.9.6
+> plus upstream PRs #4 (reconnection, user exit, Headunit Server mode), #5 (wireless session
+> teardown loop) and #13 (captive-portal retries). Its main fix: the second connection after the
+> service was stopped once in the same process never cleaned up, because `CommManager.destroy()`
+> cancelled the app-wide scope. See `CHANGELOG.md`.
+
 ## Features (MG4)
 
 - Native wireless Android Auto over the car’s built-in hotspot (Android 9; Wi‑Fi Direct unavailable).
