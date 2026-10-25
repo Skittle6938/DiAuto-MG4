@@ -1,6 +1,6 @@
-# DiAuto-MG4 1.9.7-beta6
+# DiAuto MG4+ 2.0.0-beta1
 
-- The short-lived "MG4 AA" rename (beta5) is undone: the app keeps the name DiAuto MG4 and the package com.drivehub.diauto.mg4.
+- **DiAuto MG4+**: this fork now shows its own name (DiAuto MG4+), starts its own version line at 2.0.0 and says on the About screen that it is a community fork. The package stays com.drivehub.diauto.mg4, so it installs over DiAuto-MG4 and keeps its settings (the short-lived "MG4 AA" rename of beta5 is undone).
 - Upstream PRs merged: #6 (hotspot kept on 5 GHz while the car Wi-Fi is on 2.4 GHz), #7 (720p margins and top bar), #9 (steering-wheel voice key to the assistant, arrows no longer highlight Android Auto), #10 (cabin mic reaches Android Auto), #12 (no empty diagnostic report on a USB stick), #14 (60 fps by default, no decoder toast) and #16 (Android Auto guidance on the instrument cluster, BYD navigation output removed).
 
 # DiAuto-MG4 1.9.7-beta4

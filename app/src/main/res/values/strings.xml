@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">DiAuto MG4</string>
+    <string name="app_name">DiAuto MG4+</string>
+    <string name="about_fork_notice">Community fork of DiAuto-MG4, maintained separately for the MG4.\ngithub.com/Skittle6938/DiAuto-MG4</string>
     <string name="menu">Menu</string>
     <string name="settings">Settings</string>
 
@@ -183,7 +184,7 @@
     <string name="video">Android Auto</string>
     <string name="self_mode">Self Mode</string>
     <string name="to_android_auto">To Android Auto</string>
-    <string name="title">DiAuto MG4</string>
+    <string name="title">DiAuto MG4+</string>
     <string name="remove">Remove</string>
     <string name="usb">USB</string>
     <string name="wifi">WiFi</string>

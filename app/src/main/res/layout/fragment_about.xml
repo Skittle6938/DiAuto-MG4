@@ -51,6 +51,15 @@
                 android:textStyle="bold"/>
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/about_fork_notice"
+                android:gravity="center"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?attr/colorOnSurface"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
                 android:id="@+id/copyright_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

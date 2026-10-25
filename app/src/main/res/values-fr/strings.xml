@@ -1,5 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="fr">
-    <string name="app_name">DiAuto</string>
+    <string name="app_name">DiAuto MG4+</string>
+    <string name="about_fork_notice">Fork communautaire de DiAuto-MG4, maintenu séparément pour la MG4.\ngithub.com/Skittle6938/DiAuto-MG4</string>
     <string name="menu">Menu</string>
     <string name="settings">Paramètres</string>
 

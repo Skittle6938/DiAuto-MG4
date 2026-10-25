@@ -1,4 +1,4 @@
-# DiAuto-MG4
+# DiAuto MG4+
 
 Wireless / USB **Android Auto** for the MG4 Android head unit (SWI69), with live
 battery SoC forwarded into Google Maps via Android Auto `VehicleEnergyModel`
@@ -8,11 +8,15 @@ battery SoC forwarded into Google Maps via Android Auto `VehicleEnergyModel`
 > MG4 telemetry: vendored [EVHardware](https://github.com/fatihdonmezdev/MG4ABRP) in `evhardware/`.
 > For Apple CarPlay on the same car, use **DiPlay-MG4** separately — do not run both at once.
 
-> **This fork** is [merthankaraman/DiAuto-MG4](https://github.com/merthankaraman/DiAuto-MG4) 1.9.6
-> plus upstream PRs #4 (reconnection, user exit, Headunit Server mode), #5 (wireless session
-> teardown loop) and #13 (captive-portal retries). Its main fix: the second connection after the
-> service was stopped once in the same process never cleaned up, because `CommManager.destroy()`
-> cancelled the app-wide scope. See `CHANGELOG.md`.
+> **DiAuto MG4+ — a community fork that lives its own life.** It started from
+> [merthankaraman/DiAuto-MG4](https://github.com/merthankaraman/DiAuto-MG4) 1.9.6 (itself a port of
+> DiAuto) and is maintained separately for the MG4, with its own version line from 2.0.0. It keeps
+> the package `com.drivehub.diauto.mg4`, so it installs over DiAuto-MG4 and keeps its settings.
+> What differs: reconnection on the next trip (`CommManager.destroy()` no longer cancels the
+> app-wide scope), music over Android Auto by default with the radio given back, Maps battery at
+> arrival started on every connection, updates from this repository (with or without betas), and
+> the upstream PRs #4, #5, #6, #7, #9, #10, #12, #13, #14 and #16. See `CHANGELOG.md`.
+
 
 ## Features (MG4)
 
