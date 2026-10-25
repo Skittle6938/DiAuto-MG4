@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 final class OtaReleaseFetcher {
 
     private static final String GITHUB_RELEASES_URL =
-            "https://api.github.com/repos/merthankaraman/DiAuto-MG4/releases?per_page=20";
+            "https://api.github.com/repos/Skittle6938/DiAuto-MG4/releases?per_page=20";
 
     private OtaReleaseFetcher() {
     }
@@ -183,9 +183,52 @@ final class OtaReleaseFetcher {
         return trimmed;
     }
 
+    /**
+     * Compares the numbers before the first '-' (1.9.6 < 1.9.10). With equal numbers a final
+     * version beats a pre-release (1.9.7-beta3 < 1.9.7), and pre-releases follow their number
+     * (1.9.7-beta0 < 1.9.7-beta1). The build suffixes "-debug" and "-phone" are ignored.
+     */
     static int compareVersions(String leftRaw, String rightRaw) {
-        String left = normalizeVersion(leftRaw);
-        String right = normalizeVersion(rightRaw);
+        String left = stripBuildSuffixes(normalizeVersion(leftRaw));
+        String right = stripBuildSuffixes(normalizeVersion(rightRaw));
+        int core = compareNumbers(coreOf(left), coreOf(right));
+        if (core != 0) return core;
+        String leftPre = preReleaseOf(left);
+        String rightPre = preReleaseOf(right);
+        if (leftPre == null || rightPre == null) {
+            if (leftPre == null && rightPre == null) return 0;
+            return leftPre == null ? 1 : -1;
+        }
+        return compareNumbers(leftPre, rightPre);
+    }
+
+    private static String stripBuildSuffixes(String version) {
+        String v = version;
+        boolean changed = true;
+        while (changed) {
+            changed = false;
+            for (String suffix : new String[]{"-debug", "-phone"}) {
+                if (v.endsWith(suffix)) {
+                    v = v.substring(0, v.length() - suffix.length());
+                    changed = true;
+                }
+            }
+        }
+        return v;
+    }
+
+    private static String coreOf(String version) {
+        int dash = version.indexOf('-');
+        return dash < 0 ? version : version.substring(0, dash);
+    }
+
+    /** The part after the first '-', or null for a final version. */
+    private static String preReleaseOf(String version) {
+        int dash = version.indexOf('-');
+        return dash < 0 ? null : version.substring(dash + 1);
+    }
+
+    private static int compareNumbers(String left, String right) {
         String[] leftParts = left.split("[^0-9]+");
         String[] rightParts = right.split("[^0-9]+");
         int max = Math.max(leftParts.length, rightParts.length);
