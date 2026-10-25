@@ -821,6 +821,11 @@ class CommManager(
         get() = _transport?.aapAudio?.isMediaPlaying == true
 
     /** Static audio focus: a change on AapService's permanent request, to pass on to the phone. */
+    /** Drops the buffered audio of the track being skipped (see [com.andrerinas.openheadunit.decoder.AudioTrackWrapper.flushForTrackChange]). */
+    fun flushMediaForTrackChange() {
+        audioDecoder.getTrack(com.andrerinas.openheadunit.aap.protocol.Channel.ID_AUD)?.flushForTrackChange()
+    }
+
     /** See [com.andrerinas.openheadunit.aap.AapAudio.resumeFromUser]. */
     fun resumeAudioFromUser(): Boolean = _transport?.aapAudio?.resumeFromUser() == true
 

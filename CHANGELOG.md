@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.0.0-beta4
+
+- Faster track changes: after next / previous, the old track's audio still buffered in DiAuto (1–2 s on Wi-Fi) is dropped, so the new track is heard as soon as the phone sends it.
+
 # DiAuto MG4+ 2.0.0-beta3
 
 - Music resumes after the steering-wheel arrows: the stock launcher sends them to the radio, which grabs the sound for a moment; DiAuto now waits 1.5 s before telling the phone, so the music keeps playing when a launcher hands the source back.

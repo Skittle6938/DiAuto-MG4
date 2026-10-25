@@ -1249,6 +1249,19 @@ class AapService : Service(), UsbReceiver.Listener {
      * silence. So the source is checked again a few seconds later, while the music still plays.
      */
     /**
+     * After next / previous, the old track's audio still buffered here (Wi-Fi jitter buffer plus the
+     * AudioTrack, 1–2 s) would play before the new one. Dropped shortly after the key, once the
+     * phone has stopped sending the old track.
+     */
+    private fun flushSkippedTrackAudio() {
+        if (settings.musicViaBluetooth) return
+        serviceScope.launch {
+            delay(TRACK_SKIP_FLUSH_DELAY_MS)
+            commManager.flushMediaForTrackChange()
+        }
+    }
+
+    /**
      * A PLAY aimed at this app (steering wheel, launcher handing the source back): undo a car focus
      * loss the phone was told about, and take the car's source back, so the phone restarts at once.
      */
@@ -1400,6 +1413,10 @@ class AapService : Service(), UsbReceiver.Listener {
                             // Send a complete click sequence (press + release) immediately
                             commManager.sendKey(keyEvent.keyCode, true, keyEvent.downTime, "mediasession")
                             commManager.sendKey(keyEvent.keyCode, false, keyEvent.downTime, "mediasession")
+                            if (keyEvent.keyCode == android.view.KeyEvent.KEYCODE_MEDIA_NEXT ||
+                                keyEvent.keyCode == android.view.KeyEvent.KEYCODE_MEDIA_PREVIOUS) {
+                                flushSkippedTrackAudio()
+                            }
                             return true
                         }
 
@@ -1429,12 +1446,14 @@ class AapService : Service(), UsbReceiver.Listener {
                     AppLog.i("MediaSession: Processing transport control action = KEYCODE_MEDIA_NEXT")
                     commManager.sendKey(android.view.KeyEvent.KEYCODE_MEDIA_NEXT, true, null, "transport-control")
                     commManager.sendKey(android.view.KeyEvent.KEYCODE_MEDIA_NEXT, false, null, "transport-control")
+                    flushSkippedTrackAudio()
                 }
 
                 override fun onSkipToPrevious() {
                     AppLog.i("MediaSession: Processing transport control action = KEYCODE_MEDIA_PREVIOUS")
                     commManager.sendKey(android.view.KeyEvent.KEYCODE_MEDIA_PREVIOUS, true, null, "transport-control")
                     commManager.sendKey(android.view.KeyEvent.KEYCODE_MEDIA_PREVIOUS, false, null, "transport-control")
+                    flushSkippedTrackAudio()
                 }
 
                 override fun onStop() {
@@ -4157,6 +4176,7 @@ class AapService : Service(), UsbReceiver.Listener {
         private const val USER_EXIT_COOLDOWN_MS = 15_000L
         private const val DISCOVERY_BUSY_RECHECK_MS = 10_000L
         private const val PROMPT_SOURCE_CHECK_DELAY_MS = 1_500L
+        private const val TRACK_SKIP_FLUSH_DELAY_MS = 250L
         private val CLAIM_CHECK_DELAYS_MS = longArrayOf(3_000L, 5_000L)
 
         /** Delay before AapService tries to handle a normal-mode USB attach as a fallback

@@ -540,6 +540,26 @@ class AudioTrackWrapper(
         setVolume(gain)
     }
 
+    /**
+     * Drops the audio of the previous track still queued here and in the AudioTrack (about 1–2 s
+     * with the Wi-Fi jitter buffer), so a skipped-to track is heard as soon as the phone sends it.
+     */
+    fun flushForTrackChange() {
+        if (!isRunning || mixer != null) return
+        drainQueuedAudio()
+        val track = audioTrack ?: return
+        try {
+            if (mediaPlaybackStarted && track.playState == AudioTrack.PLAYSTATE_PLAYING) {
+                track.pause()
+                track.flush()
+                track.play()
+                AppLog.i("AudioTrackWrapper: flushed the previous track's buffered audio")
+            }
+        } catch (e: Exception) {
+            AppLog.w("AudioTrackWrapper: flush for track change failed: ${e.message}")
+        }
+    }
+
     fun stopPlayback() {
         isRunning = false
         this.interrupt()
