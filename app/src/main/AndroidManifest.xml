@@ -205,12 +205,9 @@
             android:label="DiAuto Nav Test"
             android:exported="true"
             android:windowSoftInputMode="stateHidden|adjustResize"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/AppTheme" />
+        <!-- Cluster navigation test screen (upstream PR #16): no launcher icon; open it with
+             adb shell am start -n com.drivehub.diauto.mg4/com.andrerinas.openheadunit.main.NavTestActivity -->
 
         <activity
             android:name=".main.SettingsActivity"

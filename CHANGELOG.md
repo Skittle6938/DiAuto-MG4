@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.0.0-beta9
+
+- The cluster navigation test screen (from upstream PR #16) no longer has its own icon in the app list; it is still reachable with adb for testing.
+
 # DiAuto MG4+ 2.0.0-beta8
 
 - No more connection screen at car start: DiAuto stays in the background, the phone connects over Bluetooth, and the projection comes forward once the phone has started Android Auto. Whether it starts, and whether the music plays, follows the phone's own Android Auto settings ("Start Android Auto automatically", "Start music automatically"). The old behaviour is the hidden setting show-app-on-car-start.
