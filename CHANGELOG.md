@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.0.0-beta7
+
+- Beta logs keep the last 80 app starts instead of 10 (still capped at 50 MB): the head unit wakes several times an hour, so a failed morning connection was no longer in the logs a few hours later.
+
 # DiAuto MG4+ 2.0.0-beta6
 
 - DiAuto now takes the sound under AllGo's Android Auto name (com.allgo.app.androidauto, source type 70). The stock launcher then knows the source is Android Auto and stops sending the steering-wheel arrows to the radio.
