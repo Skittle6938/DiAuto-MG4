@@ -320,6 +320,8 @@ class AapService : Service(), UsbReceiver.Listener {
     /** In-flight poke that may be waiting out [USER_EXIT_COOLDOWN_MS]. */
     private var nativeAaPokeJob: Job? = null
     private var phoneReconnectJob: Job? = null
+    @Volatile private var lastWatchdogPokeMs = 0L
+    @Volatile private var lastPhoneBtConnectMs = 0L
 
     /** Sticky SAIC SRC_AA claim while Wi‑Fi AA music is the active session. */
     private var saicAaMediaClaimJob: Job? = null
@@ -2382,7 +2384,15 @@ class AapService : Service(), UsbReceiver.Listener {
                         AppLog.i("AapService: Bluetooth auto-start — switching wifi mode to Native AA")
                         settings.wifiConnectionMode = 3
                     }
-                    if (!mac.isNullOrEmpty()) {
+                    lastPhoneBtConnectMs = SystemClock.elapsedRealtime()
+                    if (!mac.isNullOrEmpty() &&
+                        SystemClock.elapsedRealtime() - lastWatchdogPokeMs < WATCHDOG_POKE_SETTLE_MS) {
+                        // The phone is back because of the watchdog's own poke, which is still
+                        // holding its socket; a second poke on top of it kept the phone's Android
+                        // Auto channel out for two minutes (2026-10-26, 19:01-19:03).
+                        AppLog.i("AapService: Bluetooth auto-start — the phone answered the watchdog poke; not poking again")
+                        scheduleNativeAaArm(reason = "bt auto-start")
+                    } else if (!mac.isNullOrEmpty()) {
                         AppLog.i("AapService: Bluetooth auto-start — poking $mac")
                         scheduleNativeAaPoke(mac, reason = "bt auto-start")
                     } else {
@@ -4031,8 +4041,8 @@ class AapService : Service(), UsbReceiver.Listener {
      * The car's Bluetooth reconnects the phone only at start, and the phone does not retry when it
      * comes back in range, so leaving the car on and walking away for a while left it without a
      * phone (and without Android Auto) until someone reconnected Bluetooth by hand. While the car
-     * is on with no session and the remembered phone is not linked over Bluetooth, poke it once a
-     * minute; the poke opens the Bluetooth link, and Bluetooth auto-start does the rest. A phone
+     * is on with no session and the remembered phone is not linked over Bluetooth, poke it every
+     * 30 s; the poke opens the Bluetooth link, and Bluetooth auto-start does the rest. A phone
      * that is linked but has not started Android Auto is left alone: that is its own setting.
      */
     private fun startPhoneReconnectWatchdog() {
@@ -4051,7 +4061,11 @@ class AapService : Service(), UsbReceiver.Listener {
                     true
                 }
                 if (linked) continue
+                // connectedBondedDevices can miss a phone that has just come back; a Bluetooth
+                // connect in the last few minutes means the handshake is under way, so let it run.
+                if (SystemClock.elapsedRealtime() - lastPhoneBtConnectMs < RECENT_BT_CONNECT_MS) continue
                 AppLog.i("AapService: remembered phone $mac is not linked and no session is up — poking it again")
+                lastWatchdogPokeMs = SystemClock.elapsedRealtime()
                 scheduleNativeAaPoke(mac, reason = "reconnect watchdog")
             }
         }
@@ -4244,7 +4258,9 @@ class AapService : Service(), UsbReceiver.Listener {
         private const val USER_EXIT_COOLDOWN_MS = 15_000L
         private const val DISCOVERY_BUSY_RECHECK_MS = 10_000L
         private const val PROMPT_SOURCE_CHECK_DELAY_MS = 1_500L
-        private const val PHONE_RECONNECT_INTERVAL_MS = 60_000L
+        private const val PHONE_RECONNECT_INTERVAL_MS = 30_000L
+        private const val WATCHDOG_POKE_SETTLE_MS = 30_000L
+        private const val RECENT_BT_CONNECT_MS = 180_000L
         private const val BOOT_LOOP_GUARD_DISABLED = true
         private const val TRACK_SKIP_FLUSH_DELAY_MS = 250L
         private val CLAIM_CHECK_DELAYS_MS = longArrayOf(3_000L, 5_000L)

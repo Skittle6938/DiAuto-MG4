@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.0.0-beta11
+
+- Faster reconnection when you come back to the car: the watchdog now pokes the phone every 30 s instead of 60 s, and when the phone answers its poke, the Bluetooth auto-start no longer pokes a second time on top of it (two pokes at once kept the phone's Android Auto channel out for two minutes). No watchdog poke for 3 minutes after the phone has just reconnected over Bluetooth.
+
 # DiAuto MG4+ 2.0.0-beta10
 
 - The phone comes back on its own after you leave the car on and walk away: while the car is on with no Android Auto session and the remembered phone is not linked over Bluetooth, DiAuto pokes it once a minute (it used to try only right after the disconnect). A phone that is linked but has not started Android Auto is left alone, and so is a session you ended yourself.
