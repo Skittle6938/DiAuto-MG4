@@ -668,7 +668,7 @@ class AapService : Service(), UsbReceiver.Listener {
 
         if (settings.autoStartOnBoot) {
             AppLog.i("WakeDetect: launching UI (trigger=$trigger)")
-            launchMainActivityOnBoot()
+            launchUiOnCarStart("wake $trigger")
         }
 
         if (settings.autoStartOnUsb) {
@@ -738,7 +738,7 @@ class AapService : Service(), UsbReceiver.Listener {
 
         // Not connected — launch UI (which triggers auto-connect via HomeFragment)
         AppLog.i("WakeDetect: launching UI on screen on")
-        launchMainActivityOnBoot()
+        launchUiOnCarStart("screen on")
 
         val settings = App.provide(this).settings
         if (settings.autoStartOnUsb) {
@@ -2302,7 +2302,7 @@ class AapService : Service(), UsbReceiver.Listener {
         if (intent?.getBooleanExtra(BootCompleteReceiver.EXTRA_BOOT_START, false) == true) {
             // Mark wake as handled so the dynamic wakeDetectReceiver doesn't double-trigger
             lastWakeHandledTimestamp = SystemClock.elapsedRealtime()
-            launchMainActivityOnBoot()
+            launchUiOnCarStart("boot")
         }
 
         when (intent?.action) {
@@ -3374,6 +3374,21 @@ class AapService : Service(), UsbReceiver.Listener {
         if (!settings.autoStartOnUsb || !settings.reopenOnReconnection) return
 
         AppLog.i("Reopen on reconnection: launching MainActivity ($source)")
+        launchMainActivityOnBoot()
+    }
+
+    /**
+     * At car start the app used to open its own screen (and its "connecting" overlay) on top of the
+     * launcher. Like the stock Android Auto, it now stays in the background: the Bluetooth
+     * auto-start connects the phone, and the projection comes forward only once the phone has
+     * started Android Auto, which follows the phone's own "Start Android Auto automatically"
+     * setting. [Settings.showAppOnCarStart] brings the old behaviour back.
+     */
+    private fun launchUiOnCarStart(reason: String) {
+        if (!App.provide(this).settings.showAppOnCarStart) {
+            AppLog.i("AapService: car start ($reason) — staying in the background, the projection opens once the phone connects")
+            return
+        }
         launchMainActivityOnBoot()
     }
 

@@ -836,6 +836,11 @@ class Settings(private val context: Context) {
         get() = prefs.getBoolean("auto-start-on-boot", true)
         set(value) { prefs.edit().putBoolean("auto-start-on-boot", value).apply() }
 
+    /** Open the app's own screen at car start (off: connect in the background, show the projection once connected). */
+    var showAppOnCarStart: Boolean
+        get() = prefs.getBoolean("show-app-on-car-start", false)
+        set(value) { prefs.edit().putBoolean("show-app-on-car-start", value).apply() }
+
     var autoStartOnScreenOn: Boolean
         get() = prefs.getBoolean("auto-start-on-screen-on", false)
         set(value) { prefs.edit().putBoolean("auto-start-on-screen-on", value).apply() }
