@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.0.0-beta10
+
+- The phone comes back on its own after you leave the car on and walk away: while the car is on with no Android Auto session and the remembered phone is not linked over Bluetooth, DiAuto pokes it once a minute (it used to try only right after the disconnect). A phone that is linked but has not started Android Auto is left alone, and so is a session you ended yourself.
+
 # DiAuto MG4+ 2.0.0-beta9
 
 - The cluster navigation test screen (from upstream PR #16) no longer has its own icon in the app list; it is still reachable with adb for testing.

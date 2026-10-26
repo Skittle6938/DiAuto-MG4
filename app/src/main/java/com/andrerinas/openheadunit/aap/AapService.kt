@@ -319,6 +319,7 @@ class AapService : Service(), UsbReceiver.Listener {
 
     /** In-flight poke that may be waiting out [USER_EXIT_COOLDOWN_MS]. */
     private var nativeAaPokeJob: Job? = null
+    private var phoneReconnectJob: Job? = null
 
     /** Sticky SAIC SRC_AA claim while Wi‑Fi AA music is the active session. */
     private var saicAaMediaClaimJob: Job? = null
@@ -836,6 +837,7 @@ class AapService : Service(), UsbReceiver.Listener {
             initWifiModeWithOptionalWait()
         }
         scheduleBootLoopStrikeClear()
+        startPhoneReconnectWatchdog()
         wifiDirectManager?.setCredentialsListener { ssid, psk, ip, bssid ->
             onNativeCredentials(ssid, psk, ip, bssid)
         }
@@ -4025,6 +4027,36 @@ class AapService : Service(), UsbReceiver.Listener {
      * Waits out a user-exit cooldown (if any), then arms Native AA and pokes [mac].
      * The home-screen pill shows a countdown so the user does not need to know about the gap.
      */
+    /**
+     * The car's Bluetooth reconnects the phone only at start, and the phone does not retry when it
+     * comes back in range, so leaving the car on and walking away for a while left it without a
+     * phone (and without Android Auto) until someone reconnected Bluetooth by hand. While the car
+     * is on with no session and the remembered phone is not linked over Bluetooth, poke it once a
+     * minute; the poke opens the Bluetooth link, and Bluetooth auto-start does the rest. A phone
+     * that is linked but has not started Android Auto is left alone: that is its own setting.
+     */
+    private fun startPhoneReconnectWatchdog() {
+        phoneReconnectJob?.cancel()
+        phoneReconnectJob = serviceScope.launch {
+            while (isActive) {
+                delay(PHONE_RECONNECT_INTERVAL_MS)
+                val settings = App.provide(this@AapService).settings
+                if (settings.wifiConnectionMode != 3 || userExitedAA) continue
+                if (commManager.isBusy || nativeAaPokeJob?.isActive == true) continue
+                val mac = settings.autoStartBluetoothDeviceMacs.firstOrNull() ?: continue
+                val linked = try {
+                    BluetoothHelper.connectedBondedDevices(this@AapService)
+                        .any { it.address.equals(mac, ignoreCase = true) }
+                } catch (_: SecurityException) {
+                    true
+                }
+                if (linked) continue
+                AppLog.i("AapService: remembered phone $mac is not linked and no session is up — poking it again")
+                scheduleNativeAaPoke(mac, reason = "reconnect watchdog")
+            }
+        }
+    }
+
     private fun scheduleNativeAaPoke(mac: String, reason: String) {
         nativeAaPokeJob?.cancel()
         nativeAaPokeJob = serviceScope.launch {
@@ -4212,6 +4244,7 @@ class AapService : Service(), UsbReceiver.Listener {
         private const val USER_EXIT_COOLDOWN_MS = 15_000L
         private const val DISCOVERY_BUSY_RECHECK_MS = 10_000L
         private const val PROMPT_SOURCE_CHECK_DELAY_MS = 1_500L
+        private const val PHONE_RECONNECT_INTERVAL_MS = 60_000L
         private const val BOOT_LOOP_GUARD_DISABLED = true
         private const val TRACK_SKIP_FLUSH_DELAY_MS = 250L
         private val CLAIM_CHECK_DELAYS_MS = longArrayOf(3_000L, 5_000L)
