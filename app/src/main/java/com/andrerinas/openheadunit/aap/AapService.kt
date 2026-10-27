@@ -941,6 +941,7 @@ class AapService : Service(), UsbReceiver.Listener {
                     }
                     is CommManager.ConnectionState.TransportStarted -> {
                         hasEverConnected = true
+                        AllgoRelayNotifier.sessionStarted(this@AapService, settings.autoStartBluetoothDeviceName.takeIf { it.isNotBlank() }, settings.bluetoothAddress)
                         accessoryHandshakeFailures = 0
                         automaticReconnectAttempts = 0
                         sendBroadcast(Intent(ACTION_REQUEST_NIGHT_MODE_UPDATE).apply {
@@ -1511,6 +1512,7 @@ class AapService : Service(), UsbReceiver.Listener {
      * 4. Scheduling a reconnect attempt if applicable (see [scheduleReconnectIfNeeded])
      */
     private fun onDisconnected(state: CommManager.ConnectionState.Disconnected) {
+        AllgoRelayNotifier.sessionEnded(this)
         com.andrerinas.openheadunit.hud.SaicNavigationOutputs.stop()
         // Give the car Wi-Fi back once wireless Android Auto has stayed down for a while.
         stationRestoreJob?.cancel()

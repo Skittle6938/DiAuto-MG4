@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.0.0-beta23
+
+- Experimental: when the AllGo relay (a local stand-in for AllGo's Android Auto, not part of this repo) is installed, DiAuto tells it when a session starts and ends, so the stock launcher's Android Auto button and media card see a connected phone. The OEM Android Auto blocker leaves the relay alone. Without the relay nothing changes.
+
 # DiAuto MG4+ 2.0.0-beta22
 
 - Experimental: the stock SAIC launcher and status bar show the song title, artist and cover from Android Auto. They read them from AllGo's media browser service, which AllGo's own Android Auto feeds; DiAuto now feeds it the same way (bind with com.allgo.action.aapservice, then metadata, play state and session status). MG4 Dash is unchanged (it reads DiAuto's own MediaSession).
