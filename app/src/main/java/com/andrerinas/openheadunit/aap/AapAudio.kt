@@ -60,6 +60,8 @@ internal class AapAudio(
         }
 
     private var audioFocusRequest: AudioFocusRequest? = null
+    /** Kind of [audioFocusRequest]: a held media request does not cover a prompt. */
+    private var audioFocusKind: ProtocolFocusRoute.Kind? = null
     private var legacyFocusListener: AudioManager.OnAudioFocusChangeListener? = null
 
     /** Which focus changes come from the car and have to reach the phone (see [CarFocusTracker]). */
@@ -321,6 +323,7 @@ internal class AapAudio(
                     runCatching { audioManager.abandonAudioFocusRequest(it) }
                 }
                 audioFocusRequest = null
+                audioFocusKind = null
                 audioFocusToken?.let { carFocus.abandoned(it) }
                 audioFocusToken = null
                 result = AudioManager.AUDIOFOCUS_REQUEST_GRANTED
@@ -355,6 +358,7 @@ internal class AapAudio(
                         .setOnAudioFocusChangeListener(trackedFocusListener(token, callback))
                         .build()
                 audioFocusToken = token
+                audioFocusKind = kind
                 carFocus.requested(token, media = usage == AudioAttributes.USAGE_MEDIA)
 
                 result = focusAm.requestAudioFocus(audioFocusRequest!!)
@@ -524,6 +528,9 @@ internal class AapAudio(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             audioFocusRequest?.let { mediaAudioManager.abandonAudioFocusRequest(it) }
             audioFocusRequest = null
+            speechFocusRequests.values.forEach { runCatching { audioManager.abandonAudioFocusRequest(it) } }
+            speechFocusRequests.clear()
+            audioFocusKind = null
             playbackFocusRequest?.let { mediaAudioManager.abandonAudioFocusRequest(it) }
             playbackFocusRequest = null
         } else {
@@ -607,13 +614,50 @@ internal class AapAudio(
         if (channel == Channel.ID_AUD) onMediaPlaybackStarted?.invoke()
     }
 
+    private val speechFocusRequests = java.util.concurrent.ConcurrentHashMap<Int, AudioFocusRequest>()
+
+    /**
+     * A prompt's own guidance request, kept apart from the music's: the MG4 opens its navigation
+     * channel (and lowers the radio or the music) only while a guidance request is held, and the
+     * prompt audio plays on that channel. Without it the prompt is silent on every source.
+     */
+    private fun requestSpeechFocus(channel: Int) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || speechFocusRequests.containsKey(channel)) return
+        lastOwnFocusRequestMs = SystemClock.elapsedRealtime()
+        val request = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
+            .setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                    .build()
+            )
+            .setWillPauseWhenDucked(false)
+            .setOnAudioFocusChangeListener { }
+            .build()
+        speechFocusRequests[channel] = request
+        val result = audioManager.requestAudioFocus(request)
+        AppLog.i("AapAudio: AA audio started (${Channel.name(channel)}) - guidance focus result=$result")
+    }
+
+    private fun releaseSpeechFocus(channel: Int) {
+        val request = speechFocusRequests.remove(channel) ?: return
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            runCatching { audioManager.abandonAudioFocusRequest(request) }
+        }
+        AppLog.i("AapAudio: ${Channel.name(channel)} stopped - guidance focus released")
+    }
+
     private fun onAudioPlaybackStarted(channel: Int) {
         if (staticAudioFocus || !enableAudioSink || !Channel.isAudio(channel)) return
         // A prompt the phone already asked focus for on the control channel needs nothing more:
         // a second request made the SAIC radio drop focus and stay silent after it. The phone does
         // not always ask, though, and then the prompt asks here, with the same guidance usage.
-        if (channel != Channel.ID_AUD && audioFocusRequest != null) {
-            AppLog.i("AapAudio: AA audio started (${Channel.name(channel)}) - the phone's focus request already covers it")
+        if (channel != Channel.ID_AUD) {
+            if (audioFocusRequest != null && audioFocusKind != null && audioFocusKind != ProtocolFocusRoute.Kind.MEDIA) {
+                AppLog.i("AapAudio: AA audio started (${Channel.name(channel)}) - the phone's focus request already covers it")
+            } else {
+                requestSpeechFocus(channel)
+            }
             return
         }
 
@@ -666,6 +710,10 @@ internal class AapAudio(
             onSpeechEndedDuringMedia?.invoke()
         }
         if (staticAudioFocus || !enableAudioSink || !Channel.isAudio(channel)) return
+        if (channel != Channel.ID_AUD) {
+            releaseSpeechFocus(channel)
+            return
+        }
 
         val nowEmpty = synchronized(activeAudioChannels) {
             activeAudioChannels.remove(channel)
