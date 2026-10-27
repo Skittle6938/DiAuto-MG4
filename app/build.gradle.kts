@@ -66,12 +66,14 @@ android {
     }
 
     defaultConfig {
-        // MG4 fork — separate id from upstream DiAuto / stock AA hosts.
-        applicationId = "com.drivehub.diauto.mg4"
+        // Installed as an update of the car's AllGo Android Auto so the stock launcher, rui and
+        // MG4 Dash see DiAuto as the car's Android Auto (was com.drivehub.diauto.mg4 up to 2.0.0-beta24).
+        // versionCode stays above AllGo's (1) and the former relay (1008).
+        applicationId = "com.allgo.app.androidauto"
         minSdk = 28
         targetSdk = 36
-        versionCode = 57
-        versionName = "2.0.0-beta24"
+        versionCode = 2058
+        versionName = "2.1.0-beta1"
         setProperty("archivesBaseName", "${applicationId}_${versionName}")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true

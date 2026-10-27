@@ -1,0 +1,95 @@
+package com.allgo.app.androidauto;
+
+import android.app.Service;
+import android.content.Intent;
+import android.os.Binder;
+import android.os.IBinder;
+import android.os.Parcel;
+import android.util.Log;
+
+/**
+ * Answers com.allgo.rui as AllGo's Android Auto service would (IAndroidAutoMainService, read from
+ * rui's own proxy), with DiAuto's session as the connected phone. DiAuto is installed as an update of
+ * com.allgo.app.androidauto, so rui, the stock launcher and MG4 Dash find it under AllGo's name.
+ */
+public class AndroidAutoMainService extends Service {
+
+    private static final String DESCRIPTOR = "com.allgo.app.androidauto.IAndroidAutoMainService";
+
+    private final android.os.Handler handler = new android.os.Handler(android.os.Looper.getMainLooper());
+
+    private final Binder binder = new Binder() {
+        @Override
+        protected boolean onTransact(int code, Parcel data, Parcel reply, int flags) {
+            if (code == INTERFACE_TRANSACTION) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            data.enforceInterface(DESCRIPTOR);
+            Log.i(RelayState.TAG, "call " + code + " from uid " + Binder.getCallingPid());
+            switch (code) {
+                case 1: // register(deviceCb, sessionCb)
+                    RelayState.register(data.readStrongBinder(), data.readStrongBinder());
+                    reply.writeNoException();
+                    return true;
+                case 8: // unregister(deviceCb, sessionCb)
+                    RelayState.unregister(data.readStrongBinder(), data.readStrongBinder());
+                    reply.writeNoException();
+                    return true;
+                case 6: // getActiveDevice()
+                    reply.writeNoException();
+                    if (RelayState.isActive()) {
+                        reply.writeInt(1);
+                        RelayState.writeDevice(reply);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 7: // isSessionActive()
+                case 24: // getVRStatus()
+                    reply.writeNoException();
+                    reply.writeInt(code == 7 && RelayState.isActive() ? 1 : 0);
+                    return true;
+                case 2: // startSession(device, screenMode, audioMode)
+                case 3: // resumeSession(device)
+                    handler.postDelayed(RelayState::sessionRequested, 300);
+                    reply.writeNoException();
+                    reply.writeInt(0);
+                    return true;
+                case 25: { // sendMediaPlayControl(code)
+                    int key = data.readInt();
+                    handler.post(() -> DiAutoLink.mediaControl(AndroidAutoMainService.this, key));
+                    reply.writeNoException();
+                    reply.writeInt(0);
+                    return true;
+                }
+                case 12: // getPluginVersion()
+                    reply.writeNoException();
+                    reply.writeString("diauto-relay-1.0");
+                    return true;
+                case 9: case 19: case 20: case 21: case 22: case 23: // void calls
+                    reply.writeNoException();
+                    return true;
+                default: // every other call returns an int status: 0 = OK
+                    Log.i(RelayState.TAG, "rui call " + code + " answered OK");
+                    reply.writeNoException();
+                    reply.writeInt(0);
+                    return true;
+            }
+        }
+    };
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        RelayState.load(this);
+        RuiRepair.run(this);
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        Log.i(RelayState.TAG, "bound by " + intent);
+        RuiRepair.run(this);
+        return binder;
+    }
+}

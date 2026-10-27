@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.1.0-beta1
+
+- DiAuto is now installed in place of the car's own Android Auto (package com.allgo.app.androidauto, as an update of AllGo's app; the original stays on the system partition). The car's launcher shows the Android Auto tile as active and the media card with the song, artist and cover; MG4 Dash sees it as the car's Android Auto. The former separate relay is built in. At first start DiAuto takes over the settings of the old com.drivehub.diauto.mg4 and removes it. Settings > Go back to the car's Android Auto removes DiAuto and brings AllGo back.
+
 # DiAuto MG4+ 2.0.0-beta24
 
 - Experimental AllGo relay: DiAuto sends the phone's Bluetooth address (never an empty one, which made AllGo's rui crash at start) and tells the relay again at every track change, so a restarted relay recovers the session.

@@ -41,9 +41,8 @@ object OemAndroidAutoBlocker {
         var stopped = 0
         for (pkg in TARGET_PACKAGES) {
             if (!isInstalled(context, pkg)) continue
-            // The experimental relay stands in for AllGo Android Auto: stopping it would undo it.
-            if (pkg == com.andrerinas.openheadunit.aap.AllgoRelayNotifier.RELAY_PACKAGE &&
-                com.andrerinas.openheadunit.aap.AllgoRelayNotifier.relayInstalled(context)) continue
+            // DiAuto now carries AllGo's Android Auto package name: never stop itself.
+            if (pkg == context.packageName) continue
             if (forceStop(context, pkg)) {
                 stopped++
                 AppLog.i("OemAndroidAutoBlocker: force-stopped $pkg ($reason)")

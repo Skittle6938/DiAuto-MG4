@@ -94,6 +94,12 @@
         android:localeConfig="@xml/locales_config"
         tools:targetApi="33"
         tools:ignore="GoogleAppIndexingWarning">
+        <!-- DiAuto installed as an update of AllGo's Android Auto (com.allgo.app.androidauto): these are
+             the components the car, rui and MG4 Dash address by AllGo's exact names. -->
+        <service android:name="com.allgo.app.androidauto.AndroidAutoMainService" android:exported="true" />
+        <activity android:name="com.allgo.app.androidauto.ProjectionActivity" android:exported="true"
+            android:theme="@android:style/Theme.NoDisplay" android:excludeFromRecents="true" />
+
 
         <activity
             android:name=".aap.AapProjectionActivity"

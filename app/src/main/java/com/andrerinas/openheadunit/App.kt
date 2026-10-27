@@ -50,6 +50,8 @@ class App : Application() {
         // profile is still locked. Boot receivers are directBootAware; constructing Settings
         // here used to crash the whole process with IllegalStateException before unlock.
         if (isUserUnlocked()) {
+            // Before anything reads Settings: DiAuto used to be com.drivehub.diauto.mg4.
+            com.andrerinas.openheadunit.utils.AllgoPackage.importOldSettings(this)
             // A platform-signed car build already has the system identity it needs. Avoid
             // eagerly constructing the root/Shizuku stack before the first Activity on
             // vendor Android 9; ordinary phone builds retain the original behaviour.

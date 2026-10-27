@@ -2254,6 +2254,20 @@ class SettingsFragment : Fragment() {
             textResId = if (otaUpdateAvailable) R.string.btn_ota_download else R.string.btn_ota_check,
             onClick = { otaController?.checkOrDownload() }
         ))
+        items.add(SettingItem.ActionButton(
+            stableId = "restoreAllgo",
+            textResId = R.string.restore_allgo,
+            onClick = {
+                MaterialAlertDialogBuilder(requireContext(), R.style.DarkAlertDialog)
+                    .setTitle(R.string.restore_allgo)
+                    .setMessage(R.string.restore_allgo_message)
+                    .setPositiveButton(R.string.restore_allgo_confirm) { _, _ ->
+                        com.andrerinas.openheadunit.utils.AllgoPackage.restoreAllgo(requireContext())
+                    }
+                    .setNegativeButton(R.string.cancel, null)
+                    .show()
+            }
+        ))
 
         items.add(SettingItem.SettingEntry(
             stableId = "support",
