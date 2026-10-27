@@ -15,7 +15,8 @@ object LogFilesHelper {
     // One file per app start: the MG4 wakes the head unit several times an hour, so 10 files kept
     // only an hour or two and the log of a failed morning start was gone by lunchtime.
     const val DEFAULT_MAX_LOG_FILES = 80
-    const val DEFAULT_MAX_TOTAL_SIZE = 50L * 1024 * 1024 // 50 MB
+    // Betas log to Downloads by default; keep the folder small (files are cut at 5 MB, see AppLog).
+    const val DEFAULT_MAX_TOTAL_SIZE = 20L * 1024 * 1024 // 20 MB
 
     fun resolveLogDirectory(
         context: Context,

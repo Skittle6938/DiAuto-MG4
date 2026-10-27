@@ -940,7 +940,15 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
 
                 // Show one-time gesture hint
                 if (!settings.gestureHintShown) {
-                    Toast.makeText(this@AapProjectionActivity, R.string.gesture_hint, Toast.LENGTH_LONG).show()
+                    // A long toast lasts about 3.5 s, too short to read two gestures while driving:
+                    // show it three times in a row (about 10 s).
+                    repeat(GESTURE_HINT_REPEATS) { i ->
+                        window.decorView.postDelayed({
+                            if (!isFinishing) {
+                                Toast.makeText(this@AapProjectionActivity, R.string.gesture_hint, Toast.LENGTH_LONG).show()
+                            }
+                        }, i * GESTURE_HINT_TOAST_MS)
+                    }
                     settings.gestureHintShown = true
                 }
             }
@@ -1885,6 +1893,8 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
         const val EXTRA_FOCUS = "focus"
         /** Align with AapService USER_EXIT_COOLDOWN_MS so reconnect spam stays quiet for one settle window. */
         private const val WIFI_DISCONNECT_TOAST_COOLDOWN_MS = 15_000L
+        private const val GESTURE_HINT_REPEATS = 3
+        private const val GESTURE_HINT_TOAST_MS = 3_500L
         @Volatile var isForeground = false
 
         /**

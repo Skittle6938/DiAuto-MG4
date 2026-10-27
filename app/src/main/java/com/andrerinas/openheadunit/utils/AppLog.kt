@@ -38,8 +38,12 @@ object AppLog {
          * log lines is always better than stalling the thread that produces them, and the count is
          * reported so a capture never silently under-reports.
          */
-        class File(val file: IoFile) : Logger, Closeable {
-            private val writer = BufferedWriter(OutputStreamWriter(FileOutputStream(file, true), Charsets.UTF_8))
+        class File(initialFile: IoFile) : Logger, Closeable {
+            /** The file being written now; moves to a new one every [MAX_FILE_BYTES]. */
+            @Volatile var file: IoFile = initialFile
+                private set
+            private var writer = open(initialFile)
+            private var bytesInFile = initialFile.length()
             private val dateFormat = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US)
             private val queue = ArrayBlockingQueue<Any>(QUEUE_CAPACITY)
             private val dropped = AtomicInteger(0)
@@ -84,6 +88,8 @@ object AppLog {
                         try {
                             writer.write(line)
                             writer.newLine()
+                            bytesInFile += line.length + 1
+                            if (bytesInFile >= MAX_FILE_BYTES) rollOver()
                             val lost = dropped.getAndSet(0)
                             if (lost > 0) {
                                 writer.write("--- AppLog: $lost lines dropped, writer could not keep up ---")
@@ -104,6 +110,25 @@ object AppLog {
             }
 
             /**
+             * A head unit left on for hours writes one file for the whole run, and the total-size
+             * cap is only applied when a file is created: close this one at [MAX_FILE_BYTES], prune
+             * the folder, and carry on in a new file. Runs on the writer thread only.
+             */
+            private fun rollOver() {
+                try { writer.flush() } catch (_: IOException) {}
+                try { writer.close() } catch (_: IOException) {}
+                val dir = file.parentFile ?: return
+                LogFilesHelper.rotateLogs(dir)
+                val next = LogFilesHelper.createTimestampedLogFile(dir)
+                writer = open(next)
+                file = next
+                bytesInFile = 0
+            }
+
+            private fun open(target: IoFile) =
+                BufferedWriter(OutputStreamWriter(FileOutputStream(target, true), Charsets.UTF_8))
+
+            /**
              * Deliberately does not wait for the writer to finish. `close()` runs on the main thread
              * from [AppLog.init] every time the log settings change, and joining a thread that is
              * mid-flush to slow eMMC there is an ANR waiting to happen. The drain thread owns the
@@ -121,6 +146,9 @@ object AppLog {
 
             private companion object {
                 const val QUEUE_CAPACITY = 4096
+
+                /** One log file at most; the next lines go to a new file (see rollOver). */
+                const val MAX_FILE_BYTES = 5L * 1024 * 1024
 
                 /** End marker; a distinct type so it can never collide with a real line. */
                 val POISON = Any()
