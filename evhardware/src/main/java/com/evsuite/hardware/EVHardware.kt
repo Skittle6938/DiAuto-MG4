@@ -482,10 +482,18 @@ object EVHardware {
             ?.div(1_000f)
     }
 
+    /**
+     * Nominal pack capacity, when the firmware publishes it (SWI68 never does, SWI133 reads 0).
+     * It is an AOSP property, so area 0 is tried after the vendor area; AOSP gives Wh, some
+     * vehicles already publish kWh.
+     */
     fun getBatteryCapacityKwh(): Float? = supportedTelemetryRead {
-        getFloatPropertyCPM(PROP_INFO_EV_BATTERY_CAPACITY, AREA_GLOBAL)
+        val raw = (getFloatPropertyCPM(PROP_INFO_EV_BATTERY_CAPACITY, AREA_GLOBAL)
             ?.takeIf { it.isFinite() && it > 0f }
-            ?.div(1_000f)
+            ?: getFloatPropertyCPM(PROP_INFO_EV_BATTERY_CAPACITY, 0)
+                ?.takeIf { it.isFinite() && it > 0f })
+            ?: return@supportedTelemetryRead null
+        if (raw > 1_000f) raw / 1_000f else raw
     }
 
     /**

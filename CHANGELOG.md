@@ -1,3 +1,8 @@
+# DiAuto MG4+ 2.0.0-beta15
+
+- Battery for Google Maps is set by itself: the capacity is read from the car when its firmware publishes it, otherwise DiAuto takes the battery MG4 Dash knows (the one chosen in its settings, or the one nearest to its measurement), otherwise the 64 kWh battery (61.7 kWh usable). The state of health is MG4 Dash's estimate when MG4 Dash is installed and has measured the battery, otherwise 100 %. Both can still be forced by hand in Settings > Charging info, with an Automatic choice to go back.
+- Updates: an Updates button on the main screen shows the installed version and offers the newest release, betas only when "Also check beta releases" is on. The in-app update now downloads the APK itself, checks its SHA-256 and installs it with a PackageInstaller session flagged for internal storage, as MG4 Dash does (the previous session lacked the internal-storage flag the MG4 needs, and went through the public Downloads folder). DiAuto restarts by itself and comes back on screen.
+
 # DiAuto MG4+ 2.0.0-beta14
 
 - Experimental, SWI68/SWI131 only: before falling back to Headunit Server, DiAuto tries Native AA once more with the phone hands-free link released and the Android Auto RFCOMM server opened on its own, in case the head unit one-session cap is a shared pool rather than per server. If the channel is still refused it moves to Headunit Server as before. Other firmwares are unchanged.

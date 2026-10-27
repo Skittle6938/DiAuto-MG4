@@ -4,6 +4,7 @@ import android.Manifest
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,10 +19,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.andrerinas.openheadunit.App
+import com.andrerinas.openheadunit.BuildConfig
 import com.andrerinas.openheadunit.R
 import com.andrerinas.openheadunit.aap.AapProjectionActivity
 import com.andrerinas.openheadunit.aap.AapService
 import com.andrerinas.openheadunit.connection.CommManager
+import com.andrerinas.openheadunit.ota.OtaController
 import com.andrerinas.openheadunit.utils.BluetoothHelper
 import com.andrerinas.openheadunit.utils.Settings
 import com.google.android.material.button.MaterialButton
@@ -32,6 +35,7 @@ import kotlinx.coroutines.launch
 class HomeFragment : Fragment() {
     private val app get() = App.provide(requireContext())
     private var activeDialog: androidx.appcompat.app.AlertDialog? = null
+    private var ota: OtaController? = null
     private val bluetoothPermission = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
@@ -59,6 +63,12 @@ class HomeFragment : Fragment() {
         }
         // Going back to the car does not tear down a connection or disable reconnect.
         view.findViewById<View>(R.id.exit_button).setOnClickListener { requireActivity().moveTaskToBack(true) }
+        val updateButton = view.findViewById<MaterialButton>(R.id.update_button)
+        val updateHint = view.findViewById<TextView>(R.id.update_hint)
+        ota = OtaController(requireActivity()).also { controller ->
+            controller.setStateListener { status -> showUpdateState(updateButton, updateHint, status) }
+        }
+        updateButton.setOnClickListener { ota?.checkOrDownload() }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 app.commManager.connectionState.collect { state ->
@@ -198,15 +208,52 @@ class HomeFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Also after Settings, where the beta option may have changed.
+        ota?.checkOnStartup()
+    }
+
     override fun onPause() {
         activeDialog?.dismiss()
         activeDialog = null
         super.onPause()
     }
 
+    override fun onDestroyView() {
+        ota?.stop()
+        ota = null
+        super.onDestroyView()
+    }
+
     companion object {
         // Retained for existing automation entry points; self projection has no standby control.
         var forceSelfModeLaunch = false
         fun resetAutoStart() { forceSelfModeLaunch = false }
+    }
+}
+
+/** Update button: highlighted with the version to install when one is offered. */
+internal fun showUpdateState(button: MaterialButton, hint: TextView, status: OtaController.Status) {
+    val context = button.context
+    val available = status.state == OtaController.State.AVAILABLE
+    val accent = ContextCompat.getColor(context, R.color.da_accent)
+    val dark = ContextCompat.getColor(context, R.color.da_background)
+    button.text = if (available) context.getString(R.string.da_update_install, status.latestVersion)
+        else context.getString(R.string.da_update)
+    button.backgroundTintList = ColorStateList.valueOf(
+        if (available) accent else ContextCompat.getColor(context, R.color.da_surface))
+    button.setTextColor(if (available) dark else ContextCompat.getColor(context, R.color.da_text))
+    button.iconTint = ColorStateList.valueOf(if (available) dark else accent)
+    val version = BuildConfig.VERSION_NAME.removeSuffix("-debug").removeSuffix("-phone")
+    hint.text = when (status.state) {
+        OtaController.State.CHECKING -> context.getString(R.string.da_update_hint_checking)
+        OtaController.State.AVAILABLE -> context.getString(
+            if (status.prerelease) R.string.da_update_hint_available_beta else R.string.da_update_hint_available)
+        OtaController.State.UP_TO_DATE -> context.getString(
+            if (status.allowBeta) R.string.da_update_hint_up_to_date_beta else R.string.da_update_hint_up_to_date,
+            version)
+        OtaController.State.FAILED -> context.getString(R.string.da_update_hint_failed, version)
+        else -> context.getString(R.string.da_update_hint_current, version)
     }
 }

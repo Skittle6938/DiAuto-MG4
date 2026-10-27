@@ -26,6 +26,14 @@ final class OtaReleaseFetcher {
         try {
             JSONArray releases = new JSONArray(readUrl(GITHUB_RELEASES_URL, "application/vnd.github+json"));
             JSONObject release = selectGitHubRelease(releases, allowBetaUpdates);
+            if (release == null && !allowBetaUpdates && selectGitHubRelease(releases, true) != null) {
+                // Only betas are published: nothing to offer without the beta option.
+                return new OtaUpdateManager.UpdateInfo(
+                        true, false, BuildConfig.VERSION_NAME, BuildConfig.VERSION_NAME,
+                        null, null, null, null, null,
+                        context.getString(R.string.ota_status_no_stable), false
+                );
+            }
             if (release == null) {
                 return failure(context.getString(R.string.ota_error_no_release), allowBetaUpdates);
             }
@@ -95,7 +103,8 @@ final class OtaReleaseFetcher {
                 updateAvailable
                         ? context.getString(R.string.ota_status_update_available, latestVersion)
                         : context.getString(R.string.ota_status_up_to_date),
-                prerelease
+                prerelease,
+                apkAsset.size
         );
     }
 

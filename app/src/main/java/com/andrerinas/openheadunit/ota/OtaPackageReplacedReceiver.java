@@ -8,17 +8,32 @@ import android.util.Log;
 import androidx.core.content.ContextCompat;
 
 import com.andrerinas.openheadunit.aap.AapService;
+import com.andrerinas.openheadunit.main.MainActivity;
 
 /**
  * Uygulama OTA ile yenilendikten sonra İndirilenler’deki eski APK’ları siler.
  * The install kills the old process, so the service is restarted here; otherwise Android Auto
- * stays down until the next car start. No recompile from here: this process already runs the
- * new code, and a forced dexopt while it is mapped fails on the MG4 and deletes the odex the
- * install produced (the app then runs from the APK).
+ * stays down until the next car start. After an update started from DiAuto's screen, the
+ * screen comes back too. No recompile from here: this process already runs the new code, and a
+ * forced dexopt while it is mapped fails on the MG4 and deletes the odex the install produced
+ * (the app then runs from the APK).
  */
 public final class OtaPackageReplacedReceiver extends BroadcastReceiver {
 
     private static final String TAG = "DiAuto_OTA";
+    private static final String PREFS_NAME = "diauto_ota";
+    private static final String KEY_UPDATE_FROM_SCREEN = "updateFromScreenAt";
+    private static final long UPDATE_FROM_SCREEN_MS = 10 * 60_000L;
+
+    /** An update is being installed from the screen: show it again once installed. */
+    static void markUpdateFromScreen(Context context) {
+        context.getSharedPreferences(PREFS_NAME, 0).edit()
+                .putLong(KEY_UPDATE_FROM_SCREEN, System.currentTimeMillis()).commit();
+    }
+
+    static void clearUpdateFromScreen(Context context) {
+        context.getSharedPreferences(PREFS_NAME, 0).edit().remove(KEY_UPDATE_FROM_SCREEN).apply();
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -31,6 +46,17 @@ public final class OtaPackageReplacedReceiver extends BroadcastReceiver {
             Log.i(TAG, "AapService restarted after the update");
         } catch (Throwable t) {
             Log.w(TAG, "AapService restart failed: " + t.getMessage());
+        }
+        long at = context.getSharedPreferences(PREFS_NAME, 0).getLong(KEY_UPDATE_FROM_SCREEN, 0L);
+        clearUpdateFromScreen(context);
+        if (at > 0L && System.currentTimeMillis() - at < UPDATE_FROM_SCREEN_MS) {
+            try {
+                context.startActivity(new Intent(context, MainActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                Log.i(TAG, "screen reopened after the update");
+            } catch (Throwable t) {
+                Log.w(TAG, "screen reopen failed: " + t.getMessage());
+            }
         }
     }
 }

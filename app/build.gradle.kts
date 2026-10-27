@@ -70,8 +70,8 @@ android {
         applicationId = "com.drivehub.diauto.mg4"
         minSdk = 28
         targetSdk = 36
-        versionCode = 47
-        versionName = "2.0.0-beta14"
+        versionCode = 48
+        versionName = "2.0.0-beta15"
         setProperty("archivesBaseName", "${applicationId}_${versionName}")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
@@ -221,6 +221,11 @@ android {
     lint {
         abortOnError = false
         disable += "PackagedPrivateKey"
+    }
+
+    testOptions {
+        // ScreenshotTest renders the app's layouts.
+        unitTests.isIncludeAndroidResources = true
     }
 
     compileOptions {

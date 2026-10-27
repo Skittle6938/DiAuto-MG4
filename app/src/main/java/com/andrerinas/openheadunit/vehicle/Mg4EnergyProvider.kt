@@ -16,7 +16,8 @@ import kotlin.math.roundToInt
  * Read-only MG4 bridge for Android Auto VehicleEnergyModel.
  *
  * SoC/range come only from [EVHardware.getBatterySocPercent] /
- * [EVHardware.getRemainingRangeKm] (Saic + CPM in one place). Pack Wh from user net × SOH.
+ * [EVHardware.getRemainingRangeKm] (Saic + CPM in one place). Pack Wh from net × SOH
+ * ([BatteryCapacityResolver]).
  */
 object Mg4EnergyProvider {
     private const val TAG = "DiAuto-MG4"
@@ -205,8 +206,8 @@ object Mg4EnergyProvider {
     }
 
     /**
-     * Capacity Wh always comes from user net × SOH (MG4 HAL capacity is usually empty).
-     * Live Wh from the car is ignored so Maps SoC stays consistent with the declared pack.
+     * Capacity Wh is net × SOH from [BatteryCapacityResolver] (car, MG4 Dash, default or the
+     * driver's values). Live Wh from the car is ignored so Maps SoC stays consistent with it.
      */
     private fun publishFromPercent(
         settings: Settings,
@@ -214,7 +215,8 @@ object Mg4EnergyProvider {
         rangeKm: Int,
         demo: Boolean,
     ) {
-        val capacityKwh = settings.batteryEffectiveNetCapacityKwh.toDouble().coerceIn(1.0, 200.0)
+        val capacityKwh = (app?.let { BatteryCapacityResolver.current(it).effectiveKwh }
+            ?: settings.batteryEffectiveNetCapacityKwh).toDouble().coerceIn(1.0, 200.0)
         val fraction = (percent / 100.0).coerceIn(0.01, 1.0)
         publish(
             capacityWh = (capacityKwh * 1000).roundToInt().coerceAtLeast(1),

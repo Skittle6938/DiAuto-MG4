@@ -259,6 +259,19 @@
     <string name="battery_effective_capacity">Capacité utilisable effective</string>
     <string name="battery_value_kwh">%1$.1f kWh</string>
     <string name="battery_effective_capacity_value">%1$.1f kWh (= net × SOH)</string>
+    <string name="battery_value_percent">%1$s %%</string>
+    <string name="battery_auto">Automatique</string>
+    <string name="battery_auto_value">%1$s · automatique (%2$s)</string>
+    <string name="battery_manual_value">%1$s · réglée à la main</string>
+    <string name="battery_soh_manual_value">%1$s · réglé à la main</string>
+    <string name="battery_auto_option">Automatique (%1$s, %2$s)</string>
+    <string name="battery_pack_option">Batterie %1$d kWh (%2$.1f kWh utiles)</string>
+    <string name="battery_source_car">lue sur la voiture</string>
+    <string name="battery_source_mg4dash_pack">batterie %1$d kWh d’après MG4 Dash</string>
+    <string name="battery_source_default_pack">batterie %1$d kWh par défaut</string>
+    <string name="battery_soh_source_mg4dash">estimé par MG4 Dash</string>
+    <string name="battery_soh_source_default">par défaut</string>
+    <string name="battery_soh_auto_description" formatted="false">Automatique : estimation de MG4 Dash s’il est installé et a déjà mesuré la batterie, sinon 100 %.</string>
     <string name="battery_value_km">%1$d km</string>
     <string name="battery_live_energy_value">%1$.1f / %2$.1f kWh</string>
     <string name="battery_demo_mode">Valeurs batterie démo</string>
@@ -613,6 +626,12 @@
     <string name="ota_install_failed_status">Échec de l’installation : %1$s</string>
     <string name="ota_toast_checking">Recherche de mises à jour…</string>
     <string name="ota_status_label">État de la mise à jour</string>
+    <string name="ota_status_no_stable">Pas de version officielle plus récente</string>
+    <string name="ota_dialog_no_stable_message">Pas encore de version officielle plus récente que la %1$s. Les bêtas sont proposées si « Vérifier aussi les versions bêta » est activé dans les Paramètres.</string>
+    <string name="ota_dialog_up_to_date_version">DiAuto %1$s est la dernière version.</string>
+    <string name="ota_dialog_install_message">DiAuto %1$s va être téléchargé (%2$s) puis installé. Sans Wi‑Fi, les données mobiles de la voiture sont utilisées. DiAuto redémarre ensuite et Android Auto se coupe quelques secondes.</string>
+    <string name="ota_progress_installing">Installation… DiAuto redémarre tout seul.</string>
+    <string name="ota_progress_busy">Une mise à jour est déjà en cours de téléchargement ou d’installation.</string>
     <string name="about_title">À propos d’Open Headunit</string>
     <string name="copyright">© 2025-%d André Rinas</string>
 

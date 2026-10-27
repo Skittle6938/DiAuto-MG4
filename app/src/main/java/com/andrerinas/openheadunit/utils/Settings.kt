@@ -546,6 +546,26 @@ class Settings(private val context: Context) {
             prefs.edit().putFloat("battery-state-of-health-percent", value.coerceIn(1f, 100f)).apply()
         }
 
+    /**
+     * [batteryNetCapacityKwh] was set by hand. Otherwise BatteryCapacityResolver finds the
+     * capacity. Values saved before this option are kept when they differ from the old default.
+     */
+    var batteryCapacityManual: Boolean
+        get() = prefs.getBoolean(
+            "battery-capacity-manual",
+            listOf("battery-net-capacity-kwh", "battery-demo-capacity-kwh-f", "battery-demo-capacity-kwh")
+                .any(prefs::contains) && kotlin.math.abs(batteryNetCapacityKwh - 61.7f) > 0.05f,
+        )
+        set(value) { prefs.edit().putBoolean("battery-capacity-manual", value).apply() }
+
+    /** [batteryStateOfHealthPercent] was set by hand. Otherwise MG4 Dash's estimate, or 100 %. */
+    var batterySohManual: Boolean
+        get() = prefs.getBoolean(
+            "battery-soh-manual",
+            prefs.contains("battery-state-of-health-percent") && batteryStateOfHealthPercent < 99.95f,
+        )
+        set(value) { prefs.edit().putBoolean("battery-soh-manual", value).apply() }
+
     /** Net × SOH — capacity Wh sent to VehicleEnergyModel. */
     val batteryEffectiveNetCapacityKwh: Float
         get() = (batteryNetCapacityKwh * batteryStateOfHealthPercent / 100f).coerceIn(1f, 200f)
