@@ -16,9 +16,13 @@ object AllgoMediaKeys {
     @Volatile
     private var lastPlayPauseMs = 0L
 
+    @Volatile
+    private var lastSkipMs = 0L
+
     /** Returns false for a code that is not one of these. */
     @JvmStatic
     fun fromRui(context: Context, code: Int): Boolean {
+        if (code == 3 || code == 4 || code in 7..8 || code in 11..12) lastSkipMs = SystemClock.elapsedRealtime()
         val (key, down) = when (code) {
             7 -> KeyEvent.KEYCODE_MEDIA_NEXT to true
             11 -> KeyEvent.KEYCODE_MEDIA_NEXT to false
@@ -41,4 +45,12 @@ object AllgoMediaKeys {
      */
     fun playPauseCameThroughRui(withinMs: Long = 1500L): Boolean =
         SystemClock.elapsedRealtime() - lastPlayPauseMs < withinMs
+
+    /**
+     * The stock launcher does nothing with the wheel's left/right keys for Android Auto: AllGo reads
+     * them itself, and so does DiAuto. A launcher that also sends them as AllGo's next/previous gets
+     * one skip, not two.
+     */
+    fun skipCameThroughRui(withinMs: Long = 1500L): Boolean =
+        SystemClock.elapsedRealtime() - lastSkipMs < withinMs
 }

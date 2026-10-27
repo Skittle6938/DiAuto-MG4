@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.1.0-beta6
+
+- Steering wheel next/previous with the stock launcher: the launcher leaves the wheel's left/right keys to AllGo when Android Auto is the source, and AllGo reads them itself. DiAuto now does the same (on release, only while Android Auto is the car's source). If a launcher also sends them as AllGo's next/previous, the skip happens once.
+
 # DiAuto MG4+ 2.1.0-beta5
 
 - Stock launcher: the media card no longer stays on "Unknown" without a cover after a car start or an Android Auto reconnect. DiAuto tells rui again that the session is up at each track change (at most every 30 s).

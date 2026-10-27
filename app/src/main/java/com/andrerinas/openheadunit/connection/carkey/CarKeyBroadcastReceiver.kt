@@ -13,6 +13,7 @@ import com.andrerinas.openheadunit.App
 import com.andrerinas.openheadunit.aap.AllgoMediaKeys
 import com.andrerinas.openheadunit.utils.AppLog
 import com.evsuite.hardware.PhysicalButtonEventDecoder
+import com.evsuite.hardware.saic.SaicCarAudioSource
 
 /**
  * A comprehensive receiver for steering wheel and hardware buttons,
@@ -31,6 +32,16 @@ class CarKeyBroadcastReceiver : BroadcastReceiver(), CarKeyReceiver {
         /** Steering-wheel voice key (stock AllGo KEYCODE_VOICE). */
         private const val SAIC_KEYCODE_VOICE = 287
         private const val PLAY_PAUSE_RUI_WAIT_MS = 400L
+        /** Steering wheel left (previous) and right (next), AllGo's KEYCODE_SWC_LEFT/RIGHT. */
+        private const val SAIC_KEYCODE_LEFT = 299
+        private const val SAIC_KEYCODE_RIGHT = 300
+
+        private fun androidAutoIsSource(context: Context): Boolean {
+            val am = SaicCarAudioSource.audioManager(context) ?: return false
+            val current = SaicCarAudioSource.readCurrentSourceType(am)
+            return if (current != null) current == SaicCarAudioSource.SRC_ANDROID_AUTO
+            else SaicCarAudioSource.isAndroidAuto(context)
+        }
 
         val ACTIONS = arrayOf(
             "android.intent.action.MEDIA_BUTTON",
@@ -204,6 +215,23 @@ class CarKeyBroadcastReceiver : BroadcastReceiver(), CarKeyReceiver {
                         AppLog.i("CarKeyReceiver: play/pause already sent through rui")
                     } else {
                         handleClick(app, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE)
+                    }
+                }, PLAY_PAUSE_RUI_WAIT_MS)
+            }
+            return
+        }
+
+        // Wheel left/right: as AllGo, skip on release while Android Auto is the car's source (the
+        // stock launcher leaves them to AllGo).
+        if (keyCode == SAIC_KEYCODE_LEFT || keyCode == SAIC_KEYCODE_RIGHT) {
+            if (!isDown && androidAutoIsSource(context)) {
+                val key = if (keyCode == SAIC_KEYCODE_RIGHT) KeyEvent.KEYCODE_MEDIA_NEXT else KeyEvent.KEYCODE_MEDIA_PREVIOUS
+                val app = context.applicationContext
+                Handler(Looper.getMainLooper()).postDelayed({
+                    if (AllgoMediaKeys.skipCameThroughRui()) {
+                        AppLog.i("CarKeyReceiver: wheel skip already sent through rui")
+                    } else {
+                        handleClick(app, key)
                     }
                 }, PLAY_PAUSE_RUI_WAIT_MS)
             }
