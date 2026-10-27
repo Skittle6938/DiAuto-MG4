@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.0.0-beta12
+
+- Head units whose Bluetooth refuses the Native AA channel (SWI68, SWI131: the nFore library caps app RFCOMM servers at one session and drops every incoming connection) are moved to Headunit Server mode automatically, once, with a notification saying what to do on the phone. Firmwares known to work (SWI69, SWI132, SWI133) are never switched; on a firmware nobody has checked, the switch only happens after the Native AA Bluetooth server has failed twice in a row with no connection.
+
 # DiAuto MG4+ 2.0.0-beta11
 
 - Faster reconnection when you come back to the car: the watchdog now pokes the phone every 30 s instead of 60 s, and when the phone answers its poke, the Bluetooth auto-start no longer pokes a second time on top of it (two pokes at once kept the phone's Android Auto channel out for two minutes). No watchdog poke for 3 minutes after the phone has just reconnected over Bluetooth.

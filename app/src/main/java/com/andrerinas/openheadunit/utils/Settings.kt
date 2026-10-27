@@ -836,6 +836,16 @@ class Settings(private val context: Context) {
         get() = prefs.getBoolean("auto-start-on-boot", true)
         set(value) { prefs.edit().putBoolean("auto-start-on-boot", value).apply() }
 
+    /** Set once DiAuto has moved this unit to Headunit Server mode (see HeadunitServerPolicy); never again after that. */
+    var autoHeadunitServerApplied: Boolean
+        get() = prefs.getBoolean("auto-headunit-server-applied", false)
+        set(value) { prefs.edit().putBoolean("auto-headunit-server-applied", value).apply() }
+
+    /** Native AA RFCOMM servers in a row that died without accepting a connection. */
+    var nativeAaServerFailures: Int
+        get() = prefs.getInt("native-aa-server-failures", 0)
+        set(value) { prefs.edit().putInt("native-aa-server-failures", value).apply() }
+
     /** Open the app's own screen at car start (off: connect in the background, show the projection once connected). */
     var showAppOnCarStart: Boolean
         get() = prefs.getBoolean("show-app-on-car-start", false)

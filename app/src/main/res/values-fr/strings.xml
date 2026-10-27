@@ -1,5 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="fr">
     <string name="app_name">DiAuto MG4+</string>
+    <string name="headunit_server_auto_title">Android Auto sans fil : mode Headunit Server</string>
+    <string name="headunit_server_auto_text">Cet autoradio refuse le canal Bluetooth par lequel démarre Android Auto sans fil, DiAuto est donc passé en mode Headunit Server. Sur le téléphone : ouvrez les réglages Android Auto, touchez 10 fois la version, puis dans le menu ⋮ choisissez « Start head unit server » (ou son équivalent traduit), et connectez-vous au hotspot de la voiture.</string>
     <string name="about_fork_notice">Fork communautaire de DiAuto-MG4, maintenu séparément pour la MG4.\ngithub.com/Skittle6938/DiAuto-MG4</string>
     <string name="menu">Menu</string>
     <string name="settings">Paramètres</string>

@@ -833,6 +833,11 @@ class AapService : Service(), UsbReceiver.Listener {
 
         // Decided here as well as inside initWifiMode() so a paused start skips the wait-for-WiFi
         // machinery entirely rather than setting it up and being turned away at the end of it.
+        val firmware = com.evsuite.hardware.FirmwareInfo.getDetectedString()
+        if (HeadunitServerPolicy.shouldSwitchAtStart(
+                firmware, settings.wifiConnectionMode, settings.autoHeadunitServerApplied)) {
+            switchToHeadunitServer("firmware $firmware refuses the Native AA Bluetooth channel")
+        }
         if (applyBootLoopGuard()) {
             AppLog.w("AapService: Wireless bring-up paused by the boot-loop guard. USB and the rest of the app are unaffected.")
         } else {
@@ -3515,6 +3520,59 @@ class AapService : Service(), UsbReceiver.Listener {
      * See [BootLoopPolicy]. The decision is taken from the strike count the receiver has already
      * written, so it needs nothing from the start intent and can run here in onCreate.
      */
+    /** The phone opened the Native AA Bluetooth channel: this head unit accepts it. */
+    fun onNativeAaServerAccepted() {
+        val settings = App.provide(this).settings
+        if (settings.nativeAaServerFailures != 0) settings.nativeAaServerFailures = 0
+    }
+
+    /**
+     * The Native AA Bluetooth server died without a connection, as on head units whose Bluetooth
+     * library refuses app RFCOMM connections (see [HeadunitServerPolicy]). Counted across starts;
+     * on a firmware nobody has checked, a second one in a row moves the unit to Headunit Server.
+     */
+    fun onNativeAaServerFailed() {
+        val settings = App.provide(this).settings
+        val failures = settings.nativeAaServerFailures + 1
+        settings.nativeAaServerFailures = failures
+        val firmware = com.evsuite.hardware.FirmwareInfo.getDetectedString()
+        AppLog.w("AapService: Native AA Bluetooth server failed ($failures in a row, firmware $firmware)")
+        if (HeadunitServerPolicy.shouldSwitchAfterFailures(
+                firmware, settings.wifiConnectionMode, settings.autoHeadunitServerApplied, failures)) {
+            serviceScope.launch {
+                switchToHeadunitServer("the Native AA Bluetooth channel failed $failures times in a row on $firmware")
+                initWifiMode(force = true)
+            }
+        }
+    }
+
+    /**
+     * Moves wireless Android Auto to Headunit Server mode, once per install: if the user picks
+     * Native AA again afterwards, that choice is kept. The phone side still needs Android Auto's
+     * "Start head unit server" (developer settings); a notification says how.
+     */
+    private fun switchToHeadunitServer(reason: String) {
+        val settings = App.provide(this).settings
+        AppLog.i("AapService: switching wireless mode to Headunit Server — $reason")
+        settings.wifiConnectionMode = HeadunitServerPolicy.MODE_HEADUNIT_SERVER
+        settings.autoHeadunitServerApplied = true
+        settings.nativeAaServerFailures = 0
+        try {
+            val nm = getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+            val notification = androidx.core.app.NotificationCompat.Builder(this, App.bootStartChannel)
+                .setSmallIcon(R.drawable.ic_stat_aa)
+                .setContentTitle(getString(R.string.headunit_server_auto_title))
+                .setContentText(getString(R.string.headunit_server_auto_text))
+                .setStyle(androidx.core.app.NotificationCompat.BigTextStyle()
+                    .bigText(getString(R.string.headunit_server_auto_text)))
+                .setAutoCancel(true)
+                .build()
+            nm.notify(HEADUNIT_SERVER_NOTIFICATION_ID, notification)
+        } catch (e: Exception) {
+            AppLog.w("AapService: Headunit Server notice failed: ${e.message}")
+        }
+    }
+
     private fun applyBootLoopGuard(): Boolean {
         // MG4: the guard was written for an MT8163 unit whose Wi-Fi stack crashed the system. On the
         // MG4 a short drive, an install or a head-unit restart are ordinary boots under 30 s, and
@@ -4202,6 +4260,7 @@ class AapService : Service(), UsbReceiver.Listener {
 
         private const val BOOT_START_NOTIFICATION_ID = 42
         private const val BOOT_LOOP_NOTIFICATION_ID = 43
+        private const val HEADUNIT_SERVER_NOTIFICATION_ID = 44
         private const val PROJECTION_LAUNCH_NOTIFICATION_ID = 43
 
         // Service action strings used with startService() and sendBroadcast()

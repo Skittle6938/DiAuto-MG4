@@ -350,6 +350,7 @@ class NativeAaHandshakeManager(
                     val socket = aaServerSocket?.accept()
                     if (socket != null) {
                         AppLog.i("NativeAA: Connection accepted from ${socket.remoteDevice.name} (${socket.remoteDevice.address}) on local radio [$localRadioName]")
+                        context.onNativeAaServerAccepted()
                         if (refuseWhileBackedOff(socket)) continue
                         // [FIX] Launch handshake in a separate coroutine so the server can accept the next connection!
                         scope.launch(Dispatchers.IO + CoroutineName("NativeAa-Handshake-${socket.remoteDevice.address}")) {
@@ -362,6 +363,7 @@ class NativeAaHandshakeManager(
                     AppLog.d("NativeAA: AA Server socket closed after successful handoff.")
                 } else if (isRunning) {
                     AppLog.e("NativeAA: AA Server socket error: ${e.message}", e)
+                    context.onNativeAaServerFailed()
                 } else {
                     AppLog.d("NativeAA: AA Server socket closed cleanly.")
                 }

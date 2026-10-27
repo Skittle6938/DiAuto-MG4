@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">DiAuto MG4+</string>
+    <string name="headunit_server_auto_title">Wireless Android Auto: Headunit Server mode</string>
+    <string name="headunit_server_auto_text">This head unit refuses the Bluetooth channel wireless Android Auto starts with, so DiAuto switched to Headunit Server mode. On the phone: open Android Auto settings, tap the version 10 times, then in the ⋮ menu choose \"Start head unit server\", and join the car hotspot.</string>
     <string name="about_fork_notice">Community fork of DiAuto-MG4, maintained separately for the MG4.\ngithub.com/Skittle6938/DiAuto-MG4</string>
     <string name="menu">Menu</string>
     <string name="settings">Settings</string>
