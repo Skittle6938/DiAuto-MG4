@@ -31,7 +31,20 @@ object AllgoRelayNotifier {
 
     fun sessionStarted(context: Context, phoneName: String?, fallbackMac: String?) {
         RelayState.load(context)
-        RelayState.update(true, phoneName, sessionPhoneAddress ?: connectedPhone(context) ?: fallbackMac)
+        RelayState.update(
+            true, phoneName,
+            sessionPhoneAddress ?: connectedPhone(context) ?: bondedNamed(context, phoneName) ?: fallbackMac,
+        )
+    }
+
+    /** The paired phone with the session's name (its link may be down: the car cut it). */
+    @SuppressLint("MissingPermission")
+    private fun bondedNamed(context: Context, phoneName: String?): String? = try {
+        if (phoneName.isNullOrBlank()) null
+        else BluetoothHelper.getBluetoothAdapter(context)?.bondedDevices
+            ?.singleOrNull { it.name == phoneName }?.address
+    } catch (e: Exception) {
+        null
     }
 
     fun sessionEnded(context: Context) {

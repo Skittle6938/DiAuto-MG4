@@ -1,3 +1,8 @@
+# DiAuto MG4+ 2.1.0-beta5
+
+- Stock launcher: the media card no longer stays on "Unknown" without a cover after a car start or an Android Auto reconnect. DiAuto tells rui again that the session is up at each track change (at most every 30 s).
+- Bluetooth: DiAuto now gives rui the phone's address the way AllGo does (Android Auto Bluetooth pairing request). rui stores it and passes it to the car, whose Settings then keep that phone's hands-free link. 2.1.0-beta2 sent it in a field rui ignores for USB devices, so the link was still being cut.
+
 # DiAuto MG4+ 2.1.0-beta3
 
 - Steering wheel next/previous now reach Android Auto the way they reached AllGo: the car's launcher sends them through rui as press/release codes (next 7/11, previous 8/12, play/pause 20/21), which DiAuto now passes to the phone as key presses. MG4 Dash needs no DiAuto-specific code. When the wheel play/pause also came through rui, DiAuto's own reading of that key is skipped, so it toggles once.

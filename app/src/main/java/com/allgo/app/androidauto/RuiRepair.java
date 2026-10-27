@@ -51,7 +51,18 @@ final class RuiRepair {
     }
 
     /** A valid address for the device rui will store: DiAuto's, else a fixed local one. */
+    private static final String FALLBACK_MAC = "02:00:00:D1:A0:70";
+
     static String validMac(String mac) {
-        return mac != null && BluetoothAdapter.checkBluetoothAddress(mac) ? mac : "02:00:00:D1:A0:70";
+        return isValidMac(mac) ? mac : FALLBACK_MAC;
+    }
+
+    static boolean isValidMac(String mac) {
+        return mac != null && BluetoothAdapter.checkBluetoothAddress(mac.toUpperCase());
+    }
+
+    /** A real phone's MAC, not the stand-in used until one is known. */
+    static boolean isPhoneMac(String mac) {
+        return isValidMac(mac) && !FALLBACK_MAC.equalsIgnoreCase(mac);
     }
 }
