@@ -339,6 +339,17 @@ class NativeAaHandshakeManager(
         // placeholder "02:00:00:00:00:00" for any non-privileged app since Android 6.0 (API 23),
         // but getName() returns the real radio name (confirmed on-device: e.g. "Navegadortz2").
         localRadioName = try { adapter.name ?: "?" } catch (e: Exception) { "?" }
+
+        // SWI68/SWI131 experiment: open only the Android Auto server (no HFP server) and free the
+        // phone's hands-free link first, so if the head unit's one-session RFCOMM cap is a shared
+        // pool rather than per server, the Android Auto channel has a free port. AapService falls
+        // back to Headunit Server if it is still refused.
+        val freedExperiment = context.isLimitedFirmwareExperiment()
+        if (freedExperiment) {
+            AppLog.i("NativeAA: capped-firmware experiment — releasing the phone hands-free link and opening the AA server alone")
+            try { BluetoothHelper.releaseCarHandsFreeLink(context, settings.bluetoothAddress) }
+            catch (e: Exception) { AppLog.w("NativeAA: hands-free release failed: ${e.message}") }
+        }
         AppLog.i("NativeAA: Starting Bluetooth Handshake Servers (primary radio [$localRadioName])...")
 
         // Start AA RFCOMM Server
@@ -370,8 +381,9 @@ class NativeAaHandshakeManager(
             }
         }
 
-        // Start HFP RFCOMM Server (Required by some phones to detect HU)
-        scope.launch(Dispatchers.IO + CoroutineName("NativeAa-HfpServer")) {
+        // Start HFP RFCOMM Server (Required by some phones to detect HU). Skipped during the
+        // capped-firmware experiment so the Android Auto server is the only app RFCOMM server open.
+        if (!freedExperiment) scope.launch(Dispatchers.IO + CoroutineName("NativeAa-HfpServer")) {
             try {
                 hfpServerSocket = adapter.listenUsingRfcommWithServiceRecord("Hands-Free Unit", HFP_UUID)
                 while (isRunning && isActive) {

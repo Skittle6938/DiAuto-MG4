@@ -35,9 +35,27 @@ object HeadunitServerPolicy {
         }
     }
 
-    /** Switch at service start: Native AA selected on a firmware known to refuse it. */
-    fun shouldSwitchAtStart(firmware: String?, wifiMode: Int, alreadySwitched: Boolean): Boolean =
-        wifiMode == MODE_NATIVE_AA && !alreadySwitched && classify(firmware) == Firmware.LIMITED
+    /**
+     * One experiment, on the limited firmwares only, before giving up on Native AA: open an
+     * Android-Auto-only RFCOMM server and free the phone's hands-free link first, in case the
+     * one-session cap is a shared pool rather than per server. Tried once; if the channel is still
+     * refused, [shouldSwitchAtStart] then moves to Headunit Server. Pure flag, Marc's 2026-10-27 test.
+     */
+    fun shouldTryFreedNativeAa(firmware: String?, wifiMode: Int, experimentTried: Boolean): Boolean =
+        wifiMode == MODE_NATIVE_AA && !experimentTried && classify(firmware) == Firmware.LIMITED
+
+    /**
+     * Switch at service start: Native AA selected on a firmware known to refuse it, once the
+     * freed-Native-AA experiment has been tried and failed (so it gets its one chance first).
+     */
+    fun shouldSwitchAtStart(
+        firmware: String?,
+        wifiMode: Int,
+        alreadySwitched: Boolean,
+        experimentTried: Boolean,
+    ): Boolean =
+        wifiMode == MODE_NATIVE_AA && !alreadySwitched && experimentTried &&
+            classify(firmware) == Firmware.LIMITED
 
     /** Switch after repeated failures, only on firmwares nobody has checked. */
     fun shouldSwitchAfterFailures(

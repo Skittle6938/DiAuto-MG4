@@ -834,8 +834,12 @@ class AapService : Service(), UsbReceiver.Listener {
         // Decided here as well as inside initWifiMode() so a paused start skips the wait-for-WiFi
         // machinery entirely rather than setting it up and being turned away at the end of it.
         val firmware = com.evsuite.hardware.FirmwareInfo.getDetectedString()
-        if (HeadunitServerPolicy.shouldSwitchAtStart(
-                firmware, settings.wifiConnectionMode, settings.autoHeadunitServerApplied)) {
+        if (HeadunitServerPolicy.shouldTryFreedNativeAa(
+                firmware, settings.wifiConnectionMode, settings.limitedFwExperimentTried)) {
+            AppLog.i("AapService: firmware $firmware caps app RFCOMM to one session — trying freed Native AA once (phone hands-free released, AA-only server) before Headunit Server")
+        } else if (HeadunitServerPolicy.shouldSwitchAtStart(
+                firmware, settings.wifiConnectionMode, settings.autoHeadunitServerApplied,
+                settings.limitedFwExperimentTried)) {
             switchToHeadunitServer("firmware $firmware refuses the Native AA Bluetooth channel")
         }
         if (applyBootLoopGuard()) {
@@ -3520,10 +3524,28 @@ class AapService : Service(), UsbReceiver.Listener {
      * See [BootLoopPolicy]. The decision is taken from the strike count the receiver has already
      * written, so it needs nothing from the start intent and can run here in onCreate.
      */
+    /**
+     * True while the SWI68/SWI131 experiment runs: the Native AA server opens alone (no HFP server)
+     * and the phone's hands-free link is freed first, testing whether the one-session RFCOMM cap is
+     * a shared pool. [NativeAaHandshakeManager] reads this when it starts its listeners.
+     */
+    fun isLimitedFirmwareExperiment(): Boolean {
+        val settings = App.provide(this).settings
+        return HeadunitServerPolicy.shouldTryFreedNativeAa(
+            com.evsuite.hardware.FirmwareInfo.getDetectedString(),
+            settings.wifiConnectionMode, settings.limitedFwExperimentTried)
+    }
+
     /** The phone opened the Native AA Bluetooth channel: this head unit accepts it. */
     fun onNativeAaServerAccepted() {
         val settings = App.provide(this).settings
         if (settings.nativeAaServerFailures != 0) settings.nativeAaServerFailures = 0
+        if (isLimitedFirmwareExperiment()) {
+            // The freed-Native-AA experiment worked on a firmware we expected to refuse it: keep
+            // Native AA, and never auto-switch to Headunit Server here again.
+            AppLog.i("AapService: freed Native AA was ACCEPTED on a capped firmware — the hands-free release worked; staying on Native AA")
+            settings.limitedFwExperimentTried = true
+        }
     }
 
     /**
@@ -3537,6 +3559,17 @@ class AapService : Service(), UsbReceiver.Listener {
         settings.nativeAaServerFailures = failures
         val firmware = com.evsuite.hardware.FirmwareInfo.getDetectedString()
         AppLog.w("AapService: Native AA Bluetooth server failed ($failures in a row, firmware $firmware)")
+        // The capped-firmware experiment got its one chance and the channel was still refused:
+        // mark it done and move to Headunit Server (the firmware analysis predicted this).
+        if (isLimitedFirmwareExperiment()) {
+            AppLog.i("AapService: freed Native AA was refused too — the cap is per server, not a shared pool; moving to Headunit Server")
+            settings.limitedFwExperimentTried = true
+            serviceScope.launch {
+                switchToHeadunitServer("the freed Native AA attempt was also refused on $firmware")
+                initWifiMode(force = true)
+            }
+            return
+        }
         if (HeadunitServerPolicy.shouldSwitchAfterFailures(
                 firmware, settings.wifiConnectionMode, settings.autoHeadunitServerApplied, failures)) {
             serviceScope.launch {

@@ -841,6 +841,11 @@ class Settings(private val context: Context) {
         get() = prefs.getBoolean("auto-headunit-server-applied", false)
         set(value) { prefs.edit().putBoolean("auto-headunit-server-applied", value).apply() }
 
+    /** Set once the SWI68/SWI131 freed-Native-AA experiment has been tried (whatever its outcome). */
+    var limitedFwExperimentTried: Boolean
+        get() = prefs.getBoolean("limited-fw-experiment-tried", false)
+        set(value) { prefs.edit().putBoolean("limited-fw-experiment-tried", value).apply() }
+
     /** Native AA RFCOMM servers in a row that died without accepting a connection. */
     var nativeAaServerFailures: Int
         get() = prefs.getInt("native-aa-server-failures", 0)

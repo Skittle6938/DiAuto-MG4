@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.0.0-beta14
+
+- Experimental, SWI68/SWI131 only: before falling back to Headunit Server, DiAuto tries Native AA once more with the phone hands-free link released and the Android Auto RFCOMM server opened on its own, in case the head unit one-session cap is a shared pool rather than per server. If the channel is still refused it moves to Headunit Server as before. Other firmwares are unchanged.
+
 # DiAuto MG4+ 2.0.0-beta13
 
 - Beta diagnostic logs (Downloads/OpenHeadunitLogs) are kept smaller: the last 40 app starts instead of 80, 20 MB for the whole folder instead of 50 MB, and a log file is cut at 5 MB (a head unit left on for hours used to write a single ever-growing file). Setting the log level to Silent in the settings turns them off. Release builds will have them off by default.
