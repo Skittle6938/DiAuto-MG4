@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.0.0-beta18
+
+- Prompts are heard when the phone does not ask for audio focus first (it does not always): the prompt then asks by itself, as navigation guidance like the phone's request, never as a voice call, so the radio dips and comes back.
+
 # DiAuto MG4+ 2.0.0-beta17
 
 - The radio comes back after a navigation prompt: DiAuto asked for audio focus twice per prompt, once as the phone asked (navigation guidance, which the MG4 mixes over the radio) and once more as a voice call when the prompt audio started. The second request made the SAIC radio drop its focus and stay silent until the next key press. Prompts and the assistant now only use the phone's own request.

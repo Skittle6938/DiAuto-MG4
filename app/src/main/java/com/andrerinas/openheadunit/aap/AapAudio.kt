@@ -399,8 +399,10 @@ internal class AapAudio(
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val attrs = if (speech) {
+                // Guidance, not voice call: the MG4 mixes it over the radio, which a voice-call
+                // request silenced until the next key press (2026-10-27).
                 val usage = if (channel == Channel.ID_AU1) {
-                    AudioAttributes.USAGE_VOICE_COMMUNICATION
+                    AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE
                 } else {
                     AudioAttributes.USAGE_NOTIFICATION
                 }
@@ -607,10 +609,13 @@ internal class AapAudio(
 
     private fun onAudioPlaybackStarted(channel: Int) {
         if (staticAudioFocus || !enableAudioSink || !Channel.isAudio(channel)) return
-        // Prompts and the assistant already hold the focus the phone asked for on the control
-        // channel (guidance usage, which the MG4 mixes over the radio). A second, voice-call
-        // request here made the SAIC radio drop focus and stay silent after the prompt.
-        if (channel != Channel.ID_AUD) return
+        // A prompt the phone already asked focus for on the control channel needs nothing more:
+        // a second request made the SAIC radio drop focus and stay silent after it. The phone does
+        // not always ask, though, and then the prompt asks here, with the same guidance usage.
+        if (channel != Channel.ID_AUD && audioFocusRequest != null) {
+            AppLog.i("AapAudio: AA audio started (${Channel.name(channel)}) - the phone's focus request already covers it")
+            return
+        }
 
         // Only the set mutation belongs under the lock. requestPlaybackFocus() is a binder
         // round-trip to AudioService and the Bluetooth probe below is another, and this runs on
@@ -623,7 +628,8 @@ internal class AapAudio(
         if (!wasEmpty) return
 
         val btMediaLinkActive = BluetoothHelper.isA2dpMediaLinkActive(context)
-        val mode = playbackFocusModeForChannel(channel)
+        val mode = PlaybackFocusPolicy.speechMode(
+            playbackFocusModeForChannel(channel), isSpeech = channel != Channel.ID_AUD)
         val acquire = PlaybackFocusPolicy.shouldAcquire(
                 mode = mode,
                 staticAudioFocus = staticAudioFocus,
