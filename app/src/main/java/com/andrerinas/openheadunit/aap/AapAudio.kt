@@ -607,6 +607,10 @@ internal class AapAudio(
 
     private fun onAudioPlaybackStarted(channel: Int) {
         if (staticAudioFocus || !enableAudioSink || !Channel.isAudio(channel)) return
+        // Prompts and the assistant already hold the focus the phone asked for on the control
+        // channel (guidance usage, which the MG4 mixes over the radio). A second, voice-call
+        // request here made the SAIC radio drop focus and stay silent after the prompt.
+        if (channel != Channel.ID_AUD) return
 
         // Only the set mutation belongs under the lock. requestPlaybackFocus() is a binder
         // round-trip to AudioService and the Bluetooth probe below is another, and this runs on
@@ -619,8 +623,7 @@ internal class AapAudio(
         if (!wasEmpty) return
 
         val btMediaLinkActive = BluetoothHelper.isA2dpMediaLinkActive(context)
-        val mode = PlaybackFocusPolicy.speechMode(
-            playbackFocusModeForChannel(channel), isSpeech = channel != Channel.ID_AUD)
+        val mode = playbackFocusModeForChannel(channel)
         val acquire = PlaybackFocusPolicy.shouldAcquire(
                 mode = mode,
                 staticAudioFocus = staticAudioFocus,
