@@ -1,6 +1,6 @@
 # DiAuto MG4+ 2.0.0-beta13
 
-- Beta diagnostic logs (Downloads/OpenHeadunitLogs) are kept smaller: 20 MB for the whole folder instead of 50 MB, and a log file is cut at 5 MB (a head unit left on for hours used to write a single ever-growing file). Setting the log level to Silent in the settings turns them off. Release builds will have them off by default.
+- Beta diagnostic logs (Downloads/OpenHeadunitLogs) are kept smaller: the last 40 app starts instead of 80, 20 MB for the whole folder instead of 50 MB, and a log file is cut at 5 MB (a head unit left on for hours used to write a single ever-growing file). Setting the log level to Silent in the settings turns them off. Release builds will have them off by default.
 - The gesture hint shown when Android Auto starts (2 fingers from the left edge: menu with Settings; 3 fingers down: back to DiAuto, disconnects) now stays about 10 s instead of 3.5 s (still shown once, on the first connection after install).
 
 # DiAuto MG4+ 2.0.0-beta12
