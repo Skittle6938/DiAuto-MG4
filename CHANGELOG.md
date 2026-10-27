@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.0.0-beta21
+
+- Prompt audio is played as Android Auto media again, as up to beta18 (prompts were heard on the Android Auto source then). The navigation-guidance usage of beta19 and beta20 left them silent on every source. Prompts keep their own guidance focus request (beta20), so the car still lowers the music for them. Prompts over the radio are not fixed yet.
+
 # DiAuto MG4+ 2.0.0-beta20
 
 - Navigation prompts: each prompt now holds its own navigation-guidance focus while it plays. The MG4 only opens its navigation channel, where the prompt audio goes since beta19, while such a request is held; beta19 skipped it whenever the phone's music request was active, so prompts were silent on every source.
