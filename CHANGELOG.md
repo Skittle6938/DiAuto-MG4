@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.1.0-beta2
+
+- Fixes short sound dropouts every few seconds: DiAuto announced the car's own Bluetooth address to the car as the phone's, so the car's Settings kept cutting the phone's hands-free link and the phone kept reconnecting it. DiAuto now announces the phone's address (from Android Auto's Bluetooth pairing request or the wireless link).
+
 # DiAuto MG4+ 2.1.0-beta1
 
 - DiAuto is now installed in place of the car's own Android Auto (package com.allgo.app.androidauto, as an update of AllGo's app; the original stays on the system partition). The car's launcher shows the Android Auto tile as active and the media card with the song, artist and cover; MG4 Dash sees it as the car's Android Auto. The former separate relay is built in. At first start DiAuto takes over the settings of the old com.drivehub.diauto.mg4 and removes it. Settings > Go back to the car's Android Auto removes DiAuto and brings AllGo back.

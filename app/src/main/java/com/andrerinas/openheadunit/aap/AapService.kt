@@ -488,9 +488,13 @@ class AapService : Service(), UsbReceiver.Listener {
     }
 
     private fun notifyAllgoRelay() {
-        val mac = settings.bluetoothAddress.takeIf { it.isNotBlank() }
-            ?: settings.autoStartBluetoothDeviceMacs.firstOrNull()
-        AllgoRelayNotifier.sessionStarted(this, settings.autoStartBluetoothDeviceName.takeIf { it.isNotBlank() }, mac)
+        // Not settings.bluetoothAddress: that is the car's own address, and the car's Settings would
+        // cut the phone's hands-free link for not being it.
+        AllgoRelayNotifier.sessionStarted(
+            this,
+            settings.autoStartBluetoothDeviceName.takeIf { it.isNotBlank() },
+            settings.autoStartBluetoothDeviceMacs.firstOrNull(),
+        )
     }
 
     private fun applyAaMediaMetadataToSession(meta: MediaPlayback.MediaMetaData, albumArt: Bitmap?) {

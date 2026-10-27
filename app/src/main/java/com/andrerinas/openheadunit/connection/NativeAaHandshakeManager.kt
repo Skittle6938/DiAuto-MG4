@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.content.Context
+import com.andrerinas.openheadunit.aap.AllgoRelayNotifier
 import com.andrerinas.openheadunit.aap.AapService
 import com.andrerinas.openheadunit.aap.BluetoothWakePolicy
 import com.andrerinas.openheadunit.aap.NativeCredentialsPolicy
@@ -363,6 +364,7 @@ class NativeAaHandshakeManager(
                         AppLog.i("NativeAA: Connection accepted from ${socket.remoteDevice.name} (${socket.remoteDevice.address}) on local radio [$localRadioName]")
                         context.onNativeAaServerAccepted()
                         if (refuseWhileBackedOff(socket)) continue
+                        AllgoRelayNotifier.phoneAddressSeen(socket.remoteDevice.address)
                         // [FIX] Launch handshake in a separate coroutine so the server can accept the next connection!
                         scope.launch(Dispatchers.IO + CoroutineName("NativeAa-Handshake-${socket.remoteDevice.address}")) {
                             handleHandshake(socket, localRadioName)
@@ -460,6 +462,7 @@ class NativeAaHandshakeManager(
                     if (socket != null) {
                         AppLog.i("NativeAA: Connection accepted (secondary radio '$serviceName' [$radioName]) from ${socket.remoteDevice.name} (${socket.remoteDevice.address})")
                         if (refuseWhileBackedOff(socket)) continue
+                        AllgoRelayNotifier.phoneAddressSeen(socket.remoteDevice.address)
                         scope.launch(Dispatchers.IO + CoroutineName("NativeAa-Handshake-${socket.remoteDevice.address}")) {
                             handleHandshake(socket, radioName)
                         }

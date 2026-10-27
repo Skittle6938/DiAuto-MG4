@@ -27,6 +27,8 @@ public final class RelayState {
     private static boolean active;
     private static String name = "Android Auto";
     private static String mac = RuiRepair.validMac(null);
+    /** rui knows DiAuto by this USB serial: it stays the same when the phone's MAC changes. */
+    private static String serial = serialFor(mac);
     private static final List<IBinder> deviceCallbacks = new ArrayList<>();
     private static final List<IBinder> sessionCallbacks = new ArrayList<>();
 
@@ -48,6 +50,7 @@ public final class RelayState {
         active = false;
         name = prefs.getString("name", name);
         mac = RuiRepair.validMac(prefs.getString("mac", mac));
+        serial = prefs.getString("serial", serialFor(mac));
         Log.i(TAG, "state loaded: active=" + active);
     }
 
@@ -59,10 +62,17 @@ public final class RelayState {
         boolean changed = nowActive != active;
         if (nowActive) {
             name = phoneName != null && !phoneName.isEmpty() ? phoneName : "Android Auto";
-            mac = RuiRepair.validMac(btMac);
+            String newMac = RuiRepair.validMac(btMac);
+            // The car's Settings keep the hands-free link of this MAC and cut every other phone's
+            // (BootService.disconnectAABtHfp): a new MAC has to reach them again.
+            if (!newMac.equals(mac)) changed = true;
+            mac = newMac;
         }
         active = nowActive;
-        if (prefs != null) prefs.edit().putBoolean("active", active).putString("name", name).putString("mac", mac).apply();
+        if (prefs != null) {
+            prefs.edit().putBoolean("active", active).putString("name", name).putString("mac", mac)
+                    .putString("serial", serial).apply();
+        }
         Log.i(TAG, "DiAuto session " + (active ? "started" : "ended") + " (" + name + ")");
         // An announce made while rui or the launcher were still starting is lost: repeat it until
         // rui answers by asking for the session.
@@ -74,6 +84,11 @@ public final class RelayState {
             for (IBinder cb : sessionCallbacks) callWithDevice(cb, SESSION_CB, TX_SESSION_CLOSED, false);
             for (IBinder cb : deviceCallbacks) callWithDevice(cb, DEVICE_CB, TX_DEVICE_DISCONNECTED, false);
         }
+    }
+
+    /** The phone's own MAC became known during a session. */
+    public static synchronized void phoneMac(String btMac) {
+        if (active) update(true, name, btMac);
     }
 
     /** rui asked to start (or resume) the session: answer as AllGo does once it has started. */
@@ -106,10 +121,14 @@ public final class RelayState {
     static synchronized void writeDevice(Parcel p) {
         p.writeInt(active ? SESSION_STARTED : 0);
         p.writeString(name);
-        p.writeString("DIAUTO" + mac.replace(":", ""));
+        p.writeString(serial);
         p.writeString(mac);
         p.writeInt(TYPE_AA);
         p.writeInt(TRANSPORT_USB);
+    }
+
+    private static String serialFor(String btMac) {
+        return "DIAUTO" + btMac.replace(":", "");
     }
 
     private static void callWithDevice(IBinder cb, String descriptor, int code, boolean launchStatus) {

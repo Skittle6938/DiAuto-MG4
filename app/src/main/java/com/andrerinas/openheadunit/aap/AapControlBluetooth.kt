@@ -31,6 +31,7 @@ internal class AapControlBluetooth(
         val request = message.parse(DynamicMessage.newBuilder(requestDescriptor)).build()
         val phoneAddress = request.getField(requestDescriptor.findFieldByName("phone_address")) as String
         val method = request.getField(requestDescriptor.findFieldByName("pairing_method"))
+        AllgoRelayNotifier.phoneAddressSeen(phoneAddress)
         val alreadyPaired = isBonded(phoneAddress)
         AppLog.i("Bluetooth pairing request: method=$method alreadyPaired=$alreadyPaired → replying SUCCESS")
         aapTransport.send(AapMessage(Channel.ID_BTH, PAIRING_RESPONSE, pairingResponse(alreadyPaired)))
