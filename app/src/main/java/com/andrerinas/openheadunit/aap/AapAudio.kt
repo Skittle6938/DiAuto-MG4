@@ -269,16 +269,18 @@ internal class AapAudio(
      * while the playback path holds focus. On a unit whose Bluetooth probe reads nothing, this path
      * has no automatic backstop and needs the mode set to NEVER by hand.
      */
-    fun shouldHonourProtocolFocusRequest(isRelease: Boolean): Boolean {
+    fun shouldHonourProtocolFocusRequest(isRelease: Boolean, isMedia: Boolean = true): Boolean {
         if (isRelease) return true
 
         val btMediaLinkActive = BluetoothHelper.isA2dpMediaLinkActive(context)
         // Hybrid NEVER is for media/A2DP only. Protocol focus (Gemini, nav prompts) must still
         // duck the car so TTS is not left on the phone speaker.
+        // Prompts and the assistant only duck or pause briefly: the latch, which guards the
+        // phone's music, must not leave guidance silent under the radio (seen 2026-10-27).
         val mode = if (settings.musicViaBluetooth) {
             PlaybackFocusPolicy.Mode.ALWAYS
         } else {
-            playbackFocusMode()
+            PlaybackFocusPolicy.speechMode(playbackFocusMode(), isSpeech = !isMedia)
         }
         val honour = PlaybackFocusPolicy.shouldAcquire(
                 mode = mode,
@@ -617,7 +619,8 @@ internal class AapAudio(
         if (!wasEmpty) return
 
         val btMediaLinkActive = BluetoothHelper.isA2dpMediaLinkActive(context)
-        val mode = playbackFocusModeForChannel(channel)
+        val mode = PlaybackFocusPolicy.speechMode(
+            playbackFocusModeForChannel(channel), isSpeech = channel != Channel.ID_AUD)
         val acquire = PlaybackFocusPolicy.shouldAcquire(
                 mode = mode,
                 staticAudioFocus = staticAudioFocus,

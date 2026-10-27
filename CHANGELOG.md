@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.0.0-beta16
+
+- Navigation prompts are heard again over the radio: once DiAuto had stopped asking for audio focus for the phone's music (its guard against pausing a Bluetooth phone), it stopped asking for prompts and the assistant too, so the radio covered them for the rest of the session. Prompts, the assistant and notifications now always ask (unless the focus setting is Never); the guard only applies to music.
+
 # DiAuto MG4+ 2.0.0-beta15
 
 - Battery for Google Maps is set by itself: the capacity is read from the car when its firmware publishes it, otherwise DiAuto takes the battery MG4 Dash knows (the one chosen in its settings, or the one nearest to its measurement), otherwise the 64 kWh battery (61.7 kWh usable). The state of health is MG4 Dash's estimate when MG4 Dash is installed and has measured the battery, otherwise 100 %. Both can still be forced by hand in Settings > Charging info, with an Automatic choice to go back.

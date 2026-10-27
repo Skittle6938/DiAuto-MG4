@@ -400,7 +400,9 @@ internal class AapControlService(
                 // static path's permanent grab from CommManager, where the answer is the opposite.
                 val isRelease = notification.request.number ==
                         Control.AudioFocusRequestNotification.AudioFocusRequestType.RELEASE_VALUE
-                if (aapAudio.shouldHonourProtocolFocusRequest(isRelease)) {
+                val isMedia = notification.request.number ==
+                        Control.AudioFocusRequestNotification.AudioFocusRequestType.GAIN_VALUE
+                if (aapAudio.shouldHonourProtocolFocusRequest(isRelease, isMedia)) {
                     val separate = settings.separateAudioStreams || settings.musicViaBluetooth
                     aapAudio.requestFocusChange(
                         AudioConfigs.stream(channel, separate),
