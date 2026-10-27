@@ -171,6 +171,8 @@ class AapService : Service(), UsbReceiver.Listener {
     private var permanentFocusRequest: android.media.AudioFocusRequest? = null
 
     private var lastAaMediaMetadata: MediaPlayback.MediaMetaData? = null
+    /** Title, cover and play state for the stock SAIC launcher (MG4 Dash reads the MediaSession). */
+    private val allgoMediaCard by lazy { AllgoMediaCardBridge(this) }
     private var lastAaPlaybackPositionMs: Long = 0L
     private var lastAaPlaybackIsPlaying: Boolean? = null
     private var mediaSessionIsPlaying = false
@@ -359,6 +361,9 @@ class AapService : Service(), UsbReceiver.Listener {
                     .build()
             )
         }
+        if (lastAaMediaMetadata != null) {
+            allgoMediaCard.playback(isPlaying, (lastAaPlaybackPositionMs / 1000L).toInt())
+        }
         AppLog.d(
             "MediaSession: State updated to ${if (isPlaying) "PLAYING" else "STOPPED"}, positionMs=$lastAaPlaybackPositionMs"
         )
@@ -512,6 +517,14 @@ class AapService : Service(), UsbReceiver.Listener {
             b.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, albumArt)
         }
         safeMediaSessionCall { it.setMetadata(b.build()) }
+        allgoMediaCard.sessionStarted()
+        allgoMediaCard.metadata(
+            title, artist,
+            if (meta.hasAlbum() && meta.album.isNotBlank()) meta.album else aaLabel,
+            albumArt,
+            if (meta.hasDurationSeconds()) meta.durationSeconds.protoUint32ToLong() * 1000L else 0L,
+        )
+        allgoMediaCard.playback(lastAaPlaybackIsPlaying ?: mediaSessionIsPlaying, (lastAaPlaybackPositionMs / 1000L).toInt())
     }
 
     // Receives ACTION_REQUEST_NIGHT_MODE_UPDATE broadcasts sent by the key-binding handler
@@ -1523,6 +1536,7 @@ class AapService : Service(), UsbReceiver.Listener {
         mediaMetadataDecodeJob?.cancel()
         mediaMetadataDecodeJob = null
         lastAaMediaMetadata = null
+        allgoMediaCard.sessionEnded()
         lastAaPlaybackPositionMs = 0L
         lastAaPlaybackIsPlaying = null
         cachedAaAlbumArtBitmap = null
