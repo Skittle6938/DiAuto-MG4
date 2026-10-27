@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.0.0-beta19
+
+- Navigation prompts and the assistant are heard while the radio plays: their audio is now played as navigation guidance, which the MG4 sends to its navigation channel and mixes over any source. It used to be played as Android Auto media, which only the Android Auto source makes audible.
+
 # DiAuto MG4+ 2.0.0-beta18
 
 - Prompts are heard when the phone does not ask for audio focus first (it does not always): the prompt then asks by itself, as navigation guidance like the phone's request, never as a voice call, so the radio dips and comes back.

@@ -13,6 +13,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Process
+import com.andrerinas.openheadunit.aap.protocol.Channel
 import com.andrerinas.openheadunit.utils.AppLog
 import java.util.concurrent.Executors
 import java.util.concurrent.LinkedBlockingQueue
@@ -447,6 +448,30 @@ class AudioTrackWrapper(
         val bufferSize = if (mediaTrackBytes > 0) maxOf(multiplied, mediaTrackBytes) else multiplied
 
         AppLog.i("Audio stream: $stream buffer size: $bufferSize (min: $minBufferSize) sampleRateInHz: $sampleRateInHz channelCount: $channelCount")
+
+        // Prompts and the assistant (AUDIO1/AUDIO2) play as navigation guidance, untagged: the MG4
+        // sends that usage to its NAVI bus, mixed over any source. As media tagged Android Auto
+        // they went to the media bus, which is silent while the radio is the car's source.
+        val speech = channelId == Channel.ID_AU1 || channelId == Channel.ID_AU2
+        if (speech && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return AudioTrack.Builder()
+                .setAudioAttributes(
+                    AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                        .build()
+                )
+                .setAudioFormat(
+                    AudioFormat.Builder()
+                        .setSampleRate(sampleRateInHz)
+                        .setChannelMask(channelConfig)
+                        .setEncoding(dataFormat)
+                        .build()
+                )
+                .setBufferSizeInBytes(bufferSize)
+                .setTransferMode(AudioTrack.MODE_STREAM)
+                .build()
+        }
 
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val (usage, contentType) = when (stream) {
