@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.0.0-beta24
+
+- Experimental AllGo relay: DiAuto sends the phone's Bluetooth address (never an empty one, which made AllGo's rui crash at start) and tells the relay again at every track change, so a restarted relay recovers the session.
+
 # DiAuto MG4+ 2.0.0-beta23
 
 - Experimental: when the AllGo relay (a local stand-in for AllGo's Android Auto, not part of this repo) is installed, DiAuto tells it when a session starts and ends, so the stock launcher's Android Auto button and media card see a connected phone. The OEM Android Auto blocker leaves the relay alone. Without the relay nothing changes.

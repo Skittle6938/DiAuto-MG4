@@ -487,6 +487,12 @@ class AapService : Service(), UsbReceiver.Listener {
         }
     }
 
+    private fun notifyAllgoRelay() {
+        val mac = settings.bluetoothAddress.takeIf { it.isNotBlank() }
+            ?: settings.autoStartBluetoothDeviceMacs.firstOrNull()
+        AllgoRelayNotifier.sessionStarted(this, settings.autoStartBluetoothDeviceName.takeIf { it.isNotBlank() }, mac)
+    }
+
     private fun applyAaMediaMetadataToSession(meta: MediaPlayback.MediaMetaData, albumArt: Bitmap?) {
         val session = mediaSession ?: return
         val title = when {
@@ -518,6 +524,8 @@ class AapService : Service(), UsbReceiver.Listener {
         }
         safeMediaSessionCall { it.setMetadata(b.build()) }
         allgoMediaCard.sessionStarted()
+        // The relay loses its state when it restarts; every track change tells it again.
+        notifyAllgoRelay()
         allgoMediaCard.metadata(
             title, artist,
             if (meta.hasAlbum() && meta.album.isNotBlank()) meta.album else aaLabel,
@@ -941,7 +949,7 @@ class AapService : Service(), UsbReceiver.Listener {
                     }
                     is CommManager.ConnectionState.TransportStarted -> {
                         hasEverConnected = true
-                        AllgoRelayNotifier.sessionStarted(this@AapService, settings.autoStartBluetoothDeviceName.takeIf { it.isNotBlank() }, settings.bluetoothAddress)
+                        notifyAllgoRelay()
                         accessoryHandshakeFailures = 0
                         automaticReconnectAttempts = 0
                         sendBroadcast(Intent(ACTION_REQUEST_NIGHT_MODE_UPDATE).apply {
