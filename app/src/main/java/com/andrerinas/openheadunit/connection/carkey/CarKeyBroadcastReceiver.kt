@@ -4,10 +4,13 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Handler
+import android.os.Looper
 import android.view.KeyEvent
 import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
 import com.andrerinas.openheadunit.App
+import com.andrerinas.openheadunit.aap.AllgoMediaKeys
 import com.andrerinas.openheadunit.utils.AppLog
 import com.evsuite.hardware.PhysicalButtonEventDecoder
 
@@ -27,6 +30,7 @@ class CarKeyBroadcastReceiver : BroadcastReceiver(), CarKeyReceiver {
         private const val SAIC_KEYCODE_PLAY_PAUSE = 301
         /** Steering-wheel voice key (stock AllGo KEYCODE_VOICE). */
         private const val SAIC_KEYCODE_VOICE = 287
+        private const val PLAY_PAUSE_RUI_WAIT_MS = 400L
 
         val ACTIONS = arrayOf(
             "android.intent.action.MEDIA_BUTTON",
@@ -190,8 +194,19 @@ class CarKeyBroadcastReceiver : BroadcastReceiver(), CarKeyReceiver {
         }
 
         // Play/pause paddle is outside the R69 decoder table.
+        // The stock launcher also sends it through rui as AllGo's play/pause (AllgoMediaKeys): wait
+        // a moment and play/pause only once.
         if (keyCode == SAIC_KEYCODE_PLAY_PAUSE) {
-            if (!isDown) handleClick(context, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE)
+            if (!isDown) {
+                val app = context.applicationContext
+                Handler(Looper.getMainLooper()).postDelayed({
+                    if (AllgoMediaKeys.playPauseCameThroughRui()) {
+                        AppLog.i("CarKeyReceiver: play/pause already sent through rui")
+                    } else {
+                        handleClick(app, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE)
+                    }
+                }, PLAY_PAUSE_RUI_WAIT_MS)
+            }
             return
         }
 

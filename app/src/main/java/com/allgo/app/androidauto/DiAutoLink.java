@@ -6,6 +6,8 @@ import android.media.session.MediaController;
 import android.media.session.MediaSessionManager;
 import android.util.Log;
 
+import com.andrerinas.openheadunit.aap.AllgoMediaKeys;
+
 /** What callers of AllGo's Android Auto ask for, done by DiAuto (this app now carries AllGo's name). */
 final class DiAutoLink {
     private static final String PROJECTION = "com.andrerinas.openheadunit.aap.AapProjectionActivity";
@@ -14,8 +16,12 @@ final class DiAutoLink {
     private DiAutoLink() {
     }
 
-    /** IAndroidAutoMainService.sendMediaPlayControl: 1 play, 2 pause, 3 next, 4 previous. */
+    /**
+     * IAndroidAutoMainService.sendMediaPlayControl: 1 play, 2 pause, 3 next, 4 previous; the
+     * launcher's press/release codes are in AllgoMediaKeys.
+     */
     static void mediaControl(Context context, int code) {
+        if (AllgoMediaKeys.fromRui(context, code)) return;
         MediaController controller = diAutoSession(context);
         if (controller == null) {
             Log.w(RelayState.TAG, "media control " + code + ": no DiAuto media session");

@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.1.0-beta3
+
+- Steering wheel next/previous now reach Android Auto the way they reached AllGo: the car's launcher sends them through rui as press/release codes (next 7/11, previous 8/12, play/pause 20/21), which DiAuto now passes to the phone as key presses. MG4 Dash needs no DiAuto-specific code. When the wheel play/pause also came through rui, DiAuto's own reading of that key is skipped, so it toggles once.
+
 # DiAuto MG4+ 2.1.0-beta2
 
 - Fixes short sound dropouts every few seconds: DiAuto announced the car's own Bluetooth address to the car as the phone's, so the car's Settings kept cutting the phone's hands-free link and the phone kept reconnecting it. DiAuto now announces the phone's address (from Android Auto's Bluetooth pairing request or the wireless link).
