@@ -41,7 +41,7 @@ object CompatibilityReport {
         lines += "Decoders: ${decoders()}"
         lines += "Video: ${resolution(settings.resolutionId)}@${settings.fpsLimit} " +
             "codec=${settings.videoCodec} view=${settings.viewMode} dpi=${settings.dpiPixelDensity}"
-        lines += "Link: ${settings.lastConnectionType.ifBlank { "-" }} wifiMode=${settings.wifiConnectionMode} " +
+        lines += "Link: ${settings.lastConnectionType.ifBlank { "-" }} " +
             "primary=${settings.primaryConnection}"
         lines += "Audio: ${if (settings.musicViaBluetooth) "music over Bluetooth" else "music over AA"} " +
             "aac=${settings.useAacAudio} buffer=${settings.mediaAudioBufferMillis}ms " +

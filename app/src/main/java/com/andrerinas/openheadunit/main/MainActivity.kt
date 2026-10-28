@@ -131,7 +131,6 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         logLaunchSource()
-        clearBootLoopGuardIfOpenedByHand()
 
         // If an Android Auto session is active, bring the projection activity to front
         if (App.provide(this).commManager.isConnected && !App.isPiPActive) {
@@ -216,7 +215,6 @@ class MainActivity : BaseActivity() {
         // installs; for users who already finished onboarding we request them from checkSetupFlow().
         viewModel.register()
         handleLaunchIntent(intent)
-        setupWifiDirectInfo()
 
         ContextCompat.registerReceiver(
             this, finishReceiver,
@@ -719,23 +717,6 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun setupWifiDirectInfo() {
-        val tvInfo = findViewById<android.widget.TextView>(R.id.wifi_direct_info)
-        val settings = Settings(this)
-
-        lifecycleScope.launch {
-            AapService.wifiDirectName.collectLatest { name ->
-                val isHelperMode = settings.wifiConnectionMode == 2
-                if (isHelperMode && name != null) {
-                    tvInfo.text = "WiFi Direct: $name"
-                    tvInfo.visibility = View.VISIBLE
-                } else {
-                    tvInfo.visibility = View.GONE
-                }
-            }
-        }
-    }
-
     override fun onStart() {
         super.onStart()
     }
@@ -762,21 +743,6 @@ class MainActivity : BaseActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         handleLaunchIntent(intent)
-    }
-
-    /**
-     * Releases the boot-loop guard, but only when a person opened the app.
-     *
-     * The distinction matters: the service launches this activity itself on every boot auto-start
-     * ([AapService] passes "Boot auto-start"), so clearing unconditionally would reset the guard on
-     * exactly the runs it exists to count. Tapping the guard's own notification does count as
-     * opening it by hand — that is a person reading the notice and acting on it.
-     */
-    private fun clearBootLoopGuardIfOpenedByHand() {
-        // No source at all is a launcher tap, which is as human as it gets.
-        val source = intent?.getStringExtra(EXTRA_LAUNCH_SOURCE) ?: ""
-        if (AUTOMATIC_LAUNCH_SOURCES.contains(source)) return
-        Settings.clearBootLoopState(this)
     }
 
     private fun logLaunchSource() {
@@ -818,32 +784,13 @@ class MainActivity : BaseActivity() {
             return
         }
 
-        if (intentAction == AapService.ACTION_START_SELF_MODE || 
-           (intentData?.scheme == "headunit" && intentData.host == "selfmode")) {
-            AppLog.i("MainActivity: Forced self-mode start requested")
-            HomeFragment.forceSelfModeLaunch = true
-            val selfModeIntent = Intent(this, AapService::class.java).apply {
-                this.action = AapService.ACTION_START_SELF_MODE
-            }
-            ContextCompat.startForegroundService(this, selfModeIntent)
-        }
-
         if (intent.action == Intent.ACTION_VIEW) {
             if (intentData?.scheme == "headunit" && intentData.host == "connect") {
-                val ip = intentData.getQueryParameter("ip")
-                if (!ip.isNullOrEmpty()) {
-                    AppLog.i("Received connect intent for IP: $ip")
-                    ContextCompat.startForegroundService(this, Intent(this, AapService::class.java).apply {
-                        action = AapService.ACTION_CONNECT_SOCKET
-                    })
-                    lifecycleScope.launch(Dispatchers.IO) { App.provide(this@MainActivity).commManager.connect(ip, 5277) }
-                } else {
-                    AppLog.i("Received connect intent without IP -> triggering last session auto-connect")
-                    val autoIntent = Intent(this, AapService::class.java).apply {
-                        action = AapService.ACTION_CHECK_USB
-                    }
-                    ContextCompat.startForegroundService(this, autoIntent)
+                AppLog.i("Received connect intent -> triggering last session auto-connect")
+                val autoIntent = Intent(this, AapService::class.java).apply {
+                    action = AapService.ACTION_CHECK_USB
                 }
+                ContextCompat.startForegroundService(this, autoIntent)
             } else if (intentData?.scheme == "headunit" && intentData.host == "disconnect") {
                 AppLog.i("Received disconnect intent")
                 val stopIntent = Intent(this, AapService::class.java).apply {
@@ -1014,20 +961,11 @@ class MainActivity : BaseActivity() {
             unregisterReceiver(autoConnectStatusReceiver)
             isAutoConnectStatusReceiverRegistered = false
         }
-        if (isFinishing) {
-            AppLog.i("MainActivity finishing, resetting auto-start flag.")
-            HomeFragment.resetAutoStart()
-        }
     }
 
     companion object {
         private const val permissionRequestCode = 97
         const val EXTRA_LAUNCH_SOURCE = "launch_source"
-
-        /** Launch sources that mean the app opened itself, with nobody necessarily watching. */
-        private val AUTOMATIC_LAUNCH_SOURCES = setOf(
-            "Boot auto-start", "USB auto-start", "WiFi auto-start", "Bluetooth auto-start"
-        )
 
         /**
          * Hard upper bound for how long the auto-connect overlay may stay visible

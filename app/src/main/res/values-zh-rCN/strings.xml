@@ -871,9 +871,6 @@
     <string name="playback_focus_mode_static_hint">启用固定音频焦点后，此设置从手机连接起持续整个会话，而非仅在播放音频时生效。</string>
     <string name="github_issues_url">https://github.com/Skittle6938/DiAuto-MG4/issues</string>
     <string name="support_rules_english_title">All posts in English</string>
-    <string name="boot_loop_paused_title">无线启动已暂停</string>
-    <string name="boot_loop_paused_generic">设备连续三次在 Open Headunit 启动无线连接后不久重启，因此本次未启用无线连接。USB 仍可使用。打开应用可重新启用无线连接。</string>
-    <string name="boot_loop_paused_native_wifi_direct">设备连续三次在 Open Headunit 启动无线连接后重启，因此本次已停用无线连接。某些车机的 Wi-Fi 芯片会在手机加入 Wi-Fi Direct 网络时导致整个系统崩溃。请尝试将 Android Auto 模式切换为车机热点。USB 仍可使用。</string>
     <string name="vehicle_make_hint">真实汽车品牌会在 Android Auto 退出按钮上显示品牌标志，但会隐藏 Play 商店以外安装的应用。切回 Google 可重新显示这些应用。</string>
     <string name="external_bt_nativeaa">此车机不支持原生无线连接</string>
     <string name="external_bt_nativeaa_desc">此车机使用独立的蓝牙模块（%1$s），而非 Android 向应用提供的接口。手机与该模块配对，因此应用发送的蓝牙数据无法到达手机，连接看似开始后便停滞。\n\n这是硬件限制，应用无法绕过。请使用 USB、Wireless Helper 或 Auto (Headunit Server) 模式，这些方式不需要蓝牙握手。</string>

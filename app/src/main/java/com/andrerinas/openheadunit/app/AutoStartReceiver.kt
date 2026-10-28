@@ -128,7 +128,7 @@ class AutoStartReceiver : BroadcastReceiver() {
     }
 
     private companion object {
-        // WifiAutoStartReceiver uses 99; kept apart so one does not replace the other.
+        // 99 was the old Wi-Fi auto-start notification; kept apart from it.
         const val BT_AUTO_START_NOTIFICATION_ID = 98
     }
 }

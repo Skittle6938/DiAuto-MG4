@@ -473,8 +473,6 @@ object SettingsBackupManager {
         Settings.syncAutoStartOnBootToDeviceStorage(context, settings.autoStartOnBoot)
         Settings.syncAutoStartOnScreenOnToDeviceStorage(context, settings.autoStartOnScreenOn)
         Settings.syncAutoStartOnUsbToDeviceStorage(context, settings.autoStartOnUsb)
-        Settings.syncAutoStartOnWifiToDeviceStorage(context, settings.autoStartOnWifi)
-        Settings.syncAutoStartWifiSsidToDeviceStorage(context, settings.autoStartWifiSsid)
         Settings.syncListenForUsbDevicesToDeviceStorage(context, settings.listenForUsbDevices)
         Settings.syncAutoStartBtMacsToDeviceStorage(context, settings.autoStartBluetoothDeviceMacs)
         Settings.setUsbAttachedActivityEnabled(context, settings.listenForUsbDevices)

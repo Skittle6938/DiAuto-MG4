@@ -11,8 +11,6 @@ import com.andrerinas.openheadunit.aap.AapService
 import com.andrerinas.openheadunit.aap.BluetoothWakePolicy
 import com.andrerinas.openheadunit.aap.NativeCredentialsPolicy
 import com.andrerinas.openheadunit.aap.NativeHandoffPolicy
-import com.andrerinas.openheadunit.aap.NativeTransport
-import com.andrerinas.openheadunit.aap.UnusableBssidAction
 import com.andrerinas.openheadunit.aap.WppAction
 import com.andrerinas.openheadunit.aap.WppEvent
 import com.andrerinas.openheadunit.aap.WppFraming
@@ -155,7 +153,7 @@ class NativeAaHandshakeManager(
     /**
      * The credentials to hand the phone, as one value.
      *
-     * Four separate fields were written by WifiDirectManager's delivery thread and read by the
+     * Four separate fields were written by the credential provider's thread and read by the
      * handshake coroutine with no synchronisation, which allowed two failures. A read could see the
      * SSID and passphrase of one group beside the BSSID of another, and Gearhead joins with a
      * WifiNetworkSpecifier matching SSID *and* BSSID under a full mask, so it rejects the pair with
@@ -177,11 +175,11 @@ class NativeAaHandshakeManager(
     private var credentials: WifiCredentials? = null
     private var pokeJob: Job? = null
     // Last (ssid, ip, bssid) triggerPoke() restarted for - dedupes redundant restarts when
-    // WifiDirectManager redelivers the same credentials, which was starving the poke before it
+    // the access point provider redelivers the same credentials, which was starving the poke before it
     // could ever finish.
     private var lastPokeTriggerCredentials: Triple<String, String, String>? = null
     // elapsedRealtime() when handleHandshake() started, or 0 when no exchange is running; lets
-    // WifiDirectManager's join watchdog know a real exchange is in progress.
+    // the rest of the service know a real exchange is in progress.
     //
     // [BUG_FIX] A stamp rather than a boolean, because handleHandshake() cannot be relied on to
     // clear it: on stacks where closing the socket does not unblock the wait for Type 2, the
@@ -289,8 +287,8 @@ class NativeAaHandshakeManager(
      * [isHandshakeInFlight] deliberately goes false the instant Type 3 is written, because the
      * *credential exchange* is done at that point. The phone's work is not: measured joining the
      * group 0.73 s after Type 3 and still without an IP 2.4 s later. Anything that must not disturb
-     * the phone mid-join — the wake poke, the BT auto-start re-arm, WifiDirectManager's join
-     * watchdog — has to check this, not isHandshakeInFlight().
+     * the phone mid-join — the wake poke, the BT auto-start re-arm, the access point
+     * refresh — has to check this, not isHandshakeInFlight().
      */
     fun isHandoffSettling(): Boolean =
         NativeHandoffPolicy.isSettling(handoffSettlingSince, SystemClock.elapsedRealtime())
@@ -781,7 +779,7 @@ class NativeAaHandshakeManager(
                     // If RFCOMM connects before WiFi credentials exist, the phone times out after 10s waiting for WifiStartRequest.
                     if (credentials == null) {
                         AppLog.i("NativeAA: WiFi credentials not ready before poke. Requesting WiFi refresh...")
-                        (context as? AapService)?.triggerWifiDirectRefresh()
+                        (context as? AapService)?.refreshAccessPoint()
                         var waitedMs = 0
                         while (credentials == null && waitedMs < 4000 && isRunning && isActive) {
                             delay(200)
@@ -845,7 +843,7 @@ class NativeAaHandshakeManager(
                 // Pre-flight: Ensure WiFi credentials (SSID/IP) are ready before connecting RFCOMM to phone.
                 if (credentials == null) {
                     AppLog.i("NativeAA: WiFi credentials not ready before manual poke. Requesting WiFi refresh...")
-                    (context as? AapService)?.triggerWifiDirectRefresh()
+                    (context as? AapService)?.refreshAccessPoint()
                     var waitedMs = 0
                     while (credentials == null && waitedMs < 4000 && isRunning && isActive) {
                         delay(200)
@@ -970,8 +968,6 @@ class NativeAaHandshakeManager(
         // whether this attempt counts against consecutiveHandshakeFailures.
         var spokeToPhone = false
         var abortedLocally = false
-        // Captured once, so a settings change mid-exchange cannot split it across two rulesets.
-        val transport = NativeTransport.fromSetting(settings.nativeApTransport)
         val session = WppHandshakeSession(settings.nativeWifiVersionExchange)
         // Everything the phone sends, in order. Replaces the single bounded read this used to do:
         // types 6 and 7 arrive *after* the credentials go out, so a one-shot read could never see
@@ -1049,7 +1045,7 @@ class NativeAaHandshakeManager(
                         AppLog.i("NativeAA: [TX] Sending WifiInfoResponse (Type 3) with full credentials")
                         // No delay: a phone already on the hotspot is projecting within ~0.7 s, and a
                         // late Type 3 makes it reconnect and tear that session down (error 1001).
-                        sendWifiSecurityResponse(output, credSsid, credPsk, credBssid, transport)
+                        sendWifiSecurityResponse(output, credSsid, credPsk, credBssid)
                         AppLog.i("NativeAA: Handshake completed successfully on Bluetooth side.")
                         ifOwner(socket) {
                             // The exchange is done; the phone's work is not — it still has to
@@ -1094,7 +1090,7 @@ class NativeAaHandshakeManager(
                     }
                     is WppAction.Fail -> {
                         AppLog.w("NativeAA: Handshake failed — ${action.reason}.")
-                        if (action.wifiJoinFailed && transport == NativeTransport.HOTSPOT) {
+                        if (action.wifiJoinFailed) {
                             ifOwner(socket) {
                                 // Refresh before ResumePoke, so the next handshake cannot reuse
                                 // an IP/BSSID selected while the car hotspot was still coming up.
@@ -1234,7 +1230,7 @@ class NativeAaHandshakeManager(
                 if (now - lastRefreshAt >= 10_000) {
                     lastRefreshAt = now
                     AppLog.w("NativeAA: Still waiting for credentials after ${waitedS}s. Requesting WiFi refresh...")
-                    context.triggerWifiDirectRefresh()
+                    context.refreshAccessPoint()
                 } else if (now - lastProgressLogAt >= 5_000) {
                     lastProgressLogAt = now
                     AppLog.d("NativeAA: Still waiting... credentials=${credentials != null} (${waitedS}s)")
@@ -1259,33 +1255,13 @@ class NativeAaHandshakeManager(
 
             // [FIX] Ensure BSSID is uppercase and not zeroed if possible
             if (!NativeCredentialsPolicy.isUsableBssid(credBssid)) {
-                when (NativeCredentialsPolicy.onUnusableBssid(transport)) {
-                    UnusableBssidAction.ABORT -> {
-                        AppLog.e("NativeAA: BSSID is still masked/empty ($credBssid) at Type 3 time — phone WILL reject these credentials. Aborting handshake. PLEASE CHECK IF LOCATION (GPS) IS ENABLED ON THIS DEVICE!")
-                        // Location is the usual cause and the one worth naming first, but it is not
-                        // the only one: where this head unit is an ordinary phone rather than
-                        // purpose-built hardware, every source in the chain is blocked by permission
-                        // and no setting will unblock them. Say so, or the log sends the reader back
-                        // to a location toggle that is already on.
-                        AppLog.e("NativeAA: If location is already on, this device cannot read its own WiFi Direct MAC at all. Read it from the system (P2P device address) and set it as the static BSSID in Advanced settings.")
-                        // Triggering a P2P refresh so the next attempt has a valid BSSID
-                        context.triggerWifiDirectRefresh()
-                        // Not fed to the session as CredentialsUnavailable: its failure reason
-                        // would say the credentials never arrived, when in fact they arrived
-                        // unusable, and the line above is the one the reporter needs to act on.
-                        abortedLocally = true
-                        return@withContext
-                    }
-                    UnusableBssidAction.SEND_WITH_EMPTY_BSSID -> {
-                        // Sending is worth a try rather than expected to work — no implementation
-                        // ships without a real BSSID, see NativeCredentialsPolicy. The point is that
-                        // a refusal is a message we can explain; this line is the first to look at
-                        // when one arrives.
-                        AppLog.w("NativeAA: No usable BSSID for this access point — sending the credentials without one, which most phones refuse. Set a BSSID by hand in Advanced settings if the phone does not join.")
-                        credBssid = ""
-                        bssidOmitted = true
-                    }
-                }
+                // Sending is worth a try rather than expected to work — no implementation
+                // ships without a real BSSID, see NativeCredentialsPolicy. The point is that
+                // a refusal is a message we can explain; this line is the first to look at
+                // when one arrives.
+                AppLog.w("NativeAA: No usable BSSID for this access point — sending the credentials without one, which most phones refuse. Set a BSSID by hand in Advanced settings if the phone does not join.")
+                credBssid = ""
+                bssidOmitted = true
             }
 
             // The port the credentials point at must be bound before they go out. The phone's next
@@ -1453,24 +1429,19 @@ class NativeAaHandshakeManager(
      * than dropping the field. Omitting it risks a strict parser rejecting the whole message, which
      * would surface as silence rather than as the specific refusal an empty one produces.
      *
-     * [transport] picks the access-point type: DYNAMIC for a hotspot, matching both reference
-     * implementations, and STATIC for a WiFi Direct group as before.
+     * The access-point type is DYNAMIC, as for any hotspot, matching both reference implementations.
      */
     private fun sendWifiSecurityResponse(
         output: OutputStream,
         ssid: String,
         key: String,
-        bssid: String?,
-        transport: NativeTransport
+        bssid: String?
     ) {
         val response = Wireless.WifiInfoResponse.newBuilder()
             .setSsid(ssid)
             .setKey(key)
             .setSecurityMode(Wireless.SecurityMode.WPA2_PERSONAL)
-            .setAccessPointType(
-                if (transport != NativeTransport.WIFI_DIRECT) Wireless.AccessPointType.DYNAMIC
-                else Wireless.AccessPointType.STATIC
-            )
+            .setAccessPointType(Wireless.AccessPointType.DYNAMIC)
             .setBssid(bssid.orEmpty())
             .build()
         sendProtobuf(output, response.toByteArray(), WppMessageType.INFO_RESPONSE)

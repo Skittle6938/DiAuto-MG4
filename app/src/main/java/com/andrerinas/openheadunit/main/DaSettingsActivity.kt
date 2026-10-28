@@ -128,7 +128,6 @@ class DaSettingsActivity : BaseActivity() {
             if (on) modes.add(Settings.ConnectionMode.WIFI) else modes.remove(Settings.ConnectionMode.WIFI)
             modes.add(Settings.ConnectionMode.USB)
             settings.connectionModes = modes
-            if (on) settings.wifiConnectionMode = MODE_NATIVE_AA
         })
         row(R.string.dset_start_with_car, R.string.dset_start_with_car_summary, yesNo(settings.autoStartOnBoot) {
             settings.autoStartOnBoot = it
@@ -350,7 +349,6 @@ class DaSettingsActivity : BaseActivity() {
     companion object {
         const val EXTRA_TAB = "tab"
         private const val KEY_TAB = "tab"
-        private const val MODE_NATIVE_AA = 3
         private const val DPI_SMALL = 200
         private const val DPI_AUTO = 0
         private const val DPI_LARGE = 260

@@ -838,9 +838,6 @@
     <string name="support_rules_describe_desc">Was du getan hast, was du erwartet hast und was passiert ist. Ein Screenshot oder Video hilft enorm.</string>
     <string name="support_rules_oneissue_title">Ein Problem pro Issue</string>
     <string name="support_rules_oneissue_desc">Erstelle für jedes unzusammenhängende Problem ein separates Issue.</string>
-    <string name="boot_loop_paused_title">Wireless-Start pausiert</string>
-    <string name="boot_loop_paused_generic">Das Gerät hat dreimal in Folge kurz nach dem Wireless-Start neu gestartet. Wireless wurde daher vorübergehend deaktiviert. USB funktioniert weiterhin. Öffne die App, um es wieder zu aktivieren.</string>
-    <string name="boot_loop_paused_native_wifi_direct">Das Gerät hat mehrfach kurz nach dem Wireless-Start neu gestartet. Bei einigen Headunits überlastet der WiFi-Chip bei WiFi Direct Verbindungen. Versuche auf den Headunit-Hotspot-Modus zu wechseln. USB funktioniert weiterhin.</string>
     <string name="vehicle_make_hint">Eine echte Automarke zeigt deren Logo auf dem Beenden-Button von Android Auto. Android Auto blendet dann jedoch Apps aus, die nicht aus dem Play Store stammen. Setze es auf \"Google\" zurück, um diese wieder anzuzeigen.</string>
     <string name="external_bt_nativeaa">Natives Wireless auf dieser Headunit nicht möglich</string>
     <string name="external_bt_nativeaa_desc">Diese Headunit nutzt ein eigenes Bluetooth-Modul (%1$s), das Android nicht für Apps bereitstellt. Das Handy koppelt sich mit diesem Modul, wodurch Bluetooth-Handshake-Daten die App nicht erreichen. Bitte nutze USB, Wireless Helper oder den Headunit Server Modus.</string>

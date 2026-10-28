@@ -4,7 +4,6 @@ import android.content.Context
 import com.andrerinas.openheadunit.App
 import com.andrerinas.openheadunit.R
 import com.andrerinas.openheadunit.aap.AapMessage
-import com.andrerinas.openheadunit.aap.AapService
 import com.andrerinas.openheadunit.aap.HybridMusicPolicy
 import com.andrerinas.openheadunit.aap.KeyCode
 import com.andrerinas.openheadunit.aap.protocol.AudioConfigs
@@ -209,17 +208,15 @@ class ServiceDiscoveryResponse(private val context: Context)
             services.add(audio2)
 
             if (settings.enableAudioSink) {
-                if (!AapService.selfMode) {
-                    val audio1 = Control.Service.newBuilder().also { service ->
-                        service.id = Channel.ID_AU1
-                        service.mediaSinkService = Control.Service.MediaSinkService.newBuilder().also {
-                            it.availableType = speechCodec
-                            it.audioType = Media.AudioStreamType.SPEECH
-                            it.addAudioConfigs(AudioConfigs.get(Channel.ID_AU1))
-                        }.build()
+                val audio1 = Control.Service.newBuilder().also { service ->
+                    service.id = Channel.ID_AU1
+                    service.mediaSinkService = Control.Service.MediaSinkService.newBuilder().also {
+                        it.availableType = speechCodec
+                        it.audioType = Media.AudioStreamType.SPEECH
+                        it.addAudioConfigs(AudioConfigs.get(Channel.ID_AU1))
                     }.build()
-                    services.add(audio1)
-                }
+                }.build()
+                services.add(audio1)
 
                 // Hybrid: never put media PCM on Wi‑Fi AA (stutters on MG4). Music stays on
                 // car Bluetooth.
@@ -261,7 +258,7 @@ class ServiceDiscoveryResponse(private val context: Context)
                         )
                     }
                 }
-                if (!AapService.selfMode && !omitMedia) {
+                if (!omitMedia) {
                     // Do not release A2DP here: Native AA still rides BT until Wi‑Fi lands.
                     // AapService releases media profiles after TransportStarted settles.
                     AppLog.i(

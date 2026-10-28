@@ -880,9 +880,6 @@
     <string name="playback_focus_mode_static_hint">Con el foco de audio estático activado, se aplica desde que se conecta el teléfono durante toda la sesión, no solo mientras suena audio.</string>
     <string name="github_issues_url">https://github.com/Skittle6938/DiAuto-MG4/issues</string>
     <string name="support_rules_english_title">All posts in English</string>
-    <string name="boot_loop_paused_title">Inicio inalámbrico pausado</string>
-    <string name="boot_loop_paused_generic">El dispositivo se reinició tres veces seguidas poco después de iniciar la conexión inalámbrica de Open Headunit, por lo que esta vez se dejó desactivada. USB sigue funcionando. Abre la aplicación para volver a activarla.</string>
-    <string name="boot_loop_paused_native_wifi_direct">El dispositivo se reinició tres veces tras iniciar la conexión inalámbrica de Open Headunit, por lo que se dejó desactivada. En algunas unidades, el chip Wi-Fi bloquea el sistema al conectar un teléfono a Wi-Fi Direct. Prueba el modo de punto de acceso de la unidad. USB sigue funcionando.</string>
     <string name="vehicle_make_hint">Una marca de coche muestra su logotipo en el botón de salida de Android Auto, pero oculta las aplicaciones instaladas fuera de Play Store. Vuelve a Google para mostrarlas.</string>
     <string name="external_bt_nativeaa">La conexión inalámbrica nativa no funciona en esta unidad</string>
     <string name="external_bt_nativeaa_desc">Esta unidad usa su propio módulo Bluetooth (%1$s), distinto del que Android ofrece a las aplicaciones. El teléfono se empareja con ese módulo y no recibe lo que envía la aplicación: la conexión parece avanzar y luego se bloquea.\n\nEs una limitación del hardware. Usa USB, Wireless Helper o Auto (Headunit Server), que no requieren negociación Bluetooth.</string>

@@ -42,12 +42,6 @@ class Settings(private val context: Context) {
             prefs.edit().putStringSet("allow-devices", devices).apply()
         }
 
-    var networkAddresses: Set<String>
-        get() = prefs.getStringSet("network-addresses", HashSet<String>())!!
-        set(addrs) {
-            prefs.edit().putStringSet("network-addresses", addrs).apply()
-        }
-
     var bluetoothAddress: String
         get() = prefs.getString("bt-address", "")!!
         set(value) = prefs.edit().putString("bt-address", value).apply()
@@ -253,16 +247,6 @@ class Settings(private val context: Context) {
             prefs.edit().putBoolean("gesture_hint_shown", value).apply()
         }
 
-    // One-time notice telling users the app is being rebranded. Shown once on the home screen.
-    // The key is versioned on purpose: an earlier build could spend the original flag behind the
-    // onboarding wizard without the notice ever being seen, so a new key lets the corrected
-    // notice reach everyone once, including users who still carry the old flag.
-    var renameNoticeShown: Boolean
-        get() = prefs.getBoolean("rename_notice_shown_v2", false)
-        set(value) {
-            prefs.edit().putBoolean("rename_notice_shown_v2", value).apply()
-        }
-
     // Custom Insets (Screen Margins)
     var insetLeft: Int
         get() = prefs.getInt("inset-left", 0)
@@ -367,52 +351,6 @@ class Settings(private val context: Context) {
     var debugForceMemoryProfile: DeviceMemoryProfile?
         get() = DeviceMemoryProfile.fromName(prefs.getString("debug-force-memory-profile", null))
         set(value) { prefs.edit().putString("debug-force-memory-profile", value?.name).apply() }
-
-    /**
-     * Puts the Native AA WiFi Direct group on 2.4 GHz instead of asking for 5 GHz.
-     *
-     * Off by default, and it is a rig lever rather than a preference: 5 GHz is what a working
-     * session runs on and nothing here recommends moving off it. What it exists for is that the
-     * link-outage reports come from 2.4 GHz head units and the rig could never be put on that band
-     * - the group is requested as 5 GHz and any group that lands on 2.4 GHz is torn down and
-     * remade. Both of those are turned off together by this one flag; see
-     * [com.andrerinas.openheadunit.aap.NativeGroupBandPolicy], which is where the coupling lives.
-     *
-     * Applies to the next group, so it needs a reconnect rather than only a settings write.
-     */
-    var debugForceP2pBand24: Boolean
-        get() = prefs.getBoolean("debug-force-p2p-band-24", false)
-        set(value) { prefs.edit().putBoolean("debug-force-p2p-band-24", value).apply() }
-
-    /**
-     * On a device with no band API, asks the P2P stack for a 5 GHz operating channel.
-     *
-     * Below API 29 there is no `WifiP2pConfig.Builder`, so the group's band is the driver's choice
-     * and this app has never had a say in it - which is every pre-Android-10 head unit, including
-     * both units in the periodic-outage reports. The hidden `setWifiP2pChannels` is the one lever
-     * left; see [com.andrerinas.openheadunit.aap.P2pOperatingChannelPolicy].
-     *
-     * **Off by default, and it should stay off until a unit reports back.** The request is a
-     * disallowed-frequency list, so a unit whose P2P firmware cannot host a 5 GHz group owner is not
-     * left on 2.4 GHz - it is left unable to form a group at all. The bring-up clears the restriction
-     * and retries once when that happens, but an opt-in costs nothing and a wrong default costs
-     * every pre-Q unit its connection.
-     *
-     * Ignored from API 29 up, where the supported band request does this properly.
-     */
-    var p2pLegacyFiveGhz: Boolean
-        get() = prefs.getBoolean("p2p-legacy-5ghz", false)
-        set(value) { prefs.edit().putBoolean("p2p-legacy-5ghz", value).apply() }
-
-    /**
-     * Asks for UNII-3 (channel 149) instead of UNII-1 (channel 36) when [p2pLegacyFiveGhz] is on.
-     *
-     * Both are non-DFS and channel 36 is what the reference implementations use, so this exists only
-     * for a regulatory domain that refuses the lower range.
-     */
-    var p2pLegacyFiveGhzUpperBand: Boolean
-        get() = prefs.getBoolean("p2p-legacy-5ghz-upper", false)
-        set(value) { prefs.edit().putBoolean("p2p-legacy-5ghz-upper", value).apply() }
 
     /**
      * Asks the decoder for low-latency mode, through whichever key its vendor understands.
@@ -578,12 +516,6 @@ class Settings(private val context: Context) {
     var headUnitModel: String
         get() = prefs.getString("head-unit-model", "SWI69")!!
         set(value) { prefs.edit().putString("head-unit-model", value).apply() }
-
-    // 0 = Manual, 1 = Auto (Headunit Server), 2 = Helper (Wifi Launcher), 3 = Native AA
-    var wifiConnectionMode: Int
-        // DiAuto for MG4: native Android Auto only (no Helper, no Headunit Server).
-        get() = 3
-        set(_) = Unit
 
     var videoCodec: String
         get() = prefs.getString("video-codec", "Auto")!!
@@ -831,10 +763,6 @@ class Settings(private val context: Context) {
         get() = prefs.getBoolean("use-native-ssl", false)
         set(value) { prefs.edit().putBoolean("use-native-ssl", value).apply() }
 
-    var autoStartSelfMode: Boolean
-        get() = prefs.getBoolean("auto-start-self-mode", false)
-        set(value) { prefs.edit().putBoolean("auto-start-self-mode", value).apply() }
-
     var autoStartOnUsb: Boolean
         get() = prefs.getBoolean("auto-start-on-usb", false)
         set(value) { prefs.edit().putBoolean("auto-start-on-usb", value).apply() }
@@ -842,11 +770,6 @@ class Settings(private val context: Context) {
     var autoStartOnBoot: Boolean
         get() = prefs.getBoolean("auto-start-on-boot", true)
         set(value) { prefs.edit().putBoolean("auto-start-on-boot", value).apply() }
-
-    /** Set by earlier betas when they moved this unit to Headunit Server mode on their own; undone at start. */
-    var autoHeadunitServerApplied: Boolean
-        get() = prefs.getBoolean("auto-headunit-server-applied", false)
-        set(value) { prefs.edit().putBoolean("auto-headunit-server-applied", value).apply() }
 
     /** Native AA RFCOMM servers in a row that died without accepting a connection. */
     var nativeAaServerFailures: Int
@@ -861,14 +784,6 @@ class Settings(private val context: Context) {
     var autoStartOnScreenOn: Boolean
         get() = prefs.getBoolean("auto-start-on-screen-on", false)
         set(value) { prefs.edit().putBoolean("auto-start-on-screen-on", value).apply() }
-
-    var autoStartOnWifi: Boolean
-        get() = prefs.getBoolean("auto-start-on-wifi", false)
-        set(value) { prefs.edit().putBoolean("auto-start-on-wifi", value).apply() }
-
-    var autoStartWifiSsid: String
-        get() = prefs.getString("auto-start-wifi-ssid", "")!!
-        set(value) { prefs.edit().putString("auto-start-wifi-ssid", value).apply() }
 
     var listenForUsbDevices: Boolean
         get() = prefs.getBoolean("listen-for-usb-devices", true)
@@ -1000,7 +915,6 @@ class Settings(private val context: Context) {
             syncAutoStartOnBootToDeviceStorage(context, false)
             syncAutoStartOnScreenOnToDeviceStorage(context, false)
             syncAutoStartOnUsbToDeviceStorage(context, false)
-            syncAutoStartOnWifiToDeviceStorage(context, false)
             syncListenForUsbDevicesToDeviceStorage(context, true)
             syncAutoStartBtMacToDeviceStorage(context, "")
         }
@@ -1248,68 +1162,6 @@ class Settings(private val context: Context) {
             }
         }
 
-        private const val KEY_BOOT_LOOP_STRIKES = "boot-loop-strikes"
-        private const val KEY_WIRELESS_PAUSED_BY_BOOT_LOOP = "wireless-paused-by-boot-loop"
-
-        /**
-         * The device-protected store, which is readable at LOCKED_BOOT_COMPLETED — before the user
-         * has unlocked, and so before ordinary preferences exist. The boot-loop counters have to
-         * live here for the same reason the auto-start flags do: they are read and written by
-         * [com.andrerinas.openheadunit.app.BootCompleteReceiver] on a device that has just booted.
-         */
-        private fun bootPrefs(context: Context) =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                context.createDeviceProtectedStorageContext()
-                    .getSharedPreferences(DEVICE_PREFS_NAME, Context.MODE_PRIVATE)
-            } else {
-                context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            }
-
-        /** Consecutive boot-started runs that did not last. See `aap/BootLoopPolicy`. */
-        fun getBootLoopStrikes(context: Context): Int = try {
-            bootPrefs(context).getInt(KEY_BOOT_LOOP_STRIKES, 0)
-        } catch (e: Exception) {
-            AppLog.d("Settings: Could not read the boot-loop strike count: ${e.message}")
-            0
-        }
-
-        fun setBootLoopStrikes(context: Context, strikes: Int) {
-            try {
-                bootPrefs(context).edit().putInt(KEY_BOOT_LOOP_STRIKES, strikes).apply()
-            } catch (e: Exception) {
-                AppLog.d("Settings: Could not store the boot-loop strike count: ${e.message}")
-            }
-        }
-
-        /**
-         * Whether wireless bring-up is currently paused because it looked like it was crashing the
-         * device. Sticky on purpose: cleared when the user opens the app, not by surviving a run,
-         * so the cycle ends outright instead of resuming every few boots.
-         */
-        fun isWirelessPausedByBootLoop(context: Context): Boolean = try {
-            bootPrefs(context).getBoolean(KEY_WIRELESS_PAUSED_BY_BOOT_LOOP, false)
-        } catch (e: Exception) {
-            AppLog.d("Settings: Could not read the boot-loop pause flag: ${e.message}")
-            false
-        }
-
-        fun setWirelessPausedByBootLoop(context: Context, paused: Boolean) {
-            try {
-                bootPrefs(context).edit()
-                    .putBoolean(KEY_WIRELESS_PAUSED_BY_BOOT_LOOP, paused)
-                    .apply()
-            } catch (e: Exception) {
-                AppLog.d("Settings: Could not store the boot-loop pause flag: ${e.message}")
-            }
-        }
-
-        /** Both counters back to their defaults, for when the user is present and can act. */
-        fun clearBootLoopState(context: Context) {
-            if (getBootLoopStrikes(context) == 0 && !isWirelessPausedByBootLoop(context)) return
-            AppLog.i("Settings: Clearing the boot-loop guard — the app was opened by hand.")
-            setBootLoopStrikes(context, 0)
-            setWirelessPausedByBootLoop(context, false)
-        }
 
         private const val KEY_AUTO_START_ON_SCREEN_ON = "auto-start-on-screen-on"
 
@@ -1365,49 +1217,6 @@ class Settings(private val context: Context) {
                 deviceContext.getSharedPreferences(DEVICE_PREFS_NAME, Context.MODE_PRIVATE)
                     .edit()
                     .putBoolean(KEY_AUTO_START_ON_USB, enabled)
-                    .apply()
-            }
-        }
-
-        private const val KEY_AUTO_START_ON_WIFI = "auto-start-on-wifi"
-        private const val KEY_AUTO_START_WIFI_SSID = "auto-start-wifi-ssid"
-
-        fun isAutoStartOnWifiEnabled(context: Context): Boolean {
-            val prefs = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                val deviceContext = context.createDeviceProtectedStorageContext()
-                deviceContext.getSharedPreferences(DEVICE_PREFS_NAME, Context.MODE_PRIVATE)
-            } else {
-                context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            }
-            return prefs.getBoolean(KEY_AUTO_START_ON_WIFI, false)
-        }
-
-        fun syncAutoStartOnWifiToDeviceStorage(context: Context, enabled: Boolean) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                val deviceContext = context.createDeviceProtectedStorageContext()
-                deviceContext.getSharedPreferences(DEVICE_PREFS_NAME, Context.MODE_PRIVATE)
-                    .edit()
-                    .putBoolean(KEY_AUTO_START_ON_WIFI, enabled)
-                    .apply()
-            }
-        }
-
-        fun getAutoStartWifiSsid(context: Context): String {
-            val prefs = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                val deviceContext = context.createDeviceProtectedStorageContext()
-                deviceContext.getSharedPreferences(DEVICE_PREFS_NAME, Context.MODE_PRIVATE)
-            } else {
-                context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            }
-            return prefs.getString(KEY_AUTO_START_WIFI_SSID, "") ?: ""
-        }
-
-        fun syncAutoStartWifiSsidToDeviceStorage(context: Context, ssid: String) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                val deviceContext = context.createDeviceProtectedStorageContext()
-                deviceContext.getSharedPreferences(DEVICE_PREFS_NAME, Context.MODE_PRIVATE)
-                    .edit()
-                    .putString(KEY_AUTO_START_WIFI_SSID, ssid)
                     .apply()
             }
         }
@@ -1616,50 +1425,10 @@ class Settings(private val context: Context) {
         get() = prefs.getBoolean(KEY_AUTO_ENABLE_HOTSPOT, true)
         set(value) { prefs.edit().putBoolean(KEY_AUTO_ENABLE_HOTSPOT, value).apply() }
 
-    var waitForWifiBeforeWifiDirect: Boolean
-        get() = prefs.getBoolean("wait-for-wifi-before-wifi-direct", false)
-        set(value) { prefs.edit().putBoolean("wait-for-wifi-before-wifi-direct", value).apply() }
-
-    var waitForWifiTimeout: Int
-        get() = prefs.getInt("wait-for-wifi-timeout", 10)
-        set(value) { prefs.edit().putInt("wait-for-wifi-timeout", value).apply() }
-
-    // 0 = Common Wifi (NSD), 1 = Wifi Direct P2P, 2 = Nearby Devices, 3 = Phone Hotspot (Host), 4 = Headunit Hotspot (Passive)
-    var helperConnectionStrategy: Int
-        get() {
-            val stored = prefs.getInt("helper-connection-strategy", 4)
-            if (stored != 2 || hasGoogleServicesFramework()) return stored
-
-            // Existing MG4 installs may have inherited the old Nearby default. Nearby depends on
-            // GSF and crashes Google-free firmware, so migrate those installs to the same passive
-            // car-hotspot transport used by the stable wireless setup.
-            prefs.edit().putInt("helper-connection-strategy", 4).apply()
-            return 4
-        }
-        set(value) = prefs.edit().putInt("helper-connection-strategy", value).apply()
-
-    private fun hasGoogleServicesFramework(): Boolean =
-        context.packageManager.resolveContentProvider("com.google.android.gsf.gservices", 0) != null
-
-    var lastNearbyDeviceName: String
-        get() = prefs.getString("last-nearby-device-name", "")!!
-        set(value) = prefs.edit().putString("last-nearby-device-name", value).apply()
-
     var bluetoothManagerServiceName: String
         get() = prefs.getString("bluetooth-manager-service-name", "bluetooth_manager")!!
         set(value) = prefs.edit().putString("bluetooth-manager-service-name", value).apply()
 
-    // Which network the Native AA mode (wifiConnectionMode 3) puts the phone on.
-    // 0 = WiFi Direct, 1 = car hotspot. Legacy local-hotspot value 2 migrates to 1.
-    //
-    // Deliberately not folded into helperConnectionStrategy: that setting belongs to mode 2 and
-    // means something different in every one of its five values. A wireless mode that reuses
-    // another mode's selector is how the two call sites of the old usesWifiDirect() drifted apart.
-    // DiAuto for MG4: wireless Android Auto always goes through the car's own hotspot (1 = HOTSPOT);
-    // Wi-Fi Direct and the app-owned local hotspot are no longer offered.
-    var nativeApTransport: Int
-        get() = 1
-        set(_) = Unit
 
     // Whether the Native AA handshake opens with a WifiVersionRequest (Type 4), as real head units
     // and the OEM ZLink app do, instead of going straight to WifiStartRequest.
