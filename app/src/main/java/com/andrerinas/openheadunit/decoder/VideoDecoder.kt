@@ -200,6 +200,9 @@ class VideoDecoder(
     private var softwareHevcDecoder: FfmpegHevcDecoder? = null
     private var codecBufferInfo: MediaCodec.BufferInfo? = null
     private var mSurface: Surface? = null
+    /** See [parkFrom]. */
+    @Volatile private var parked = false
+    private var parkingTexture: android.graphics.SurfaceTexture? = null
     private var outputThread: Thread? = null
     @Volatile private var running = false
     private var startTime = 0L
@@ -491,9 +494,71 @@ class VideoDecoder(
     /**
      * Sets the rendering surface and restarts the decoder if necessary.
      */
+    /**
+     * Keeps the decoder running while the projection screen is away (the car's home, another
+     * app): its output moves to an off-screen surface and frames are decoded without being shown.
+     * The screen coming back then gets the picture at once, without waiting for the phone to
+     * restart the stream. Needs MediaCodec.setOutputSurface (API 23) and a hardware/MediaCodec
+     * decoder; false when it cannot park, and the caller stops the decoder as before.
+     */
+    fun parkFrom(surface: Surface): Boolean = synchronized(this) {
+        val current = codec
+        if (Build.VERSION.SDK_INT < 23 || mSurface !== surface || current == null || !running ||
+            bundledHevcSelected()) return false
+        return try {
+            val texture = android.graphics.SurfaceTexture(0).apply {
+                setDefaultBufferSize(mWidth.coerceAtLeast(1), mHeight.coerceAtLeast(1))
+            }
+            val offscreen = Surface(texture)
+            parked = true
+            current.setOutputSurface(offscreen)
+            parkingTexture = texture
+            mSurface = offscreen
+            AppLog.i("Decoder parked off-screen: the stream keeps running for a quick return")
+            true
+        } catch (e: Exception) {
+            parked = false
+            AppLog.w("Decoder could not park off-screen (${e.message}); stopping as usual")
+            false
+        }
+    }
+
+    val isParked: Boolean get() = parked
+
+    /** Ends a park that lasted too long: the decoder stops as it would have on leaving. */
+    fun stopParked(reason: String) = synchronized(this) {
+        if (!parked) return
+        stop(reason)
+        releaseParking()
+    }
+
+    private fun releaseParking() {
+        parked = false
+        val texture = parkingTexture ?: return
+        parkingTexture = null
+        runCatching { texture.release() }
+    }
+
     fun setSurface(surface: Surface?) {
         synchronized(this) {
             if (mSurface === surface) return
+
+            val current = codec
+            if (parked && surface != null && current != null && Build.VERSION.SDK_INT >= 23) {
+                try {
+                    current.setOutputSurface(surface)
+                    val parking = mSurface
+                    mSurface = surface
+                    releaseParking()
+                    parking?.release()
+                    lastFrameRenderedMs = 0L
+                    AppLog.i("Decoder unparked onto the new surface: picture back at once")
+                    return
+                } catch (e: Exception) {
+                    AppLog.w("Decoder unpark failed (${e.message}); restarting it on the new surface")
+                    releaseParking()
+                }
+            }
 
             AppLog.i("New surface set: $surface")
             // Unconditional, not gated on a live codec: stop() is where the failure state
@@ -541,6 +606,7 @@ class VideoDecoder(
     fun stop(reason: String = "unknown") {
         synchronized(this) {
             running = false
+            if (parked) releaseParking()
             try {
                 // If calling from output thread, don't join itself to avoid deadlock
                 if (outputThread != null && outputThread != Thread.currentThread()) {
@@ -1771,6 +1837,11 @@ class VideoDecoder(
         val pacer = if (Build.VERSION.SDK_INT >= 21 && settings.viewMode == Settings.ViewMode.SURFACE)
             FrameReleasePacer(settings.displayRefreshRate) else null
         fun releaseFrame(codec: MediaCodec, index: Int): Boolean {
+            // Parked: decoded to keep the stream current, nothing is shown.
+            if (parked) {
+                codec.releaseOutputBuffer(index, false)
+                return false
+            }
             if (pacer == null) {
                 codec.releaseOutputBuffer(index, true)
                 return true

@@ -1,3 +1,8 @@
+# DiAuto MG4+ 2.1.0-beta8
+
+- Video at 30 frames per second by default, also for existing installs: half the frames for the phone to encode and send over Wi-Fi, fewer stutters, still smooth. 60 remains available in Video > FPS limit.
+- Coming back to the Android Auto screen is instant: for 2 minutes after leaving it, the video keeps decoding off-screen, then it is given back to the phone as before (so the phone does not keep encoding for nothing).
+
 # DiAuto MG4+ 2.1.0-beta7
 
 - Pause is heard at once: the music already in the Wi-Fi jitter buffer (about 1 s) is dropped when a pause key or play/pause on playing music is sent, instead of playing out first.

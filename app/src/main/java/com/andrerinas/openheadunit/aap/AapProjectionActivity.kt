@@ -1590,6 +1590,8 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
         AppLog.i("[UI_DEBUG] [AapProjectionActivity] onSurfaceChanged. Actual surface dimensions: width=$width, height=$height")
         isSurfaceSet = true
 
+        parkTimeout?.let { parkHandler.removeCallbacks(it) }
+        parkTimeout = null
         videoDecoder.setSurface(surface)
         // A surface arriving inside a cycle's own gap must not strand the pending gain.
         settleFocusCycle()
@@ -1679,6 +1681,23 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
         }
         AppLog.i("SurfaceCallback: onSurfaceDestroyed. Surface: $surface")
         isSurfaceSet = false
+        // Leaving the screen: keep the stream decoding off-screen for a while, so coming back
+        // shows the picture at once; only then give the video back to the phone.
+        if (videoDecoder.parkFrom(surface)) {
+            val decoder = videoDecoder
+            val comm = commManager
+            parkTimeout?.let { parkHandler.removeCallbacks(it) }
+            val timeout = Runnable {
+                if (decoder.isParked) {
+                    AppLog.i("Projection away for ${PARK_MAX_MS / 1000}s: giving the video back to the phone")
+                    comm.send(VideoFocusEvent(gain = false, unsolicited = false))
+                    decoder.stopParked(DecoderStopPolicy.REASON_SURFACE_DESTROYED)
+                }
+            }
+            parkTimeout = timeout
+            parkHandler.postDelayed(timeout, PARK_MAX_MS)
+            return
+        }
         commManager.send(VideoFocusEvent(gain = false, unsolicited = false))
         videoDecoder.stopIfCurrentSurface(surface, DecoderStopPolicy.REASON_SURFACE_DESTROYED)
     }
@@ -1890,6 +1909,11 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
     }
 
     companion object {
+        /** How long the stream keeps decoding off-screen after the projection screen is left (2 min). */
+        private const val PARK_MAX_MS = 120_000L
+        // Process-wide: the activity may be destroyed while the decoder is parked.
+        private val parkHandler = android.os.Handler(android.os.Looper.getMainLooper())
+        private var parkTimeout: Runnable? = null
         const val EXTRA_FOCUS = "focus"
         /** Align with AapService USER_EXIT_COOLDOWN_MS so reconnect spam stays quiet for one settle window. */
         private const val WIFI_DISCONNECT_TOAST_COOLDOWN_MS = 15_000L
