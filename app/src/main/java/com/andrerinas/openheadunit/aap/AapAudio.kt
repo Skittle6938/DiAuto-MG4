@@ -33,12 +33,16 @@ internal class AapAudio(
 
     private val staticAudioFocus = settings.staticAudioFocus
 
-    init {
-        com.andrerinas.openheadunit.decoder.SpeechRoute.navigationChannel = settings.guidanceOnNavigationChannel
-    }
     // Hybrid Bluetooth music: keep assistant/nav off STREAM_MUSIC so Gemini is not lost under A2DP.
     private val separateAudioStreams =
         settings.separateAudioStreams || settings.musicViaBluetooth
+
+    init {
+        // Separate streams: prompts and the assistant get their own channel, the car's navigation
+        // one (mixed over the radio). Otherwise they play in the multimedia stream with the music.
+        com.andrerinas.openheadunit.decoder.SpeechRoute.navigationChannel = separateAudioStreams
+    }
+
     private val mediaVolumeOffset = settings.mediaVolumeOffset
     private val assistantVolumeOffset = settings.assistantVolumeOffset
     private val navigationVolumeOffset = settings.navigationVolumeOffset

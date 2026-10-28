@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.1.0-beta13
+
+- The beta12 setting is replaced by the existing "Separate audio streams", now off by default (also for existing installs): off, prompts, the assistant and notifications play in the multimedia stream with the music; on, they get their own channel, the car's navigation one, heard over the radio. Takes effect at the next connection.
+
 # DiAuto MG4+ 2.1.0-beta12
 
 - New setting "Navigation prompts over the radio" (off by default): off, prompts and the assistant play with the music, on all speakers, as before 2.0.0-beta19, but are not heard while the radio plays; on, they use the car's navigation channel and are heard over the radio, which can sound thinner.

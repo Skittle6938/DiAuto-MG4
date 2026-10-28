@@ -731,11 +731,6 @@ class Settings(private val context: Context) {
         get() = prefs.getBoolean(KEY_MUSIC_VIA_BLUETOOTH, false)
         set(value) { prefs.edit().putBoolean(KEY_MUSIC_VIA_BLUETOOTH, value).apply() }
 
-    /** Prompts and the assistant on the car's navigation channel (mixed over the radio) instead of with the music. */
-    var guidanceOnNavigationChannel: Boolean
-        get() = prefs.getBoolean("guidance-nav-channel", false)
-        set(value) { prefs.edit().putBoolean("guidance-nav-channel", value).apply() }
-
     /**
      * When hybrid ([musicViaBluetooth]) is on and AA connects, ask SAIC media to select
      * Bluetooth Music (`requestBtAudioFocus` then `play`) — same as the home music card.
@@ -779,8 +774,8 @@ class Settings(private val context: Context) {
 
     /** Voice / nav / media on separate Android streams — helps calls not share MUSIC with radio. */
     var separateAudioStreams: Boolean
-        get() = prefs.getBoolean("separate-audio-streams", true)
-        set(value) { prefs.edit().putBoolean("separate-audio-streams", value).apply() }
+        get() = prefs.getBoolean("separate-audio-streams-v2", false)
+        set(value) { prefs.edit().putBoolean("separate-audio-streams-v2", value).apply() }
 
     var micInputSource: Int
         get() = prefs.getInt("mic-input-source", 0) // Default: DEFAULT

@@ -1603,18 +1603,6 @@ class SettingsFragment : Fragment() {
         items.add(SettingItem.CategoryHeader("audio", R.string.category_audio))
 
         items.add(SettingItem.ToggleSettingEntry(
-            stableId = "guidanceOnNavigationChannel",
-            nameResId = R.string.guidance_nav_channel,
-            descriptionResId = R.string.guidance_nav_channel_description,
-            isChecked = settings.guidanceOnNavigationChannel,
-            onCheckedChanged = { enabled ->
-                settings.guidanceOnNavigationChannel = enabled
-                com.andrerinas.openheadunit.decoder.SpeechRoute.navigationChannel = enabled
-                updateSettingsList()
-            }
-        ))
-
-        items.add(SettingItem.ToggleSettingEntry(
             stableId = "musicViaBluetooth",
             nameResId = R.string.da_bluetooth_music,
             descriptionResId = R.string.da_bluetooth_music_hint,
@@ -1722,7 +1710,7 @@ class SettingsFragment : Fragment() {
             stableId = "separateAudioStreams",
             nameResId = R.string.separate_audio_streams,
             descriptionResId = R.string.separate_audio_streams_description,
-            isChecked = pendingSeparateAudioStreams ?: true,
+            isChecked = pendingSeparateAudioStreams ?: false,
             onCheckedChanged = { isChecked ->
                 pendingSeparateAudioStreams = isChecked
                 checkChanges()

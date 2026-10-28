@@ -512,8 +512,8 @@
     <string name="playback_focus_mode_always_hint">Always pauses other audio while Android Auto plays. If your music stops after a second or two whenever Bluetooth is on, switch back to Automatic.</string>
     <string name="playback_focus_mode_never_hint">Never touches system audio focus. Other audio on the headunit may keep playing over Android Auto.</string>
     <string name="playback_focus_mode_static_hint">With Static Audio Focus on, this applies from the moment the phone connects and lasts the whole session, rather than only while audio is playing.</string>
-    <string name="separate_audio_streams">Separate Audio Streams</string>
-    <string name="separate_audio_streams_description">Separate audio channels for music, calls, and notifications instead of a single multimedia stream (may not work correctly on some devices).</string>
+    <string name="separate_audio_streams">Séparer les flux audio</string>
+    <string name="separate_audio_streams_description">Désactivé : le guidage, l’assistant et les notifications passent dans le flux multimédia avec la musique. Activé : ils ont leur propre canal, que la voiture gère à part (le canal navigation, audible par-dessus la radio). Prend effet à la prochaine connexion.</string>
     <string name="use_aac_audio">Use AAC Audio</string>
     <string name="use_aac_audio_description">Use AAC codec for audio to save bandwidth (Experimental).</string>
     <string name="attach_hw_dsp_equalizer">Hardware DSP Equalizer Trigger</string>
@@ -624,8 +624,6 @@
     <string name="ota_install_failed_status">Échec de l’installation : %1$s</string>
     <string name="ota_toast_checking">Recherche de mises à jour…</string>
     <string name="ota_status_label">État de la mise à jour</string>
-    <string name="guidance_nav_channel">Guidage par-dessus la radio</string>
-    <string name="guidance_nav_channel_description">Activé : le guidage et l’assistant passent par le canal navigation de la voiture et s’entendent par-dessus la radio, mais le son peut être plus fin. Désactivé : ils passent avec la musique, son plus plein, mais ne s’entendent pas pendant la radio.</string>
     <string name="compat_report">Rapport de compatibilité</string>
     <string name="compat_report_description">Votre configuration en bref, à joindre à une issue GitHub. Aucune donnée personnelle.</string>
     <string name="compat_report_title">Rapport de compatibilité</string>
