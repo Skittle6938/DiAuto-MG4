@@ -581,22 +581,9 @@ class Settings(private val context: Context) {
 
     // 0 = Manual, 1 = Auto (Headunit Server), 2 = Helper (Wifi Launcher), 3 = Native AA
     var wifiConnectionMode: Int
-        get() {
-            // Migration: Check if old helper boolean exists
-            if (prefs.contains("wifi-launcher-mode")) {
-                val old = prefs.getBoolean("wifi-launcher-mode", false)
-                val newMode = if (old) 2 else 1
-                prefs.edit().putInt("wifi-connection-mode", newMode).remove("wifi-launcher-mode").apply()
-                return newMode
-            }
-            // Migration: Check if native-aa-wireless was true
-            if (prefs.getBoolean("native-aa-wireless", false)) {
-                prefs.edit().putInt("wifi-connection-mode", 3).remove("native-aa-wireless").apply()
-                return 3
-            }
-            return prefs.getInt("wifi-connection-mode", 3) // Native Android Auto; no companion app
-        }
-        set(value) { prefs.edit().putInt("wifi-connection-mode", value).apply() }
+        // DiAuto for MG4: native Android Auto only (no Helper, no Headunit Server).
+        get() = 3
+        set(_) = Unit
 
     var videoCodec: String
         get() = prefs.getString("video-codec", "Auto")!!
@@ -1668,15 +1655,11 @@ class Settings(private val context: Context) {
     // Deliberately not folded into helperConnectionStrategy: that setting belongs to mode 2 and
     // means something different in every one of its five values. A wireless mode that reuses
     // another mode's selector is how the two call sites of the old usesWifiDirect() drifted apart.
+    // DiAuto for MG4: wireless Android Auto always goes through the car's own hotspot (1 = HOTSPOT);
+    // Wi-Fi Direct and the app-owned local hotspot are no longer offered.
     var nativeApTransport: Int
-        get() {
-            val stored = prefs.getInt("native-ap-transport", 1)
-            return if (stored == 2) {
-                prefs.edit().putInt("native-ap-transport", 1).apply()
-                1
-            } else stored
-        }
-        set(value) = prefs.edit().putInt("native-ap-transport", if (value == 2) 1 else value).apply()
+        get() = 1
+        set(_) = Unit
 
     // Whether the Native AA handshake opens with a WifiVersionRequest (Type 4), as real head units
     // and the OEM ZLink app do, instead of going straight to WifiStartRequest.
