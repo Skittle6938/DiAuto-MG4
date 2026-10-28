@@ -203,6 +203,13 @@ class VideoDecoder(
     /** See [parkFrom]. */
     @Volatile private var parked = false
     private var parkingTexture: android.graphics.SurfaceTexture? = null
+    // While parked, the newest decoded frame is held instead of dropped, and shown the moment the
+    // screen comes back: a still Android Auto screen sends no new frame until something on it
+    // changes, which left the returning screen black for seconds.
+    private val parkHoldLock = Any()
+    private var heldParkedFrame: Pair<MediaCodec, Int>? = null
+    // Set when an unpark had no frame to show, so the log says how long the screen stayed empty.
+    @Volatile private var unparkedWithoutFrameAtMs = 0L
     private var outputThread: Thread? = null
     @Volatile private var running = false
     private var startTime = 0L
@@ -539,12 +546,26 @@ class VideoDecoder(
             if (parked && surface != null && current != null && Build.VERSION.SDK_INT >= 23) {
                 try {
                     current.setOutputSurface(surface)
+                    // Under the lock, before parked clears: the output thread then renders only
+                    // frames newer than this one.
+                    val shown = synchronized(parkHoldLock) {
+                        val held = heldParkedFrame
+                        heldParkedFrame = null
+                        val ok = held != null && held.first === current &&
+                            runCatching { current.releaseOutputBuffer(held.second, true) }.isSuccess
+                        parked = false
+                        ok
+                    }
                     val parking = mSurface
                     mSurface = surface
                     releaseParking()
                     parking?.release()
                     lastFrameRenderedMs = 0L
-                    AppLog.i("Decoder unparked onto the new surface: picture back at once")
+                    unparkedWithoutFrameAtMs = if (shown) 0L else SystemClock.elapsedRealtime()
+                    AppLog.i(
+                        "Decoder unparked onto the new surface: " +
+                            if (shown) "last frame shown at once" else "no held frame, waiting for the next one"
+                    )
                     return true
                 } catch (e: Exception) {
                     AppLog.w("Decoder unpark failed (${e.message}); restarting it on the new surface")
@@ -603,6 +624,7 @@ class VideoDecoder(
             // surface goes with it, or every restart configures onto a released surface and fails
             // (error -19 twenty times a second, each asking the phone for a keyframe; 2026-10-28).
             val parkedSurface = if (parked) mSurface else null
+            synchronized(parkHoldLock) { heldParkedFrame = null }
             try {
                 // If calling from output thread, don't join itself to avoid deadlock
                 if (outputThread != null && outputThread != Thread.currentThread()) {
@@ -1841,8 +1863,16 @@ class VideoDecoder(
             // Parked: decoded to keep the stream current, nothing is shown. Counted as delivered,
             // or the stall watchdog sees no frame and restarts the decoder over and over.
             if (parked) {
-                codec.releaseOutputBuffer(index, false)
-                return true
+                synchronized(parkHoldLock) {
+                    if (parked) {
+                        val previous = heldParkedFrame
+                        heldParkedFrame = codec to index
+                        if (previous != null && previous.first === codec) {
+                            codec.releaseOutputBuffer(previous.second, false)
+                        }
+                        return true
+                    }
+                }
             }
             if (pacer == null) {
                 codec.releaseOutputBuffer(index, true)
@@ -1923,6 +1953,10 @@ class VideoDecoder(
 
                     if (!releaseFrame(currentCodec, renderIndex)) continue
                     lastFrameRenderedMs = SystemClock.elapsedRealtime()
+                    if (unparkedWithoutFrameAtMs != 0L) {
+                        AppLog.i("Picture back ${lastFrameRenderedMs - unparkedWithoutFrameAtMs}ms after the unpark")
+                        unparkedWithoutFrameAtMs = 0L
+                    }
                     renderedThisSession = true
                     lastOutputMs = lastFrameRenderedMs
                     // bufferInfo carries the last successful dequeue, which is renderIndex. The
