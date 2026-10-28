@@ -1356,7 +1356,33 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
 
     private data class ExitOption(val titleResId: Int, val iconResId: Int, val iconColor: Int)
 
+    private var projectionMenu: View? = null
+
+    /** The two-finger menu: two big buttons over Android Auto; a tap elsewhere closes it. */
     private fun showExitDialog() {
+        if (projectionMenu != null) return
+        val root = window.decorView as android.view.ViewGroup
+        val menu = layoutInflater.inflate(R.layout.da_projection_menu, root, false)
+        fun close() {
+            root.removeView(menu)
+            projectionMenu = null
+        }
+        menu.setOnClickListener { close() }
+        menu.findViewById<View>(R.id.menu_disconnect).setOnClickListener {
+            close()
+            commManager.disconnect(sendByeBye = true)
+            finish()
+        }
+        menu.findViewById<View>(R.id.menu_settings).setOnClickListener {
+            close()
+            startActivity(com.andrerinas.openheadunit.main.DaSettingsActivity.intent(this))
+        }
+        root.addView(menu)
+        projectionMenu = menu
+    }
+
+    @Suppress("unused")
+    private fun showLegacyExitDialog() {
         val options = mutableListOf<ExitOption>()
         options.add(ExitOption(R.string.exit_dialog_stop, R.drawable.ic_stop, Color.RED))
 

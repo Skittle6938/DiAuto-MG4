@@ -216,6 +216,12 @@
              adb shell am start -n com.drivehub.diauto.mg4/com.andrerinas.openheadunit.main.NavTestActivity -->
 
         <activity
+            android:name=".main.DaSettingsActivity"
+            android:label="@string/da_settings"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme" />
+
+        <activity
             android:name=".main.SettingsActivity"
             android:label="@string/settings"
             android:windowSoftInputMode="stateHidden|adjustResize"

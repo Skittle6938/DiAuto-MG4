@@ -44,41 +44,40 @@ class HomeFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?): View =
-        inflater.inflate(R.layout.fragment_home, container, false)
+        inflater.inflate(R.layout.da_home, container, false)
 
     override fun onViewCreated(view: View, state: Bundle?) {
-        view.findViewById<View>(R.id.wifi_button).setOnClickListener {
+        view.findViewById<TextView>(R.id.home_version).text =
+            BuildConfig.VERSION_NAME.removeSuffix("-debug").removeSuffix("-phone")
+        view.findViewById<View>(R.id.home_main_button).setOnClickListener {
             if (app.commManager.isConnected) openProjection()
             else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
                 ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                 bluetoothPermission.launch(Manifest.permission.BLUETOOTH_CONNECT)
             } else connectWireless()
         }
-        view.findViewById<View>(R.id.usb_button).setOnClickListener {
-            if (app.commManager.isConnected) openProjection()
-            else findNavController().navigate(R.id.action_homeFragment_to_usbListFragment)
+        view.findViewById<View>(R.id.home_settings).setOnClickListener {
+            startActivity(DaSettingsActivity.intent(requireContext()))
         }
-        view.findViewById<View>(R.id.settings_button).setOnClickListener {
-            startActivity(Intent(requireContext(), SettingsActivity::class.java))
-        }
-        // Going back to the car does not tear down a connection or disable reconnect.
-        view.findViewById<View>(R.id.exit_button).setOnClickListener { requireActivity().moveTaskToBack(true) }
-        val updateButton = view.findViewById<MaterialButton>(R.id.update_button)
-        val updateHint = view.findViewById<TextView>(R.id.update_hint)
+        val updateHint = view.findViewById<TextView>(R.id.home_update_hint)
         ota = OtaController(requireActivity()).also { controller ->
-            controller.setStateListener { status -> showUpdateState(updateButton, updateHint, status) }
+            controller.setStateListener { status -> updateHint.text = updateText(requireContext(), status) }
         }
-        updateButton.setOnClickListener { ota?.checkOrDownload() }
+        view.findViewById<View>(R.id.home_update).setOnClickListener { ota?.checkOrDownload() }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 app.commManager.connectionState.collect { state ->
-                    val status = when (state) {
-                        is CommManager.ConnectionState.Disconnected -> R.string.da_ready
-                        is CommManager.ConnectionState.TransportStarted -> R.string.da_connected
-                        else -> R.string.da_connecting
+                    val connected = state is CommManager.ConnectionState.TransportStarted
+                    val phone = app.settings.autoStartBluetoothDeviceName
+                    view.findViewById<TextView>(R.id.home_state).text = when {
+                        connected && phone.isNotBlank() -> getString(R.string.dhome_connected, phone)
+                        connected -> getString(R.string.dhome_connected_generic)
+                        state is CommManager.ConnectionState.Disconnected -> getString(R.string.dhome_waiting)
+                        else -> getString(R.string.dhome_connecting)
                     }
-                    view.findViewById<TextView>(R.id.connection_status).setText(status)
-                    view.findViewById<MaterialButton>(R.id.wifi_button).setText(
+                    view.findViewById<TextView>(R.id.home_state_hint).setText(
+                        if (connected) R.string.dhome_connected_hint else R.string.dhome_waiting_hint)
+                    view.findViewById<TextView>(R.id.home_main_label).setText(
                         if (app.commManager.isConnected) R.string.da_open else R.string.da_connect)
                 }
             }
@@ -233,20 +232,13 @@ class HomeFragment : Fragment() {
     }
 }
 
-/** Update button: highlighted with the version to install when one is offered. */
-internal fun showUpdateState(button: MaterialButton, hint: TextView, status: OtaController.Status) {
-    val context = button.context
-    val available = status.state == OtaController.State.AVAILABLE
-    val accent = ContextCompat.getColor(context, R.color.da_accent)
-    val dark = ContextCompat.getColor(context, R.color.da_background)
-    button.text = if (available) context.getString(R.string.da_update_install, status.latestVersion)
-        else context.getString(R.string.da_update)
-    button.backgroundTintList = ColorStateList.valueOf(
-        if (available) accent else ContextCompat.getColor(context, R.color.da_surface))
-    button.setTextColor(if (available) dark else ContextCompat.getColor(context, R.color.da_text))
-    button.iconTint = ColorStateList.valueOf(if (available) dark else accent)
+/** The update tile's line: the version to install when one is offered, else where things stand. */
+internal fun updateText(context: android.content.Context, status: OtaController.Status): String {
     val version = BuildConfig.VERSION_NAME.removeSuffix("-debug").removeSuffix("-phone")
-    hint.text = when (status.state) {
+    if (status.state == OtaController.State.AVAILABLE) {
+        return context.getString(R.string.da_update_install, status.latestVersion)
+    }
+    return when (status.state) {
         OtaController.State.CHECKING -> context.getString(R.string.da_update_hint_checking)
         OtaController.State.AVAILABLE -> context.getString(
             if (status.prerelease) R.string.da_update_hint_available_beta else R.string.da_update_hint_available)

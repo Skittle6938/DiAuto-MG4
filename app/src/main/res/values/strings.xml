@@ -632,17 +632,6 @@
     <string name="ota_install_failed_status">Install failed: %1$s</string>
     <string name="ota_toast_checking">Checking for updates…</string>
     <string name="ota_status_label">Update status</string>
-    <string name="compat_report">Compatibility report</string>
-    <string name="compat_report_description">Your setup in short, to add to a GitHub issue. No personal data.</string>
-    <string name="compat_report_title">Compatibility report</string>
-    <string name="compat_report_scan_hint">Scan it with your phone, then paste the text into the issue.</string>
-    <string name="compat_report_qr_description">QR code of the compatibility report</string>
-    <string name="compat_report_copy">Copy</string>
-    <string name="compat_report_share">Share</string>
-    <string name="compat_report_copied">Report copied</string>
-    <string name="restore_allgo">Go back to the car’s Android Auto (AllGo)</string>
-    <string name="restore_allgo_message">DiAuto is installed in place of the car’s own Android Auto. This removes DiAuto: the car’s original Android Auto comes back exactly as it was. DiAuto’s settings are lost.</string>
-    <string name="restore_allgo_confirm">Remove DiAuto</string>
     <string name="ota_status_no_stable">No newer official version</string>
     <string name="ota_dialog_no_stable_message">No official version newer than %1$s yet. Betas are offered when “Also check beta releases” is on in Settings.</string>
     <string name="ota_dialog_up_to_date_version">DiAuto %1$s is the latest version.</string>

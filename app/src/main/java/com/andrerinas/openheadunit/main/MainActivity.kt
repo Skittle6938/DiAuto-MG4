@@ -975,18 +975,9 @@ class MainActivity : BaseActivity() {
     }
 
     fun checkSetupFlow() {
-        val appSettings = Settings(this)
-        // Show the intelligent onboarding wizard once whenever the stored version is
-        // older than the current one (covers fresh installs and upgraders alike).
-        val wizardPending = appSettings.onboardingVersion < OnboardingActivity.CURRENT_ONBOARDING_VERSION
-        if (wizardPending && !OnboardingActivity.deferredThisSession) {
-            // The wizard's permissions step handles runtime permissions, so don't also prompt here.
-            startActivity(Intent(this, OnboardingActivity::class.java))
-        } else if (!wizardPending) {
-            // Onboarding already completed (e.g. upgraders): request runtime permissions directly.
-            requestPermissions()
-        }
-        // Wizard deferred this session ("Do it later"): wait until it runs on the next launch.
+        // No first-run wizard on the MG4: DiAuto is ready as installed (system app, permissions
+        // granted), and the settings have MG4 defaults.
+        requestPermissions()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
