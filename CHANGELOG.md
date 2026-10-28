@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.1.0-beta12
+
+- New setting "Navigation prompts over the radio" (off by default): off, prompts and the assistant play with the music, on all speakers, as before 2.0.0-beta19, but are not heard while the radio plays; on, they use the car's navigation channel and are heard over the radio, which can sound thinner.
+
 # DiAuto MG4+ 2.1.0-beta11
 
 - Navigation prompts, assistant and system sounds back to 16 kHz: with them announced at 48 kHz (beta9/10) the phone no longer connected.

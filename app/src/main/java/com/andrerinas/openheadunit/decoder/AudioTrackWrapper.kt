@@ -452,11 +452,12 @@ class AudioTrackWrapper(
 
         AppLog.i("Audio stream: $stream buffer size: $bufferSize (min: $minBufferSize) sampleRateInHz: $sampleRateInHz channelCount: $channelCount")
 
-        // Prompts and the assistant (AUDIO1/AUDIO2) play as navigation guidance, untagged: the MG4
+        // With the navigation channel chosen (SpeechRoute), prompts and the assistant (AUDIO1/AUDIO2)
+        // play as navigation guidance, untagged: the MG4
         // sends that usage to its NAVI bus, mixed over any source. As media tagged Android Auto
         // they went to the media bus, which is silent while the radio is the car's source.
         val speech = channelId == Channel.ID_AU1 || channelId == Channel.ID_AU2
-        if (speech && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (speech && SpeechRoute.navigationChannel && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return AudioTrack.Builder()
                 .setAudioAttributes(
                     AudioAttributes.Builder()

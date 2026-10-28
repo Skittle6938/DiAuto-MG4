@@ -731,6 +731,11 @@ class Settings(private val context: Context) {
         get() = prefs.getBoolean(KEY_MUSIC_VIA_BLUETOOTH, false)
         set(value) { prefs.edit().putBoolean(KEY_MUSIC_VIA_BLUETOOTH, value).apply() }
 
+    /** Prompts and the assistant on the car's navigation channel (mixed over the radio) instead of with the music. */
+    var guidanceOnNavigationChannel: Boolean
+        get() = prefs.getBoolean("guidance-nav-channel", false)
+        set(value) { prefs.edit().putBoolean("guidance-nav-channel", value).apply() }
+
     /**
      * When hybrid ([musicViaBluetooth]) is on and AA connects, ask SAIC media to select
      * Bluetooth Music (`requestBtAudioFocus` then `play`) — same as the home music card.

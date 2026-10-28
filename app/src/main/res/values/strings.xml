@@ -632,6 +632,8 @@
     <string name="ota_install_failed_status">Install failed: %1$s</string>
     <string name="ota_toast_checking">Checking for updates…</string>
     <string name="ota_status_label">Update status</string>
+    <string name="guidance_nav_channel">Navigation prompts over the radio</string>
+    <string name="guidance_nav_channel_description">On: prompts and the assistant use the car’s navigation channel and are heard over the radio, but may sound thinner. Off: they play with the music, fuller, but are not heard while the radio plays.</string>
     <string name="compat_report">Compatibility report</string>
     <string name="compat_report_description">Your setup in short, to add to a GitHub issue. No personal data.</string>
     <string name="compat_report_title">Compatibility report</string>

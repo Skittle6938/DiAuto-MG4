@@ -32,6 +32,10 @@ internal class AapAudio(
         SaicCarAudioSource.audioManager(context) ?: audioManager
 
     private val staticAudioFocus = settings.staticAudioFocus
+
+    init {
+        com.andrerinas.openheadunit.decoder.SpeechRoute.navigationChannel = settings.guidanceOnNavigationChannel
+    }
     // Hybrid Bluetooth music: keep assistant/nav off STREAM_MUSIC so Gemini is not lost under A2DP.
     private val separateAudioStreams =
         settings.separateAudioStreams || settings.musicViaBluetooth
@@ -622,6 +626,8 @@ internal class AapAudio(
      * prompt audio plays on that channel. Without it the prompt is silent on every source.
      */
     private fun requestSpeechFocus(channel: Int) {
+        // Only the navigation channel needs it; on the media path the prompt plays with the music.
+        if (!com.andrerinas.openheadunit.decoder.SpeechRoute.navigationChannel) return
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || speechFocusRequests.containsKey(channel)) return
         lastOwnFocusRequestMs = SystemClock.elapsedRealtime()
         val request = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
