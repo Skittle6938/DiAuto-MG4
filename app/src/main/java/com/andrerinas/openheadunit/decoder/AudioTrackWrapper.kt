@@ -33,6 +33,13 @@ class AudioTrackWrapper(
     private val attachHwDspEqualizer: Boolean = false,
     /** >0 enables Wi‑Fi media jitter: larger track + delay play() until this many ms are queued. */
     private val mediaBufferMillis: Int = 0,
+    /**
+     * Called once for every chunk handed to [write], when it leaves this wrapper: played, decoded,
+     * flushed or refused. The phone's media ack is sent from here, so its unacked window really
+     * bounds how far ahead of the speakers it can be, instead of every burst being acked on arrival
+     * and then dropped here when the queue overflowed (heard as sped-up, choppy music).
+     */
+    private val onChunkDone: (() -> Unit)? = null,
 ) : Thread() {
 
     private data class AudioChunk(
@@ -321,6 +328,7 @@ class AudioTrackWrapper(
                         }
                     } finally {
                         recycleAudioBuffer(chunk.data)
+                        onChunkDone?.invoke()
                     }
                 }
             } catch (e: InterruptedException) {
@@ -546,7 +554,10 @@ class AudioTrackWrapper(
     }
 
     fun write(buffer: ByteArray, offset: Int, size: Int) {
-        if (!isRunning) return
+        if (!isRunning) {
+            onChunkDone?.invoke()
+            return
+        }
 
         var data: ByteArray? = null
         try {
@@ -555,10 +566,12 @@ class AudioTrackWrapper(
             val success = dataQueue.offer(AudioChunk(data, size), 5, TimeUnit.MILLISECONDS)
             if (!success) {
                 recycleAudioBuffer(data)
+                onChunkDone?.invoke()
                 AppLog.w("Audio queue is full, dropping audio frame to prevent stalling")
             }
         } catch (e: InterruptedException) {
             data?.let { recycleAudioBuffer(it) }
+            onChunkDone?.invoke()
             Thread.currentThread().interrupt()
             AppLog.w("Interrupted while putting audio data to queue")
         }
@@ -692,6 +705,7 @@ class AudioTrackWrapper(
         while (true) {
             val chunk = dataQueue.poll() ?: break
             recycleAudioBuffer(chunk.data)
+            onChunkDone?.invoke()
         }
     }
 }

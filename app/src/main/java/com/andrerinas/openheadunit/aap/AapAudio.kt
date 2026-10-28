@@ -556,12 +556,17 @@ internal class AapAudio(
      * Processes a message as an audio stream packet.
      * Returns true if the packet was identified and processed as audio data, false otherwise.
      */
+    /** Set by [process]: the last media chunk will be acked by its track once played (see AudioDecoder.mediaAck). */
+    var lastChunkAckDeferred = false
+        private set
+
     fun process(message: AapMessage): Boolean {
         // Media stream packets have msgType 0 or 1.
         // Control packets on audio channels (Setup, Start, Stop) have types > 32767.
+        lastChunkAckDeferred = false
         if (message.type == 0 || message.type == 1) {
             if (message.size >= 10) {
-                decode(message.channel, 10, message.data, message.size - 10)
+                lastChunkAckDeferred = decode(message.channel, 10, message.data, message.size - 10)
             }
             return true
         }
@@ -814,7 +819,7 @@ internal class AapAudio(
         startAudioTrack(channel)
     }
 
-    private fun decode(channel: Int, start: Int, buf: ByteArray, len: Int) {
+    private fun decode(channel: Int, start: Int, buf: ByteArray, len: Int): Boolean {
         var length = len
         if (length > AUDIO_BUFS_SIZE) {
             AppLog.e("Error audio len: %d  aud_buf_BUFS_SIZE: %d", length, AUDIO_BUFS_SIZE)
@@ -825,13 +830,14 @@ internal class AapAudio(
             startAudioTrack(channel)
         }
 
-        audioDecoder.decode(channel, buf, start, length)
+        val deferred = audioDecoder.decode(channel, buf, start, length)
 
         if ((channel == Channel.ID_AU1 || channel == Channel.ID_AU2) && staticAudioFocus) {
             duckMedia()
             handler.removeCallbacks(unduckRunnable)
             handler.postDelayed(unduckRunnable, UNDUCK_DELAY_MS)
         }
+        return deferred
     }
 
     fun updateGains() {

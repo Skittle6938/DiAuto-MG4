@@ -408,6 +408,9 @@ class AapTransport(
     init {
         micRecorder.listener = this
         aapAudio = AapAudio(audioDecoder, audioManager, settings, context)
+        // Media chunks are acked as they leave their track, so the phone stays at most its
+        // unacked window ahead of what is played (see AudioTrackWrapper.onChunkDone).
+        audioDecoder.mediaAck = { channel -> sendMediaAck(channel) }
         aapAudio.onPhoneFocusState = { state -> sendCarFocusState(state) }
         aapAudio.onMediaPlaybackStarted = { onMediaPlaybackStarted?.invoke() }
         aapAudio.onSpeechEndedDuringMedia = { onSpeechEndedDuringMedia?.invoke() }
