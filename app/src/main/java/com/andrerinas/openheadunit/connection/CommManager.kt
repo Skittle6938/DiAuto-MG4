@@ -328,10 +328,7 @@ class CommManager(
             _connection = SocketAccessoryConnection(socket, context)
 
             if (_connection?.connect() ?: false) {
-                // [FIX] Don't overwrite NEARBY connection type with WIFI + localhost IP (::1)
-                if (socket !is NearbySocket) {
-                    settings.saveLastConnection(type = Settings.CONNECTION_TYPE_WIFI, ip = socket.inetAddress?.hostAddress ?: "")
-                }
+                settings.saveLastConnection(type = Settings.CONNECTION_TYPE_WIFI, ip = socket.inetAddress?.hostAddress ?: "")
                 _connectionState.emit(ConnectionState.Connected)
             } else {
                 _connectionState.emit(ConnectionState.Disconnected())
