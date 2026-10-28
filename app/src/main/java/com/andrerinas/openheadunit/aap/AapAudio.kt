@@ -368,6 +368,7 @@ internal class AapAudio(
                 audioFocusToken = token
                 audioFocusKind = kind
                 carFocus.requested(token, media = usage == AudioAttributes.USAGE_MEDIA)
+                if (kind == ProtocolFocusRoute.Kind.GUIDANCE || kind == ProtocolFocusRoute.Kind.NOTIFICATION) armSpeechIdleCheck()
 
                 result = focusAm.requestAudioFocus(audioFocusRequest!!)
                 AppLog.i("Audio focus request result: ${if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) "GRANTED" else "FAILED ($result)"}")
@@ -647,6 +648,48 @@ internal class AapAudio(
         speechFocusRequests[channel] = request
         val result = audioManager.requestAudioFocus(request)
         AppLog.i("AapAudio: AA audio started (${Channel.name(channel)}) - guidance focus result=$result")
+        armSpeechIdleCheck()
+    }
+
+    private var speechLastActiveMs = 0L
+    private val speechIdleCheck = Runnable { checkSpeechIdle() }
+
+    /**
+     * A prompt's focus is given back when the phone stops the stream or releases its request; when
+     * that message does not come, the radio or the music stayed lowered until the next prompt
+     * (2026-10-28). Once no prompt audio has arrived for a few seconds, the guidance focus (never
+     * the assistant's, which listens in silence) is given back here.
+     */
+    private fun armSpeechIdleCheck() {
+        speechLastActiveMs = SystemClock.elapsedRealtime()
+        handler.removeCallbacks(speechIdleCheck)
+        handler.postDelayed(speechIdleCheck, SPEECH_IDLE_POLL_MS)
+    }
+
+    private fun checkSpeechIdle() {
+        val now = SystemClock.elapsedRealtime()
+        if (listOf(Channel.ID_AU1, Channel.ID_AU2).any { audioDecoder.getTrack(it)?.isReceivingAudio() == true }) {
+            speechLastActiveMs = now
+        }
+        val guidanceHeld = audioFocusRequest != null &&
+            (audioFocusKind == ProtocolFocusRoute.Kind.GUIDANCE || audioFocusKind == ProtocolFocusRoute.Kind.NOTIFICATION)
+        if (speechFocusRequests.isEmpty() && !guidanceHeld) return
+        if (now - speechLastActiveMs < SPEECH_IDLE_RELEASE_MS) {
+            handler.postDelayed(speechIdleCheck, SPEECH_IDLE_POLL_MS)
+            return
+        }
+        AppLog.i("AapAudio: no prompt audio for ${SPEECH_IDLE_RELEASE_MS / 1000}s - giving the guidance focus back")
+        speechFocusRequests.keys.toList().forEach { releaseSpeechFocus(it) }
+        if (guidanceHeld && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            audioFocusRequest?.let {
+                runCatching { mediaAudioManager.abandonAudioFocusRequest(it) }
+                runCatching { audioManager.abandonAudioFocusRequest(it) }
+            }
+            audioFocusRequest = null
+            audioFocusKind = null
+            audioFocusToken?.let { carFocus.abandoned(it) }
+            audioFocusToken = null
+        }
     }
 
     private fun releaseSpeechFocus(channel: Int) {
@@ -825,5 +868,7 @@ internal class AapAudio(
         private const val UNDUCK_DELAY_MS = 1500L
         private const val OWN_REQUEST_GRACE_MS = 1_000L
         private const val CAR_LOSS_DEBOUNCE_MS = 1_500L
+        private const val SPEECH_IDLE_POLL_MS = 1_000L
+        private const val SPEECH_IDLE_RELEASE_MS = 3_000L
     }
 }

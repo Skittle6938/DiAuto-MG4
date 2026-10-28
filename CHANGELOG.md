@@ -1,3 +1,8 @@
+# DiAuto MG4+ 2.1.0-beta17
+
+- Coming back to the Android Auto screen is instant every time: the phone keeps sending video for the whole session instead of 2 minutes after leaving.
+- A navigation prompt no longer keeps the radio or the music lowered until the next one: once no prompt audio has arrived for 3 s, DiAuto gives the guidance focus back (never the assistant's).
+
 # DiAuto MG4+ 2.1.0-beta16
 
 - Steering wheel keys no longer draw Android Auto's focus highlight: keys Android Auto does not know (the MG4 wheel's own codes, which also reach the projection screen) were sent as an unknown key, which Android Auto takes as rotary input. They are no longer sent; the wheel still works through its media key paths.
