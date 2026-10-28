@@ -38,6 +38,14 @@ object AllgoMediaKeys {
         return true
     }
 
+    /** A key press and release to the phone. */
+    @JvmStatic
+    fun click(context: Context, key: Int, source: String) {
+        val comm = App.provide(context).commManager
+        comm.sendKey(key, true, null, source)
+        comm.sendKey(key, false, null, source)
+    }
+
     /**
      * DiAuto also reads the wheel's play/pause key itself (for launchers that do not tell rui).
      * When the launcher sent it through rui too, that copy is dropped so the music does not

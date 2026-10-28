@@ -38,6 +38,33 @@ final class DiAutoLink {
         Log.i(RelayState.TAG, "media control " + code + " sent to DiAuto");
     }
 
+    /**
+     * IAndroidAutoMainService.launchApp, sent by the car's shortcuts (the steering wheel phone key
+     * goes through SystemUI's shortCutPhone → rui launchApp(3) while Android Auto is connected):
+     * the Android Auto screen comes up, and for phone or music the phone opens that app.
+     */
+    static void launchApp(Context context, int app) {
+        Log.i(RelayState.TAG, "launch app " + app);
+        openScreen(context);
+        if (!RelayState.isActive()) return;
+        int key;
+        switch (app) {
+            case 3: key = android.view.KeyEvent.KEYCODE_CALL; break;
+            case 1: case 4: key = android.view.KeyEvent.KEYCODE_MUSIC; break;
+            default: return;
+        }
+        // Once the projection is in front, so the phone's answer is seen.
+        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(
+                () -> AllgoMediaKeys.click(context, key, "allgo-launch-app"), 600);
+    }
+
+    /** IAndroidAutoMainService.launchGoogleAssistant: as the steering wheel voice key. */
+    static void launchAssistant(Context context) {
+        Log.i(RelayState.TAG, "launch assistant");
+        if (!RelayState.isActive()) return;
+        AllgoMediaKeys.click(context, android.view.KeyEvent.KEYCODE_SEARCH, "allgo-assistant");
+    }
+
     private static MediaController diAutoSession(Context context) {
         try {
             MediaSessionManager msm = context.getSystemService(MediaSessionManager.class);

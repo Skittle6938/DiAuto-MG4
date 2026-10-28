@@ -63,6 +63,20 @@ public class AndroidAutoMainService extends Service {
                     reply.writeInt(0);
                     return true;
                 }
+                case 10: { // launchGoogleAssistant(boolean)
+                    data.readInt();
+                    handler.post(() -> DiAutoLink.launchAssistant(AndroidAutoMainService.this));
+                    reply.writeNoException();
+                    reply.writeInt(RelayState.isActive() ? 0 : -1);
+                    return true;
+                }
+                case 11: { // launchApp(app): 0 home, 1 music, 2 navigation, 3 phone, 4 now playing
+                    int app = data.readInt();
+                    handler.post(() -> DiAutoLink.launchApp(AndroidAutoMainService.this, app));
+                    reply.writeNoException();
+                    reply.writeInt(RelayState.isActive() ? 0 : -1);
+                    return true;
+                }
                 case 12: // getPluginVersion()
                     reply.writeNoException();
                     reply.writeString("diauto-relay-1.0");
