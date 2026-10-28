@@ -56,8 +56,6 @@ import android.widget.ImageView
 import android.widget.VideoView
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.andrerinas.openheadunit.main.QuickSettingsFragment
-import com.andrerinas.openheadunit.main.RenameNotice
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import java.io.File
 import java.util.concurrent.Executors
@@ -426,10 +424,10 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
 
     private val settingsReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            val needsViewRecreate = intent.getBooleanExtra(QuickSettingsFragment.EXTRA_NEEDS_VIEW_RECREATE, false)
-            val needsAudioRestart = intent.getBooleanExtra(QuickSettingsFragment.EXTRA_NEEDS_AUDIO_RESTART, false)
-            val sensorRefresh = intent.getBooleanExtra(QuickSettingsFragment.EXTRA_SENSOR_REFRESH, false)
-            val applyFullscreen = intent.getBooleanExtra(QuickSettingsFragment.EXTRA_APPLY_FULLSCREEN, false)
+            val needsViewRecreate = intent.getBooleanExtra(EXTRA_NEEDS_VIEW_RECREATE, false)
+            val needsAudioRestart = intent.getBooleanExtra(EXTRA_NEEDS_AUDIO_RESTART, false)
+            val sensorRefresh = intent.getBooleanExtra(EXTRA_SENSOR_REFRESH, false)
+            val applyFullscreen = intent.getBooleanExtra(EXTRA_APPLY_FULLSCREEN, false)
 
             if (needsViewRecreate) {
                 recreateProjectionView()
@@ -963,7 +961,6 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
         isForeground = false
         AppLog.i("AapProjectionActivity: onPause")
         super.onPause()
-        RenameNotice.dismiss()
         // Clear any activity-local fullscreen override when leaving the Activity so
         // the stored settings remain authoritative on next resume.
         activityFullscreenOverride = null
@@ -997,7 +994,6 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
         isForeground = true
         AppLog.i("AapProjectionActivity: onResume")
         // Show the one-time rename notice even here, on top of an active projection.
-        RenameNotice.maybeShow(this, App.provide(this).settings)
         applyStickyOrientation()
         watchdogHandler.postDelayed(watchdogRunnable, 2000)
         watchdogHandler.postDelayed(videoWatchdogRunnable, 3000)
@@ -1018,7 +1014,7 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
         isNightModeReceiverRegistered = true
 
         if (!isSettingsReceiverRegistered) {
-            LocalBroadcastManager.getInstance(this).registerReceiver(settingsReceiver, IntentFilter(QuickSettingsFragment.ACTION_SETTINGS_CHANGED))
+            LocalBroadcastManager.getInstance(this).registerReceiver(settingsReceiver, IntentFilter(ACTION_SETTINGS_CHANGED))
             isSettingsReceiverRegistered = true
         }
 
@@ -1354,7 +1350,6 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
         }
     }
 
-    private data class ExitOption(val titleResId: Int, val iconResId: Int, val iconColor: Int)
 
     private var projectionMenu: View? = null
 
@@ -1381,70 +1376,6 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
         projectionMenu = menu
     }
 
-    @Suppress("unused")
-    private fun showLegacyExitDialog() {
-        val options = mutableListOf<ExitOption>()
-        options.add(ExitOption(R.string.exit_dialog_stop, R.drawable.ic_stop, Color.RED))
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            options.add(ExitOption(R.string.exit_dialog_pip, R.drawable.ic_pip, Color.LTGRAY))
-        }
-
-        options.add(ExitOption(R.string.exit_dialog_background, R.drawable.ic_home, Color.LTGRAY))
-        options.add(ExitOption(R.string.exit_dialog_settings, R.drawable.ic_settings_quick, Color.LTGRAY))
-
-        val adapter = object : android.widget.BaseAdapter() {
-            override fun getCount(): Int = options.size
-            override fun getItem(position: Int): Any = options[position]
-            override fun getItemId(position: Int): Long = position.toLong()
-            override fun getView(position: Int, convertView: View?, parent: android.view.ViewGroup): View {
-                val view = convertView ?: layoutInflater.inflate(R.layout.dialog_exit_item, parent, false)
-                val option = options[position]
-                val iconView = view.findViewById<android.widget.ImageView>(R.id.icon)
-                val textView = view.findViewById<android.widget.TextView>(R.id.text)
-
-                textView.setText(option.titleResId)
-                iconView.setImageResource(option.iconResId)
-                iconView.setColorFilter(option.iconColor)
-
-                return view
-            }
-        }
-
-        val dialog = MaterialAlertDialogBuilder(this, R.style.DarkAlertDialog)
-            .setTitle(R.string.exit_dialog_title)
-            .setAdapter(adapter) { _, which ->
-                val selected = options[which]
-                when (selected.titleResId) {
-                    R.string.exit_dialog_stop -> {
-                        commManager.disconnect(sendByeBye = true)
-                        finish()
-                    }
-                    R.string.exit_dialog_pip -> {
-                        enterPiP()
-                    }
-                    R.string.exit_dialog_background -> {
-                        moveToBackground()
-                    }
-                    R.string.exit_dialog_settings -> {
-                        showQuickSettings()
-                    }
-                }
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
-
-        if (settings.hudMirroring) {
-            val root = dialog.window?.findViewById<View>(android.R.id.content) ?: dialog.window?.decorView
-            root?.scaleX = -1.0f
-        }
-    }
-
-    private fun showQuickSettings() {
-        if (supportFragmentManager.findFragmentByTag("quick_settings") != null) return
-        val quickSettings = com.andrerinas.openheadunit.main.QuickSettingsFragment()
-        quickSettings.show(supportFragmentManager, "quick_settings")
-    }
 
     private fun returnToMainScreen() {
         commManager.disconnect(sendByeBye = true)
@@ -1923,6 +1854,12 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
     }
 
     companion object {
+        // Settings changes the open projection applies at once (sent by the settings screens).
+        const val ACTION_SETTINGS_CHANGED = "com.andrerinas.openheadunit.SETTINGS_CHANGED"
+        const val EXTRA_NEEDS_VIEW_RECREATE = "needs_view_recreate"
+        const val EXTRA_NEEDS_AUDIO_RESTART = "needs_audio_restart"
+        const val EXTRA_SENSOR_REFRESH = "sensor_refresh"
+        const val EXTRA_APPLY_FULLSCREEN = "apply_fullscreen"
         const val EXTRA_FOCUS = "focus"
         /** Align with AapService USER_EXIT_COOLDOWN_MS so reconnect spam stays quiet for one settle window. */
         private const val WIFI_DISCONNECT_TOAST_COOLDOWN_MS = 15_000L

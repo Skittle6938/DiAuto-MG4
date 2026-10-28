@@ -207,15 +207,6 @@
         </activity>
 
         <activity
-            android:name=".main.NavTestActivity"
-            android:label="DiAuto Nav Test"
-            android:exported="true"
-            android:windowSoftInputMode="stateHidden|adjustResize"
-            android:theme="@style/AppTheme" />
-        <!-- Cluster navigation test screen (upstream PR #16): no launcher icon; open it with
-             adb shell am start -n com.drivehub.diauto.mg4/com.andrerinas.openheadunit.main.NavTestActivity -->
-
-        <activity
             android:name=".main.DaSettingsActivity"
             android:label="@string/da_settings"
             android:screenOrientation="landscape"
@@ -225,12 +216,6 @@
             android:name=".main.SettingsActivity"
             android:label="@string/settings"
             android:windowSoftInputMode="stateHidden|adjustResize"
-            android:theme="@style/AppTheme" />
-
-        <activity
-            android:name=".main.OnboardingActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme" />
 
         <service
@@ -354,42 +339,6 @@
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name=".main.AutomationActivity"
-            android:excludeFromRecents="true"
-            android:exported="true"
-            android:noHistory="true"
-            android:taskAffinity=""
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
-            <intent-filter>
-                <action android:name="com.andrerinas.openheadunit.ACTION_SET_NIGHT_MODE" />
-                <action android:name="com.andrerinas.openheadunit.ACTION_CONNECT" />
-                <action android:name="com.andrerinas.openheadunit.ACTION_DISCONNECT" />
-                <action android:name="com.andrerinas.openheadunit.ACTION_START_SELF_MODE" />
-                <action android:name="com.andrerinas.openheadunit.ACTION_STOP_SERVICE" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="connect"
-                    android:scheme="headunit" />
-                <data
-                    android:host="disconnect"
-                    android:scheme="headunit" />
-                <data
-                    android:host="nightmode"
-                    android:scheme="headunit" />
-                <data
-                    android:host="exit"
-                    android:scheme="headunit" />
-            </intent-filter>
-        </activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"

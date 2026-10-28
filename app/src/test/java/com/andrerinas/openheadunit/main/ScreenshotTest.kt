@@ -56,8 +56,8 @@ class ScreenshotTest {
     }
 
     private fun home(status: OtaController.Status, name: String) {
-        val root = LayoutInflater.from(context).inflate(R.layout.fragment_home, null)
-        showUpdateState(root.findViewById(R.id.update_button), root.findViewById(R.id.update_hint), status)
+        val root = LayoutInflater.from(context).inflate(R.layout.da_home, null)
+        root.findViewById<TextView>(R.id.home_update_hint).text = updateText(context, status)
         save(root, 1920, 720, name)
     }
 

@@ -599,7 +599,10 @@ class VideoDecoder(
     fun stop(reason: String = "unknown") {
         synchronized(this) {
             running = false
-            if (parked) releaseParking()
+            // A parked decoder renders to an off-screen surface of its own: once it stops, that
+            // surface goes with it, or every restart configures onto a released surface and fails
+            // (error -19 twenty times a second, each asking the phone for a keyframe; 2026-10-28).
+            val parkedSurface = if (parked) mSurface else null
             try {
                 // If calling from output thread, don't join itself to avoid deadlock
                 if (outputThread != null && outputThread != Thread.currentThread()) {
@@ -645,6 +648,11 @@ class VideoDecoder(
             }
 
             codec = null
+            if (parkedSurface != null) {
+                releaseParking()
+                if (mSurface === parkedSurface) mSurface = null
+                parkedSurface.release()
+            }
             softwareHevcDecoder = null
             inputBuffers = null
             legacyFrameBuffer = null
@@ -1830,10 +1838,11 @@ class VideoDecoder(
         val pacer = if (Build.VERSION.SDK_INT >= 21 && settings.viewMode == Settings.ViewMode.SURFACE)
             FrameReleasePacer(settings.displayRefreshRate) else null
         fun releaseFrame(codec: MediaCodec, index: Int): Boolean {
-            // Parked: decoded to keep the stream current, nothing is shown.
+            // Parked: decoded to keep the stream current, nothing is shown. Counted as delivered,
+            // or the stall watchdog sees no frame and restarts the decoder over and over.
             if (parked) {
                 codec.releaseOutputBuffer(index, false)
-                return false
+                return true
             }
             if (pacer == null) {
                 codec.releaseOutputBuffer(index, true)
