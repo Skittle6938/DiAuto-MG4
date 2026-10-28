@@ -774,8 +774,8 @@ class Settings(private val context: Context) {
 
     /** Voice / nav / media on separate Android streams — helps calls not share MUSIC with radio. */
     var separateAudioStreams: Boolean
-        get() = prefs.getBoolean("separate-audio-streams-v2", false)
-        set(value) { prefs.edit().putBoolean("separate-audio-streams-v2", value).apply() }
+        get() = prefs.getBoolean("separate-audio-streams-v3", true)
+        set(value) { prefs.edit().putBoolean("separate-audio-streams-v3", value).apply() }
 
     var micInputSource: Int
         get() = prefs.getInt("mic-input-source", 0) // Default: DEFAULT

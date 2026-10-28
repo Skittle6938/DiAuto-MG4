@@ -1710,7 +1710,7 @@ class SettingsFragment : Fragment() {
             stableId = "separateAudioStreams",
             nameResId = R.string.separate_audio_streams,
             descriptionResId = R.string.separate_audio_streams_description,
-            isChecked = pendingSeparateAudioStreams ?: false,
+            isChecked = pendingSeparateAudioStreams ?: true,
             onCheckedChanged = { isChecked ->
                 pendingSeparateAudioStreams = isChecked
                 checkChanges()
