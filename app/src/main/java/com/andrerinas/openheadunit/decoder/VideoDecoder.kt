@@ -539,9 +539,10 @@ class VideoDecoder(
         runCatching { texture.release() }
     }
 
-    fun setSurface(surface: Surface?) {
+    /** @return true when a parked decoder was moved onto [surface]: the stream never stopped. */
+    fun setSurface(surface: Surface?): Boolean {
         synchronized(this) {
-            if (mSurface === surface) return
+            if (mSurface === surface) return false
 
             val current = codec
             if (parked && surface != null && current != null && Build.VERSION.SDK_INT >= 23) {
@@ -553,7 +554,7 @@ class VideoDecoder(
                     parking?.release()
                     lastFrameRenderedMs = 0L
                     AppLog.i("Decoder unparked onto the new surface: picture back at once")
-                    return
+                    return true
                 } catch (e: Exception) {
                     AppLog.w("Decoder unpark failed (${e.message}); restarting it on the new surface")
                     releaseParking()
@@ -571,6 +572,7 @@ class VideoDecoder(
             mSurface = surface
             lastFrameRenderedMs = 0L
             keyframeRepair.reset()
+            return false
         }
     }
 

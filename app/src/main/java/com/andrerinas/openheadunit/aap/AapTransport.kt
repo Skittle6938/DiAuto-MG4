@@ -739,8 +739,12 @@ class AapTransport(
             return
         }
 
+        // Not sent: Android Auto takes any key it does not know (the MG4 wheel's 299/300/301, which
+        // reach the projection screen as key events too) as rotary input and draws its focus
+        // highlight on the screen. Those keys reach the phone as media keys by their own paths.
         if (aapKeyCode == KeyEvent.KEYCODE_UNKNOWN) {
-            AppLog.i("Unknown: $keyCode")
+            AppLog.i("Unknown key $keyCode not sent to Android Auto")
+            return
         }
 
         val ts = SystemClock.elapsedRealtime()

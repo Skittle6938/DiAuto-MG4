@@ -1,3 +1,8 @@
+# DiAuto MG4+ 2.1.0-beta16
+
+- Steering wheel keys no longer draw Android Auto's focus highlight: keys Android Auto does not know (the MG4 wheel's own codes, which also reach the projection screen) were sent as an unknown key, which Android Auto takes as rotary input. They are no longer sent; the wheel still works through its media key paths.
+- Coming back to the Android Auto screen within 2 minutes no longer blanks the picture for a moment: the video was never stopped, so DiAuto no longer asks the phone to restart it.
+
 # DiAuto MG4+ 2.1.0-beta15
 
 - After an update (USB, file manager or the in-app updater) the car sees Android Auto again at once: the update ended the process the car's Android Auto service (rui) was bound to, and rui never bound again until the car restarted. DiAuto now restarts rui right after it is updated.

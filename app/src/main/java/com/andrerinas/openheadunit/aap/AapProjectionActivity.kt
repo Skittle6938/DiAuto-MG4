@@ -1592,13 +1592,15 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
 
         parkTimeout?.let { parkHandler.removeCallbacks(it) }
         parkTimeout = null
-        videoDecoder.setSurface(surface)
+        val unparked = videoDecoder.setSurface(surface)
         // A surface arriving inside a cycle's own gap must not strand the pending gain.
         settleFocusCycle()
         lastSurfaceSetMs = SystemClock.elapsedRealtime()
         warmRelaunchCycleSpent = false
         watchdogHandler.removeCallbacks(warmRelaunchCheckRunnable)
-        watchdogHandler.postDelayed(
+        // An unparked decoder already shows the stream; a still screen sends no new frame, and the
+        // check would then cycle video focus and blank it.
+        if (!unparked) watchdogHandler.postDelayed(
             warmRelaunchCheckRunnable,
             WarmRelaunchKeyframePolicy.ESCALATE_AFTER_SURFACE_MS
         )
@@ -1647,7 +1649,9 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
             }
             is CommManager.ConnectionState.TransportStarted -> {
                 // Surface recreated while transport was already running; request a keyframe.
-                commManager.send(VideoFocusEvent(gain = true, unsolicited = true))
+                // Not after an unpark: the stream never stopped, and a focus gain makes the phone
+                // restart it, which blanked the picture for a moment after it had come back.
+                if (!unparked) commManager.send(VideoFocusEvent(gain = true, unsolicited = true))
             }
             else -> {
                 commManager.send(VideoFocusEvent(gain = true, unsolicited = false))
