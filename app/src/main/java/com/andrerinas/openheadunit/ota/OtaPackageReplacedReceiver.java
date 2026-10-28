@@ -35,6 +35,27 @@ public final class OtaPackageReplacedReceiver extends BroadcastReceiver {
         context.getSharedPreferences(PREFS_NAME, 0).edit().remove(KEY_UPDATE_FROM_SCREEN).apply();
     }
 
+    /**
+     * DiAuto carries AllGo's package: the update killed the process rui (the car's Android Auto
+     * service) was bound to, and rui does not bind again by itself, so the car stops seeing
+     * Android Auto until it restarts. Ending rui's process (same system uid) makes the system start
+     * it again, and it binds to this new DiAuto at once.
+     */
+    private static void restartRui(Context context) {
+        try {
+            android.app.ActivityManager am = context.getSystemService(android.app.ActivityManager.class);
+            for (android.app.ActivityManager.RunningAppProcessInfo p : am.getRunningAppProcesses()) {
+                if ("com.allgo.rui".equals(p.processName)) {
+                    android.os.Process.killProcess(p.pid);
+                    Log.i(TAG, "rui restarted after the update");
+                    return;
+                }
+            }
+        } catch (Throwable t) {
+            Log.w(TAG, "rui restart failed: " + t.getMessage());
+        }
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent == null) return;
@@ -47,6 +68,7 @@ public final class OtaPackageReplacedReceiver extends BroadcastReceiver {
         } catch (Throwable t) {
             Log.w(TAG, "AapService restart failed: " + t.getMessage());
         }
+        restartRui(context);
         long at = context.getSharedPreferences(PREFS_NAME, 0).getLong(KEY_UPDATE_FROM_SCREEN, 0L);
         clearUpdateFromScreen(context);
         if (at > 0L && System.currentTimeMillis() - at < UPDATE_FROM_SCREEN_MS) {

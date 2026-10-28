@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.1.0-beta15
+
+- After an update (USB, file manager or the in-app updater) the car sees Android Auto again at once: the update ended the process the car's Android Auto service (rui) was bound to, and rui never bound again until the car restarted. DiAuto now restarts rui right after it is updated.
+
 # DiAuto MG4+ 2.1.0-beta14
 
 - "Separate audio streams" is on by default (also for existing installs): prompts, the assistant and notifications keep their own channel, the car's navigation one, heard over the radio. Off puts them in the multimedia stream with the music.
