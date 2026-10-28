@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.1.0-beta11
+
+- Navigation prompts, assistant and system sounds back to 16 kHz: with them announced at 48 kHz (beta9/10) the phone no longer connected.
+
 # DiAuto MG4+ 2.1.0-beta10
 
 - Steering wheel phone key (and the car's other Android Auto shortcuts): the car asks Android Auto to open its phone, music or assistant; DiAuto answered without doing it, so the car's own phone opened. DiAuto now opens the Android Auto screen on that app.
