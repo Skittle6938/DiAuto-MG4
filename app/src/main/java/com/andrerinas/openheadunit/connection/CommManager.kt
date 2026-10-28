@@ -123,6 +123,7 @@ class CommManager(
     /** Cached answer of the Bluetooth media probe used by media-key routing, and when it was taken. */
     private var btMediaLinkCached: Boolean? = null
     private var btMediaLinkCheckedAt: Long? = null
+    private val PAUSE_TAIL_FLUSH_MS = 400L
     private val BT_MEDIA_LINK_CACHE_MS = 2_000L
 
     private val _connectionState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected())
@@ -656,6 +657,24 @@ class CommManager(
 
         AppLog.i("CommManager: TX Key -> AA=$logicalCode (isPress=$isPress) src=$source")
         _transport?.send(logicalCode, isPress)
+        if (isPress) cutBufferedAudioOnPause(logicalCode)
+    }
+
+    /**
+     * Pause would otherwise be heard only after the Wi-Fi jitter buffer (about 1 s of music already
+     * here) has played out. When the key pauses playing music, that audio is dropped at once, and
+     * again shortly after for what the phone sent before it stopped.
+     */
+    private fun cutBufferedAudioOnPause(keyCode: Int) {
+        val track = audioDecoder.getTrack(com.andrerinas.openheadunit.aap.protocol.Channel.ID_AUD) ?: return
+        val pauses = keyCode == KeyEvent.KEYCODE_MEDIA_PAUSE ||
+            (keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE && track.isReceivingAudio())
+        if (!pauses) return
+        track.flushForTrackChange()
+        _scope.launch {
+            kotlinx.coroutines.delay(PAUSE_TAIL_FLUSH_MS)
+            if (!track.isReceivingAudio()) track.flushForTrackChange()
+        }
     }
 
     /**

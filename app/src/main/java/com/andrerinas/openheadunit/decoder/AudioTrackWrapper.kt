@@ -41,6 +41,7 @@ class AudioTrackWrapper(
     )
 
     companion object {
+        private const val RECEIVING_WINDOW_MS = 300L
         private const val AUDIO_BUFFER_POOL_LIMIT = 16
         private const val MIN_POOLED_AUDIO_BUFFER_SIZE = 4096
         private const val INPUT_BUFFER_POLL_MS = 100L
@@ -106,6 +107,7 @@ class AudioTrackWrapper(
     private val mediaJitterStartBytes: Int
     private var bytesWrittenBeforePlay: Int = 0
     @Volatile private var mediaPlaybackStarted: Boolean = true
+    @Volatile private var lastWriteMs = 0L
 
     init {
         this.name = "AudioPlaybackThread"
@@ -281,6 +283,7 @@ class AudioTrackWrapper(
             val track = audioTrack ?: return
             val result = track.write(buffer, 0, size)
             if (result > 0) {
+                lastWriteMs = android.os.SystemClock.elapsedRealtime()
                 framesWritten += result / bytesPerFrame
                 if (!mediaPlaybackStarted) {
                     bytesWrittenBeforePlay += result
@@ -584,6 +587,10 @@ class AudioTrackWrapper(
             AppLog.w("AudioTrackWrapper: flush for track change failed: ${e.message}")
         }
     }
+
+    /** The phone is still sending this stream (audio written in the last few hundred ms). */
+    fun isReceivingAudio(): Boolean =
+        android.os.SystemClock.elapsedRealtime() - lastWriteMs < RECEIVING_WINDOW_MS
 
     fun stopPlayback() {
         isRunning = false

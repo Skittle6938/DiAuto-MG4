@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.1.0-beta7
+
+- Pause is heard at once: the music already in the Wi-Fi jitter buffer (about 1 s) is dropped when a pause key or play/pause on playing music is sent, instead of playing out first.
+
 # DiAuto MG4+ 2.1.0-beta6
 
 - Steering wheel next/previous with the stock launcher: the launcher leaves the wheel's left/right keys to AllGo when Android Auto is the source, and AllGo reads them itself. DiAuto now does the same (on release, only while Android Auto is the car's source). If a launcher also sends them as AllGo's next/previous, the skip happens once.
