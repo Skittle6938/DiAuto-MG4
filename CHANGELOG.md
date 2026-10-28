@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.1.0-beta9
+
+- Navigation prompts, the assistant and system sounds are asked from the phone at 48 kHz like the music, instead of 16 kHz, which sounded dull on the car's navigation channel.
+
 # DiAuto MG4+ 2.1.0-beta8
 
 - Video at 30 frames per second by default, also for existing installs: half the frames for the phone to encode and send over Wi-Fi, fewer stutters, still smooth. 60 remains available in Video > FPS limit.

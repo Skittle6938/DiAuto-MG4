@@ -33,15 +33,17 @@ object AudioConfigs {
         }.build()
         audioTracks.put(Channel.ID_AUD, audioConfig0)
 
+        // Guidance, assistant and system sounds at 48 kHz like music (was 16 kHz, the usual speech
+        // rate, heard as dull on the MG4 navigation channel).
         val audioConfig1 = Media.AudioConfiguration.newBuilder().apply {
-            sampleRate = AudioDecoder.SAMPLE_RATE_HZ_16
+            sampleRate = AudioDecoder.SAMPLE_RATE_HZ_48
             numberOfBits = 16
             numberOfChannels = 1
         }.build()
         audioTracks.put(Channel.ID_AU1, audioConfig1)
 
         val audioConfig2 = Media.AudioConfiguration.newBuilder().apply {
-            sampleRate = AudioDecoder.SAMPLE_RATE_HZ_16
+            sampleRate = AudioDecoder.SAMPLE_RATE_HZ_48
             numberOfBits = 16
             numberOfChannels = 1
         }.build()
