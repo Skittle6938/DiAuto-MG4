@@ -129,4 +129,30 @@ class ScreenshotTest {
         shadowOf(Looper.getMainLooper()).idle()
         save(dialog.window!!.decorView, 720, 470, "battery_capacity_dialog.png")
     }
+
+    @Test fun compatibilityReport() {
+        val activity = Robolectric.buildActivity(FragmentActivity::class.java).setup().get()
+        activity.setTheme(R.style.AppTheme)
+        val report = listOf(
+            "DiAuto MG4+ 2.1.0-beta10 (2067)",
+            "Firmware: SWI69-29958-1100R45",
+            "Car: EH32_CR EUUK",
+            "Android: 9 (API 28), mt2712",
+            "Integration: as AllGo update, rui=1.0, MG4Dash=1.4.2",
+            "Decoders: H264 OMX.MTK.VIDEO.DECODER.AVC 1080p60; H265 OMX.MTK.VIDEO.DECODER.HEVC",
+            "Video: 1080p@30 codec=H.264 view=SURFACE dpi=227",
+            "Link: wifi wifiMode=3 primary=WIFI",
+            "Audio: music over AA aac=false buffer=1000ms latency=8 focus=AUTO",
+            "Screen: 1920x720 160dpi",
+            "Bluetooth: on, paired=2, hands-free=connected, native AA BT failures=0",
+            "Hotspot: on, band=5 GHz",
+            "Session: AA connected, car source=70",
+            "System: RAM 3847 MB, free 1210 MB, up 42 min",
+            "Wheel keys: 300 299 301 287(long)",
+        ).joinToString("\n")
+        val dialog = com.andrerinas.openheadunit.utils.CompatibilityReport.dialog(activity, report)
+        dialog.show()
+        shadowOf(Looper.getMainLooper()).idle()
+        save(dialog.window!!.decorView, 1400, 600, "compat_report_dialog.png")
+    }
 }

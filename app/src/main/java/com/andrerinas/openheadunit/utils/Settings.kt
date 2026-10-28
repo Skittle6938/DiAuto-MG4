@@ -856,15 +856,10 @@ class Settings(private val context: Context) {
         get() = prefs.getBoolean("auto-start-on-boot", true)
         set(value) { prefs.edit().putBoolean("auto-start-on-boot", value).apply() }
 
-    /** Set once DiAuto has moved this unit to Headunit Server mode (see HeadunitServerPolicy); never again after that. */
+    /** Set by earlier betas when they moved this unit to Headunit Server mode on their own; undone at start. */
     var autoHeadunitServerApplied: Boolean
         get() = prefs.getBoolean("auto-headunit-server-applied", false)
         set(value) { prefs.edit().putBoolean("auto-headunit-server-applied", value).apply() }
-
-    /** Set once the SWI68/SWI131 freed-Native-AA experiment has been tried (whatever its outcome). */
-    var limitedFwExperimentTried: Boolean
-        get() = prefs.getBoolean("limited-fw-experiment-tried", false)
-        set(value) { prefs.edit().putBoolean("limited-fw-experiment-tried", value).apply() }
 
     /** Native AA RFCOMM servers in a row that died without accepting a connection. */
     var nativeAaServerFailures: Int

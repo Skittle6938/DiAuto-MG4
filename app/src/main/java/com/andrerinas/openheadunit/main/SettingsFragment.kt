@@ -2270,6 +2270,13 @@ class SettingsFragment : Fragment() {
         ))
 
         items.add(SettingItem.SettingEntry(
+            stableId = "compatReport",
+            nameResId = R.string.compat_report,
+            value = getString(R.string.compat_report_description),
+            onClick = { com.andrerinas.openheadunit.utils.CompatibilityReport.show(requireContext()) }
+        ))
+
+        items.add(SettingItem.SettingEntry(
             stableId = "support",
             nameResId = R.string.support,
             value = getString(R.string.support_description),

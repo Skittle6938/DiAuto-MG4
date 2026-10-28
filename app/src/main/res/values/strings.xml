@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">DiAuto MG4+</string>
-    <string name="headunit_server_auto_title">Wireless Android Auto: Headunit Server mode</string>
-    <string name="headunit_server_auto_text">This head unit refuses the Bluetooth channel wireless Android Auto starts with, so DiAuto switched to Headunit Server mode. On the phone: open Android Auto settings, tap the version 10 times, then in the ⋮ menu choose \"Start head unit server\", and join the car hotspot.</string>
     <string name="about_fork_notice">Community fork of DiAuto-MG4, maintained separately for the MG4.\ngithub.com/Skittle6938/DiAuto-MG4</string>
     <string name="menu">Menu</string>
     <string name="settings">Settings</string>
@@ -634,6 +632,14 @@
     <string name="ota_install_failed_status">Install failed: %1$s</string>
     <string name="ota_toast_checking">Checking for updates…</string>
     <string name="ota_status_label">Update status</string>
+    <string name="compat_report">Compatibility report</string>
+    <string name="compat_report_description">Your setup in short, to add to a GitHub issue. No personal data.</string>
+    <string name="compat_report_title">Compatibility report</string>
+    <string name="compat_report_scan_hint">Scan it with your phone, then paste the text into the issue.</string>
+    <string name="compat_report_qr_description">QR code of the compatibility report</string>
+    <string name="compat_report_copy">Copy</string>
+    <string name="compat_report_share">Share</string>
+    <string name="compat_report_copied">Report copied</string>
     <string name="restore_allgo">Go back to the car’s Android Auto (AllGo)</string>
     <string name="restore_allgo_message">DiAuto is installed in place of the car’s own Android Auto. This removes DiAuto: the car’s original Android Auto comes back exactly as it was. DiAuto’s settings are lost.</string>
     <string name="restore_allgo_confirm">Remove DiAuto</string>

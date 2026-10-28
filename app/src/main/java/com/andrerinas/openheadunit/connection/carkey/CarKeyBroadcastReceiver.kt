@@ -193,6 +193,7 @@ class CarKeyBroadcastReceiver : BroadcastReceiver(), CarKeyReceiver {
         val isDown = intent.getBooleanExtra(EXTRA_SAIC_DOWN, false)
         val isLong = intent.getBooleanExtra(EXTRA_SAIC_LONGPRESS, false)
         AppLog.i("CarKeyReceiver: SAIC hardkey code=$keyCode down=$isDown long=$isLong")
+        com.andrerinas.openheadunit.utils.SteeringKeyLog.record(keyCode, isDown, isLong)
 
         // Voice key: forward the real press to Android Auto as stock AllGo does on this car (search
         // down on press, up on release); the phone decides between a tap and a hold.

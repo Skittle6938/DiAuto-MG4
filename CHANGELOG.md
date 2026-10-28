@@ -1,3 +1,9 @@
+# DiAuto MG4+ 2.1.0-beta10
+
+- Steering wheel phone key (and the car's other Android Auto shortcuts): the car asks Android Auto to open its phone, music or assistant; DiAuto answered without doing it, so the car's own phone opened. DiAuto now opens the Android Auto screen on that app.
+- Settings > Compatibility report: a short summary of the setup (car firmware, Android, decoders, DiAuto settings, Bluetooth and hotspot state, last steering wheel key codes) with a QR code, Copy and Share, to add to a GitHub issue. It holds no addresses, names, passwords, VIN or location.
+- SWI68 R46 and SWI131: the freed hands-free retry and the automatic move to Headunit Server mode are removed (neither got wireless Android Auto working there; a newer firmware does). Units that earlier betas had moved to Headunit Server go back to Native AA.
+
 # DiAuto MG4+ 2.1.0-beta9
 
 - Navigation prompts, the assistant and system sounds are asked from the phone at 48 kHz like the music, instead of 16 kHz, which sounded dull on the car's navigation channel.

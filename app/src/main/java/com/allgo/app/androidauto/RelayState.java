@@ -61,6 +61,11 @@ public final class RelayState {
         Log.i(TAG, "state loaded: active=" + active);
     }
 
+    /** For the compatibility report. */
+    public static synchronized boolean isSessionUp() {
+        return active;
+    }
+
     static synchronized boolean isActive() {
         return active;
     }

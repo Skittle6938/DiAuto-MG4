@@ -1,7 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="fr">
     <string name="app_name">DiAuto MG4+</string>
-    <string name="headunit_server_auto_title">Android Auto sans fil : mode Headunit Server</string>
-    <string name="headunit_server_auto_text">Cet autoradio refuse le canal Bluetooth par lequel démarre Android Auto sans fil, DiAuto est donc passé en mode Headunit Server. Sur le téléphone : ouvrez les réglages Android Auto, touchez 10 fois la version, puis dans le menu ⋮ choisissez « Start head unit server » (ou son équivalent traduit), et connectez-vous au hotspot de la voiture.</string>
     <string name="about_fork_notice">Fork communautaire de DiAuto-MG4, maintenu séparément pour la MG4.\ngithub.com/Skittle6938/DiAuto-MG4</string>
     <string name="menu">Menu</string>
     <string name="settings">Paramètres</string>
@@ -626,6 +624,14 @@
     <string name="ota_install_failed_status">Échec de l’installation : %1$s</string>
     <string name="ota_toast_checking">Recherche de mises à jour…</string>
     <string name="ota_status_label">État de la mise à jour</string>
+    <string name="compat_report">Rapport de compatibilité</string>
+    <string name="compat_report_description">Votre configuration en bref, à joindre à une issue GitHub. Aucune donnée personnelle.</string>
+    <string name="compat_report_title">Rapport de compatibilité</string>
+    <string name="compat_report_scan_hint">Scannez-le avec votre téléphone, puis collez le texte dans l’issue.</string>
+    <string name="compat_report_qr_description">QR code du rapport de compatibilité</string>
+    <string name="compat_report_copy">Copier</string>
+    <string name="compat_report_share">Partager</string>
+    <string name="compat_report_copied">Rapport copié</string>
     <string name="restore_allgo">Revenir à l’Android Auto de la voiture (AllGo)</string>
     <string name="restore_allgo_message">DiAuto est installé à la place de l’Android Auto d’origine de la voiture. Cette action supprime DiAuto : l’Android Auto d’origine revient exactement comme avant. Les réglages de DiAuto sont perdus.</string>
     <string name="restore_allgo_confirm">Supprimer DiAuto</string>
@@ -704,7 +710,7 @@
     <string name="logs_exported">Logs Exported</string>
     <string name="log_saved_to">Log saved to:\n%s</string>
     <string name="share">Share</string>
-    <string name="close">Close</string>
+    <string name="close">Fermer</string>
     <string name="failed_export_logs">Failed to export logs</string>
     <string name="failed_export_in_silent_logs">Unable to export logs: Silent logging level selected</string>
     <string name="switching_to_android_auto">Switching to Android Auto…</string>
