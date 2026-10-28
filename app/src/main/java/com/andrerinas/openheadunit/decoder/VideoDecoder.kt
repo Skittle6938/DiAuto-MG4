@@ -523,15 +523,6 @@ class VideoDecoder(
         }
     }
 
-    val isParked: Boolean get() = parked
-
-    /** Ends a park that lasted too long: the decoder stops as it would have on leaving. */
-    fun stopParked(reason: String) = synchronized(this) {
-        if (!parked) return
-        stop(reason)
-        releaseParking()
-    }
-
     private fun releaseParking() {
         parked = false
         val texture = parkingTexture ?: return
