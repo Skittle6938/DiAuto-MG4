@@ -1,6 +1,8 @@
 # DiAuto MG4+ 2.2.0-beta24
 
 - Clean navigation prompts again. With separate audio streams (the default), prompts and the assistant are never boosted: the phone sends them near full scale, so the boost went through the limiter on almost every syllable. Use the car's navigation volume instead. Mixed with the music, the voice level can still be raised (0 % by default, also for existing installs), with a note that it costs some quality.
+- The voice level shows marks every 50 % and its current value, and changing it during a session offers to reconnect (it is read when the phone connects).
+- Larger small texts: the hint under the two-finger menu, the setting descriptions, the choice buttons and the home screen lines.
 
 # DiAuto MG4+ 2.2.0-beta21
 
