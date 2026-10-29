@@ -76,4 +76,7 @@
     <string name="restore_allgo">მანქანის Android Auto-ზე დაბრუნება (AllGo)</string>
     <string name="restore_allgo_message">DiAuto დაყენებულია მანქანის საკუთარი Android Auto-ს ნაცვლად. ეს წაშლის DiAuto-ს: მანქანის ორიგინალი Android Auto ზუსტად ისე დაბრუნდება, როგორც იყო. DiAuto-ს პარამეტრები დაიკარგება.</string>
     <string name="restore_allgo_confirm">DiAuto-ს წაშლა</string>
+    <string name="reconnect_prompt">ზოგიერთი პარამეტრი მხოლოდ ხელახალი დაკავშირების შემდეგ მოქმედებს. გადავტვირთო კავშირი ახლა?</string>
+    <string name="reconnect_now">ხელახლა დაკავშირება</string>
+    <string name="reconnect_later">მოგვიანებით</string>
 </resources>

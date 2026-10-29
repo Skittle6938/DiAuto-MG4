@@ -560,7 +560,9 @@ class VideoDecoder(
                     mSurface = surface
                     releaseParking()
                     parking?.release()
-                    lastFrameRenderedMs = 0L
+                    // A shown frame counts as rendered, or the projection watchdog sees no picture
+                    // and restarts the phone's stream, which is what blanked the screen on return.
+                    lastFrameRenderedMs = if (shown) SystemClock.elapsedRealtime() else 0L
                     unparkedWithoutFrameAtMs = if (shown) 0L else SystemClock.elapsedRealtime()
                     AppLog.i(
                         "Decoder unparked onto the new surface: " +

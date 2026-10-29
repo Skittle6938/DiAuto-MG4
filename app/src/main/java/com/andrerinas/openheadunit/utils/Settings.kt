@@ -871,12 +871,13 @@ class Settings(private val context: Context) {
         set(value) { prefs.edit().putInt("media-volume-offset", value).apply() }
 
     var assistantVolumeOffset: Int
-        get() = prefs.getInt("assistant-volume-offset", 0)
-        set(value) { prefs.edit().putInt("assistant-volume-offset", value).apply() }
+        // v2: wider range (up to +200 %) and a louder default, centred on the slider.
+        get() = prefs.getInt("assistant-volume-offset-v2", DEFAULT_VOICE_VOLUME_OFFSET)
+        set(value) { prefs.edit().putInt("assistant-volume-offset-v2", value).apply() }
 
     var navigationVolumeOffset: Int
-        get() = prefs.getInt("navigation-volume-offset", 0)
-        set(value) { prefs.edit().putInt("navigation-volume-offset", value).apply() }
+        get() = prefs.getInt("navigation-volume-offset-v2", DEFAULT_VOICE_VOLUME_OFFSET)
+        set(value) { prefs.edit().putInt("navigation-volume-offset-v2", value).apply() }
 
     // Custom loading screen
     var loadingScreenMediaPath: String
@@ -1079,6 +1080,9 @@ class Settings(private val context: Context) {
         }
 
     companion object {
+        /** Voice (assistant + navigation) level above the music, in %; the slider runs -50 … +200. */
+        const val DEFAULT_VOICE_VOLUME_OFFSET = 75
+        const val MAX_VOICE_VOLUME_OFFSET = 200
         const val PREFS_NAME = "settings"
 
         const val CONNECTION_TYPE_WIFI = "wifi"

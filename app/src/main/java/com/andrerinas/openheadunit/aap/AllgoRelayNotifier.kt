@@ -30,6 +30,14 @@ object AllgoRelayNotifier {
     }
 
     fun sessionStarted(context: Context, phoneName: String?, fallbackMac: String?) {
+        // Music over Bluetooth: the car's Settings drop the phone's A2DP (and refuse it back) for
+        // as long as rui reports an Android Auto session, so the music fell back to the phone's
+        // speaker. Not announcing the session keeps Bluetooth music, which the car then shows and
+        // controls as its own Bluetooth source.
+        if (com.andrerinas.openheadunit.utils.Settings(context).musicViaBluetooth) {
+            AppLog.i("AllgoRelay: music over Bluetooth — session not announced to the car, so it keeps A2DP")
+            return
+        }
         RelayState.load(context)
         RelayState.update(
             true, phoneName,

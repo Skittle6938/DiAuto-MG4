@@ -76,4 +76,7 @@
     <string name="restore_allgo">Aracın Android Auto’suna dön (AllGo)</string>
     <string name="restore_allgo_message">DiAuto, aracın kendi Android Auto’sunun yerine kurulu. Bu işlem DiAuto’yu kaldırır: aracın orijinal Android Auto’su tam olarak eski hâliyle geri gelir. DiAuto ayarları silinir.</string>
     <string name="restore_allgo_confirm">DiAuto’yu kaldır</string>
+    <string name="reconnect_prompt">Bazı ayarlar yalnızca yeniden bağlandıktan sonra geçerli olur. Bağlantı şimdi yeniden başlatılsın mı?</string>
+    <string name="reconnect_now">Yeniden bağlan</string>
+    <string name="reconnect_later">Daha sonra</string>
 </resources>

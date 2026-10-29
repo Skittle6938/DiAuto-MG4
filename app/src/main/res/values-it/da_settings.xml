@@ -76,4 +76,7 @@
     <string name="restore_allgo">Torna all’Android Auto dell’auto (AllGo)</string>
     <string name="restore_allgo_message">DiAuto è installato al posto dell’Android Auto originale dell’auto. Questa operazione rimuove DiAuto: l’Android Auto originale dell’auto torna esattamente com’era. Le impostazioni di DiAuto vanno perse.</string>
     <string name="restore_allgo_confirm">Rimuovi DiAuto</string>
+    <string name="reconnect_prompt">Alcune impostazioni valgono solo dopo una nuova connessione. Riavviare la connessione ora?</string>
+    <string name="reconnect_now">Riconnetti</string>
+    <string name="reconnect_later">Più tardi</string>
 </resources>

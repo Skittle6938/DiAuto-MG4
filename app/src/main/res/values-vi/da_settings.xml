@@ -76,4 +76,7 @@
     <string name="restore_allgo">Quay lại Android Auto của xe (AllGo)</string>
     <string name="restore_allgo_message">DiAuto được cài thay cho Android Auto gốc của xe. Thao tác này sẽ gỡ DiAuto: Android Auto gốc của xe sẽ trở lại y như cũ. Cài đặt của DiAuto sẽ bị mất.</string>
     <string name="restore_allgo_confirm">Gỡ DiAuto</string>
+    <string name="reconnect_prompt">Một số cài đặt chỉ có hiệu lực sau khi kết nối lại. Khởi động lại kết nối ngay?</string>
+    <string name="reconnect_now">Kết nối lại</string>
+    <string name="reconnect_later">Để sau</string>
 </resources>

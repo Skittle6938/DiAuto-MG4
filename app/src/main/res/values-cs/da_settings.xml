@@ -76,4 +76,7 @@
     <string name="restore_allgo">Zpět na Android Auto auta (AllGo)</string>
     <string name="restore_allgo_message">DiAuto je nainstalováno místo vlastního Android Auto auta. Tímto se DiAuto odebere: původní Android Auto auta se vrátí přesně tak, jak bylo. Nastavení DiAuto budou ztracena.</string>
     <string name="restore_allgo_confirm">Odebrat DiAuto</string>
+    <string name="reconnect_prompt">Některá nastavení platí až po novém připojení. Restartovat připojení nyní?</string>
+    <string name="reconnect_now">Znovu připojit</string>
+    <string name="reconnect_later">Později</string>
 </resources>

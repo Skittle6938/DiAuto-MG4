@@ -463,7 +463,17 @@ class MainActivity : BaseActivity() {
         autoConnectWatchdog?.cancel()
         autoConnectWatchdog = lifecycleScope.launch {
             delay(AUTO_CONNECT_WATCHDOG_MS)
-            if (autoConnectInProgress) {
+            if (autoConnectInProgress && App.provide(this@MainActivity).commManager.isConnected) {
+                // The attempt succeeded without clearing the flag; never end a live session for it
+                // (2026-10-29 09:00 and 09:07: drives disconnected 125 s after connecting).
+                AppLog.i("Auto-connect overlay: watchdog fired with a session up — just hiding the overlay")
+                autoConnectWatchdog = null
+                autoConnectInProgress = false
+                hasAdvancedToActiveState = false
+                autoConnectStatusText = null
+                hideAutoConnectPill()
+                findViewById<View>(R.id.auto_connect_loading_overlay)?.visibility = View.GONE
+            } else if (autoConnectInProgress) {
                 AppLog.w(
                     "Auto-connect overlay: watchdog timeout after ${AUTO_CONNECT_WATCHDOG_MS}ms, giving up",
                 )

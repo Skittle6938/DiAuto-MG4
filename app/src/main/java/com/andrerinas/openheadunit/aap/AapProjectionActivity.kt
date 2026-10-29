@@ -522,7 +522,10 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
     // leaves a black screen while audio keeps working. A broken SurfaceView cannot be detected
     // automatically (it reports no drawn frames), so we ask the user directly.
     private var rendererBanner: View? = null
-    private var rendererConfirmResolved = false
+    // Never asked on the MG4: its SurfaceView renderer is known good, and a still Android Auto
+    // screen after a return from the launcher drew nothing new, which raised the banner for no
+    // reason (2026-10-29).
+    private var rendererConfirmResolved = true
     private var projectionStartMs = 0L
     private val rendererConfirmNoFrameMs = 6000L
     // "Phone still streaming" window for the offer. Kept comfortably above the 2s watchdog interval
@@ -1024,6 +1027,7 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
         })
 
         setFullscreen()
+        maybeOfferReconnect()
     }
 
 
@@ -1351,6 +1355,35 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
     }
 
 
+
+    /** After a setting the phone only reads when it connects: offer to reconnect, yes or no. */
+    private fun maybeOfferReconnect() {
+        if (!com.andrerinas.openheadunit.main.DaSettingsActivity.reconnectNeeded) return
+        com.andrerinas.openheadunit.main.DaSettingsActivity.reconnectNeeded = false
+        if (!commManager.isConnected) return
+        val root = window.decorView as android.view.ViewGroup
+        val prompt = layoutInflater.inflate(R.layout.da_reconnect_prompt, root, false)
+        fun close() = root.removeView(prompt)
+        prompt.findViewById<View>(R.id.reconnect_later).setOnClickListener { close() }
+        prompt.findViewById<View>(R.id.reconnect_now).setOnClickListener {
+            close()
+            AppLog.i("AapProjectionActivity: reconnecting to apply the new settings")
+            // Not a user exit: the service re-arms wireless at once and the phone comes back.
+            commManager.disconnect(sendByeBye = true, isUserExit = false)
+            // The phone does not come back by itself after a bye-bye: call it, as the home
+            // screen's connect button does, once the service has re-armed wireless.
+            val mac = settings.autoStartBluetoothDeviceMacs.firstOrNull() ?: return@setOnClickListener
+            val app = applicationContext
+            android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                androidx.core.content.ContextCompat.startForegroundService(app,
+                    Intent(app, AapService::class.java).apply {
+                        action = AapService.ACTION_NATIVE_AA_POKE
+                        putExtra(AapService.EXTRA_MAC, mac)
+                    })
+            }, RECONNECT_POKE_DELAY_MS)
+        }
+        root.addView(prompt)
+    }
     private var projectionMenu: View? = null
 
     /** The two-finger menu: two big buttons over Android Auto; a tap elsewhere closes it. */
@@ -1854,6 +1887,8 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
     }
 
     companion object {
+        /** After the bye-bye, so the service has stopped and re-armed wireless before the call. */
+        private const val RECONNECT_POKE_DELAY_MS = 2_500L
         // Settings changes the open projection applies at once (sent by the settings screens).
         const val ACTION_SETTINGS_CHANGED = "com.andrerinas.openheadunit.SETTINGS_CHANGED"
         const val EXTRA_NEEDS_VIEW_RECREATE = "needs_view_recreate"

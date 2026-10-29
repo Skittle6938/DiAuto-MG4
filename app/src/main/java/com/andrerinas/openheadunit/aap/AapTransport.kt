@@ -838,7 +838,9 @@ class AapTransport(
             data[0] = Channel.ID_MIC.toByte()
             data[1] = 0x0b
             // Timestamp at byte 4 so the full 8 bytes are inside the encrypted payload (HEADER_SIZE=4)
-            Utils.put_time(4, data, SystemClock.elapsedRealtime())
+            // Microseconds, as Android Auto stamps media and openauto its mic. Milliseconds
+            // were sent while Gemini kept closing the mic 0.2 s after opening it (2026-10-29).
+            Utils.put_time(4, data, SystemClock.elapsedRealtimeNanos() / 1000L)
             System.arraycopy(mic_buf, 0, data, 12, mic_audio_len)
             send(AapMessage(Channel.ID_MIC, 0x0b.toByte(), -1, 2, length, data))
         }

@@ -587,7 +587,7 @@ internal class AapAudio(
             Channel.ID_AU2 -> navigationVolumeOffset
             else -> 0
         }
-        val gain = (1.0f + (offset / 100.0f)).coerceIn(0.0f, 2.0f)
+        val gain = (1.0f + (offset / 100.0f)).coerceIn(0.0f, 3.0f)
 
         // Voice and Navigation benefit from lower latency. Cap the multiplier for those channels.
         // MEDIA over Wi‑Fi also gets a DiPlay-style jitter start buffer (nav/speech stay immediate).
@@ -842,8 +842,8 @@ internal class AapAudio(
 
     fun updateGains() {
         val mediaGain = (1.0f + (settings.mediaVolumeOffset / 100.0f)).coerceIn(0.0f, 2.0f)
-        val assistantGain = (1.0f + (settings.assistantVolumeOffset / 100.0f)).coerceIn(0.0f, 2.0f)
-        val navGain = (1.0f + (settings.navigationVolumeOffset / 100.0f)).coerceIn(0.0f, 2.0f)
+        val assistantGain = (1.0f + (settings.assistantVolumeOffset / 100.0f)).coerceIn(0.0f, 3.0f)
+        val navGain = (1.0f + (settings.navigationVolumeOffset / 100.0f)).coerceIn(0.0f, 3.0f)
 
         audioDecoder.setGain(Channel.ID_AUD, mediaGain)
         audioDecoder.setGain(Channel.ID_AU1, assistantGain)

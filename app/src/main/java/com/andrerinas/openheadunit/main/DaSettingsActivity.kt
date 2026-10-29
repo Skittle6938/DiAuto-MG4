@@ -140,12 +140,14 @@ class DaSettingsActivity : BaseActivity() {
         row(R.string.dset_fps, R.string.dset_fps_summary,
             choices(listOf("30", "60"), if (settings.fpsLimit == 60) 1 else 0) {
                 settings.fpsLimit = if (it == 1) 60 else 30
+                appliesOnReconnect()
             })
         val sizes = listOf(DPI_SMALL, DPI_AUTO, DPI_LARGE)
         val size = sizes.indexOf(settings.dpiPixelDensity).takeIf { it >= 0 } ?: 1
         row(R.string.dset_ui_size, R.string.dset_ui_size_summary,
             choices(listOf(getString(R.string.dset_small), getString(R.string.dset_normal), getString(R.string.dset_large)), size) {
                 settings.dpiPixelDensity = sizes[it]
+                appliesOnReconnect()
             })
         val modes = listOf(Settings.NightMode.AUTO, Settings.NightMode.DAY, Settings.NightMode.NIGHT)
         val mode = modes.indexOf(settings.nightMode).takeIf { it >= 0 } ?: 0
@@ -159,6 +161,7 @@ class DaSettingsActivity : BaseActivity() {
     private fun soundTab() {
         row(R.string.dset_separate, R.string.dset_separate_summary, yesNo(settings.separateAudioStreams) {
             settings.separateAudioStreams = it
+            appliesOnReconnect()
         })
         row(R.string.dset_voice_volume, R.string.dset_voice_volume_summary, level(settings.assistantVolumeOffset) {
             settings.assistantVolumeOffset = it
@@ -166,6 +169,7 @@ class DaSettingsActivity : BaseActivity() {
         })
         row(R.string.dset_bt_music, R.string.dset_bt_music_summary, yesNo(settings.musicViaBluetooth) {
             settings.musicViaBluetooth = it
+            appliesOnReconnect()
         })
         val buffers = listOf(500, 1000, 1500)
         val buffer = buffers.indexOf(settings.mediaAudioBufferMillis).takeIf { it >= 0 } ?: 1
@@ -261,6 +265,11 @@ class DaSettingsActivity : BaseActivity() {
 
     // --- Rows and controls --------------------------------------------------------------------
 
+    /** The phone reads this setting when it connects: ask to reconnect if a session is running. */
+    private fun appliesOnReconnect() {
+        if (App.provide(this).commManager.isConnected) reconnectNeeded = true
+    }
+
     private fun row(title: Int, summary: Int, control: View) = rowText(getString(title), getString(summary), control)
 
     private fun rowText(title: String, summary: String, control: View) {
@@ -329,12 +338,12 @@ class DaSettingsActivity : BaseActivity() {
         setOnClickListener { onClick() }
     }
 
-    /** -50 % … +100 % around the music level, in 10 % steps. */
+    /** -50 % … +200 % around the music level, in 10 % steps. */
     private fun level(offset: Int, onChange: (Int) -> Unit): View = Slider(this).apply {
         valueFrom = -50f
-        valueTo = 100f
+        valueTo = Settings.MAX_VOICE_VOLUME_OFFSET.toFloat()
         stepSize = 10f
-        value = offset.coerceIn(-50, 100).toFloat()
+        value = offset.coerceIn(-50, Settings.MAX_VOICE_VOLUME_OFFSET).toFloat()
         layoutParams = FrameLayout.LayoutParams(dp(420), ViewGroup.LayoutParams.WRAP_CONTENT)
         val accent = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.da_accent))
         thumbTintList = accent
@@ -347,6 +356,12 @@ class DaSettingsActivity : BaseActivity() {
     private fun dp(v: Int): Int = (v * resources.displayMetrics.density).toInt()
 
     companion object {
+        /**
+         * Set when a setting that the phone only reads at connection time changed during a session;
+         * the projection screen offers to reconnect when it comes back.
+         */
+        @Volatile var reconnectNeeded = false
+
         const val EXTRA_TAB = "tab"
         private const val KEY_TAB = "tab"
         private const val DPI_SMALL = 200

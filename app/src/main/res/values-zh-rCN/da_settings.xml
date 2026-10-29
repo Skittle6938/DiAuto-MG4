@@ -76,4 +76,7 @@
     <string name="restore_allgo">恢复车辆原装 Android Auto (AllGo)</string>
     <string name="restore_allgo_message">DiAuto 安装在车辆原装 Android Auto 的位置。此操作将卸载 DiAuto：车辆原装 Android Auto 会完全恢复原样。DiAuto 的设置将丢失。</string>
     <string name="restore_allgo_confirm">卸载 DiAuto</string>
+    <string name="reconnect_prompt">部分设置需重新连接后才生效。现在重新启动连接吗？</string>
+    <string name="reconnect_now">重新连接</string>
+    <string name="reconnect_later">稍后</string>
 </resources>
