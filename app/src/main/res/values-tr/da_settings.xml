@@ -79,4 +79,7 @@
     <string name="reconnect_prompt">Bazı ayarlar yalnızca yeniden bağlandıktan sonra geçerli olur. Bağlantı şimdi yeniden başlatılsın mı?</string>
     <string name="reconnect_now">Yeniden bağlan</string>
     <string name="reconnect_later">Daha sonra</string>
+    <string name="dset_variant">MG4 sürümü</string>
+    <string name="dset_variant_summary">Google Haritalar şarj durakları için şarj eğrisi ve ağırlık</string>
+    <string name="dset_variant_auto">Otomatik (%s)</string>
 </resources>

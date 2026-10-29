@@ -79,4 +79,7 @@
     <string name="reconnect_prompt">Certains réglages ne s\'appliquent qu\'après une reconnexion. Relancer la connexion maintenant ?</string>
     <string name="reconnect_now">Reconnecter</string>
     <string name="reconnect_later">Plus tard</string>
+    <string name="dset_variant">Version de la MG4</string>
+    <string name="dset_variant_summary">Courbe de charge et masse envoyées à Google Maps pour les arrêts de recharge</string>
+    <string name="dset_variant_auto">Auto (%s)</string>
 </resources>

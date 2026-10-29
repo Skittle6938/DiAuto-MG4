@@ -79,4 +79,7 @@
     <string name="reconnect_prompt">Một số cài đặt chỉ có hiệu lực sau khi kết nối lại. Khởi động lại kết nối ngay?</string>
     <string name="reconnect_now">Kết nối lại</string>
     <string name="reconnect_later">Để sau</string>
+    <string name="dset_variant">Phiên bản MG4</string>
+    <string name="dset_variant_summary">Đường cong sạc và khối lượng gửi tới Google Maps cho các điểm dừng sạc</string>
+    <string name="dset_variant_auto">Tự động (%s)</string>
 </resources>

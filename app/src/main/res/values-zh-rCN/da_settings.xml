@@ -79,4 +79,7 @@
     <string name="reconnect_prompt">部分设置需重新连接后才生效。现在重新启动连接吗？</string>
     <string name="reconnect_now">重新连接</string>
     <string name="reconnect_later">稍后</string>
+    <string name="dset_variant">MG4 版本</string>
+    <string name="dset_variant_summary">发送给 Google 地图用于充电站规划的充电曲线和重量</string>
+    <string name="dset_variant_auto">自动（%s）</string>
 </resources>

@@ -79,4 +79,7 @@
     <string name="reconnect_prompt">Einige Einstellungen gelten erst nach einer neuen Verbindung. Verbindung jetzt neu starten?</string>
     <string name="reconnect_now">Neu verbinden</string>
     <string name="reconnect_later">Später</string>
+    <string name="dset_variant">MG4-Version</string>
+    <string name="dset_variant_summary">Ladekurve und Gewicht für Ladestopps in Google Maps</string>
+    <string name="dset_variant_auto">Auto (%s)</string>
 </resources>

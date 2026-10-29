@@ -79,4 +79,7 @@
     <string name="reconnect_prompt">一部の設定は再接続後に反映されます。今すぐ接続をやり直しますか？</string>
     <string name="reconnect_now">再接続</string>
     <string name="reconnect_later">後で</string>
+    <string name="dset_variant">MG4 のバージョン</string>
+    <string name="dset_variant_summary">充電スポット計画のため Google マップに送る充電曲線と重量</string>
+    <string name="dset_variant_auto">自動 (%s)</string>
 </resources>

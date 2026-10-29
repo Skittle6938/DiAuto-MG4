@@ -426,6 +426,11 @@ class Settings(private val context: Context) {
         get() = prefs.getBoolean("battery-for-google-maps", true)
         set(value) { prefs.edit().putBoolean("battery-for-google-maps", value).apply() }
 
+    /** MG4 version for the Maps energy model: "auto" (from the car's pack) or a [com.andrerinas.openheadunit.vehicle.Mg4Variant] key. */
+    var mg4Variant: String
+        get() = prefs.getString("mg4-variant", com.andrerinas.openheadunit.vehicle.Mg4Variant.AUTO)!!
+        set(value) { prefs.edit().putString("mg4-variant", value).apply() }
+
     /**
      * When true, [com.andrerinas.openheadunit.vehicle.Mg4EnergyProvider] uses the demo
      * SoC/range/capacity fields below instead of EVHardware (for desk / non-MG4 testing).

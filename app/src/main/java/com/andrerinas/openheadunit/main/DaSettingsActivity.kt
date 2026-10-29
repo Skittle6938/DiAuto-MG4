@@ -188,6 +188,7 @@ class DaSettingsActivity : BaseActivity() {
         row(R.string.dset_maps_range, R.string.dset_maps_range_summary, yesNo(settings.batteryForGoogleMaps) {
             settings.batteryForGoogleMaps = it
         })
+        row(R.string.dset_variant, R.string.dset_variant_summary, value(variantLabel()) { pickVariant() })
         val keys = SteeringKeyLog.recent().takeLast(5).joinToString(" · ").ifEmpty { "—" }
         row(R.string.dset_wheel_keys, R.string.dset_wheel_keys_summary, value(keys, null))
     }
@@ -224,6 +225,27 @@ class DaSettingsActivity : BaseActivity() {
     // --- Actions ------------------------------------------------------------------------------
 
     @SuppressLint("MissingPermission")
+    private fun variantLabel(): String {
+        val chosen = com.andrerinas.openheadunit.vehicle.Mg4Variant.entries.firstOrNull { it.key == settings.mg4Variant }
+        if (chosen != null) return chosen.label
+        val pack = com.andrerinas.openheadunit.vehicle.Mg4EnergyProvider.snapshot()?.capacityWh
+        return if (pack == null) getString(R.string.dset_auto)
+        else getString(R.string.dset_variant_auto, com.andrerinas.openheadunit.vehicle.Mg4Variant.detect(pack).label)
+    }
+
+    private fun pickVariant() {
+        val variants = com.andrerinas.openheadunit.vehicle.Mg4Variant.entries
+        val labels = listOf(getString(R.string.dset_auto)) + variants.map { it.label }
+        MaterialAlertDialogBuilder(this, R.style.DarkAlertDialog)
+            .setTitle(R.string.dset_variant)
+            .setItems(labels.toTypedArray()) { _, i ->
+                settings.mg4Variant = if (i == 0) com.andrerinas.openheadunit.vehicle.Mg4Variant.AUTO else variants[i - 1].key
+                showTab(selectedTab)
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
     private fun pickPhone() {
         val bonded = try {
             BluetoothHelper.getBluetoothAdapter(this)?.bondedDevices.orEmpty().sortedBy { it.name ?: it.address }

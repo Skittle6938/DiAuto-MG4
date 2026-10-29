@@ -79,4 +79,7 @@
     <string name="reconnect_prompt">Unele setări se aplică doar după reconectare. Reporniți conexiunea acum?</string>
     <string name="reconnect_now">Reconectare</string>
     <string name="reconnect_later">Mai târziu</string>
+    <string name="dset_variant">Versiunea MG4</string>
+    <string name="dset_variant_summary">Curba de încărcare și masa trimise către Google Maps pentru opririle de încărcare</string>
+    <string name="dset_variant_auto">Auto (%s)</string>
 </resources>
