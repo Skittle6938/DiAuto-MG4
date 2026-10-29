@@ -170,6 +170,8 @@ class DaSettingsActivity : BaseActivity() {
             row(R.string.dset_voice_volume, R.string.dset_voice_volume_summary, level(settings.assistantVolumeOffset) {
                 settings.assistantVolumeOffset = it
                 settings.navigationVolumeOffset = it
+                // The level is read when the voice channels open, at connection.
+                appliesOnReconnect()
             })
         }
         row(R.string.dset_bt_music, R.string.dset_bt_music_summary, yesNo(settings.musicViaBluetooth) {
@@ -435,7 +437,7 @@ class DaSettingsActivity : BaseActivity() {
                 id = View.generateViewId()
                 this.text = label
                 isAllCaps = false
-                textSize = 19f
+                textSize = 21f
                 minWidth = dp(130)
                 minimumHeight = dp(72)
                 strokeColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.da_border))
@@ -477,18 +479,82 @@ class DaSettingsActivity : BaseActivity() {
     }
 
     /** -50 % … +200 % around the music level, in 5 % steps (the +75 % default sits between two 10 % steps). */
-    private fun level(offset: Int, onChange: (Int) -> Unit): View = Slider(this).apply {
-        valueFrom = -50f
-        valueTo = Settings.MAX_VOICE_VOLUME_OFFSET.toFloat()
-        stepSize = 5f
-        value = (offset.coerceIn(-50, Settings.MAX_VOICE_VOLUME_OFFSET) / 5 * 5).toFloat()
-        layoutParams = FrameLayout.LayoutParams(dp(420), ViewGroup.LayoutParams.WRAP_CONTENT)
-        val accent = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.da_accent))
-        thumbTintList = accent
-        trackActiveTintList = accent
-        trackInactiveTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.da_border))
-        setLabelFormatter { v -> "%+d %%".format(v.toInt()) }
-        addOnChangeListener { _, v, fromUser -> if (fromUser) onChange(v.toInt()) }
+    /** The voice level: its value on the left, the slider with its marks every 50 % below it. */
+    private fun level(offset: Int, onChange: (Int) -> Unit): View {
+        val accentColor = ContextCompat.getColor(this, R.color.da_accent)
+        val shown = TextView(this).apply {
+            textSize = 22f
+            setTextColor(accentColor)
+            gravity = android.view.Gravity.END or android.view.Gravity.CENTER_VERTICAL
+            minWidth = dp(110)
+        }
+        fun label(v: Int) = if (v == 0) "0 %" else "%+d %%".format(v)
+        val slider = Slider(this).apply {
+            valueFrom = -50f
+            valueTo = Settings.MAX_VOICE_VOLUME_OFFSET.toFloat()
+            stepSize = 5f
+            value = (offset.coerceIn(-50, Settings.MAX_VOICE_VOLUME_OFFSET) / 5 * 5).toFloat()
+            isTickVisible = false
+            val accent = ColorStateList.valueOf(accentColor)
+            thumbTintList = accent
+            trackActiveTintList = accent
+            trackInactiveTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.da_border))
+            setLabelFormatter { v -> label(v.toInt()) }
+            addOnChangeListener { _, v, fromUser ->
+                shown.text = label(v.toInt())
+                if (fromUser) onChange(v.toInt())
+            }
+        }
+        shown.text = label(slider.value.toInt())
+        // The end labels are wider than the track's margin: the marks reach past the slider.
+        val overhang = dp(28)
+        val marks = SliderMarks(this, slider, overhang, (-50..Settings.MAX_VOICE_VOLUME_OFFSET step 50).toList(), ::label)
+        val column = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            addView(slider, LinearLayout.LayoutParams(dp(480), ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                marginStart = overhang
+                marginEnd = overhang
+            })
+            addView(marks, LinearLayout.LayoutParams(dp(480) + 2 * overhang, dp(28)))
+        }
+        return LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = android.view.Gravity.CENTER_VERTICAL
+            addView(shown)
+            addView(column, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                marginStart = dp(4)
+            })
+        }
+    }
+
+    /** Labels under a slider, each centred on the point of the track it names. */
+    private class SliderMarks(
+        context: Context,
+        private val slider: Slider,
+        private val overhang: Int,
+        private val values: List<Int>,
+        private val label: (Int) -> String,
+    ) : View(context) {
+        private val paint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
+            color = ContextCompat.getColor(context, R.color.da_muted)
+            textSize = 17f * resources.displayMetrics.scaledDensity
+            textAlign = android.graphics.Paint.Align.CENTER
+        }
+        private val tick = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
+            color = ContextCompat.getColor(context, R.color.da_border)
+            strokeWidth = 2f * resources.displayMetrics.density
+        }
+
+        override fun onDraw(canvas: android.graphics.Canvas) {
+            val start = (overhang + slider.trackSidePadding).toFloat()
+            val end = (width - overhang - slider.trackSidePadding).toFloat()
+            val span = slider.valueTo - slider.valueFrom
+            values.forEach { v ->
+                val x = start + (end - start) * (v - slider.valueFrom) / span
+                canvas.drawLine(x, 0f, x, 6f * resources.displayMetrics.density, tick)
+                canvas.drawText(label(v), x, height - 4f * resources.displayMetrics.density, paint)
+            }
+        }
     }
 
     private fun dp(v: Int): Int = (v * resources.displayMetrics.density).toInt()

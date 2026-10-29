@@ -78,5 +78,5 @@
         android:layout_marginTop="40dp"
         android:text="@string/menu_close_hint"
         android:textColor="@color/da_muted"
-        android:textSize="20sp" />
+        android:textSize="28sp" />
 </LinearLayout>

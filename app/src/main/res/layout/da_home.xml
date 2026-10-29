@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/da_muted"
-            android:textSize="18sp" />
+            android:textSize="22sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -85,7 +85,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:textColor="@color/da_muted"
-                android:textSize="19sp" />
+                android:textSize="22sp" />
 
             <LinearLayout
                 android:id="@+id/home_main_button"
@@ -185,7 +185,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:textColor="@color/da_muted"
-                    android:textSize="16sp" />
+                    android:textSize="20sp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
