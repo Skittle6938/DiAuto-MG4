@@ -62,7 +62,11 @@ class DaTutorialActivity : BaseActivity() {
         val last = index == steps.lastIndex
         findViewById<TextView>(R.id.tuto_step).text = getString(R.string.tuto_step, index + 1, steps.size)
         findViewById<TextView>(R.id.tuto_title).setText(step.title)
-        findViewById<TextView>(R.id.tuto_text).setText(step.text)
+        findViewById<TextView>(R.id.tuto_text).apply {
+            setText(step.text)
+            // The last step holds five points.
+            textSize = if (last) 21f else 23f
+        }
         findViewById<GestureDemoView>(R.id.tuto_demo).apply {
             visibility = if (step.gesture != null) View.VISIBLE else View.GONE
             step.gesture?.let { gesture = it }
