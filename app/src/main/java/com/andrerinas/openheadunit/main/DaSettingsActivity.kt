@@ -469,12 +469,12 @@ class DaSettingsActivity : BaseActivity() {
         setOnClickListener { onClick() }
     }
 
-    /** -50 % … +200 % around the music level, in 10 % steps. */
+    /** -50 % … +200 % around the music level, in 5 % steps (the +75 % default sits between two 10 % steps). */
     private fun level(offset: Int, onChange: (Int) -> Unit): View = Slider(this).apply {
         valueFrom = -50f
         valueTo = Settings.MAX_VOICE_VOLUME_OFFSET.toFloat()
-        stepSize = 10f
-        value = offset.coerceIn(-50, Settings.MAX_VOICE_VOLUME_OFFSET).toFloat()
+        stepSize = 5f
+        value = (offset.coerceIn(-50, Settings.MAX_VOICE_VOLUME_OFFSET) / 5 * 5).toFloat()
         layoutParams = FrameLayout.LayoutParams(dp(420), ViewGroup.LayoutParams.WRAP_CONTENT)
         val accent = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.da_accent))
         thumbTintList = accent
