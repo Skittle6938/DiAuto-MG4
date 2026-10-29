@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.0-beta22
+
+- Steering wheel play/pause sends the phone an explicit "pause" while Android Auto music is playing and "play" otherwise, instead of a toggle that some phones and players (Spotify) ignore. With music over Bluetooth the toggle is kept.
+
 # DiAuto MG4+ 2.2.0-beta21
 
 - A short **tutorial** at first start: the gestures over Android Auto and the main features (Maps trip planning, battery settings, preheating before a charging stop, going back to the car's Android Auto). It can be skipped and shown again from *Settings → About*. In all 22 languages.

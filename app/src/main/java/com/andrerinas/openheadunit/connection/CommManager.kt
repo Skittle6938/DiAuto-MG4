@@ -121,6 +121,8 @@ class CommManager(
 
     /** Cached answer of the Bluetooth media probe used by media-key routing, and when it was taken. */
     private var btMediaLinkCached: Boolean? = null
+    /** What a play/pause press was sent as, so its release goes out as the same key. */
+    private var playPauseSent = KeyEvent.KEYCODE_MEDIA_PAUSE
     private var btMediaLinkCheckedAt: Long? = null
     private val PAUSE_TAIL_FLUSH_MS = 400L
     private val BT_MEDIA_LINK_CACHE_MS = 2_000L
@@ -534,6 +536,14 @@ class CommManager(
             logicalCode = KeyEvent.KEYCODE_DPAD_CENTER
         }
 
+        // The play/pause toggle is ignored by some phones and players (Spotify on an SWI173): send
+        // the action that fits instead, pause while Android Auto music is arriving, play otherwise.
+        // With music over Bluetooth that music never arrives here, so the toggle stays.
+        if (logicalCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE && !settings.musicViaBluetooth) {
+            if (isPress) playPauseSent = if (isAndroidAutoMusicArriving()) KeyEvent.KEYCODE_MEDIA_PAUSE else KeyEvent.KEYCODE_MEDIA_PLAY
+            logicalCode = playPauseSent
+        }
+
         val isMedia = isMediaKey(logicalCode)
 
         // 3. Routing: a media button the head unit's own Bluetooth side is already acting on must
@@ -579,6 +589,9 @@ class CommManager(
      * here) has played out. When the key pauses playing music, that audio is dropped at once, and
      * again shortly after for what the phone sent before it stopped.
      */
+    private fun isAndroidAutoMusicArriving(): Boolean =
+        audioDecoder.getTrack(com.andrerinas.openheadunit.aap.protocol.Channel.ID_AUD)?.isReceivingAudio() == true
+
     private fun cutBufferedAudioOnPause(keyCode: Int) {
         val track = audioDecoder.getTrack(com.andrerinas.openheadunit.aap.protocol.Channel.ID_AUD) ?: return
         val pauses = keyCode == KeyEvent.KEYCODE_MEDIA_PAUSE ||
