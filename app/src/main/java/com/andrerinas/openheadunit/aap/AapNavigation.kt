@@ -133,6 +133,13 @@ class AapNavigation(
                             "exitNumber=${if (maneuver?.hasRoundaboutExitNumber() == true) maneuver.roundaboutExitNumber else "-"} " +
                             "exitAngle=${if (maneuver?.hasRoundaboutExitAngle() == true) maneuver.roundaboutExitAngle else "-"}"
                     )
+                    // Which stops the phone names, and how (charging stops for battery preheating).
+                    logOnChange(
+                        "destinations",
+                        "${state.destinationsCount}: " + state.destinationsList.joinToString(" | ") {
+                            if (it.hasAddress()) it.address.take(40) else "-"
+                        }
+                    )
                     snapshot.navigationState = AapNavigationHelper.TimedMessage(state, helper.nowElapsedRealtimeMs())
                     val firstStepRoad = state.stepsList.firstOrNull()
                         ?.takeIf { it.hasRoad() && it.road.hasName() }
