@@ -58,7 +58,18 @@ class AudioMixer(
 
     // Per-channel configuration
     private val channelConfigs = ConcurrentHashMap<Int, ChannelConfig>()
-    private val lastMonoSample = ConcurrentHashMap<Int, Int>()
+    private val upsamplers = ConcurrentHashMap<Int, Upsampler3x>()
+    // Per feeding thread: each channel feeds from its own wrapper thread.
+    private val upsampleBuffer = ThreadLocal<ShortArray>()
+
+    private fun getUpsampleBuffer(size: Int): ShortArray {
+        var arr = upsampleBuffer.get()
+        if (arr == null || arr.size < size) {
+            arr = ShortArray(size)
+            upsampleBuffer.set(arr)
+        }
+        return arr
+    }
 
     // Per-channel PCM circular buffers
     private val channelBuffers = ConcurrentHashMap<Int, ShortCircularBuffer>()
@@ -228,7 +239,7 @@ class AudioMixer(
      */
     fun unregisterChannel(channel: Int) {
         channelConfigs.remove(channel)
-        lastMonoSample.remove(channel)
+        upsamplers.remove(channel)
         channelBuffers.remove(channel)
         channelPreRolling.remove(channel)
         channelGains.remove(channel)
@@ -265,20 +276,15 @@ class AudioMixer(
             // Highly optimized path: 16kHz mono to 48kHz stereo (ratio = 3)
             val outputShortsSize = inputShortsSize * 3 * 2
             val outputShorts = getFeedOutputBuffer(outputShortsSize)
+            // A filtered upsampler per channel (see Upsampler3x), then mono to both sides.
+            val upsampler = upsamplers.getOrPut(channel) { Upsampler3x() }
+            val mono = getUpsampleBuffer(inputShortsSize * 3)
+            val produced = upsampler.process(inputShorts, inputShortsSize, mono)
             var outIdx = 0
-            // Interpolates from the previous sample, carried over from the last chunk: restarting
-            // each ~32 ms chunk on a flat step put a buzz under every navigation prompt.
-            var previous = lastMonoSample[channel] ?: inputShorts[0].toInt()
-            for (i in 0 until inputShortsSize) {
-                val current = inputShorts[i].toInt()
-                for (j in 1..3) {
-                    val interpolated = (previous + (current - previous) * j / 3).toShort()
-                    outputShorts[outIdx++] = interpolated // Left
-                    outputShorts[outIdx++] = interpolated // Right
-                }
-                previous = current
+            for (i in 0 until produced) {
+                outputShorts[outIdx++] = mono[i] // Left
+                outputShorts[outIdx++] = mono[i] // Right
             }
-            lastMonoSample[channel] = previous
             buffer.write(outputShorts, outputShortsSize)
         } else {
             // Generic linear resampling and channel configuration fallback
