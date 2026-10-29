@@ -80,6 +80,6 @@
     <string name="reconnect_now">Újracsatlakozás</string>
     <string name="reconnect_later">Később</string>
     <string name="dset_variant">MG4 változat</string>
-    <string name="dset_variant_summary">Töltési görbe és tömeg a Google Térkép töltési megállóihoz</string>
+    <string name="dset_variant_summary">Legnagyobb gyorstöltési teljesítmény a Google Térképnek</string>
     <string name="dset_variant_auto">Auto (%s)</string>
 </resources>

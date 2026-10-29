@@ -80,6 +80,6 @@
     <string name="reconnect_now">Yeniden bağlan</string>
     <string name="reconnect_later">Daha sonra</string>
     <string name="dset_variant">MG4 sürümü</string>
-    <string name="dset_variant_summary">Google Haritalar şarj durakları için şarj eğrisi ve ağırlık</string>
+    <string name="dset_variant_summary">Google Haritalar\'a gönderilen en yüksek hızlı şarj gücü</string>
     <string name="dset_variant_auto">Otomatik (%s)</string>
 </resources>

@@ -80,6 +80,6 @@
     <string name="reconnect_now">再接続</string>
     <string name="reconnect_later">後で</string>
     <string name="dset_variant">MG4 のバージョン</string>
-    <string name="dset_variant_summary">充電スポット計画のため Google マップに送る充電曲線と重量</string>
+    <string name="dset_variant_summary">Google マップに送る急速充電の最大出力</string>
     <string name="dset_variant_auto">自動 (%s)</string>
 </resources>

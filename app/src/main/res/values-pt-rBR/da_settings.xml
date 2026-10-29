@@ -80,6 +80,6 @@
     <string name="reconnect_now">Reconectar</string>
     <string name="reconnect_later">Mais tarde</string>
     <string name="dset_variant">Versão do MG4</string>
-    <string name="dset_variant_summary">Curva de carga e peso enviados ao Google Maps para paradas de recarga</string>
+    <string name="dset_variant_summary">Potência máxima de recarga rápida enviada ao Google Maps</string>
     <string name="dset_variant_auto">Auto (%s)</string>
 </resources>

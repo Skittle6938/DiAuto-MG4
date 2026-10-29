@@ -80,6 +80,6 @@
     <string name="reconnect_now">Neu verbinden</string>
     <string name="reconnect_later">Später</string>
     <string name="dset_variant">MG4-Version</string>
-    <string name="dset_variant_summary">Ladekurve und Gewicht für Ladestopps in Google Maps</string>
+    <string name="dset_variant_summary">Maximale Schnellladeleistung für Google Maps</string>
     <string name="dset_variant_auto">Auto (%s)</string>
 </resources>

@@ -80,6 +80,6 @@
     <string name="reconnect_now">Reconectare</string>
     <string name="reconnect_later">Mai târziu</string>
     <string name="dset_variant">Versiunea MG4</string>
-    <string name="dset_variant_summary">Curba de încărcare și masa trimise către Google Maps pentru opririle de încărcare</string>
+    <string name="dset_variant_summary">Puterea maximă de încărcare rapidă trimisă către Google Maps</string>
     <string name="dset_variant_auto">Auto (%s)</string>
 </resources>

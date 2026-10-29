@@ -80,6 +80,6 @@
     <string name="reconnect_now">重新連線</string>
     <string name="reconnect_later">稍後</string>
     <string name="dset_variant">MG4 版本</string>
-    <string name="dset_variant_summary">傳送給 Google 地圖規劃充電站的充電曲線與重量</string>
+    <string name="dset_variant_summary">傳送給 Google 地圖的最大快充功率</string>
     <string name="dset_variant_auto">自動（%s）</string>
 </resources>

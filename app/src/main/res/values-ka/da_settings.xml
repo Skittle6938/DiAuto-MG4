@@ -80,6 +80,6 @@
     <string name="reconnect_now">ხელახლა დაკავშირება</string>
     <string name="reconnect_later">მოგვიანებით</string>
     <string name="dset_variant">MG4-ის ვერსია</string>
-    <string name="dset_variant_summary">დამუხტვის მრუდი და მასა Google Maps-ისთვის დამუხტვის გაჩერებებისთვის</string>
+    <string name="dset_variant_summary">სწრაფი დამუხტვის მაქსიმალური სიმძლავრე Google Maps-ისთვის</string>
     <string name="dset_variant_auto">ავტო (%s)</string>
 </resources>

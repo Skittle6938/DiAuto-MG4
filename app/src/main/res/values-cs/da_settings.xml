@@ -80,6 +80,6 @@
     <string name="reconnect_now">Znovu připojit</string>
     <string name="reconnect_later">Později</string>
     <string name="dset_variant">Verze MG4</string>
-    <string name="dset_variant_summary">Nabíjecí křivka a hmotnost pro nabíjecí zastávky v Mapách Google</string>
+    <string name="dset_variant_summary">Maximální rychlonabíjecí výkon pro Mapy Google</string>
     <string name="dset_variant_auto">Auto (%s)</string>
 </resources>

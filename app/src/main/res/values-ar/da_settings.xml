@@ -80,6 +80,6 @@
     <string name="reconnect_now">إعادة الاتصال</string>
     <string name="reconnect_later">لاحقًا</string>
     <string name="dset_variant">إصدار MG4</string>
-    <string name="dset_variant_summary">منحنى الشحن والكتلة المرسلة إلى خرائط Google لمحطات الشحن</string>
+    <string name="dset_variant_summary">أقصى قدرة شحن سريع مُرسلة إلى خرائط Google</string>
     <string name="dset_variant_auto">تلقائي (%s)</string>
 </resources>

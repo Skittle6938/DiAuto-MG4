@@ -80,6 +80,6 @@
     <string name="reconnect_now">Перепідключити</string>
     <string name="reconnect_later">Пізніше</string>
     <string name="dset_variant">Версія MG4</string>
-    <string name="dset_variant_summary">Крива заряджання й маса для зупинок на заряджання в Google Картах</string>
+    <string name="dset_variant_summary">Максимальна потужність швидкого заряджання для Google Карт</string>
     <string name="dset_variant_auto">Авто (%s)</string>
 </resources>
