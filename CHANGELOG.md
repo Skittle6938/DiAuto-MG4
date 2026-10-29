@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.1-beta4
+
+- The car's Wi-Fi client comes back 1 minute after the Android Auto session ends (was 2 minutes); the delay can be set in *Settings → Connection*: 10 s, 30 s, 1 min, 2 min or 5 min.
+
 # DiAuto MG4+ 2.2.1-beta3
 
 - The car's Wi-Fi client is switched off only once your phone connects to the car over Bluetooth, no longer as soon as DiAuto starts: with no phone in the car, the car keeps joining its own Wi-Fi networks (a home network, for example). It comes back 2 minutes after the Android Auto session ends.

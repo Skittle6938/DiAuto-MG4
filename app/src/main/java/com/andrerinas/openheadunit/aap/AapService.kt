@@ -1410,7 +1410,7 @@ class AapService : Service(), UsbReceiver.Listener {
         // Give the car Wi-Fi back once wireless Android Auto has stayed down for a while.
         stationRestoreJob?.cancel()
         stationRestoreJob = serviceScope.launch(Dispatchers.IO) {
-            delay(HotspotManager.STATION_RESTORE_DELAY_MS)
+            delay(settings.stationRestoreDelaySeconds * 1000L)
             if (!commManager.isBusy) HotspotManager.restorePausedStation(this@AapService)
         }
         isSwitchingToAccessory.set(false)

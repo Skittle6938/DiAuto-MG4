@@ -138,6 +138,12 @@ class DaSettingsActivity : BaseActivity() {
         row(R.string.dset_usb_wifi, R.string.dset_usb_wifi_summary, yesNo(settings.usbWifiClient) {
             settings.usbWifiClient = it
         })
+        val delays = listOf(10, 30, 60, 120, 300)
+        val delay = delays.indexOf(settings.stationRestoreDelaySeconds).takeIf { it >= 0 } ?: 2
+        row(R.string.dset_station_delay, R.string.dset_station_delay_summary,
+            choices(listOf("10 s", "30 s", "1 min", "2 min", "5 min"), delay) {
+                settings.stationRestoreDelaySeconds = delays[it]
+            })
     }
 
     private fun displayTab() {

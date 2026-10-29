@@ -167,7 +167,6 @@ object HotspotManager {
         context.applicationContext.getSharedPreferences("hotspot_band", Context.MODE_PRIVATE)
 
     private const val KEY_STATION_PAUSED = "station-paused-for-5ghz"
-    const val STATION_RESTORE_DELAY_MS = 120_000L
 
     fun setHotspotEnabled(context: Context, enabled: Boolean): Boolean {
         AppLog.i("HotspotManager: Setting hotspot enabled=$enabled (API ${Build.VERSION.SDK_INT}, canWriteSettings=${AppPermissions.isWriteSettingsGranted(context)})")

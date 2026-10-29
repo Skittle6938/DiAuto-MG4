@@ -246,6 +246,14 @@ class Settings(private val context: Context) {
         get() = prefs.getBoolean("usb-wifi-client", true)
         set(value) { prefs.edit().putBoolean("usb-wifi-client", value).apply() }
 
+    /**
+     * How long wireless Android Auto must stay down before the car's Wi-Fi client, switched off
+     * for the session, comes back: long enough to ride out a quick reconnection.
+     */
+    var stationRestoreDelaySeconds: Int
+        get() = prefs.getInt("station-restore-delay-s", 60).coerceIn(10, 300)
+        set(value) { prefs.edit().putInt("station-restore-delay-s", value.coerceIn(10, 300)).apply() }
+
     /** The first-start tutorial was shown (or skipped). */
     var tutorialShown: Boolean
         get() = prefs.getBoolean("tutorial-shown", false)
