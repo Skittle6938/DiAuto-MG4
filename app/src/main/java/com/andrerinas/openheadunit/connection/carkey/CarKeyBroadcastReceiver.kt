@@ -31,6 +31,8 @@ class CarKeyBroadcastReceiver : BroadcastReceiver(), CarKeyReceiver {
         private const val SAIC_KEYCODE_PLAY_PAUSE = 301
         /** Steering-wheel voice key (stock AllGo KEYCODE_VOICE). */
         private const val SAIC_KEYCODE_VOICE = 287
+        /** Steering-wheel phone key (hardkey 3 on the MG4). */
+        private const val SAIC_KEYCODE_PHONE = 3
         private const val PLAY_PAUSE_RUI_WAIT_MS = 400L
         /** Steering wheel left (previous) and right (next), AllGo's KEYCODE_SWC_LEFT/RIGHT. */
         private const val SAIC_KEYCODE_LEFT = 299
@@ -197,6 +199,16 @@ class CarKeyBroadcastReceiver : BroadcastReceiver(), CarKeyReceiver {
 
         // Voice key: forward the real press to Android Auto as stock AllGo does on this car (search
         // down on press, up on release); the phone decides between a tap and a hold.
+        // Phone key with Android Auto on screen: the car only forwards it (rui launchApp 3) from
+        // its own screens, so here it did nothing. Open the phone's dialer as AllGo does.
+        if (keyCode == SAIC_KEYCODE_PHONE) {
+            if (!isDown && !isLong && com.andrerinas.openheadunit.aap.AapProjectionActivity.isForeground) {
+                AllgoMediaKeys.click(context, KeyEvent.KEYCODE_CALL, "steering-phone")
+                AppLog.i("CarKeyReceiver: phone key on the Android Auto screen -> phone app")
+            }
+            return
+        }
+
         if (keyCode == SAIC_KEYCODE_VOICE) {
             if (!isLong) {
                 App.provide(context).commManager.sendKey(KeyEvent.KEYCODE_SEARCH, isDown, null, "steering-voice")
