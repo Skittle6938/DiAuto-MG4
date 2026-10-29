@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.1-beta2
+
+- Smoother wireless Android Auto when the car's own Wi-Fi is on: the car has a single Wi-Fi radio, so its Wi-Fi client shared it with the Android Auto hotspot, and once the car drove away from that network the picture could drop to a few frames per second with sound gaps. During a wireless session the car's Wi-Fi client is now always switched off (it was only switched off on 2.4 GHz), and back on afterwards if it was on.
+
 # DiAuto MG4+ 2.2.1-beta1
 
 - With Android Auto on the USB cable, the car's Wi-Fi client is switched on so the car joins its known networks, such as the phone's hotspot, and has internet. It goes off again when the USB session ends. Option in *Settings → Connection*, on by default.

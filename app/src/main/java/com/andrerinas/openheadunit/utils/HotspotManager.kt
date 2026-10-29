@@ -102,7 +102,7 @@ object HotspotManager {
      */
     fun ensure5GhzBeforeSession(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) return
-        val pausedStation = pauseStationIfOn2Ghz(context)
+        val pausedStation = pauseStation(context)
         val stored = SoftApConfigCompat.legacyBandAndChannel(context)
         AppLog.i("HotspotManager: stored AP config apBand=${stored?.first} apChannel=${stored?.second}")
         val configIs5Ghz = stored != null &&
@@ -123,19 +123,19 @@ object HotspotManager {
     }
 
     /**
-     * The MG4's MT6630 has one radio: while the car's own Wi-Fi is connected, the access point is
-     * forced onto that network's channel, so a 2.4 GHz network caps Android Auto at 720p. Switch the
-     * station off (remembering that we did) so the AP can come up on 5 GHz.
+     * The MG4's MT6630 has one radio: while the car's own Wi-Fi is on, the access point shares its
+     * channel and airtime. On 2.4 GHz that caps Android Auto at 720p; on any band, once the car
+     * drives away from that network the station keeps scanning for it and the access point starves
+     * (picture down to 5-9 fps, 2 s gaps, seen on an SWI133). Switch the station off (remembering
+     * that we did) while wireless Android Auto is in use.
+     *
+     * @return true when the station was on 2.4 GHz, so the AP must be restarted to reach 5 GHz.
      */
-    private fun pauseStationIfOn2Ghz(context: Context): Boolean {
+    private fun pauseStation(context: Context): Boolean {
         val wifi = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         if (!wifi.isWifiEnabled) return false
         val freq = try { wifi.connectionInfo?.frequency ?: -1 } catch (e: Exception) { -1 }
-        if (freq !in 2400..2500) {
-            AppLog.i("HotspotManager: car Wi-Fi station frequency=$freq MHz - leaving it on")
-            return false
-        }
-        AppLog.i("HotspotManager: car Wi-Fi is connected on $freq MHz, which pins the single-radio AP to 2.4 GHz - switching it off while wireless Android Auto is in use")
+        AppLog.i("HotspotManager: car Wi-Fi station is on (frequency=$freq MHz), sharing the single radio with the AP - switching it off while wireless Android Auto is in use")
         stationPrefs(context).edit().putBoolean(KEY_STATION_PAUSED, true).apply()
         @Suppress("DEPRECATION")
         val ok = try { wifi.setWifiEnabled(false) } catch (e: Exception) {
@@ -145,10 +145,10 @@ object HotspotManager {
         while (ok && wifi.isWifiEnabled && System.currentTimeMillis() < deadline) {
             try { Thread.sleep(200) } catch (e: InterruptedException) { break }
         }
-        return ok
+        return ok && freq in 2400..2500
     }
 
-    /** Switches the car's Wi-Fi back on, but only if [pauseStationIfOn2Ghz] switched it off. */
+    /** Switches the car's Wi-Fi back on, but only if [pauseStation] switched it off. */
     fun restorePausedStation(context: Context) {
         val prefs = stationPrefs(context)
         if (!prefs.getBoolean(KEY_STATION_PAUSED, false)) return
