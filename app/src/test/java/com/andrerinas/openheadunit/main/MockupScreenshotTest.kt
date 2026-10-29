@@ -60,7 +60,7 @@ class MockupScreenshotTest {
     )
 
     @Test fun homeConnected() = home(
-        "Connecté à Edge 60",
+        "Connecté à Pixel 8",
         "Android Auto tourne en arrière-plan.",
         "Ouvrir Android Auto",
         "mockup_home_connected.png",
@@ -106,7 +106,7 @@ class MockupScreenshotTest {
     @Test fun settingsConnection() = settings(0, listOf(
         Row("Android Auto sans fil", "Par le point d'accès de la voiture. Le câble USB marche toujours.", Control.Switch(true)),
         Row("Démarrer avec la voiture", "Android Auto revient tout seul quand vous montez.", Control.Switch(true)),
-        Row("Téléphone", "Celui qui lance Android Auto au démarrage.", Control.Value("Edge 60")),
+        Row("Téléphone", "Celui qui lance Android Auto au démarrage.", Control.Value("Pixel 8")),
         Row("Bande du point d'accès", "5 GHz : image plus fluide. 2,4 GHz si le téléphone ne trouve pas la voiture.", Control.Choices(listOf("5 GHz", "2,4 GHz"), 0)),
     ), "mockup_settings_connexion.png")
 

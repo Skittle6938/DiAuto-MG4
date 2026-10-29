@@ -1,91 +1,115 @@
 # DiAuto MG4+
 
-Wireless / USB **Android Auto** for the MG4 Android head unit (SWI69), with live
-battery SoC forwarded into Google Maps via Android Auto `VehicleEnergyModel`
-(sensor types 23/25).
+**Wireless Android Auto for the MG4's screen**, built for the car. It replaces the car's own
+Android Auto, connects by itself when you get in, and gives Google Maps your MG4's battery so Maps
+can plan your charging stops.
 
-> Fork of [shihabal3amri/DiAuto](https://github.com/shihabal3amri/DiAuto) (AGPL-3.0).
-> MG4 telemetry: vendored [EVHardware](https://github.com/fatihdonmezdev/MG4ABRP) in `evhardware/`.
-> For Apple CarPlay on the same car, use **DiPlay-MG4** separately — do not run both at once.
+> Community fork of [DiAuto](https://github.com/shihabal3amri/DiAuto) (AGPL-3.0), via
+> [merthankaraman/DiAuto-MG4](https://github.com/merthankaraman/DiAuto-MG4), maintained separately
+> for the MG4 (SWI69 head unit) with its own version line. MG4 data comes from the vendored
+> [EVHardware](https://github.com/fatihdonmezdev/MG4ABRP) library. For Apple CarPlay, use
+> **DiPlay-MG4** instead (do not run both at once).
 
-> **DiAuto MG4+ — a community fork that lives its own life.** It started from
-> [merthankaraman/DiAuto-MG4](https://github.com/merthankaraman/DiAuto-MG4) 1.9.6 (itself a port of
-> DiAuto) and is maintained separately for the MG4, with its own version line from 2.0.0. From 2.1.0
-> it is installed in place of the car's own Android Auto (see below).
-> What differs: reconnection on the next trip (`CommManager.destroy()` no longer cancels the
-> app-wide scope), music over Android Auto by default with the radio given back, Maps battery at
-> arrival started on every connection, updates from this repository (with or without betas), and
-> the upstream PRs #4, #5, #6, #7, #9, #10, #12, #13, #14 and #16. See `CHANGELOG.md`.
+<p align="center"><img src="docs/screenshots/tutorial_1.png" width="800" alt="DiAuto first-start tutorial"></p>
 
+## What it does
 
-## Features (MG4)
+### Android Auto, wireless and automatic
+- Once your phone is paired with the car over Bluetooth, it joins the car's own Wi-Fi hotspot and
+  Android Auto starts by itself every trip. A USB cable works too.
+- DiAuto installs as an **update of the car's original Android Auto app** (AllGo). The car's
+  launcher sees it as its Android Auto: the Android Auto tile works and the media card shows the
+  song, artist and cover.
+- Steering wheel keys work as with the original: previous / next, play / pause, voice assistant
+  (Google Assistant / Gemini) and the phone key.
 
-- Wireless Android Auto over the car's own hotspot, or by USB cable. One connection mode, nothing to configure.
-- **DiAuto for MG4** home screen and settings in five tabs (Connection, Display, Sound, Car, About), in the car's language.
-- The car's own launcher sees DiAuto as its Android Auto: the Android Auto tile is active and the media card shows the song, artist and cover.
-- Steering wheel: previous/next, play/pause, voice (Google Assistant / Gemini) and the phone key, as with the car's original Android Auto.
-- **Battery for Google Maps** (default on): state of charge, range and the MG4 version's charging speed go to Maps, for the battery at arrival and charging stops. Capacity, state of health and version are found automatically and can be set by hand in *Settings → Car*.
-- **Battery preheating before a charging stop** (off by default, *Settings → Car*): battery heating comes on a set time (30 min by default) before a charging stop on the Maps route.
-- Navigation prompts on their own channel (the car mixes them with the radio or music), with an adjustable voice level.
-- Settings that only apply at the next connection offer to reconnect when you return to Android Auto.
-- *Settings → About → Compatibility report*: a short summary of your setup, with a QR code, to add to an issue. No personal data.
-- Application id: `com.allgo.app.androidauto` (phone desk build: `.phone` suffix); `com.drivehub.diauto.mg4` up to 2.0.0-beta24.
-- Platform-signed `android.uid.system` install for CarProperty / BMS access.
+### Google Maps as an EV trip planner
+- DiAuto sends Maps the battery level, range, consumption and the **real fast-charging power of your
+  MG4 version** (Standard 51 kWh, Comfort / Luxury / XPower 64 kWh, Extended Range 77 kWh). Maps
+  then shows the battery at arrival and adds charging stops to long routes.
+- The version, net battery capacity and state of health are detected from the car. Each can be
+  changed in *Settings → Car*, with a button to go back to automatic.
+- **Battery preheating before a charging stop** (off by default): when the next stop on the Maps
+  route is a charger, DiAuto turns battery heating on a set time before you arrive (30 min by
+  default, 5 to 60 min) and turns it off again if the route changes.
 
-## DiAuto replaces the car's Android Auto
+<p align="center"><img src="docs/screenshots/settings_car.png" width="800" alt="Settings, Car tab"></p>
 
-From 2.1.0, DiAuto is installed as an **update of the car's own Android Auto app** (AllGo,
-`com.allgo.app.androidauto`). The car's launcher, its AllGo services and MG4 Dash then treat DiAuto
-as the car's Android Auto. The original app is not deleted: it stays on the system partition.
+### Sound
+- Navigation prompts and the assistant get their own channel, so they are heard over the radio or
+  your music, at a voice level you choose (up to +200 %).
+- Music plays over Android Auto by default. *Music over Bluetooth* keeps the music on the car's
+  Bluetooth and the rest on Android Auto.
 
-- **Coming from 2.0.0-beta24 or older** (`com.drivehub.diauto.mg4`): install the new APK once by hand.
-  At its first start it takes over the old DiAuto's settings, then removes the old DiAuto. The
-  in-app updater of the old DiAuto cannot make this switch.
-- **Going back to the car's Android Auto**: in DiAuto, *Settings → Go back to the car's Android Auto
-  (AllGo)* (in the About tab). Or in Android's settings, *Apps → Android Auto → Uninstall updates*. Or with adb:
-  `adb shell pm uninstall com.allgo.app.androidauto`. Each of these removes DiAuto and its settings;
-  the car's original Android Auto comes back exactly as it was.
+<p align="center"><img src="docs/screenshots/settings_sound.png" width="800" alt="Settings, Sound tab"></p>
 
-## Installing APKs on the MG4
+### Simple screens, in your language
+- A home screen and settings in five tabs (Connection, Display, Sound, Car, About) with large
+  buttons, in the car's language (22 languages).
+- A short **tutorial** at first start shows the gestures and the main features. It can be skipped,
+  and shown again from *Settings → About*.
+- Updates from this repository, from the app (*Settings → About*, betas optional).
 
-If you haven't sideloaded apps before:
+## Gestures over Android Auto
 
-1. Open **Bluetooth Settings** and select the car name.
-2. Hold down on the **comma** until the settings appear.
-3. Select **Android Keyboard Settings**.
-4. Select **Languages**.
-5. Use the search box at the top to search for **file**.
-6. That should give you access to the **Files** app.
-7. From there, select a connected USB device with APKs on it and install as usual.
+| Gesture | What it does |
+| --- | --- |
+| Two fingers from the **left** edge, slide right | Menu with **Disconnect** and **Settings** |
+| Two fingers from the **right** edge, slide left | Full screen: hides the car's side bar and top strip (Android Auto reconnects for a few seconds to use the new height). Same gesture to bring them back. |
+| Three fingers **down** | Disconnects Android Auto and goes back to DiAuto's home screen |
+
+<p align="center">
+  <img src="docs/screenshots/tutorial_2b.png" width="49%" alt="Two fingers from the left edge open the menu">
+  <img src="docs/screenshots/tutorial_3b.png" width="49%" alt="Two fingers from the right edge switch to full screen">
+</p>
+
+## Install
+
+1. Download `DiAuto-MG4_<version>.apk` from the [Releases](https://github.com/Skittle6938/DiAuto-MG4/releases)
+   page and copy it to a USB stick.
+2. On the car, open the **Files** app. If you have never installed an app on the car:
+   1. Open **Bluetooth Settings** and select the car's name.
+   2. Hold down the **comma** key until the keyboard settings appear.
+   3. Select **Android Keyboard Settings → Languages**.
+   4. Search for **file** with the search box at the top: this opens the **Files** app.
+3. Select the USB stick and install the APK. It installs on top of the car's Android Auto.
+4. Pair your phone with the car over Bluetooth if it is not already, then open DiAuto.
+
+**Coming from 2.0.x** (`com.drivehub.diauto.mg4`): install the new APK once by hand. At first start
+it takes over the old settings, then removes the old DiAuto.
+
+## Going back to the car's Android Auto
+
+*Settings → About → Go back to the car's Android Auto (AllGo)*, then restart the screen by holding
+the **Home** button for 20 s. This removes DiAuto and its settings; the original app was never
+deleted and comes back as it was. The same can be done in Android's settings (*Apps → Android Auto →
+Uninstall updates*) or with `adb shell pm uninstall com.allgo.app.androidauto`.
+
+## Reporting a problem
+
+Open an [issue](https://github.com/Skittle6938/DiAuto-MG4/issues) and add:
+- *Settings → About → Compatibility report*: a short summary of your setup (car firmware, Android,
+  DiAuto settings), with no personal data.
+- *Settings → About → Logs → Export*, taken right after the problem.
+
+<p align="center"><img src="docs/screenshots/settings_about.png" width="800" alt="Settings, About tab"></p>
 
 ## Build
 
-**MG4 car** (platform-signed, `android.uid.system`):
+The car build is signed with the head unit's platform key (`android.uid.system`, needed for the
+car's battery and climate data). The keys are not in this repository.
 
 ```powershell
 $env:MG4_PLATFORM_KEYS_DIR = "C:\path\to\platform-keys"  # platform.pk8 + platform.x509.pem
 powershell -File scripts\build_mg4.ps1
-adb install -r ..\DiAuto-MG4-v0.3.11-mg4.1.apk
 ```
 
-**Normal phone / tablet** (debug keystore, Demo battery):
+A phone / tablet build with a demo battery: `powershell -File scripts\build_phone.ps1`. In Android
+Studio, open the project and pick **carDebug** or **phoneDebug**. Tests: `gradlew testCarDebugUnitTest`.
 
-```powershell
-powershell -File scripts\build_phone.ps1
-adb install -r ..\DiAuto-MG4-phone-debug.apk
-```
+See [CHANGELOG.md](CHANGELOG.md) for what changed in each version and
+[docs/MG4_TESTING.md](docs/MG4_TESTING.md) for the in-car checklist.
 
-In Android Studio: open `DiAuto-MG4`, pick **phoneDebug** or **carDebug**.
+## License
 
-See [docs/MG4_TESTING.md](docs/MG4_TESTING.md) for the vehicle checklist.
-
-### Google Maps SoC note
-
-Battery % / arrival charge is shown primarily on **Android Auto Maps** (the projected
-head-unit UI) once a route is active. The phone’s own Maps screen often has no permanent
-SoC badge; that is expected Google behavior when VEM is delivered over AA.
-
-## Upstream
-
-See upstream DiAuto README / docs for general AA host features. MG4-specific changes
-live in this fork.
+AGPL-3.0, like DiAuto. See [LICENSE](LICENSE) and [docs/THIRD_PARTY.md](docs/THIRD_PARTY.md).

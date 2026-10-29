@@ -17,7 +17,7 @@ import java.io.File
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @org.robolectric.annotation.ConscryptMode(org.robolectric.annotation.ConscryptMode.Mode.OFF)
-@Config(application = android.app.Application::class, qualifiers = "fr-w1778dp-h640dp-land-night-mdpi", sdk = [28])
+@Config(application = android.app.Application::class, qualifiers = "en-w1920dp-h720dp-land-night-mdpi", sdk = [28])
 class TutorialShotTest {
     @Test
     fun shots() {
@@ -29,9 +29,9 @@ class TutorialShotTest {
             val demo = a.findViewById<GestureDemoView>(com.andrerinas.openheadunit.R.id.tuto_demo)
             demo.freeze(0.35f)
             val root = a.window.decorView
-            root.measure(View.MeasureSpec.makeMeasureSpec(1778, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(640, View.MeasureSpec.EXACTLY))
-            root.layout(0, 0, 1778, 640)
-            val bmp = Bitmap.createBitmap(1778, 640, Bitmap.Config.ARGB_8888)
+            root.measure(View.MeasureSpec.makeMeasureSpec(1920, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(720, View.MeasureSpec.EXACTLY))
+            root.layout(0, 0, 1920, 720)
+            val bmp = Bitmap.createBitmap(1920, 720, Bitmap.Config.ARGB_8888)
             root.draw(Canvas(bmp))
             File(out, "tuto_${i + 1}.png").outputStream().use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
             if (i == 1 || i == 2) {

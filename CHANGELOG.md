@@ -1,3 +1,9 @@
+# DiAuto MG4+ 2.2.0-beta21
+
+- A short **tutorial** at first start: the gestures over Android Auto and the main features (Maps trip planning, battery settings, preheating before a charging stop, going back to the car's Android Auto). It can be skipped and shown again from *Settings → About*. In all 22 languages.
+- Two fingers from the right edge now give a real full screen: the car's top strip is hidden too, and Android Auto reconnects for a few seconds to use the whole height. The choice is kept for the next trips.
+- "Settings" was shown in English in 14 languages.
+
 # DiAuto MG4+ 2.2.0-beta20
 
 **A simpler DiAuto.** New home screen and settings, one way to connect, and many fixes found on the road.
