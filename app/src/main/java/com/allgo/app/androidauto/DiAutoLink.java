@@ -49,7 +49,11 @@ final class DiAutoLink {
         if (!RelayState.isActive()) return;
         int key;
         switch (app) {
-            case 3: key = android.view.KeyEvent.KEYCODE_CALL; break;
+            case 3:
+                // The wheel key already opened the phone app from the Android Auto screen.
+                if (AllgoMediaKeys.INSTANCE.phoneKeyRecentlySent(3_000L)) return;
+                key = android.view.KeyEvent.KEYCODE_CALL;
+                break;
             case 1: case 4: key = android.view.KeyEvent.KEYCODE_MUSIC; break;
             default: return;
         }

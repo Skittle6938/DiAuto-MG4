@@ -203,6 +203,7 @@ class CarKeyBroadcastReceiver : BroadcastReceiver(), CarKeyReceiver {
         // its own screens, so here it did nothing. Open the phone's dialer as AllGo does.
         if (keyCode == SAIC_KEYCODE_PHONE) {
             if (!isDown && !isLong && com.andrerinas.openheadunit.aap.AapProjectionActivity.isForeground) {
+                AllgoMediaKeys.lastPhoneKeyMs = android.os.SystemClock.elapsedRealtime()
                 AllgoMediaKeys.click(context, KeyEvent.KEYCODE_CALL, "steering-phone")
                 AppLog.i("CarKeyReceiver: phone key on the Android Auto screen -> phone app")
             }

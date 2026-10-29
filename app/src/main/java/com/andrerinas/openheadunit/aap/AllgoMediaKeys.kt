@@ -18,6 +18,12 @@ object AllgoMediaKeys {
 
     @Volatile
     private var lastSkipMs = 0L
+    /** When the wheel's phone key was last sent to the phone, so the car's own launchApp(3) is not sent too. */
+    @Volatile var lastPhoneKeyMs = 0L
+
+    /** Two phone-key presses close together close the dialer again: send only the first. */
+    fun phoneKeyRecentlySent(withinMs: Long = 3_000L): Boolean =
+        SystemClock.elapsedRealtime() - lastPhoneKeyMs < withinMs
 
     /** Returns false for a code that is not one of these. */
     @JvmStatic
