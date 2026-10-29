@@ -31,6 +31,7 @@ internal class AapControlMedia(
 
     private var lastNativeFocusRequestTime = 0L
     private var nativeFocusRequestCount = 0
+    private val micGeneration = java.util.concurrent.atomic.AtomicInteger()
 
     override fun execute(message: AapMessage): Int {
 
@@ -64,7 +65,13 @@ internal class AapControlMedia(
                 aapTransport.onUpdateUiConfigReplyReceived?.invoke()
                 return 0
             }
-            Media.MsgType.MEDIA_MESSAGE_ACK_VALUE -> return 0
+            Media.MsgType.MEDIA_MESSAGE_ACK_VALUE -> {
+                if (message.channel == Channel.ID_MIC) {
+                    val ack = message.parse(Media.Ack.newBuilder()).build()
+                    aapTransport.onMicAck(if (ack.ack > 0) ack.ack.toInt() else 1)
+                }
+                return 0
+            }
             else -> AppLog.e("Unsupported Media message type: ${message.type}")
         }
         return 0
@@ -153,21 +160,32 @@ internal class AapControlMedia(
     }
 
     private fun micRequest(micRequest: Media.MicrophoneRequest): Int {
-        AppLog.i("Mic request: open=${micRequest.open}")
-
-        val status = if (micRequest.open) {
-            val result = micRecorder.start()
-            AppLog.i("MicRecorder.start result=$result")
-            if (result == 0) {
-                Common.MessageStatus.STATUS_SUCCESS_VALUE
-            } else {
-                Common.MessageStatus.STATUS_INTERNAL_ERROR_VALUE
-            }
-        } else {
-            micRecorder.stop()
-            Common.MessageStatus.STATUS_SUCCESS_VALUE
+        AppLog.i("Mic request: open=${micRequest.open} anc=${micRequest.ancEnabled} ec=${micRequest.ecEnabled} maxUnacked=${micRequest.maxUnacked}")
+        if (!micRequest.open) {
+            micGeneration.incrementAndGet()
+            synchronized(micRecorder) { micRecorder.stop() }
+            sendMicResponse(Common.MessageStatus.STATUS_SUCCESS_VALUE)
+            return 0
         }
+        aapTransport.micOpened(micRequest.maxUnacked)
+        // Answered at once, and the recorder started off the read thread: starting it takes
+        // ~120 ms (the car's voice path needs 100 ms), which held every other message from the
+        // phone behind it while Gemini was opening the mic.
+        sendMicResponse(Common.MessageStatus.STATUS_SUCCESS_VALUE)
+        val generation = micGeneration.incrementAndGet()
+        Thread({
+            synchronized(micRecorder) {
+                // A close that came in first wins: never start a recording nobody wants.
+                if (micGeneration.get() == generation) {
+                    val result = micRecorder.start()
+                    AppLog.i("MicRecorder.start result=$result")
+                }
+            }
+        }, "MicStart").start()
+        return 0
+    }
 
+    private fun sendMicResponse(status: Int) {
         val response = Media.MicrophoneResponse.newBuilder()
             .setStatus(status)
             .setSessionId(0)
@@ -179,7 +197,6 @@ internal class AapControlMedia(
                 response,
             ),
         )
-        return 0
     }
 
     companion object {

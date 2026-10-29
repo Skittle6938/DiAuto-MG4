@@ -831,23 +831,70 @@ class AapTransport(
         sessionIds.put(channel, sessionId)
     }
 
+    // Mic flow control, as AllGo's stack does: the phone names how many mic frames may be in flight
+    // without an ack (MicrophoneRequest.max_unacked). Frames beyond it wait here for the next ack.
+    private val micLock = Any()
+    private var micMaxUnacked = 0
+    private var micUnacked = 0
+    private val micPending = ArrayDeque<AapMessage>()
+    private var micFramesHeld = 0
+
+    internal fun micOpened(maxUnacked: Int) = synchronized(micLock) {
+        micMaxUnacked = maxUnacked.coerceAtLeast(0)
+        micUnacked = 0
+        micPending.clear()
+        micFramesHeld = 0
+    }
+
+    internal fun onMicAck(count: Int) {
+        val toSend = mutableListOf<AapMessage>()
+        synchronized(micLock) {
+            micUnacked = (micUnacked - count).coerceAtLeast(0)
+            while (micPending.isNotEmpty() && (micMaxUnacked == 0 || micUnacked < micMaxUnacked)) {
+                toSend += micPending.removeFirst()
+                micUnacked++
+            }
+        }
+        toSend.forEach { send(it) }
+    }
+
     override fun onMicDataAvailable(mic_buf: ByteArray, mic_audio_len: Int) {
         if (mic_audio_len > 64) {  // If we read at least 64 bytes of audio data
-            val length = mic_audio_len + 12  // 4 header + 8 timestamp + PCM
+            // 4 header + 2 message type (0x0000, media data with timestamp) + 8 timestamp + PCM.
+            // The type was missing: the phone read the first two timestamp bytes as the type and
+            // the timestamp two bytes late, shifted into the audio, and Gemini mostly closed the
+            // mic after 0.2 s (2026-10-29). openauto sends the same layout.
+            val length = mic_audio_len + 14
             val data = ByteArray(length)
             data[0] = Channel.ID_MIC.toByte()
             data[1] = 0x0b
-            // Timestamp at byte 4 so the full 8 bytes are inside the encrypted payload (HEADER_SIZE=4)
-            // Microseconds, as Android Auto stamps media and openauto its mic. Milliseconds
-            // were sent while Gemini kept closing the mic 0.2 s after opening it (2026-10-29).
-            Utils.put_time(4, data, SystemClock.elapsedRealtimeNanos() / 1000L)
-            System.arraycopy(mic_buf, 0, data, 12, mic_audio_len)
-            send(AapMessage(Channel.ID_MIC, 0x0b.toByte(), -1, 2, length, data))
+            data[4] = 0
+            data[5] = 0
+            // Microseconds, as Android Auto stamps media and openauto its mic.
+            Utils.put_time(6, data, SystemClock.elapsedRealtimeNanos() / 1000L)
+            System.arraycopy(mic_buf, 0, data, 14, mic_audio_len)
+            val message = AapMessage(Channel.ID_MIC, 0x0b.toByte(), -1, 2, length, data)
+            val sendNow = synchronized(micLock) {
+                if (micMaxUnacked == 0 || micUnacked < micMaxUnacked) {
+                    micUnacked++
+                    true
+                } else {
+                    // About a second at most; past that the oldest audio is the least useful.
+                    if (micPending.size >= MIC_PENDING_MAX) micPending.removeFirst()
+                    micPending.addLast(message)
+                    if (micFramesHeld++ == 0) {
+                        AppLog.i("Mic: phone allows $micMaxUnacked unacked frames; holding the next ones for its acks")
+                    }
+                    false
+                }
+            }
+            if (sendNow) send(message)
         }
     }
 
     companion object {
         private const val MSG_POLL = 1
+        private const val MIC_PENDING_MAX = 32
         private const val MSG_SEND = 2
         // Maximum wall-clock time allowed for the version-exchange phase of the AAP handshake.
         // Prevents the retry loop from blocking for minutes on an unresponsive USB device.
