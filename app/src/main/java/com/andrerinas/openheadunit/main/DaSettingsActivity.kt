@@ -188,8 +188,9 @@ class DaSettingsActivity : BaseActivity() {
     private fun carTab() {
         // Each choice is saved at once; the reset button puts everything back on automatic.
         val battery = com.andrerinas.openheadunit.vehicle.BatteryCapacityResolver.current(this)
-        rowText(getString(R.string.battery_net_capacity_kwh), batteryCapacitySource(this, battery),
-            value(batteryCapacityText(this, battery)) { pickCapacity() })
+        // One choice for both: the version gives Maps its usable capacity and its charging curve.
+        rowText(getString(R.string.dset_variant), batteryCapacityText(this, battery),
+            value(variantLabel(battery)) { pickVariant() })
         rowText(getString(R.string.battery_soh_percent), getString(R.string.dset_soh_summary),
             value(batterySohText(this, battery)) { editSoh(battery.sohPercent) })
         com.andrerinas.openheadunit.vehicle.Mg4EnergyProvider.snapshot()?.takeIf { !it.demo }?.let { snap ->
@@ -202,7 +203,6 @@ class DaSettingsActivity : BaseActivity() {
         row(R.string.dset_maps_range, R.string.dset_maps_range_summary, yesNo(settings.batteryForGoogleMaps) {
             settings.batteryForGoogleMaps = it
         })
-        row(R.string.dset_variant, R.string.dset_variant_summary, value(variantLabel()) { pickVariant() })
         row(R.string.dset_ev_layout, R.string.dset_ev_layout_summary, value(evLayoutLabel(settings.evModelLayout)) { pickEvLayout() })
         row(R.string.dset_preheat, R.string.dset_preheat_summary, yesNo(settings.batteryPreheatBeforeCharger) {
             settings.batteryPreheatBeforeCharger = it
@@ -248,22 +248,28 @@ class DaSettingsActivity : BaseActivity() {
 
     // --- Actions ------------------------------------------------------------------------------
 
-    @SuppressLint("MissingPermission")
-    private fun variantLabel(): String {
+    private fun variantLabel(battery: com.andrerinas.openheadunit.vehicle.BatteryCapacityResolver.Resolved): String {
         val chosen = com.andrerinas.openheadunit.vehicle.Mg4Variant.entries.firstOrNull { it.key == settings.mg4Variant }
-        if (chosen != null) return chosen.label
-        val pack = com.andrerinas.openheadunit.vehicle.Mg4EnergyProvider.snapshot()?.capacityWh
-        return if (pack == null) getString(R.string.dset_auto)
-        else getString(R.string.dset_variant_auto, com.andrerinas.openheadunit.vehicle.Mg4Variant.detect(pack).label)
+        return chosen?.label ?: getString(R.string.dset_variant_auto,
+            com.andrerinas.openheadunit.vehicle.Mg4Variant.detect((battery.netKwh * 1000).toInt()).label)
     }
 
+    /** Sets the version and its usable capacity together; automatic follows the car for both. */
     private fun pickVariant() {
         val variants = com.andrerinas.openheadunit.vehicle.Mg4Variant.entries
         val labels = listOf(getString(R.string.dset_auto)) + variants.map { it.label }
         MaterialAlertDialogBuilder(this, R.style.DarkAlertDialog)
             .setTitle(R.string.dset_variant)
             .setItems(labels.toTypedArray()) { _, i ->
-                settings.mg4Variant = if (i == 0) com.andrerinas.openheadunit.vehicle.Mg4Variant.AUTO else variants[i - 1].key
+                if (i == 0) {
+                    settings.mg4Variant = com.andrerinas.openheadunit.vehicle.Mg4Variant.AUTO
+                    settings.batteryCapacityManual = false
+                } else {
+                    settings.mg4Variant = variants[i - 1].key
+                    settings.batteryNetCapacityKwh = variants[i - 1].usableKwh
+                    settings.batteryCapacityManual = true
+                }
+                com.andrerinas.openheadunit.vehicle.Mg4EnergyProvider.refresh()
                 showTab(selectedTab)
             }
             .setNegativeButton(R.string.cancel, null)
@@ -284,27 +290,6 @@ class DaSettingsActivity : BaseActivity() {
             .setItems(EV_LAYOUT_LABELS.map { getString(it) }.toTypedArray()) { _, i ->
                 settings.evModelLayout = layouts[i].key
                 appliesOnReconnect()
-                showTab(selectedTab)
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
-    }
-
-    private fun pickCapacity() {
-        val resolver = com.andrerinas.openheadunit.vehicle.BatteryCapacityResolver
-        val packs = resolver.PACKS
-        val labels = listOf(getString(R.string.battery_auto)) +
-            packs.map { (pack, usable) -> getString(R.string.battery_pack_option, pack, usable) }
-        MaterialAlertDialogBuilder(this, R.style.DarkAlertDialog)
-            .setTitle(R.string.battery_net_capacity_kwh)
-            .setItems(labels.toTypedArray()) { _, i ->
-                if (i == 0) {
-                    settings.batteryCapacityManual = false
-                } else {
-                    settings.batteryNetCapacityKwh = packs[i - 1].second
-                    settings.batteryCapacityManual = true
-                }
-                com.andrerinas.openheadunit.vehicle.Mg4EnergyProvider.refresh()
                 showTab(selectedTab)
             }
             .setNegativeButton(R.string.cancel, null)
