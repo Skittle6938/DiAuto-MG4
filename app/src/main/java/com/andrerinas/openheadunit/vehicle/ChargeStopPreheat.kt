@@ -79,6 +79,7 @@ object ChargeStopPreheater {
     @Volatile private var ownedByUs = false
     @Volatile private var lastSecondsToStop: Int? = null
     @Volatile private var lastAction: ChargeStopPreheatPolicy.Action? = null
+    @Volatile private var lastLoggedStop: String? = null
 
     /** Called on every navigation update; [nextStop] is the next stop's name or address. */
     fun update(context: Context, navigating: Boolean, nextStop: String?, secondsToStop: Int?) {
@@ -86,6 +87,11 @@ object ChargeStopPreheater {
         if (!settings.batteryPreheatBeforeCharger && !ownedByUs) return
         if (navigating && secondsToStop != null) lastSecondsToStop = secondsToStop
         val charger = ChargeStopPreheatPolicy.isCharger(nextStop)
+        // Only with the option on, once per stop: how chargers are named is still being learned.
+        if (navigating && nextStop != lastLoggedStop) {
+            lastLoggedStop = nextStop
+            AppLog.i("$TAG: next stop \"${nextStop?.take(40) ?: "-"}\" charger=$charger")
+        }
         val lead = settings.batteryPreheatMinutes * 60
         executor.execute {
             val heating = runCatching { EVHardware.isDrivingBatteryHeatOn() }.getOrNull()
