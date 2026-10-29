@@ -20,12 +20,17 @@ battery SoC forwarded into Google Maps via Android Auto `VehicleEnergyModel`
 
 ## Features (MG4)
 
-- Native wireless Android Auto over the car’s built-in hotspot (Android 9; Wi‑Fi Direct unavailable).
-- Platform-signed `android.uid.system` install for CarProperty / BMS access.
-- Optional **Battery for Google Maps** (default on): SoC + range → AA sensors 23/25.
-- **Demo battery values**: manual SoC / range / capacity (skips EVHardware; desk testing).
-- Application id: `com.allgo.app.androidauto` (phone desk build: `.phone` suffix); `com.drivehub.diauto.mg4` up to 2.0.0-beta24.
+- Wireless Android Auto over the car's own hotspot, or by USB cable. One connection mode, nothing to configure.
+- **DiAuto for MG4** home screen and settings in five tabs (Connection, Display, Sound, Car, About), in the car's language.
 - The car's own launcher sees DiAuto as its Android Auto: the Android Auto tile is active and the media card shows the song, artist and cover.
+- Steering wheel: previous/next, play/pause, voice (Google Assistant / Gemini) and the phone key, as with the car's original Android Auto.
+- **Battery for Google Maps** (default on): state of charge, range and the MG4 version's charging speed go to Maps, for the battery at arrival and charging stops. Capacity, state of health and version are found automatically and can be set by hand in *Settings → Car*.
+- **Battery preheating before a charging stop** (off by default, *Settings → Car*): battery heating comes on a set time (30 min by default) before a charging stop on the Maps route.
+- Navigation prompts on their own channel (the car mixes them with the radio or music), with an adjustable voice level.
+- Settings that only apply at the next connection offer to reconnect when you return to Android Auto.
+- *Settings → About → Compatibility report*: a short summary of your setup, with a QR code, to add to an issue. No personal data.
+- Application id: `com.allgo.app.androidauto` (phone desk build: `.phone` suffix); `com.drivehub.diauto.mg4` up to 2.0.0-beta24.
+- Platform-signed `android.uid.system` install for CarProperty / BMS access.
 
 ## DiAuto replaces the car's Android Auto
 
@@ -37,7 +42,7 @@ as the car's Android Auto. The original app is not deleted: it stays on the syst
   At its first start it takes over the old DiAuto's settings, then removes the old DiAuto. The
   in-app updater of the old DiAuto cannot make this switch.
 - **Going back to the car's Android Auto**: in DiAuto, *Settings → Go back to the car's Android Auto
-  (AllGo)*. Or in Android's settings, *Apps → Android Auto → Uninstall updates*. Or with adb:
+  (AllGo)* (in the About tab). Or in Android's settings, *Apps → Android Auto → Uninstall updates*. Or with adb:
   `adb shell pm uninstall com.allgo.app.androidauto`. Each of these removes DiAuto and its settings;
   the car's original Android Auto comes back exactly as it was.
 

@@ -1,3 +1,20 @@
+# DiAuto MG4+ 2.2.0-beta20
+
+**A simpler DiAuto.** New home screen and settings, one way to connect, and many fixes found on the road.
+
+- New **DiAuto for MG4** home screen and settings in five tabs (Connection, Display, Sound, Car, About), with large buttons, in the car's language. The two-finger menu over Android Auto has two large buttons: Disconnect and Settings.
+- Wireless Android Auto uses only the car's own hotspot (USB still works). Wi-Fi Direct, Headunit Server, Wireless Helper, Self Mode, Wi-Fi auto-start and the old onboarding are gone (about 6,000 lines less).
+- Music no longer sounds sped up or choppy: audio is acknowledged to the phone once it has really been played.
+- Coming back to Android Auto no longer shows a black screen for several seconds, and the "Do you see the screen?" banner is gone.
+- Gemini / Google Assistant: the microphone stays open. DiAuto's mic packets lacked the header the phone expects, so it often closed the mic after 0.2 s.
+- Steering wheel phone key with Android Auto on screen opens Android Auto's phone app.
+- Clearer navigation prompts: the 16 kHz voice is converted to 48 kHz with a proper filter, and a raised voice level no longer clips. The voice level goes up to +200 %.
+- Google Maps gets the MG4 version's real fast-charging power (Standard 51 kWh, Comfort / Luxury / XPower 64 kWh, Extended Range 77 kWh), detected from the car or set in *Settings → Car*. Battery capacity and state of health are set there too, saved at once, with a reset to automatic.
+- New, off by default: **battery preheating before a charging stop** on the Maps route, a set time before arrival (30 min by default).
+- Music over Bluetooth (hybrid) keeps the music in the car: the car's settings no longer drop the phone's Bluetooth audio.
+- A setting that applies at the next connection offers to reconnect when you return to Android Auto.
+- An unwanted disconnection 2 minutes after connecting is fixed.
+
 # DiAuto MG4+ 2.1.0-beta17
 
 - Coming back to the Android Auto screen is instant every time: the phone keeps sending video for the whole session instead of 2 minutes after leaving.
