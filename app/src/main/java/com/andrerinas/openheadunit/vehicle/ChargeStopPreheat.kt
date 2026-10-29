@@ -93,9 +93,10 @@ object ChargeStopPreheater {
         if (navigating && secondsToStop != null) lastSecondsToStop = secondsToStop
         val charger = ChargeStopPreheatPolicy.isCharger(nextStop) || stopsAhead >= 2
         // Only with the option on, once per stop: how chargers are named is still being learned.
-        if (navigating && nextStop != lastLoggedStop) {
-            lastLoggedStop = nextStop
-            AppLog.i("$TAG: next stop \"${nextStop?.take(40) ?: "-"}\" of $stopsAhead, charger=$charger")
+        val summary = "\"${nextStop?.take(40) ?: "-"}\" of $stopsAhead, ${secondsToStop?.div(60) ?: "?"} min, charger=$charger"
+        if (navigating && summary != lastLoggedStop) {
+            lastLoggedStop = summary
+            AppLog.i("$TAG: next stop $summary")
         }
         val lead = settings.batteryPreheatMinutes * 60
         executor.execute {

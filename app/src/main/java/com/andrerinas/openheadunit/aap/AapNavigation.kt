@@ -214,8 +214,10 @@ class AapNavigation(
 
     private fun updatePreheat() {
         val status = snapshot.clusterStatus?.payload?.status
+        // The route state alone says a route is followed: the cluster status does not always come.
         val navigating = status == NavigationStatus.NavigationClusterStatus.NavigationStatusEnum.ACTIVE ||
-            status == NavigationStatus.NavigationClusterStatus.NavigationStatusEnum.REROUTING
+            status == NavigationStatus.NavigationClusterStatus.NavigationStatusEnum.REROUTING ||
+            (snapshot.navigationState?.payload?.destinationsCount ?: 0) > 0
         val nextStop = snapshot.navigationState?.payload?.destinationsList?.firstOrNull()
             ?.takeIf { it.hasAddress() }?.address
         val seconds = snapshot.currentPosition?.payload?.destinationDistancesList?.firstOrNull()
