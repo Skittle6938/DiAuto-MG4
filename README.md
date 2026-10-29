@@ -85,6 +85,14 @@ the **Home** button for 20 s. This removes DiAuto and its settings; the original
 deleted and comes back as it was. The same can be done in Android's settings (*Apps → Android Auto →
 Uninstall updates*) or with `adb shell pm uninstall com.allgo.app.androidauto`.
 
+## Tips
+
+- **Google Assistant / Gemini closes right away** (the listening animation shows, then stops before
+  you speak): unlock the phone and try again. On some phones Gemini cancels at once while the phone
+  is locked, even with *Use Gemini without unlocking* on. Keeping the phone unlocked in the car (for
+  example with Android's *Extend Unlock* / Smart Lock and the car as a trusted Bluetooth device)
+  avoids it.
+
 ## Reporting a problem
 
 Open an [issue](https://github.com/Skittle6938/DiAuto-MG4/issues) and add:
