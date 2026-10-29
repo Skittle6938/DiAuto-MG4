@@ -79,6 +79,12 @@ object ChargeStopPreheater {
     @Volatile private var ownedByUs = false
     @Volatile private var lastSecondsToStop: Int? = null
     @Volatile private var lastAction: ChargeStopPreheatPolicy.Action? = null
+    @Volatile private var turnedOnAtMs = 0L
+    @Volatile private var offSinceMs = 0L
+    /** How long the car may take to report the switch on. */
+    private const val CONFIRM_MS = 30_000L
+    /** How long the trip must stay changed before heating DiAuto switched on goes off. */
+    private const val OFF_AFTER_MS = 60_000L
     @Volatile private var lastLoggedStop: String? = null
 
     /** Called on every navigation update; [nextStop] is the next stop's name or address. */
@@ -100,7 +106,10 @@ object ChargeStopPreheater {
         }
         val lead = settings.batteryPreheatMinutes * 60
         executor.execute {
-            val heating = runCatching { EVHardware.isDrivingBatteryHeatOn() }.getOrNull()
+            val now = android.os.SystemClock.elapsedRealtime()
+            val read = runCatching { EVHardware.isDrivingBatteryHeatOn() }.getOrNull()
+            // The car reports the switch a few seconds after the write; until then "off" is stale.
+            val heating = if (ownedByUs && read == false && now - turnedOnAtMs < CONFIRM_MS) true else read
             val action = ChargeStopPreheatPolicy.decide(
                 enabled = settings.batteryPreheatBeforeCharger,
                 navigating = navigating,
@@ -116,12 +125,29 @@ object ChargeStopPreheater {
                     "lead ${lead / 60} min, heating=${heating ?: "?"})")
             }
             lastAction = action
+            // A route's state blinks out for a moment now and then: switch off only once the trip
+            // has really changed for a while.
+            if (action != ChargeStopPreheatPolicy.Action.TURN_OFF) offSinceMs = 0L
             when (action) {
                 ChargeStopPreheatPolicy.Action.TURN_ON ->
-                    if (EVHardware.setDrivingBatteryHeat(true)) ownedByUs = true
+                    if (EVHardware.setDrivingBatteryHeat(true)) {
+                        ownedByUs = true
+                        turnedOnAtMs = now
+                    }
                 ChargeStopPreheatPolicy.Action.TURN_OFF -> {
-                    EVHardware.setDrivingBatteryHeat(false)
-                    release()
+                    if (offSinceMs == 0L) {
+                        offSinceMs = now
+                        // No more navigation events may come once a route ends: look again later.
+                        android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                            update(context, navigating, nextStop, secondsToStop, stopsAhead)
+                        }, OFF_AFTER_MS + 1_000L)
+                    }
+                    if (now - offSinceMs >= OFF_AFTER_MS) {
+                        AppLog.i("$TAG: trip changed for ${OFF_AFTER_MS / 1000} s, battery heating off")
+                        EVHardware.setDrivingBatteryHeat(false)
+                        release()
+                        offSinceMs = 0L
+                    }
                 }
                 ChargeStopPreheatPolicy.Action.RELEASE -> release()
                 ChargeStopPreheatPolicy.Action.NONE -> {}
