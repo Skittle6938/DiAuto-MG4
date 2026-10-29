@@ -94,4 +94,8 @@
     <string name="dset_ev_layout_c">C · B + DC charging curve</string>
     <string name="dset_ev_layout_d">D · B + DC charging times</string>
     <string name="dset_ev_layout_e">E · full (beta 5)</string>
+    <string name="dset_soh_summary">Battery state of health, used with the capacity for Maps.</string>
+    <string name="dset_battery_reset">Back to automatic</string>
+    <string name="dset_battery_reset_summary">Capacity, state of health and MG4 version as the car reports them.</string>
+    <string name="dset_battery_reset_button">Reset</string>
 </resources>

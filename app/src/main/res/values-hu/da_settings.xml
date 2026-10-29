@@ -87,4 +87,8 @@
     <string name="dset_preheat_lead">Előfűtés ennyivel előtte</string>
     <string name="dset_preheat_lead_summary">Idő a töltőhöz érkezés előtt.</string>
     <string name="dset_minutes">%d perc</string>
+    <string name="dset_soh_summary">Az akkumulátor állapota, a kapacitással együtt a Térképhez.</string>
+    <string name="dset_battery_reset">Vissza automatikusra</string>
+    <string name="dset_battery_reset_summary">Kapacitás, állapot és MG4 változat az autó szerint.</string>
+    <string name="dset_battery_reset_button">Visszaállítás</string>
 </resources>

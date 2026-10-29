@@ -87,4 +87,8 @@
     <string name="dset_preheat_lead">مدة التسخين المسبق</string>
     <string name="dset_preheat_lead_summary">الوقت قبل الوصول إلى الشاحن.</string>
     <string name="dset_minutes">%d دقيقة</string>
+    <string name="dset_soh_summary">حالة البطارية، تُستخدم مع السعة للخرائط.</string>
+    <string name="dset_battery_reset">العودة إلى التلقائي</string>
+    <string name="dset_battery_reset_summary">السعة وحالة البطارية وإصدار MG4 كما تبلغ عنها السيارة.</string>
+    <string name="dset_battery_reset_button">إعادة الضبط</string>
 </resources>

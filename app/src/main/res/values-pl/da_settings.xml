@@ -87,4 +87,8 @@
     <string name="dset_preheat_lead">Czas podgrzewania</string>
     <string name="dset_preheat_lead_summary">Czas przed dotarciem do ładowarki.</string>
     <string name="dset_minutes">%d min</string>
+    <string name="dset_soh_summary">Stan zdrowia baterii, używany z pojemnością dla Map.</string>
+    <string name="dset_battery_reset">Przywróć automatyczne</string>
+    <string name="dset_battery_reset_summary">Pojemność, stan zdrowia i wersja MG4 według samochodu.</string>
+    <string name="dset_battery_reset_button">Resetuj</string>
 </resources>

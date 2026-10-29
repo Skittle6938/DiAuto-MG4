@@ -87,4 +87,8 @@
     <string name="dset_preheat_lead">Làm ấm trước</string>
     <string name="dset_preheat_lead_summary">Thời gian trước khi tới trạm sạc.</string>
     <string name="dset_minutes">%d phút</string>
+    <string name="dset_soh_summary">Tình trạng pin, dùng cùng dung lượng cho Maps.</string>
+    <string name="dset_battery_reset">Về tự động</string>
+    <string name="dset_battery_reset_summary">Dung lượng, tình trạng pin và phiên bản MG4 theo xe.</string>
+    <string name="dset_battery_reset_button">Đặt lại</string>
 </resources>

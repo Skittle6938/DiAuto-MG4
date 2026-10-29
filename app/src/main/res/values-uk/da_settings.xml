@@ -87,4 +87,8 @@
     <string name="dset_preheat_lead">Прогрівати заздалегідь</string>
     <string name="dset_preheat_lead_summary">Час до прибуття на зарядку.</string>
     <string name="dset_minutes">%d хв</string>
+    <string name="dset_soh_summary">Стан батареї, використовується разом з ємністю для Карт.</string>
+    <string name="dset_battery_reset">Повернути автоматично</string>
+    <string name="dset_battery_reset_summary">Ємність, стан батареї та версія MG4 за даними авто.</string>
+    <string name="dset_battery_reset_button">Скинути</string>
 </resources>

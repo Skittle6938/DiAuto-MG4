@@ -87,4 +87,8 @@
     <string name="dset_preheat_lead">Timp de preîncălzire</string>
     <string name="dset_preheat_lead_summary">Timp înainte de a ajunge la stație.</string>
     <string name="dset_minutes">%d min</string>
+    <string name="dset_soh_summary">Starea de sănătate a bateriei, folosită cu capacitatea pentru Maps.</string>
+    <string name="dset_battery_reset">Înapoi la automat</string>
+    <string name="dset_battery_reset_summary">Capacitatea, starea de sănătate și versiunea MG4 așa cum le dă mașina.</string>
+    <string name="dset_battery_reset_button">Resetează</string>
 </resources>

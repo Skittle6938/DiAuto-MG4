@@ -87,4 +87,8 @@
     <string name="dset_preheat_lead">提前預熱時間</string>
     <string name="dset_preheat_lead_summary">抵達充電站前的時間。</string>
     <string name="dset_minutes">%d 分鐘</string>
+    <string name="dset_soh_summary">電池健康度，與容量一起用於地圖。</string>
+    <string name="dset_battery_reset">恢復自動</string>
+    <string name="dset_battery_reset_summary">容量、健康度與 MG4 版本恢復為車輛資料。</string>
+    <string name="dset_battery_reset_button">重設</string>
 </resources>

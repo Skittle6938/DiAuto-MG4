@@ -50,7 +50,7 @@ object VehicleEnergyModelEncoder {
         FULL("full");
 
         companion object {
-            fun of(key: String?): Layout = entries.firstOrNull { it.key == key } ?: LEGACY
+            fun of(key: String?): Layout = entries.firstOrNull { it.key == key } ?: DC_CURVE
         }
     }
 

@@ -87,4 +87,8 @@
     <string name="dset_preheat_lead">Vorheizen so lange vorher</string>
     <string name="dset_preheat_lead_summary">Zeit bis zur Ankunft an der Ladesäule.</string>
     <string name="dset_minutes">%d Min.</string>
+    <string name="dset_soh_summary">Akkuzustand, mit der Kapazität für Maps verwendet.</string>
+    <string name="dset_battery_reset">Zurück auf automatisch</string>
+    <string name="dset_battery_reset_summary">Kapazität, Akkuzustand und MG4-Version wie vom Auto gemeldet.</string>
+    <string name="dset_battery_reset_button">Zurücksetzen</string>
 </resources>

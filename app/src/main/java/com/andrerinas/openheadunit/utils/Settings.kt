@@ -433,7 +433,7 @@ class Settings(private val context: Context) {
 
     /** Which sections of the Maps energy model are sent (see VehicleEnergyModelEncoder.Layout). */
     var evModelLayout: String
-        get() = prefs.getString("ev-model-layout", "legacy")!!
+        get() = prefs.getString("ev-model-layout", "dc_curve")!!
         set(value) { prefs.edit().putString("ev-model-layout", value).apply() }
 
     /** Switch battery heating on before a charging stop on the route (off by default). */

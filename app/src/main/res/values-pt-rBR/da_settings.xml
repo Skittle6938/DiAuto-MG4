@@ -87,4 +87,8 @@
     <string name="dset_preheat_lead">Antecedência do pré-aquecimento</string>
     <string name="dset_preheat_lead_summary">Tempo antes de chegar ao carregador.</string>
     <string name="dset_minutes">%d min</string>
+    <string name="dset_soh_summary">Estado de saúde da bateria, usado com a capacidade para o Maps.</string>
+    <string name="dset_battery_reset">Voltar para automático</string>
+    <string name="dset_battery_reset_summary">Capacidade, estado de saúde e versão do MG4 conforme o carro.</string>
+    <string name="dset_battery_reset_button">Redefinir</string>
 </resources>

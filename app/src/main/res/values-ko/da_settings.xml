@@ -87,4 +87,8 @@
     <string name="dset_preheat_lead">예열 시작 시간</string>
     <string name="dset_preheat_lead_summary">충전소 도착 전 시간.</string>
     <string name="dset_minutes">%d분</string>
+    <string name="dset_soh_summary">배터리 상태, 지도에서 용량과 함께 사용합니다.</string>
+    <string name="dset_battery_reset">자동으로 되돌리기</string>
+    <string name="dset_battery_reset_summary">용량, 배터리 상태, MG4 버전을 차량 값으로 되돌립니다.</string>
+    <string name="dset_battery_reset_button">재설정</string>
 </resources>

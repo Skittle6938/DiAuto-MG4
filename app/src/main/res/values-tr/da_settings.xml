@@ -87,4 +87,8 @@
     <string name="dset_preheat_lead">Ön ısıtma süresi</string>
     <string name="dset_preheat_lead_summary">Şarj istasyonuna varmadan önceki süre.</string>
     <string name="dset_minutes">%d dk</string>
+    <string name="dset_soh_summary">Batarya sağlığı, kapasiteyle birlikte Haritalar için kullanılır.</string>
+    <string name="dset_battery_reset">Otomatiğe dön</string>
+    <string name="dset_battery_reset_summary">Kapasite, batarya sağlığı ve MG4 sürümü aracın bildirdiği gibi.</string>
+    <string name="dset_battery_reset_button">Sıfırla</string>
 </resources>

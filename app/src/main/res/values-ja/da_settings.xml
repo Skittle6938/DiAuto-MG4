@@ -87,4 +87,8 @@
     <string name="dset_preheat_lead">予熱を始める時間</string>
     <string name="dset_preheat_lead_summary">充電スポット到着までの時間。</string>
     <string name="dset_minutes">%d 分</string>
+    <string name="dset_soh_summary">バッテリーの健全性。容量とともにマップで使います。</string>
+    <string name="dset_battery_reset">自動に戻す</string>
+    <string name="dset_battery_reset_summary">容量、健全性、MG4 のバージョンを車の値に戻します。</string>
+    <string name="dset_battery_reset_button">リセット</string>
 </resources>

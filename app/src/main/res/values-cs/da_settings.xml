@@ -87,4 +87,8 @@
     <string name="dset_preheat_lead">Předehřívat předem</string>
     <string name="dset_preheat_lead_summary">Čas před příjezdem k nabíječce.</string>
     <string name="dset_minutes">%d min</string>
+    <string name="dset_soh_summary">Stav baterie, používá se s kapacitou pro Mapy.</string>
+    <string name="dset_battery_reset">Zpět na automatiku</string>
+    <string name="dset_battery_reset_summary">Kapacita, stav baterie a verze MG4 podle auta.</string>
+    <string name="dset_battery_reset_button">Obnovit</string>
 </resources>

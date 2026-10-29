@@ -87,4 +87,8 @@
     <string name="dset_preheat_lead">Anticipo del preriscaldamento</string>
     <string name="dset_preheat_lead_summary">Tempo prima di arrivare alla colonnina.</string>
     <string name="dset_minutes">%d min</string>
+    <string name="dset_soh_summary">Stato di salute della batteria, usato con la capacità per Maps.</string>
+    <string name="dset_battery_reset">Torna ad automatico</string>
+    <string name="dset_battery_reset_summary">Capacità, stato di salute e versione MG4 come li indica l’auto.</string>
+    <string name="dset_battery_reset_button">Ripristina</string>
 </resources>

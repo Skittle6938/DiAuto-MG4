@@ -94,4 +94,8 @@
     <string name="dset_ev_layout_c">C · B + courbe de charge DC</string>
     <string name="dset_ev_layout_d">D · B + temps de charge DC</string>
     <string name="dset_ev_layout_e">E · complet (beta 5)</string>
+    <string name="dset_soh_summary">État de santé de la batterie, utilisé avec la capacité pour Maps.</string>
+    <string name="dset_battery_reset">Tout remettre en automatique</string>
+    <string name="dset_battery_reset_summary">Capacité, état de santé et version de la MG4 tels que la voiture les donne.</string>
+    <string name="dset_battery_reset_button">Réinitialiser</string>
 </resources>

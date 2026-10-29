@@ -87,4 +87,8 @@
     <string name="dset_preheat_lead">წინასწარი გათბობის დრო</string>
     <string name="dset_preheat_lead_summary">დრო დამტენთან მისვლამდე.</string>
     <string name="dset_minutes">%d წთ</string>
+    <string name="dset_soh_summary">ბატარეის მდგომარეობა, Maps-ისთვის ტევადობასთან ერთად.</string>
+    <string name="dset_battery_reset">ავტომატურზე დაბრუნება</string>
+    <string name="dset_battery_reset_summary">ტევადობა, მდგომარეობა და MG4-ის ვერსია მანქანის მონაცემებით.</string>
+    <string name="dset_battery_reset_button">გადატვირთვა</string>
 </resources>

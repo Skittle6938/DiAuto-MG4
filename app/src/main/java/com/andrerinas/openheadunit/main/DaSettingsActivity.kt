@@ -31,6 +31,7 @@ import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.slider.Slider
 import java.io.File
+import kotlin.math.roundToInt
 
 /**
  * DiAuto for MG4 settings: five tabs on the left, each a short list of large cards. Every change is
@@ -178,13 +179,19 @@ class DaSettingsActivity : BaseActivity() {
     }
 
     private fun carTab() {
-        val capacity = if (settings.batteryCapacityManual)
-            getString(R.string.dset_battery_manual, settings.batteryNetCapacityKwh)
-            else getString(R.string.dset_auto)
-        row(R.string.dset_battery, R.string.dset_battery_summary, value(capacity) {
-            startActivity(Intent(this, SettingsActivity::class.java)
-                .putExtra(SettingsActivity.EXTRA_DESTINATION, R.id.chargingInfoFragment))
-        })
+        // Each choice is saved at once; the reset button puts everything back on automatic.
+        val battery = com.andrerinas.openheadunit.vehicle.BatteryCapacityResolver.current(this)
+        rowText(getString(R.string.battery_net_capacity_kwh), batteryCapacitySource(this, battery),
+            value(batteryCapacityText(this, battery)) { pickCapacity() })
+        rowText(getString(R.string.battery_soh_percent), getString(R.string.dset_soh_summary),
+            value(batterySohText(this, battery)) { editSoh(battery.sohPercent) })
+        com.andrerinas.openheadunit.vehicle.Mg4EnergyProvider.snapshot()?.takeIf { !it.demo }?.let { snap ->
+            rowText(getString(R.string.battery_live_from_car), "", value(
+                "${snap.batteryPercent.roundToInt()} % · " + getString(R.string.battery_value_km, snap.rangeKm) + " · " +
+                    getString(R.string.battery_live_energy_value, snap.currentWh / 1000.0, snap.capacityWh / 1000.0),
+                null,
+            ))
+        }
         row(R.string.dset_maps_range, R.string.dset_maps_range_summary, yesNo(settings.batteryForGoogleMaps) {
             settings.batteryForGoogleMaps = it
         })
@@ -197,6 +204,8 @@ class DaSettingsActivity : BaseActivity() {
             value(getString(R.string.dset_minutes, settings.batteryPreheatMinutes)) { pickPreheatLead() })
         val keys = SteeringKeyLog.recent().takeLast(5).joinToString(" · ").ifEmpty { "—" }
         row(R.string.dset_wheel_keys, R.string.dset_wheel_keys_summary, value(keys, null))
+        row(R.string.dset_battery_reset, R.string.dset_battery_reset_summary,
+            button(getString(R.string.dset_battery_reset_button)) { resetBattery() })
     }
 
     private fun aboutTab() {
@@ -270,6 +279,68 @@ class DaSettingsActivity : BaseActivity() {
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
+    }
+
+    private fun pickCapacity() {
+        val resolver = com.andrerinas.openheadunit.vehicle.BatteryCapacityResolver
+        val packs = resolver.PACKS
+        val labels = listOf(getString(R.string.battery_auto)) +
+            packs.map { (pack, usable) -> getString(R.string.battery_pack_option, pack, usable) }
+        MaterialAlertDialogBuilder(this, R.style.DarkAlertDialog)
+            .setTitle(R.string.battery_net_capacity_kwh)
+            .setItems(labels.toTypedArray()) { _, i ->
+                if (i == 0) {
+                    settings.batteryCapacityManual = false
+                } else {
+                    settings.batteryNetCapacityKwh = packs[i - 1].second
+                    settings.batteryCapacityManual = true
+                }
+                com.andrerinas.openheadunit.vehicle.Mg4EnergyProvider.refresh()
+                showTab(selectedTab)
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun editSoh(current: Float) {
+        val input = android.widget.EditText(this).apply {
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
+            setText(String.format(java.util.Locale.getDefault(), "%.1f", current))
+            textSize = 30f
+            setSelectAllOnFocus(true)
+            minWidth = dp(320)
+        }
+        val box = FrameLayout(this).apply {
+            setPadding(dp(32), dp(16), dp(32), dp(8))
+            addView(input)
+        }
+        MaterialAlertDialogBuilder(this, R.style.DarkAlertDialog)
+            .setTitle(R.string.battery_soh_percent)
+            .setView(box)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                input.text.toString().replace(',', '.').toFloatOrNull()?.let {
+                    settings.batteryStateOfHealthPercent = it.coerceIn(1f, 100f)
+                    settings.batterySohManual = true
+                    com.andrerinas.openheadunit.vehicle.Mg4EnergyProvider.refresh()
+                }
+                showTab(selectedTab)
+            }
+            .setNeutralButton(R.string.battery_auto) { _, _ ->
+                settings.batterySohManual = false
+                com.andrerinas.openheadunit.vehicle.Mg4EnergyProvider.refresh()
+                showTab(selectedTab)
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    /** Battery, version and Maps model back to what the car says. */
+    private fun resetBattery() {
+        settings.batteryCapacityManual = false
+        settings.batterySohManual = false
+        settings.mg4Variant = com.andrerinas.openheadunit.vehicle.Mg4Variant.AUTO
+        com.andrerinas.openheadunit.vehicle.Mg4EnergyProvider.refresh()
+        showTab(selectedTab)
     }
 
     private fun pickPreheatLead() {
