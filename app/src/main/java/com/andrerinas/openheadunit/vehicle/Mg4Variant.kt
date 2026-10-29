@@ -19,9 +19,9 @@ enum class Mg4Variant(
     STANDARD("standard", "Standard 51 kWh", 50.8f, 1655, 6_600, intArrayOf(
         20, 76, 81, 85, 85, 86, 84, 79, 75, 72, 70, 67, 63, 51, 42, 41, 27, 24, 15, 12, 10,
     )),
-    LONG_RANGE("long_range", "Long Range / Luxury 64 kWh", 61.7f, 1765, 11_000, NMC_CURVE),
-    EXTENDED_RANGE("extended_range", "Extended Range 77 kWh", 74.4f, 1823, 11_000, NMC_CURVE),
-    XPOWER("xpower", "XPower 64 kWh", 62.1f, 1803, 11_000, NMC_CURVE);
+    /** Comfort / Luxury, and the XPower: same 64 kWh pack and charging speed. */
+    LONG_RANGE("long_range", "Comfort / Luxury / XPower 64 kWh", 61.7f, 1765, 11_000, NMC_CURVE),
+    EXTENDED_RANGE("extended_range", "Extended Range 77 kWh", 74.4f, 1823, 11_000, NMC_CURVE);
 
     /** Peak DC power, W. */
     val maxDcW: Int get() = dcCurveKw.max() * 1000
@@ -39,15 +39,15 @@ enum class Mg4Variant(
         const val AUTO = "auto"
 
         /**
-         * The version whose usable pack is nearest [capacityWh] (the car's own figure). XPower has
-         * the Long Range pack, so it can only be chosen by hand.
+         * The version whose usable pack is nearest [capacityWh] (the car's own figure).
          */
         fun detect(capacityWh: Int): Mg4Variant =
-            listOf(STANDARD, LONG_RANGE, EXTENDED_RANGE)
-                .minBy { abs(it.usableKwh * 1000 - capacityWh) }
+            entries.minBy { abs(it.usableKwh * 1000 - capacityWh) }
 
         fun resolve(setting: String, capacityWh: Int): Mg4Variant =
-            entries.firstOrNull { it.key == setting } ?: detect(capacityWh)
+            entries.firstOrNull { it.key == setting }
+                ?: LONG_RANGE.takeIf { setting == "xpower" } // merged with Comfort / Luxury
+                ?: detect(capacityWh)
     }
 }
 

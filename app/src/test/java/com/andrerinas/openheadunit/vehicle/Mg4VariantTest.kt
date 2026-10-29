@@ -14,7 +14,7 @@ class Mg4VariantTest {
 
     @Test
     fun `a version chosen by hand wins over detection`() {
-        assertEquals(Mg4Variant.XPOWER, Mg4Variant.resolve("xpower", 61_700))
+        assertEquals(Mg4Variant.LONG_RANGE, Mg4Variant.resolve("xpower", 61_700))
         assertEquals(Mg4Variant.LONG_RANGE, Mg4Variant.resolve(Mg4Variant.AUTO, 61_700))
     }
 
