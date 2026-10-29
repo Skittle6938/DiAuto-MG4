@@ -23,6 +23,19 @@ can plan your charging stops.
 - Steering wheel keys work as with the original: previous / next, play / pause, voice assistant
   (Google Assistant / Gemini) and the phone key.
 
+### Internet in the car (Android Auto over USB)
+Over Wi-Fi, the car's Wi-Fi is busy being the hotspot your phone joins for Android Auto, so the car
+itself has no internet. With Android Auto on the **USB cable**, DiAuto switches the car's Wi-Fi
+client on, and the car joins the networks it knows, such as your phone's Wi-Fi hotspot:
+1. Turn on your phone's Wi-Fi hotspot.
+2. Once, in the car's *Settings → Wi-Fi*, connect to that hotspot (the car remembers it).
+3. From then on, plug the phone in: Android Auto starts over USB and the car joins the hotspot by
+   itself. When the cable is unplugged, the car's Wi-Fi client goes off again, ready for wireless
+   Android Auto next time.
+
+The option is *Settings → Connection → Car Wi-Fi with USB*, on by default. Sharing the phone's
+internet over Bluetooth is not possible on the MG4: its Bluetooth stack has no network profile.
+
 ### Google Maps as an EV trip planner
 - DiAuto sends Maps the battery level, range, consumption and the **real fast-charging power of your
   MG4 version** (Standard 51 kWh, Comfort / Luxury / XPower 64 kWh, Extended Range 77 kWh). Maps
