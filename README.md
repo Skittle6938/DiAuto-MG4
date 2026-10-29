@@ -17,6 +17,11 @@ can plan your charging stops.
 ### Android Auto, wireless and automatic
 - Once your phone is paired with the car over Bluetooth, it joins the car's own Wi-Fi hotspot and
   Android Auto starts by itself every trip. A USB cable works too.
+- The car has a single Wi-Fi radio. When your phone connects over Bluetooth, DiAuto switches the
+  car's own Wi-Fi client off so the Android Auto hotspot gets the whole radio (smooth picture and
+  sound), and switches it back on once the session has ended for a while (1 minute by default,
+  10 s to 5 min in *Settings → Connection*). With no phone in the car, the car keeps joining its own
+  Wi-Fi networks, such as your home network.
 - DiAuto installs as an **update of the car's original Android Auto app** (AllGo). The car's
   launcher sees it as its Android Auto: the Android Auto tile works and the media card shows the
   song, artist and cover.
