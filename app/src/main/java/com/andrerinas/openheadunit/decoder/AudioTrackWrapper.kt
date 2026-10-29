@@ -48,6 +48,8 @@ class AudioTrackWrapper(
     )
 
     companion object {
+        /** Where the voice limiter starts rounding peaks off (about -6 dBFS). */
+        private const val LIMIT_KNEE = 16_384
         private const val RECEIVING_WINDOW_MS = 300L
         private const val AUDIO_BUFFER_POOL_LIMIT = 16
         private const val MIN_POOLED_AUDIO_BUFFER_SIZE = 4096
@@ -96,13 +98,25 @@ class AudioTrackWrapper(
         }
     }
 
+    /**
+     * Soft limiter for boosted voice: above the knee, peaks are rounded off instead of cut flat.
+     * Prompts arrive close to full scale, so a +100 to +200 % boost clipped hard on every syllable.
+     */
+    private fun limit(sample: Int): Int {
+        val magnitude = kotlin.math.abs(sample)
+        if (magnitude <= LIMIT_KNEE) return sample
+        val room = (32767 - LIMIT_KNEE).toDouble()
+        val shaped = LIMIT_KNEE + room * kotlin.math.tanh((magnitude - LIMIT_KNEE) / room)
+        return if (sample < 0) -shaped.toInt() else shaped.toInt()
+    }
+
     private fun applyGain(buffer: ByteArray, size: Int) {
         if (currentGain <= 1.0f) return
         for (i in 0 until size - 1 step 2) {
             val low = buffer[i].toInt() and 0xFF
             val high = buffer[i + 1].toInt() // High byte handles sign
             val sample = (high shl 8) or low
-            val modifiedSample = (sample * currentGain).toInt().coerceIn(-32768, 32767)
+            val modifiedSample = limit((sample * currentGain).toInt())
             buffer[i] = (modifiedSample and 0xFF).toByte()
             buffer[i + 1] = (modifiedSample shr 8).toByte()
         }

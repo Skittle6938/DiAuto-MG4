@@ -58,6 +58,7 @@ class AudioMixer(
 
     // Per-channel configuration
     private val channelConfigs = ConcurrentHashMap<Int, ChannelConfig>()
+    private val lastMonoSample = ConcurrentHashMap<Int, Int>()
 
     // Per-channel PCM circular buffers
     private val channelBuffers = ConcurrentHashMap<Int, ShortCircularBuffer>()
@@ -227,6 +228,7 @@ class AudioMixer(
      */
     fun unregisterChannel(channel: Int) {
         channelConfigs.remove(channel)
+        lastMonoSample.remove(channel)
         channelBuffers.remove(channel)
         channelPreRolling.remove(channel)
         channelGains.remove(channel)
@@ -264,17 +266,19 @@ class AudioMixer(
             val outputShortsSize = inputShortsSize * 3 * 2
             val outputShorts = getFeedOutputBuffer(outputShortsSize)
             var outIdx = 0
+            // Interpolates from the previous sample, carried over from the last chunk: restarting
+            // each ~32 ms chunk on a flat step put a buzz under every navigation prompt.
+            var previous = lastMonoSample[channel] ?: inputShorts[0].toInt()
             for (i in 0 until inputShortsSize) {
                 val current = inputShorts[i].toInt()
-                val next = if (i + 1 < inputShortsSize) inputShorts[i + 1].toInt() else current
-
-                for (j in 0 until 3) {
-                    val fraction = j.toFloat() / 3f
-                    val interpolated = (current + (next - current) * fraction).toInt().coerceIn(-32768, 32767).toShort()
+                for (j in 1..3) {
+                    val interpolated = (previous + (current - previous) * j / 3).toShort()
                     outputShorts[outIdx++] = interpolated // Left
                     outputShorts[outIdx++] = interpolated // Right
                 }
+                previous = current
             }
+            lastMonoSample[channel] = previous
             buffer.write(outputShorts, outputShortsSize)
         } else {
             // Generic linear resampling and channel configuration fallback
