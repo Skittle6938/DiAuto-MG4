@@ -82,4 +82,9 @@
     <string name="dset_variant">Versión del MG4</string>
     <string name="dset_variant_summary">Potencia máxima de carga rápida enviada a Google Maps</string>
     <string name="dset_variant_auto">Auto (%s)</string>
+    <string name="dset_preheat">Precalentar la batería antes de un cargador</string>
+    <string name="dset_preheat_summary">Si la próxima parada de la ruta de Maps es un cargador, la calefacción de la batería se enciende a tiempo y se apaga si cambia la ruta.</string>
+    <string name="dset_preheat_lead">Tiempo de precalentamiento</string>
+    <string name="dset_preheat_lead_summary">Tiempo antes de llegar al cargador.</string>
+    <string name="dset_minutes">%d min</string>
 </resources>

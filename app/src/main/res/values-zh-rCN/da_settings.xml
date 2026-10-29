@@ -82,4 +82,9 @@
     <string name="dset_variant">MG4 版本</string>
     <string name="dset_variant_summary">发送给 Google 地图的最大快充功率</string>
     <string name="dset_variant_auto">自动（%s）</string>
+    <string name="dset_preheat">到达充电站前预热电池</string>
+    <string name="dset_preheat_summary">当地图路线的下一站是充电站时，电池加热会及时开启，路线改变时关闭。</string>
+    <string name="dset_preheat_lead">提前预热时间</string>
+    <string name="dset_preheat_lead_summary">到达充电站前的时间。</string>
+    <string name="dset_minutes">%d 分钟</string>
 </resources>

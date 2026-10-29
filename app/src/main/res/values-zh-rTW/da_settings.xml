@@ -82,4 +82,9 @@
     <string name="dset_variant">MG4 版本</string>
     <string name="dset_variant_summary">傳送給 Google 地圖的最大快充功率</string>
     <string name="dset_variant_auto">自動（%s）</string>
+    <string name="dset_preheat">抵達充電站前預熱電池</string>
+    <string name="dset_preheat_summary">當地圖路線的下一站是充電站時，電池加熱會及時開啟，路線改變時關閉。</string>
+    <string name="dset_preheat_lead">提前預熱時間</string>
+    <string name="dset_preheat_lead_summary">抵達充電站前的時間。</string>
+    <string name="dset_minutes">%d 分鐘</string>
 </resources>

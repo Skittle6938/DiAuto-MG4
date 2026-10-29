@@ -82,4 +82,9 @@
     <string name="dset_variant">Versione MG4</string>
     <string name="dset_variant_summary">Potenza massima di ricarica rapida inviata a Google Maps</string>
     <string name="dset_variant_auto">Auto (%s)</string>
+    <string name="dset_preheat">Preriscaldare la batteria prima di una colonnina</string>
+    <string name="dset_preheat_summary">Se la prossima tappa del percorso Maps è una colonnina, il riscaldamento della batteria si accende in tempo e si spegne se il percorso cambia.</string>
+    <string name="dset_preheat_lead">Anticipo del preriscaldamento</string>
+    <string name="dset_preheat_lead_summary">Tempo prima di arrivare alla colonnina.</string>
+    <string name="dset_minutes">%d min</string>
 </resources>

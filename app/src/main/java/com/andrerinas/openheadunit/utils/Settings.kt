@@ -431,6 +431,16 @@ class Settings(private val context: Context) {
         get() = prefs.getString("mg4-variant", com.andrerinas.openheadunit.vehicle.Mg4Variant.AUTO)!!
         set(value) { prefs.edit().putString("mg4-variant", value).apply() }
 
+    /** Switch battery heating on before a charging stop on the route (off by default). */
+    var batteryPreheatBeforeCharger: Boolean
+        get() = prefs.getBoolean("battery-preheat-before-charger", false)
+        set(value) { prefs.edit().putBoolean("battery-preheat-before-charger", value).apply() }
+
+    /** How long before the charging stop, in minutes (5 to 60, in steps of 5). */
+    var batteryPreheatMinutes: Int
+        get() = prefs.getInt("battery-preheat-minutes", 30).coerceIn(5, 60)
+        set(value) { prefs.edit().putInt("battery-preheat-minutes", value.coerceIn(5, 60)).apply() }
+
     /**
      * When true, [com.andrerinas.openheadunit.vehicle.Mg4EnergyProvider] uses the demo
      * SoC/range/capacity fields below instead of EVHardware (for desk / non-MG4 testing).

@@ -205,7 +205,19 @@ class AapNavigation(
         }
     }
 
+    private fun updatePreheat() {
+        val status = snapshot.clusterStatus?.payload?.status
+        val navigating = status == NavigationStatus.NavigationClusterStatus.NavigationStatusEnum.ACTIVE ||
+            status == NavigationStatus.NavigationClusterStatus.NavigationStatusEnum.REROUTING
+        val nextStop = snapshot.navigationState?.payload?.destinationsList?.firstOrNull()
+            ?.takeIf { it.hasAddress() }?.address
+        val seconds = snapshot.currentPosition?.payload?.destinationDistancesList?.firstOrNull()
+            ?.takeIf { it.hasTimeToArrivalSeconds() }?.timeToArrivalSeconds?.coerceIn(0, Int.MAX_VALUE.toLong())?.toInt()
+        com.andrerinas.openheadunit.vehicle.ChargeStopPreheater.update(context, navigating, nextStop, seconds)
+    }
+
     private fun scheduleDebouncedBroadcast(navEventType: Int) {
+        updatePreheat()
         val guidance = com.andrerinas.openheadunit.hud.SaicNavigationMapper.from(snapshot, settings.rightHandDrive)
         logOnChange("cluster", guidance?.let { "icon=${it.icon.name} (${it.icon.id})" } ?: "none")
         com.andrerinas.openheadunit.hud.SaicNavigationOutputs.update(guidance)

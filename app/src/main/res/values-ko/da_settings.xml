@@ -82,4 +82,9 @@
     <string name="dset_variant">MG4 버전</string>
     <string name="dset_variant_summary">Google 지도로 보내는 최대 급속 충전 출력</string>
     <string name="dset_variant_auto">자동 (%s)</string>
+    <string name="dset_preheat">충전소 전에 배터리 예열</string>
+    <string name="dset_preheat_summary">지도 경로의 다음 경유지가 충전소이면 배터리 히터를 미리 켜고 경로가 바뀌면 끕니다.</string>
+    <string name="dset_preheat_lead">예열 시작 시간</string>
+    <string name="dset_preheat_lead_summary">충전소 도착 전 시간.</string>
+    <string name="dset_minutes">%d분</string>
 </resources>

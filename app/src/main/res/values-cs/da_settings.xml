@@ -82,4 +82,9 @@
     <string name="dset_variant">Verze MG4</string>
     <string name="dset_variant_summary">Maximální rychlonabíjecí výkon pro Mapy Google</string>
     <string name="dset_variant_auto">Auto (%s)</string>
+    <string name="dset_preheat">Předehřát baterii před nabíječkou</string>
+    <string name="dset_preheat_summary">Když je další zastávka trasy v Mapách nabíječka, ohřev baterie se včas zapne a při změně trasy vypne.</string>
+    <string name="dset_preheat_lead">Předehřívat předem</string>
+    <string name="dset_preheat_lead_summary">Čas před příjezdem k nabíječce.</string>
+    <string name="dset_minutes">%d min</string>
 </resources>

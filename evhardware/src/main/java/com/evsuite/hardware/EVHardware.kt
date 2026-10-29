@@ -406,6 +406,37 @@ object EVHardware {
      * The null is significant: it means "we do not know", not "it is 0 °C".
      * A weather rule that receives null must NOT fire.
      */
+    // MG4 battery heating while driving (DRVNG_PTC_HEAT, as MG4 Dash drives it). Written 1 = on,
+    // 2 = off; read back 0 = on, 1 = off. Verified on a car 2026-10-15.
+    private const val PROP_DRIVING_BATTERY_HEAT = 0x2140f429
+
+    /** Whether battery heating is on, or null if the car does not say. */
+    fun isDrivingBatteryHeatOn(): Boolean? =
+        when (getIntPropertyCPM(PROP_DRIVING_BATTERY_HEAT, 0)) {
+            0 -> true
+            1 -> false
+            else -> null
+        }
+
+    /**
+     * Switches battery heating. Deliberately outside [VehicleWriteGate]: the car's own menu offers
+     * this switch while driving, and warming the pack on the way to a charger is the whole point.
+     * Every other vehicle write keeps the stopped-car rule.
+     */
+    fun setDrivingBatteryHeat(on: Boolean): Boolean {
+        val cpm = sCarPropertyManager ?: return false
+        return try {
+            cpm.javaClass
+                .getMethod("setIntProperty", Int::class.java, Int::class.java, Int::class.java)
+                .invoke(cpm, PROP_DRIVING_BATTERY_HEAT, 0, if (on) 1 else 2)
+            AppLogger.i(TAG, "battery heating ${if (on) "on" else "off"}")
+            true
+        } catch (e: Exception) {
+            AppLogger.w(TAG, "battery heating write failed: ${e.message}")
+            false
+        }
+    }
+
     fun getOutsideTempCelsius(): Float? =
         getFloatPropertyCPM(PROP_OUTSIDE_TEMP, AREA_GLOBAL)
             ?: getFloatPropertyCPM(PROP_OUTSIDE_TEMP, 0)
