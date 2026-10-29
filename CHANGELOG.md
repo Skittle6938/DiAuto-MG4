@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.0-beta24
+
+- Clean navigation prompts again: the prompt and assistant volume is back to 0 % by default (also for existing installs). The phone sends prompts near full scale, so the +75 % boost went through the limiter on almost every syllable. Use the car's volume to make them louder.
+
 # DiAuto MG4+ 2.2.0-beta21
 
 - A short **tutorial** at first start: the gestures over Android Auto and the main features (Maps trip planning, battery settings, preheating before a charging stop, going back to the car's Android Auto). It can be skipped and shown again from *Settings → About*. In all 22 languages.

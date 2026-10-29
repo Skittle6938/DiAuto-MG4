@@ -31,7 +31,7 @@
     <string name="dset_separate">Séparer les flux audio</string>
     <string name="dset_separate_summary">Le guidage a son propre canal et s’entend même sur la radio. À la prochaine connexion.</string>
     <string name="dset_voice_volume">Volume du guidage et de l’assistant</string>
-    <string name="dset_voice_volume_summary">Par rapport à la musique.</string>
+    <string name="dset_voice_volume_summary">Par rapport à la musique. Au-delà de 0 %, la voix est amplifiée et perd en qualité.</string>
     <string name="dset_bt_music">Musique par Bluetooth</string>
     <string name="dset_bt_music_summary">La musique passe par le Bluetooth de la voiture, Android Auto garde le reste.</string>
     <string name="dset_buffer">Réserve audio Wi‑Fi</string>

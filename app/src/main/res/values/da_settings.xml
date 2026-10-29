@@ -31,7 +31,7 @@
     <string name="dset_separate">Separate audio streams</string>
     <string name="dset_separate_summary">Navigation prompts get their own channel and are heard even over the radio. From the next connection.</string>
     <string name="dset_voice_volume">Prompt and assistant volume</string>
-    <string name="dset_voice_volume_summary">Compared with the music.</string>
+    <string name="dset_voice_volume_summary">Compared with the music. Above 0 %, the voice is boosted and loses some quality.</string>
     <string name="dset_bt_music">Music over Bluetooth</string>
     <string name="dset_bt_music_summary">Music plays over the car’s Bluetooth, Android Auto keeps the rest.</string>
     <string name="dset_buffer">Wi‑Fi audio buffer</string>

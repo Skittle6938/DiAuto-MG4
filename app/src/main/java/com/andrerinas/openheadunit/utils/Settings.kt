@@ -898,13 +898,14 @@ class Settings(private val context: Context) {
         set(value) { prefs.edit().putInt("media-volume-offset", value).apply() }
 
     var assistantVolumeOffset: Int
-        // v2: wider range (up to +200 %) and a louder default, centred on the slider.
-        get() = prefs.getInt("assistant-volume-offset-v2", DEFAULT_VOICE_VOLUME_OFFSET)
-        set(value) { prefs.edit().putInt("assistant-volume-offset-v2", value).apply() }
+        // v3: back to no boost by default. Prompts arrive near full scale, so any boost goes
+        // through the limiter and degrades the voice; the car's volume makes it louder cleanly.
+        get() = prefs.getInt("assistant-volume-offset-v3", DEFAULT_VOICE_VOLUME_OFFSET)
+        set(value) { prefs.edit().putInt("assistant-volume-offset-v3", value).apply() }
 
     var navigationVolumeOffset: Int
-        get() = prefs.getInt("navigation-volume-offset-v2", DEFAULT_VOICE_VOLUME_OFFSET)
-        set(value) { prefs.edit().putInt("navigation-volume-offset-v2", value).apply() }
+        get() = prefs.getInt("navigation-volume-offset-v3", DEFAULT_VOICE_VOLUME_OFFSET)
+        set(value) { prefs.edit().putInt("navigation-volume-offset-v3", value).apply() }
 
     // Custom loading screen
     var loadingScreenMediaPath: String
@@ -1108,7 +1109,7 @@ class Settings(private val context: Context) {
 
     companion object {
         /** Voice (assistant + navigation) level above the music, in %; the slider runs -50 … +200. */
-        const val DEFAULT_VOICE_VOLUME_OFFSET = 75
+        const val DEFAULT_VOICE_VOLUME_OFFSET = 0
         const val MAX_VOICE_VOLUME_OFFSET = 200
         const val PREFS_NAME = "settings"
 
