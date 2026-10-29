@@ -87,4 +87,11 @@
     <string name="dset_preheat_lead">Preheat this long before</string>
     <string name="dset_preheat_lead_summary">Time before reaching the charger.</string>
     <string name="dset_minutes">%d min</string>
+    <string name="dset_ev_layout">Model sent to Maps (test)</string>
+    <string name="dset_ev_layout_summary">Temporary: compare the charging stops Maps plans with each format</string>
+    <string name="dset_ev_layout_a">A · current (battery only)</string>
+    <string name="dset_ev_layout_b">B · A + weight and outside temperature</string>
+    <string name="dset_ev_layout_c">C · B + DC charging curve</string>
+    <string name="dset_ev_layout_d">D · B + DC charging times</string>
+    <string name="dset_ev_layout_e">E · full (beta 5)</string>
 </resources>

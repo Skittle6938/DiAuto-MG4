@@ -189,6 +189,7 @@ class DaSettingsActivity : BaseActivity() {
             settings.batteryForGoogleMaps = it
         })
         row(R.string.dset_variant, R.string.dset_variant_summary, value(variantLabel()) { pickVariant() })
+        row(R.string.dset_ev_layout, R.string.dset_ev_layout_summary, value(evLayoutLabel(settings.evModelLayout)) { pickEvLayout() })
         row(R.string.dset_preheat, R.string.dset_preheat_summary, yesNo(settings.batteryPreheatBeforeCharger) {
             settings.batteryPreheatBeforeCharger = it
         })
@@ -245,6 +246,26 @@ class DaSettingsActivity : BaseActivity() {
             .setTitle(R.string.dset_variant)
             .setItems(labels.toTypedArray()) { _, i ->
                 settings.mg4Variant = if (i == 0) com.andrerinas.openheadunit.vehicle.Mg4Variant.AUTO else variants[i - 1].key
+                showTab(selectedTab)
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun evLayoutLabel(key: String): String {
+        val layouts = com.andrerinas.openheadunit.vehicle.VehicleEnergyModelEncoder.Layout.entries
+        val i = layouts.indexOfFirst { it.key == key }.coerceAtLeast(0)
+        return getString(EV_LAYOUT_LABELS[i])
+    }
+
+    /** Temporary: lets the driver compare what Maps plans with each model layout. */
+    private fun pickEvLayout() {
+        val layouts = com.andrerinas.openheadunit.vehicle.VehicleEnergyModelEncoder.Layout.entries
+        MaterialAlertDialogBuilder(this, R.style.DarkAlertDialog)
+            .setTitle(R.string.dset_ev_layout)
+            .setItems(EV_LAYOUT_LABELS.map { getString(it) }.toTypedArray()) { _, i ->
+                settings.evModelLayout = layouts[i].key
+                appliesOnReconnect()
                 showTab(selectedTab)
             }
             .setNegativeButton(R.string.cancel, null)
@@ -402,6 +423,10 @@ class DaSettingsActivity : BaseActivity() {
         @Volatile var reconnectNeeded = false
 
         const val EXTRA_TAB = "tab"
+        private val EV_LAYOUT_LABELS = intArrayOf(
+            R.string.dset_ev_layout_a, R.string.dset_ev_layout_b, R.string.dset_ev_layout_c,
+            R.string.dset_ev_layout_d, R.string.dset_ev_layout_e,
+        )
         private const val KEY_TAB = "tab"
         private const val DPI_SMALL = 200
         private const val DPI_AUTO = 0

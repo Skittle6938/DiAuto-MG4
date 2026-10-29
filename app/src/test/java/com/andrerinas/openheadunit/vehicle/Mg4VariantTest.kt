@@ -36,4 +36,20 @@ class Mg4VariantTest {
         assertEquals(108_000, Mg4Variant.LONG_RANGE.dcPowerW(57.5))
         assertEquals(138_000, Mg4Variant.LONG_RANGE.maxDcW)
     }
+    @Test
+    fun `each layout adds only its own sections`() {
+        fun bytes(layout: VehicleEnergyModelEncoder.Layout) = VehicleEnergyModelEncoder.encode(
+            VehicleEnergyModelEncoder.Snapshot(
+                capacityWh = 47_858, currentWh = 21_680, rangeMeters = 136_000,
+                variant = Mg4Variant.STANDARD, outsideTempC = 8f, layout = layout,
+            ),
+        )
+        val legacy = bytes(VehicleEnergyModelEncoder.Layout.LEGACY)
+        val vehicle = bytes(VehicleEnergyModelEncoder.Layout.VEHICLE)
+        val full = bytes(VehicleEnergyModelEncoder.Layout.FULL)
+        assertTrue(vehicle.size > legacy.size)
+        assertTrue(full.size > 1_000)
+        // Field 8 (tag 0x42) only once the charge times are asked for.
+        assertTrue(bytes(VehicleEnergyModelEncoder.Layout.DC_TIMES).size > vehicle.size + 200)
+    }
 }

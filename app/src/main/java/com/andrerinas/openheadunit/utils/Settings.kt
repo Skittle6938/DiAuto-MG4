@@ -431,6 +431,11 @@ class Settings(private val context: Context) {
         get() = prefs.getString("mg4-variant", com.andrerinas.openheadunit.vehicle.Mg4Variant.AUTO)!!
         set(value) { prefs.edit().putString("mg4-variant", value).apply() }
 
+    /** Which sections of the Maps energy model are sent (see VehicleEnergyModelEncoder.Layout). */
+    var evModelLayout: String
+        get() = prefs.getString("ev-model-layout", "legacy")!!
+        set(value) { prefs.edit().putString("ev-model-layout", value).apply() }
+
     /** Switch battery heating on before a charging stop on the route (off by default). */
     var batteryPreheatBeforeCharger: Boolean
         get() = prefs.getBoolean("battery-preheat-before-charger", false)

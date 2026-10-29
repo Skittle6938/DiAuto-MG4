@@ -87,4 +87,11 @@
     <string name="dset_preheat_lead">Délai de préchauffage</string>
     <string name="dset_preheat_lead_summary">Temps avant d\'arriver à la borne.</string>
     <string name="dset_minutes">%d min</string>
+    <string name="dset_ev_layout">Modèle envoyé à Maps (test)</string>
+    <string name="dset_ev_layout_summary">Provisoire : comparer les arrêts de recharge proposés par Maps selon le format</string>
+    <string name="dset_ev_layout_a">A · actuel (batterie seule)</string>
+    <string name="dset_ev_layout_b">B · A + masse et température extérieure</string>
+    <string name="dset_ev_layout_c">C · B + courbe de charge DC</string>
+    <string name="dset_ev_layout_d">D · B + temps de charge DC</string>
+    <string name="dset_ev_layout_e">E · complet (beta 5)</string>
 </resources>
