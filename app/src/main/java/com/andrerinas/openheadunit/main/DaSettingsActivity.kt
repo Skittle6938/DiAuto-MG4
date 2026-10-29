@@ -135,6 +135,9 @@ class DaSettingsActivity : BaseActivity() {
         })
         val phone = settings.autoStartBluetoothDeviceName.ifBlank { getString(R.string.dset_phone_none) }
         row(R.string.dset_phone, R.string.dset_phone_summary, value(phone) { pickPhone() })
+        row(R.string.dset_usb_wifi, R.string.dset_usb_wifi_summary, yesNo(settings.usbWifiClient) {
+            settings.usbWifiClient = it
+        })
     }
 
     private fun displayTab() {

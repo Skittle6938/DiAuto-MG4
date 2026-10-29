@@ -832,6 +832,8 @@ class AapService : Service(), UsbReceiver.Listener {
                     is CommManager.ConnectionState.TransportStarted -> {
                         hasEverConnected = true
                         notifyAllgoRelay()
+                        com.andrerinas.openheadunit.connection.UsbWifiClient.onSessionStarted(
+                            this@AapService, commManager.isWirelessSession)
                         accessoryHandshakeFailures = 0
                         automaticReconnectAttempts = 0
                         sendBroadcast(Intent(ACTION_REQUEST_NIGHT_MODE_UPDATE).apply {
@@ -852,6 +854,7 @@ class AapService : Service(), UsbReceiver.Listener {
                         }
                     }
                     is CommManager.ConnectionState.Disconnected -> {
+                        com.andrerinas.openheadunit.connection.UsbWifiClient.onSessionEnded(this@AapService)
                         if (hasEverConnected || connectedSinceLastDisconnect) {
                             connectedSinceLastDisconnect = false
                             onDisconnected(state)

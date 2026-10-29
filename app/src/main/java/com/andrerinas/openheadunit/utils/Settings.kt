@@ -241,6 +241,11 @@ class Settings(private val context: Context) {
             prefs.edit().putBoolean("fake_speed", value).apply()
         }
 
+    /** Switch the car's Wi-Fi client on during a USB session, so it joins known networks. */
+    var usbWifiClient: Boolean
+        get() = prefs.getBoolean("usb-wifi-client", true)
+        set(value) { prefs.edit().putBoolean("usb-wifi-client", value).apply() }
+
     /** The first-start tutorial was shown (or skipped). */
     var tutorialShown: Boolean
         get() = prefs.getBoolean("tutorial-shown", false)
