@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.1-beta3
+
+- The car's Wi-Fi client is switched off only once your phone connects to the car over Bluetooth, no longer as soon as DiAuto starts: with no phone in the car, the car keeps joining its own Wi-Fi networks (a home network, for example). It comes back 2 minutes after the Android Auto session ends.
+
 # DiAuto MG4+ 2.2.1-beta2
 
 - Smoother wireless Android Auto when the car's own Wi-Fi is on: the car has a single Wi-Fi radio, so its Wi-Fi client shared it with the Android Auto hotspot, and once the car drove away from that network the picture could drop to a few frames per second with sound gaps. During a wireless session the car's Wi-Fi client is now always switched off (it was only switched off on 2.4 GHz), and back on afterwards if it was on.

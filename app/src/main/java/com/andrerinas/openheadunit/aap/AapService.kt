@@ -1665,6 +1665,29 @@ class AapService : Service(), UsbReceiver.Listener {
     }
 
     /** Brings up wireless Android Auto over the car's hotspot, unless it is off in the settings. */
+    /** Bluetooth auto-start, once the Wi-Fi radio is free: poke the phone or arm the handshake. */
+    private fun startNativeAaForPhone(mac: String?) {
+        if (!mac.isNullOrEmpty() &&
+            SystemClock.elapsedRealtime() - lastWatchdogPokeMs < WATCHDOG_POKE_SETTLE_MS) {
+            // The phone is back because of the watchdog's own poke, which is still
+            // holding its socket; a second poke on top of it kept the phone's Android
+            // Auto channel out for two minutes (2026-10-26, 19:01-19:03).
+            AppLog.i("AapService: Bluetooth auto-start — the phone answered the watchdog poke; not poking again")
+            scheduleNativeAaArm(reason = "bt auto-start")
+        } else if (!mac.isNullOrEmpty()) {
+            AppLog.i("AapService: Bluetooth auto-start — poking $mac")
+            scheduleNativeAaPoke(mac, reason = "bt auto-start")
+        } else {
+            scheduleNativeAaArm(reason = "bt auto-start")
+        }
+    }
+
+    /** A phone DiAuto starts Android Auto with is connected over Bluetooth right now. */
+    private fun rememberedPhoneLinked(): Boolean {
+        val remembered = settings.autoStartBluetoothDeviceMacs
+        return BluetoothHelper.connectedBondedDevices(this).any { remembered.contains(it.address) }
+    }
+
     private fun initWifiMode(force: Boolean = false) {
         if (!force && wirelessInitialized && !wirelessSettingChanged()) {
             AppLog.d("AapService: wireless Android Auto is already initialized.")
@@ -1697,8 +1720,11 @@ class AapService : Service(), UsbReceiver.Listener {
             // Read this device's own access point. The AP itself is the car's; the provider only
             // resolves and watches it.
             AppLog.i("AapService: Native AA on the head unit hotspot — resolving access point credentials.")
+            // The car's Wi-Fi client is only switched off once the phone is linked over Bluetooth
+            // (here, or on the Bluetooth auto-start below), so with no phone it stays on.
+            val phoneLinked = rememberedPhoneLinked()
             serviceScope.launch(Dispatchers.IO) {
-                HotspotManager.ensure5GhzBeforeSession(this@AapService)
+                HotspotManager.ensure5GhzBeforeSession(this@AapService, pauseStation = phoneLinked)
             }
             softApCredentialsProvider?.start()
             // Start the official Bluetooth handshake servers
@@ -1924,18 +1950,14 @@ class AapService : Service(), UsbReceiver.Listener {
                     // Trusted Bluetooth phone just linked — go straight to Native AA; do not wait
                     // for the user to pick the phone on the home screen.
                     lastPhoneBtConnectMs = SystemClock.elapsedRealtime()
-                    if (!mac.isNullOrEmpty() &&
-                        SystemClock.elapsedRealtime() - lastWatchdogPokeMs < WATCHDOG_POKE_SETTLE_MS) {
-                        // The phone is back because of the watchdog's own poke, which is still
-                        // holding its socket; a second poke on top of it kept the phone's Android
-                        // Auto channel out for two minutes (2026-10-26, 19:01-19:03).
-                        AppLog.i("AapService: Bluetooth auto-start — the phone answered the watchdog poke; not poking again")
-                        scheduleNativeAaArm(reason = "bt auto-start")
-                    } else if (!mac.isNullOrEmpty()) {
-                        AppLog.i("AapService: Bluetooth auto-start — poking $mac")
-                        scheduleNativeAaPoke(mac, reason = "bt auto-start")
-                    } else {
-                        scheduleNativeAaArm(reason = "bt auto-start")
+                    // The phone is here: free the single Wi-Fi radio from the car's own Wi-Fi
+                    // client before it joins the access point (instant unless that client was on
+                    // 2.4 GHz, where the access point has to restart on 5 GHz first).
+                    serviceScope.launch {
+                        withContext(Dispatchers.IO) {
+                            HotspotManager.ensure5GhzBeforeSession(this@AapService, pauseStation = true)
+                        }
+                        startNativeAaForPhone(mac)
                     }
                 }
             }

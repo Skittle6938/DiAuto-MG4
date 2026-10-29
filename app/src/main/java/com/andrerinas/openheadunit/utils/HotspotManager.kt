@@ -100,9 +100,13 @@ object HotspotManager {
      * connects (restarting a live MG4 AP mid-handshake bounces the session). Android Auto refuses
      * 1080p over 2.4 GHz. setHotspotEnabled() falls back to 2.4 GHz if 5 GHz will not come up.
      */
-    fun ensure5GhzBeforeSession(context: Context) {
+    /**
+     * @param pauseStation switch the car's Wi-Fi client off: only once the phone is there, so a
+     *   car with no phone in it keeps its own Wi-Fi (a home network) as usual.
+     */
+    fun ensure5GhzBeforeSession(context: Context, pauseStation: Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) return
-        val pausedStation = pauseStation(context)
+        val pausedStation = pauseStation && pauseStation(context)
         val stored = SoftApConfigCompat.legacyBandAndChannel(context)
         AppLog.i("HotspotManager: stored AP config apBand=${stored?.first} apChannel=${stored?.second}")
         val configIs5Ghz = stored != null &&
