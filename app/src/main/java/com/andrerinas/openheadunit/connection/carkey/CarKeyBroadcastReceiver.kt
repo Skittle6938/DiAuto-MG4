@@ -31,14 +31,8 @@ class CarKeyBroadcastReceiver : BroadcastReceiver(), CarKeyReceiver {
         private const val SAIC_KEYCODE_PLAY_PAUSE = 301
         /** Steering-wheel voice key (stock AllGo KEYCODE_VOICE). */
         private const val SAIC_KEYCODE_VOICE = 287
-        /** Steering-wheel phone key (hardkey 3 on the MG4). */
-        private const val SAIC_KEYCODE_PHONE = 3
-        /** How long the car gets to forward the phone key itself (rui launchApp 3, seen ~1.5 s). */
-        private const val PHONE_KEY_WAIT_CAR_MS = 2_500L
-        /** Once Android Auto is in front again, so the phone shows its dialer there. */
-        private const val PHONE_KEY_CALL_DELAY_MS = 700L
-
-        @Volatile private var phoneKeyFromProjection = false
+        /** Steering-wheel phone key. (Hardkey 3 is the car's home key, handled by the car.) */
+        private const val SAIC_KEYCODE_PHONE = 291
         private const val PLAY_PAUSE_RUI_WAIT_MS = 400L
         /** Steering wheel left (previous) and right (next), AllGo's KEYCODE_SWC_LEFT/RIGHT. */
         private const val SAIC_KEYCODE_LEFT = 299
@@ -205,26 +199,12 @@ class CarKeyBroadcastReceiver : BroadcastReceiver(), CarKeyReceiver {
 
         // Voice key: forward the real press to Android Auto as stock AllGo does on this car (search
         // down on press, up on release); the phone decides between a tap and a hold.
-        // Phone key with Android Auto on screen: the car goes to its home screen, and rui then
-        // sometimes forwards the key (launchApp 3, which brings Android Auto back with its phone
-        // app). When it does not, DiAuto does the same itself. The dialer key is only ever sent
-        // with Android Auto in front: sent from behind, the phone app popped up on the next return.
+        // Phone key (hardkey 291) with Android Auto on screen: the car only forwards it from its own
+        // screens (rui launchApp 3), so DiAuto opens the phone's dialer itself here.
         if (keyCode == SAIC_KEYCODE_PHONE) {
-            if (isDown) {
-                phoneKeyFromProjection = com.andrerinas.openheadunit.aap.AapProjectionActivity.isForeground
-            } else if (!isLong && phoneKeyFromProjection) {
-                phoneKeyFromProjection = false
-                val app = context.applicationContext
-                val pressedAt = android.os.SystemClock.elapsedRealtime()
-                val main = Handler(Looper.getMainLooper())
-                main.postDelayed({
-                    if (AllgoMediaKeys.lastLaunchPhoneMs >= pressedAt) return@postDelayed
-                    AppLog.i("CarKeyReceiver: phone key from Android Auto not forwarded by the car -> back to it, then phone app")
-                    app.startActivity(com.andrerinas.openheadunit.aap.AapProjectionActivity.intent(app))
-                    main.postDelayed({
-                        AllgoMediaKeys.click(app, KeyEvent.KEYCODE_CALL, "steering-phone")
-                    }, PHONE_KEY_CALL_DELAY_MS)
-                }, PHONE_KEY_WAIT_CAR_MS)
+            if (!isDown && !isLong && com.andrerinas.openheadunit.aap.AapProjectionActivity.isForeground) {
+                AllgoMediaKeys.click(context, KeyEvent.KEYCODE_CALL, "steering-phone")
+                AppLog.i("CarKeyReceiver: phone key on the Android Auto screen -> phone app")
             }
             return
         }

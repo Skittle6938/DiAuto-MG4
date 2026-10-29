@@ -222,7 +222,11 @@ class AapNavigation(
             ?.takeIf { it.hasAddress() }?.address
         val seconds = snapshot.currentPosition?.payload?.destinationDistancesList?.firstOrNull()
             ?.takeIf { it.hasTimeToArrivalSeconds() }?.timeToArrivalSeconds?.coerceIn(0, Int.MAX_VALUE.toLong())?.toInt()
-        val stopsAhead = snapshot.currentPosition?.payload?.destinationDistancesCount ?: 0
+        // Maps sends two lines per stop (name, then address) but a time for the next stop only:
+        // "A11 | Aire de Pirmil Ouest, A11, km 197 | Rue du Layon 4 | 85560" is a charging stop then
+        // the destination.
+        val lines = snapshot.navigationState?.payload?.destinationsCount ?: 0
+        val stopsAhead = maxOf(snapshot.currentPosition?.payload?.destinationDistancesCount ?: 0, (lines + 1) / 2)
         com.andrerinas.openheadunit.vehicle.ChargeStopPreheater.update(context, navigating, nextStop, seconds, stopsAhead)
     }
 
