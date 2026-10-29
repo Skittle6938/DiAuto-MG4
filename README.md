@@ -23,10 +23,12 @@ can plan your charging stops.
 - Steering wheel keys work as with the original: previous / next, play / pause, voice assistant
   (Google Assistant / Gemini) and the phone key.
 
-### Internet in the car (Android Auto over USB)
-Over Wi-Fi, the car's Wi-Fi is busy being the hotspot your phone joins for Android Auto, so the car
-itself has no internet. With Android Auto on the **USB cable**, DiAuto switches the car's Wi-Fi
-client on, and the car joins the networks it knows, such as your phone's Wi-Fi hotspot:
+### Internet in the car from the phone (Android Auto over USB)
+Many MG4s have their own 4G connection, but not in every country, and it comes with a monthly data
+allowance after which it stops. The phone can take over: with wireless Android Auto the car's Wi-Fi
+is busy being the hotspot your phone joins, but with Android Auto on the **USB cable** it is free.
+DiAuto then switches the car's Wi-Fi client on, and the car joins the networks it knows, such as
+your phone's Wi-Fi hotspot:
 1. Turn on your phone's Wi-Fi hotspot.
 2. Once, in the car's *Settings → Wi-Fi*, connect to that hotspot (the car remembers it).
 3. From then on, plug the phone in: Android Auto starts over USB and the car joins the hotspot by
