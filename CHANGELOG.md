@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.1-beta1
+
+- With Android Auto on the USB cable, the car's Wi-Fi client is switched on so the car joins its known networks, such as the phone's hotspot, and has internet. It goes off again when the USB session ends. Option in *Settings → Connection*, on by default.
+
 # DiAuto MG4+ 2.2.0
 
 First official release of DiAuto MG4+: everything in the 2.1 and 2.2 betas, and since 2.2.0-beta24:
