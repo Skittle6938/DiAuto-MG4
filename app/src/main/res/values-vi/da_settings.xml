@@ -31,7 +31,7 @@
     <string name="dset_separate">Tách luồng âm thanh</string>
     <string name="dset_separate_summary">Lời nhắc dẫn đường có kênh riêng và vẫn nghe được cả khi đang mở radio. Áp dụng từ lần kết nối sau.</string>
     <string name="dset_voice_volume">Âm lượng lời nhắc và trợ lý</string>
-    <string name="dset_voice_volume_summary">So với nhạc.</string>
+    <string name="dset_voice_volume_summary">So với nhạc. Trên 0 %, giọng nói được khuếch đại và giảm chất lượng.</string>
     <string name="dset_bt_music">Nhạc qua Bluetooth</string>
     <string name="dset_bt_music_summary">Nhạc phát qua Bluetooth của xe, Android Auto lo phần còn lại.</string>
     <string name="dset_buffer">Bộ đệm âm thanh Wi‑Fi</string>

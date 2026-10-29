@@ -31,7 +31,7 @@
     <string name="dset_separate">オーディオストリームを分ける</string>
     <string name="dset_separate_summary">ナビ音声に専用チャンネルを割り当て、ラジオの上からでも聞こえるようにします。次回の接続から反映されます。</string>
     <string name="dset_voice_volume">案内とアシスタントの音量</string>
-    <string name="dset_voice_volume_summary">音楽に対する音量です。</string>
+    <string name="dset_voice_volume_summary">音楽に対する音量です。0 % を超えると音声が増幅され、音質が下がります。</string>
     <string name="dset_bt_music">Bluetooth で音楽を再生</string>
     <string name="dset_bt_music_summary">音楽は車の Bluetooth で再生し、それ以外は Android Auto が担当します。</string>
     <string name="dset_buffer">Wi‑Fi オーディオバッファ</string>

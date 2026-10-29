@@ -44,8 +44,10 @@ internal class AapAudio(
     }
 
     private val mediaVolumeOffset = settings.mediaVolumeOffset
-    private val assistantVolumeOffset = settings.assistantVolumeOffset
-    private val navigationVolumeOffset = settings.navigationVolumeOffset
+    // On their own channel the voice is never boosted: the phone sends it near full scale, and the
+    // car's navigation volume sets its level cleanly. Only mixed with the music can it be raised.
+    private val assistantVolumeOffset = if (separateAudioStreams) 0 else settings.assistantVolumeOffset
+    private val navigationVolumeOffset = if (separateAudioStreams) 0 else settings.navigationVolumeOffset
     private val audioLatencyMultiplier = settings.audioLatencyMultiplier
     private val useAacAudio = settings.useAacAudio
     private val audioQueueCapacity = settings.audioQueueCapacity
@@ -842,8 +844,10 @@ internal class AapAudio(
 
     fun updateGains() {
         val mediaGain = (1.0f + (settings.mediaVolumeOffset / 100.0f)).coerceIn(0.0f, 2.0f)
-        val assistantGain = (1.0f + (settings.assistantVolumeOffset / 100.0f)).coerceIn(0.0f, 3.0f)
-        val navGain = (1.0f + (settings.navigationVolumeOffset / 100.0f)).coerceIn(0.0f, 3.0f)
+        val assistantGain = if (separateAudioStreams) 1.0f
+            else (1.0f + (settings.assistantVolumeOffset / 100.0f)).coerceIn(0.0f, 3.0f)
+        val navGain = if (separateAudioStreams) 1.0f
+            else (1.0f + (settings.navigationVolumeOffset / 100.0f)).coerceIn(0.0f, 3.0f)
 
         audioDecoder.setGain(Channel.ID_AUD, mediaGain)
         audioDecoder.setGain(Channel.ID_AU1, assistantGain)

@@ -163,14 +163,19 @@ class DaSettingsActivity : BaseActivity() {
         row(R.string.dset_separate, R.string.dset_separate_summary, yesNo(settings.separateAudioStreams) {
             settings.separateAudioStreams = it
             appliesOnReconnect()
+            showTab(selectedTab)
         })
-        row(R.string.dset_voice_volume, R.string.dset_voice_volume_summary, level(settings.assistantVolumeOffset) {
-            settings.assistantVolumeOffset = it
-            settings.navigationVolumeOffset = it
-        })
+        // Only mixed with the music can the voice be boosted (see AapAudio).
+        if (!settings.separateAudioStreams && !settings.musicViaBluetooth) {
+            row(R.string.dset_voice_volume, R.string.dset_voice_volume_summary, level(settings.assistantVolumeOffset) {
+                settings.assistantVolumeOffset = it
+                settings.navigationVolumeOffset = it
+            })
+        }
         row(R.string.dset_bt_music, R.string.dset_bt_music_summary, yesNo(settings.musicViaBluetooth) {
             settings.musicViaBluetooth = it
             appliesOnReconnect()
+            showTab(selectedTab)
         })
         val buffers = listOf(500, 1000, 1500)
         val buffer = buffers.indexOf(settings.mediaAudioBufferMillis).takeIf { it >= 0 } ?: 1

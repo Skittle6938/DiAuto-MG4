@@ -31,7 +31,7 @@
     <string name="dset_separate">Aparte audiostromen</string>
     <string name="dset_separate_summary">Navigatie-aanwijzingen krijgen een eigen kanaal en zijn zelfs boven de radio uit te horen. Vanaf de volgende verbinding.</string>
     <string name="dset_voice_volume">Volume van aanwijzingen en assistent</string>
-    <string name="dset_voice_volume_summary">Ten opzichte van de muziek.</string>
+    <string name="dset_voice_volume_summary">Ten opzichte van de muziek. Boven 0 % wordt de stem versterkt en gaat de kwaliteit achteruit.</string>
     <string name="dset_bt_music">Muziek via Bluetooth</string>
     <string name="dset_bt_music_summary">Muziek speelt via de Bluetooth van de auto, Android Auto doet de rest.</string>
     <string name="dset_buffer">Wi‑Fi-audiobuffer</string>

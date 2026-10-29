@@ -31,7 +31,7 @@
     <string name="dset_separate">오디오 스트림 분리</string>
     <string name="dset_separate_summary">내비게이션 안내가 별도 채널을 사용해 라디오 위로도 들립니다. 다음 연결부터 적용됩니다.</string>
     <string name="dset_voice_volume">안내 및 어시스턴트 볼륨</string>
-    <string name="dset_voice_volume_summary">음악 대비 볼륨입니다.</string>
+    <string name="dset_voice_volume_summary">음악 대비 음량입니다. 0 %를 넘으면 음성이 증폭되어 음질이 떨어집니다.</string>
     <string name="dset_bt_music">Bluetooth로 음악 재생</string>
     <string name="dset_bt_music_summary">음악은 차량 Bluetooth로 재생되고, 나머지는 Android Auto가 처리합니다.</string>
     <string name="dset_buffer">Wi‑Fi 오디오 버퍼</string>

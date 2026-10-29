@@ -31,7 +31,7 @@
     <string name="dset_separate">Окремі аудіопотоки</string>
     <string name="dset_separate_summary">Підказки навігації мають власний канал і чутні навіть поверх радіо. З наступного підключення.</string>
     <string name="dset_voice_volume">Гучність підказок та асистента</string>
-    <string name="dset_voice_volume_summary">Відносно музики.</string>
+    <string name="dset_voice_volume_summary">Відносно музики. Понад 0 % голос підсилюється й втрачає якість.</string>
     <string name="dset_bt_music">Музика через Bluetooth</string>
     <string name="dset_bt_music_summary">Музика грає через Bluetooth автомобіля, решта залишається в Android Auto.</string>
     <string name="dset_buffer">Аудіобуфер Wi‑Fi</string>

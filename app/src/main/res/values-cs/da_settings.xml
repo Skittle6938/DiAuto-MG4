@@ -31,7 +31,7 @@
     <string name="dset_separate">Oddělené zvukové proudy</string>
     <string name="dset_separate_summary">Navigační pokyny mají vlastní kanál a jsou slyšet i přes rádio. Od příštího připojení.</string>
     <string name="dset_voice_volume">Hlasitost pokynů a asistenta</string>
-    <string name="dset_voice_volume_summary">V poměru k hudbě.</string>
+    <string name="dset_voice_volume_summary">Vzhledem k hudbě. Nad 0 % se hlas zesiluje a ztrácí na kvalitě.</string>
     <string name="dset_bt_music">Hudba přes Bluetooth</string>
     <string name="dset_bt_music_summary">Hudba hraje přes Bluetooth auta, zbytek obstará Android Auto.</string>
     <string name="dset_buffer">Zvuková vyrovnávací paměť Wi‑Fi</string>

@@ -31,7 +31,7 @@
     <string name="dset_separate">Getrennte Audiokanäle</string>
     <string name="dset_separate_summary">Navigationsansagen erhalten einen eigenen Kanal und sind sogar über dem Radio zu hören. Ab der nächsten Verbindung.</string>
     <string name="dset_voice_volume">Lautstärke von Ansagen und Assistent</string>
-    <string name="dset_voice_volume_summary">Im Verhältnis zur Musik.</string>
+    <string name="dset_voice_volume_summary">Im Verhältnis zur Musik. Über 0 % wird die Stimme verstärkt und verliert an Qualität.</string>
     <string name="dset_bt_music">Musik über Bluetooth</string>
     <string name="dset_bt_music_summary">Musik läuft über das Bluetooth des Autos, Android Auto übernimmt den Rest.</string>
     <string name="dset_buffer">Wi‑Fi-Audiopuffer</string>

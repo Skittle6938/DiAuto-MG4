@@ -31,7 +31,7 @@
     <string name="dset_separate">分離音訊串流</string>
     <string name="dset_separate_summary">導航提示使用獨立聲道，即使在播放收音機時也聽得到。下次連線時生效。</string>
     <string name="dset_voice_volume">導航提示與助理音量</string>
-    <string name="dset_voice_volume_summary">相對於音樂的音量。</string>
+    <string name="dset_voice_volume_summary">相對於音樂的音量。高於 0 % 時語音會被放大，音質會下降。</string>
     <string name="dset_bt_music">透過 Bluetooth 播放音樂</string>
     <string name="dset_bt_music_summary">音樂透過車輛的 Bluetooth 播放，其餘由 Android Auto 處理。</string>
     <string name="dset_buffer">Wi‑Fi 音訊緩衝</string>

@@ -31,7 +31,7 @@
     <string name="dset_separate">Раздельные аудиопотоки</string>
     <string name="dset_separate_summary">Подсказки навигации получают свой канал и слышны даже поверх радио. Со следующего подключения.</string>
     <string name="dset_voice_volume">Громкость подсказок и ассистента</string>
-    <string name="dset_voice_volume_summary">Относительно музыки.</string>
+    <string name="dset_voice_volume_summary">Относительно музыки. Выше 0 % голос усиливается и теряет в качестве.</string>
     <string name="dset_bt_music">Музыка через Bluetooth</string>
     <string name="dset_bt_music_summary">Музыка идёт через Bluetooth автомобиля, остальное остаётся в Android Auto.</string>
     <string name="dset_buffer">Аудиобуфер Wi‑Fi</string>

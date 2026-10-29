@@ -31,7 +31,7 @@
     <string name="dset_separate">Separa i flussi audio</string>
     <string name="dset_separate_summary">Le indicazioni di navigazione hanno un canale tutto loro e si sentono anche sopra la radio. Dalla prossima connessione.</string>
     <string name="dset_voice_volume">Volume di indicazioni e assistente</string>
-    <string name="dset_voice_volume_summary">Rispetto alla musica.</string>
+    <string name="dset_voice_volume_summary">Rispetto alla musica. Sopra lo 0 % la voce viene amplificata e perde qualità.</string>
     <string name="dset_bt_music">Musica via Bluetooth</string>
     <string name="dset_bt_music_summary">La musica passa dal Bluetooth dell’auto, Android Auto pensa al resto.</string>
     <string name="dset_buffer">Buffer audio Wi‑Fi</string>

@@ -31,7 +31,7 @@
     <string name="dset_separate">Fluxuri audio separate</string>
     <string name="dset_separate_summary">Indicațiile de navigare au propriul canal și se aud chiar și peste radio. De la următoarea conexiune.</string>
     <string name="dset_voice_volume">Volumul indicațiilor și al asistentului</string>
-    <string name="dset_voice_volume_summary">Față de muzică.</string>
+    <string name="dset_voice_volume_summary">Față de muzică. Peste 0 %, vocea este amplificată și pierde din calitate.</string>
     <string name="dset_bt_music">Muzică prin Bluetooth</string>
     <string name="dset_bt_music_summary">Muzica se aude prin Bluetooth-ul mașinii, Android Auto se ocupă de rest.</string>
     <string name="dset_buffer">Buffer audio Wi‑Fi</string>

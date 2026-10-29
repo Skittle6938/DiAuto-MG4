@@ -31,7 +31,7 @@
     <string name="dset_separate">Osobne strumienie audio</string>
     <string name="dset_separate_summary">Komunikaty nawigacji mają własny kanał i są słyszalne nawet przy włączonym radiu. Od następnego połączenia.</string>
     <string name="dset_voice_volume">Głośność komunikatów i asystenta</string>
-    <string name="dset_voice_volume_summary">W stosunku do muzyki.</string>
+    <string name="dset_voice_volume_summary">W stosunku do muzyki. Powyżej 0 % głos jest wzmacniany i traci na jakości.</string>
     <string name="dset_bt_music">Muzyka przez Bluetooth</string>
     <string name="dset_bt_music_summary">Muzyka gra przez Bluetooth samochodu, Android Auto zajmuje się resztą.</string>
     <string name="dset_buffer">Bufor audio Wi‑Fi</string>

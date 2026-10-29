@@ -31,7 +31,7 @@
     <string name="dset_separate">ცალკე აუდიო ნაკადები</string>
     <string name="dset_separate_summary">ნავიგაციის მითითებებს საკუთარი არხი აქვს და რადიოს ფონზეც ისმის. შემდეგი დაკავშირებიდან.</string>
     <string name="dset_voice_volume">მითითებებისა და ასისტენტის ხმა</string>
-    <string name="dset_voice_volume_summary">მუსიკასთან შედარებით.</string>
+    <string name="dset_voice_volume_summary">მუსიკასთან შედარებით. 0 %-ზე მეტზე ხმა ძლიერდება და ხარისხი ეცემა.</string>
     <string name="dset_bt_music">მუსიკა Bluetooth-ით</string>
     <string name="dset_bt_music_summary">მუსიკა მანქანის Bluetooth-ით უკრავს, დანარჩენს Android Auto აკეთებს.</string>
     <string name="dset_buffer">Wi‑Fi აუდიო ბუფერი</string>

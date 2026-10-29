@@ -31,7 +31,7 @@
     <string name="dset_separate">Külön hangcsatornák</string>
     <string name="dset_separate_summary">A navigációs utasítások saját csatornát kapnak, és a rádió mellett is hallhatók. A következő csatlakozástól.</string>
     <string name="dset_voice_volume">Utasítások és asszisztens hangereje</string>
-    <string name="dset_voice_volume_summary">A zenéhez képest.</string>
+    <string name="dset_voice_volume_summary">A zenéhez képest. 0 % fölött a hang erősítve szól, és romlik a minősége.</string>
     <string name="dset_bt_music">Zene Bluetooth-on</string>
     <string name="dset_bt_music_summary">A zene az autó Bluetooth-kapcsolatán szól, a többit az Android Auto intézi.</string>
     <string name="dset_buffer">Wi‑Fi hangpuffer</string>

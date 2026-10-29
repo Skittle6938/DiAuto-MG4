@@ -31,7 +31,7 @@
     <string name="dset_separate">Ayrı ses akışları</string>
     <string name="dset_separate_summary">Navigasyon yönlendirmeleri kendi kanalını alır ve radyo açıkken bile duyulur. Bir sonraki bağlantıdan itibaren.</string>
     <string name="dset_voice_volume">Yönlendirme ve asistan ses düzeyi</string>
-    <string name="dset_voice_volume_summary">Müziğe göre.</string>
+    <string name="dset_voice_volume_summary">Müziğe göre. %0\'ın üzerinde ses yükseltilir ve kalitesi düşer.</string>
     <string name="dset_bt_music">Bluetooth ile müzik</string>
     <string name="dset_bt_music_summary">Müzik aracın Bluetooth’u üzerinden çalar, gerisini Android Auto halleder.</string>
     <string name="dset_buffer">Wi‑Fi ses arabelleği</string>

@@ -31,7 +31,7 @@
     <string name="dset_separate">分离音频流</string>
     <string name="dset_separate_summary">导航提示使用独立声道，即使在播放收音机时也能听到。下次连接时生效。</string>
     <string name="dset_voice_volume">导航提示与助理音量</string>
-    <string name="dset_voice_volume_summary">相对于音乐的音量。</string>
+    <string name="dset_voice_volume_summary">相对于音乐的音量。高于 0 % 时语音会被放大，音质会下降。</string>
     <string name="dset_bt_music">通过 Bluetooth 播放音乐</string>
     <string name="dset_bt_music_summary">音乐通过车辆的 Bluetooth 播放，其余由 Android Auto 处理。</string>
     <string name="dset_buffer">Wi‑Fi 音频缓冲</string>

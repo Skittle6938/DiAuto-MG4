@@ -31,7 +31,7 @@
     <string name="dset_separate">فصل مسارات الصوت</string>
     <string name="dset_separate_summary">تحصل إرشادات التنقل على قناة خاصة بها وتُسمع حتى فوق الراديو. بدءًا من الاتصال التالي.</string>
     <string name="dset_voice_volume">مستوى صوت الإرشادات والمساعد</string>
-    <string name="dset_voice_volume_summary">مقارنةً بالموسيقى.</string>
+    <string name="dset_voice_volume_summary">مقارنةً بالموسيقى. فوق 0 % يُضخَّم الصوت وتنخفض جودته.</string>
     <string name="dset_bt_music">الموسيقى عبر Bluetooth</string>
     <string name="dset_bt_music_summary">تُشغَّل الموسيقى عبر Bluetooth السيارة، ويتولى Android Auto الباقي.</string>
     <string name="dset_buffer">المخزن المؤقت للصوت عبر Wi‑Fi</string>
