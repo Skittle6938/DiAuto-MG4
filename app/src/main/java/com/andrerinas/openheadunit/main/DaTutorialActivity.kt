@@ -65,7 +65,7 @@ class DaTutorialActivity : BaseActivity() {
         findViewById<TextView>(R.id.tuto_text).apply {
             setText(step.text)
             // The last step holds five points.
-            textSize = if (last) 21f else 23f
+            textSize = if (last) 24f else 27f
         }
         findViewById<GestureDemoView>(R.id.tuto_demo).apply {
             visibility = if (step.gesture != null) View.VISIBLE else View.GONE

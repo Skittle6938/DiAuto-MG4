@@ -1511,14 +1511,15 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
 
                         if (deltaX < -200 && deltaY < 100) {
                             isPotentialGesture = false
+                            // Full screen hides the car's top strip too, as MG4 Dash does; the
+                            // other way keeps it and hides only the left bar. Kept for next time.
                             val currentEffective = activityFullscreenOverride ?: settings.fullscreenMode
-                            if (currentEffective != Settings.FullscreenMode.NONE) {
-                                activityFullscreenOverride = Settings.FullscreenMode.NONE
-                                setFullscreen()
-                            } else {
-                                activityFullscreenOverride = null
-                                setFullscreen()
-                            }
+                            activityFullscreenOverride = null
+                            settings.fullscreenMode =
+                                if (currentEffective == Settings.FullscreenMode.IMMERSIVE) Settings.FullscreenMode.NAV_ONLY
+                                else Settings.FullscreenMode.IMMERSIVE
+                            AppLog.i("Two-finger swipe: full screen ${settings.fullscreenMode}")
+                            setFullscreen()
                             return true // Consume
                         }
                     }

@@ -5,10 +5,10 @@
     android:layout_height="match_parent"
     android:background="@color/da_background"
     android:orientation="vertical"
-    android:paddingStart="48dp"
-    android:paddingTop="32dp"
-    android:paddingEnd="48dp"
-    android:paddingBottom="32dp">
+    android:paddingStart="32dp"
+    android:paddingTop="20dp"
+    android:paddingEnd="32dp"
+    android:paddingBottom="20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,19 +20,19 @@
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="5"
+            android:layout_weight="2"
             android:background="@drawable/da_card">
 
             <com.andrerinas.openheadunit.main.GestureDemoView
                 android:id="@+id/tuto_demo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="24dp" />
+                android:layout_margin="16dp" />
 
             <ImageView
                 android:id="@+id/tuto_icon"
-                android:layout_width="180dp"
-                android:layout_height="180dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:layout_gravity="center"
                 android:importantForAccessibility="no"
                 android:tint="@color/da_accent" />
@@ -42,8 +42,8 @@
         <ScrollView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginStart="48dp"
-            android:layout_weight="4"
+            android:layout_marginStart="36dp"
+            android:layout_weight="3"
             android:fillViewport="true">
 
         <LinearLayout
@@ -57,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/da_accent"
-                android:textSize="20sp" />
+                android:textSize="22sp" />
 
             <TextView
                 android:id="@+id/tuto_title"
@@ -66,7 +66,7 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif-medium"
                 android:textColor="@color/da_text"
-                android:textSize="34sp" />
+                android:textSize="38sp" />
 
             <TextView
                 android:id="@+id/tuto_text"
@@ -82,8 +82,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="96dp"
-        android:layout_marginTop="28dp"
+        android:layout_height="88dp"
+        android:layout_marginTop="20dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
