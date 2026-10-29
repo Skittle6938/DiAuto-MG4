@@ -213,6 +213,11 @@
             android:theme="@style/AppTheme" />
 
         <activity
+            android:name=".main.DaTutorialActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme" />
+
+        <activity
             android:name=".main.SettingsActivity"
             android:label="@string/settings"
             android:windowSoftInputMode="stateHidden|adjustResize"

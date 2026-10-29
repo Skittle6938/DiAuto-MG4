@@ -224,6 +224,8 @@ class DaSettingsActivity : BaseActivity() {
         row(R.string.dset_betas, R.string.dset_betas_summary, yesNo(ota?.isAllowBeta == true) {
             ota?.setAllowBeta(it)
         })
+        row(R.string.tuto_settings_title, R.string.tuto_settings_summary,
+            button(getString(R.string.tuto_settings_button)) { startActivity(DaTutorialActivity.intent(this)) })
         row(R.string.compat_report, R.string.compat_report_description,
             button(getString(R.string.dset_open)) { CompatibilityReport.show(this) })
         row(R.string.dset_logs, R.string.dset_logs_summary, button(getString(R.string.dset_export)) { exportLogs() })

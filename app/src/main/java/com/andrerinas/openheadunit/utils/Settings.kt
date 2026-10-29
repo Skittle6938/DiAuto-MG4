@@ -241,6 +241,13 @@ class Settings(private val context: Context) {
             prefs.edit().putBoolean("fake_speed", value).apply()
         }
 
+    /** The first-start tutorial was shown (or skipped). */
+    var tutorialShown: Boolean
+        get() = prefs.getBoolean("tutorial-shown", false)
+        set(value) {
+            prefs.edit().putBoolean("tutorial-shown", value).apply()
+        }
+
     var gestureHintShown: Boolean
         get() = prefs.getBoolean("gesture_hint_shown", false)
         set(value) {

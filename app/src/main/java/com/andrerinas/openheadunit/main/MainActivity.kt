@@ -933,8 +933,11 @@ class MainActivity : BaseActivity() {
 
     fun checkSetupFlow() {
         // No first-run wizard on the MG4: DiAuto is ready as installed (system app, permissions
-        // granted), and the settings have MG4 defaults.
+        // granted), and the settings have MG4 defaults. Only a short tutorial, once.
         requestPermissions()
+        if (!App.provide(this).settings.tutorialShown && !App.provide(this).commManager.isConnected) {
+            startActivity(DaTutorialActivity.intent(this))
+        }
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
