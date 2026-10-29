@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.1-beta5
+
+- With separate audio streams, navigation prompts and the assistant now reach the car exactly as the phone sends them: no boost and no resampling in DiAuto (the 16 kHz voice was converted to 48 kHz since 2.2.0-beta12).
+
 # DiAuto MG4+ 2.2.1-beta4
 
 - The car's Wi-Fi client comes back 1 minute after the Android Auto session ends (was 2 minutes); the delay can be set in *Settings → Connection*: 10 s, 30 s, 1 min, 2 min or 5 min.
