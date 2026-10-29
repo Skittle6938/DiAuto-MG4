@@ -14,7 +14,7 @@
     <string name="tuto_home_title">Three fingers down</string>
     <string name="tuto_home_text">Slide three fingers down the screen to disconnect Android Auto and come back to DiAuto\'s home screen.</string>
     <string name="tuto_tips_title">Good to know</string>
-    <string name="tuto_tips_text">• The steering wheel\'s phone key opens Android Auto\'s phone app.\n• Settings → Sound: navigation voice level.\n• Settings → Car: your MG4 version for Google Maps\' charging stops, and battery preheating before a charging stop.\n• Settings → About: show this tutorial again.</string>
+    <string name="tuto_tips_text">• Google Maps becomes a trip planner: it gets your MG4\'s battery, consumption and charging power, and picks the charging stops.\n• Settings → Car: your MG4 version, battery capacity and health, detected automatically and adjustable.\n• Automatic battery preheating before a charging stop planned by Maps. Off by default, turn it on in Settings → Car.\n• Settings → About: show this tutorial again.</string>
     <string name="tuto_settings_title">Tutorial</string>
     <string name="tuto_settings_summary">The gestures over Android Auto and the useful settings, in a few steps.</string>
     <string name="tuto_settings_button">Show</string>
