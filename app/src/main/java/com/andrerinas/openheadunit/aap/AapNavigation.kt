@@ -220,7 +220,8 @@ class AapNavigation(
             ?.takeIf { it.hasAddress() }?.address
         val seconds = snapshot.currentPosition?.payload?.destinationDistancesList?.firstOrNull()
             ?.takeIf { it.hasTimeToArrivalSeconds() }?.timeToArrivalSeconds?.coerceIn(0, Int.MAX_VALUE.toLong())?.toInt()
-        com.andrerinas.openheadunit.vehicle.ChargeStopPreheater.update(context, navigating, nextStop, seconds)
+        val stopsAhead = snapshot.currentPosition?.payload?.destinationDistancesCount ?: 0
+        com.andrerinas.openheadunit.vehicle.ChargeStopPreheater.update(context, navigating, nextStop, seconds, stopsAhead)
     }
 
     private fun scheduleDebouncedBroadcast(navEventType: Int) {

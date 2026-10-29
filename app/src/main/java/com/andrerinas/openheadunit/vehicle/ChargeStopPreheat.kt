@@ -82,15 +82,20 @@ object ChargeStopPreheater {
     @Volatile private var lastLoggedStop: String? = null
 
     /** Called on every navigation update; [nextStop] is the next stop's name or address. */
-    fun update(context: Context, navigating: Boolean, nextStop: String?, secondsToStop: Int?) {
+    /**
+     * @param stopsAhead stops the phone gives a time for, the destination included. Maps names a
+     *   charging stop it added by its place ("Aire de …"), not its network, so a stop before the
+     *   destination on a route counts as a charging stop too.
+     */
+    fun update(context: Context, navigating: Boolean, nextStop: String?, secondsToStop: Int?, stopsAhead: Int) {
         val settings = App.provide(context).settings
         if (!settings.batteryPreheatBeforeCharger && !ownedByUs) return
         if (navigating && secondsToStop != null) lastSecondsToStop = secondsToStop
-        val charger = ChargeStopPreheatPolicy.isCharger(nextStop)
+        val charger = ChargeStopPreheatPolicy.isCharger(nextStop) || stopsAhead >= 2
         // Only with the option on, once per stop: how chargers are named is still being learned.
         if (navigating && nextStop != lastLoggedStop) {
             lastLoggedStop = nextStop
-            AppLog.i("$TAG: next stop \"${nextStop?.take(40) ?: "-"}\" charger=$charger")
+            AppLog.i("$TAG: next stop \"${nextStop?.take(40) ?: "-"}\" of $stopsAhead, charger=$charger")
         }
         val lead = settings.batteryPreheatMinutes * 60
         executor.execute {
