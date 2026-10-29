@@ -1367,22 +1367,27 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
         prompt.findViewById<View>(R.id.reconnect_later).setOnClickListener { close() }
         prompt.findViewById<View>(R.id.reconnect_now).setOnClickListener {
             close()
-            AppLog.i("AapProjectionActivity: reconnecting to apply the new settings")
-            // Not a user exit: the service re-arms wireless at once and the phone comes back.
-            commManager.disconnect(sendByeBye = true, isUserExit = false)
-            // The phone does not come back by itself after a bye-bye: call it, as the home
-            // screen's connect button does, once the service has re-armed wireless.
-            val mac = settings.autoStartBluetoothDeviceMacs.firstOrNull() ?: return@setOnClickListener
-            val app = applicationContext
-            android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-                androidx.core.content.ContextCompat.startForegroundService(app,
-                    Intent(app, AapService::class.java).apply {
-                        action = AapService.ACTION_NATIVE_AA_POKE
-                        putExtra(AapService.EXTRA_MAC, mac)
-                    })
-            }, RECONNECT_POKE_DELAY_MS)
+            reconnectToApply("the new settings")
         }
         root.addView(prompt)
+    }
+
+    /** The phone reads the screen size and settings when it connects: connect again. */
+    private fun reconnectToApply(what: String) {
+        AppLog.i("AapProjectionActivity: reconnecting to apply $what")
+        // Not a user exit: the service re-arms wireless at once and the phone comes back.
+        commManager.disconnect(sendByeBye = true, isUserExit = false)
+        // The phone does not come back by itself after a bye-bye: call it, as the home
+        // screen's connect button does, once the service has re-armed wireless.
+        val mac = settings.autoStartBluetoothDeviceMacs.firstOrNull() ?: return
+        val app = applicationContext
+        android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+            androidx.core.content.ContextCompat.startForegroundService(app,
+                Intent(app, AapService::class.java).apply {
+                    action = AapService.ACTION_NATIVE_AA_POKE
+                    putExtra(AapService.EXTRA_MAC, mac)
+                })
+        }, RECONNECT_POKE_DELAY_MS)
     }
     private var projectionMenu: View? = null
 
@@ -1520,6 +1525,12 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
                                 else Settings.FullscreenMode.IMMERSIVE
                             AppLog.i("Two-finger swipe: full screen ${settings.fullscreenMode}")
                             setFullscreen()
+                            // The phone draws Android Auto for the height it was given when it
+                            // connected; only a new connection makes it use the new height.
+                            if (commManager.isConnected) {
+                                Toast.makeText(this, R.string.fullscreen_reconnecting, Toast.LENGTH_SHORT).show()
+                                reconnectToApply("the new screen height")
+                            }
                             return true // Consume
                         }
                     }
