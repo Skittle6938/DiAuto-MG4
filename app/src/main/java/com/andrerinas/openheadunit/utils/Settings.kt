@@ -1060,7 +1060,9 @@ class Settings(private val context: Context) {
         LIGHT_SENSOR(4),
         SCREEN_BRIGHTNESS(5),
         CAR_SIGNAL(6),
-        LOCATION(7);
+        LOCATION(7),
+        /** Sunset to sunrise at the car's position (what AUTO did before it followed the car). */
+        SUN(8);
 
         companion object {
             private val map = NightMode.values().associateBy(NightMode::value)

@@ -183,10 +183,10 @@ class DaSettingsActivity : BaseActivity() {
                 settings.dpiPixelDensity = sizes[it]
                 appliesOnReconnect()
             })
-        val modes = listOf(Settings.NightMode.AUTO, Settings.NightMode.DAY, Settings.NightMode.NIGHT)
+        val modes = listOf(Settings.NightMode.AUTO, Settings.NightMode.SUN, Settings.NightMode.DAY, Settings.NightMode.NIGHT)
         val mode = modes.indexOf(settings.nightMode).takeIf { it >= 0 } ?: 0
-        row(R.string.dset_night, R.string.dset_night_summary,
-            choices(listOf(getString(R.string.dset_night_car), getString(R.string.dset_day), getString(R.string.dset_night_only)), mode) {
+        row(R.string.dset_night, R.string.dset_night_summary_modes,
+            choices(listOf(R.string.dset_night_car, R.string.dset_night_sun, R.string.dset_day, R.string.dset_night_only).map { getString(it) }, mode) {
                 settings.nightMode = modes[it]
                 sendBroadcast(Intent(com.andrerinas.openheadunit.aap.AapService.ACTION_REQUEST_NIGHT_MODE_UPDATE).setPackage(packageName))
             })

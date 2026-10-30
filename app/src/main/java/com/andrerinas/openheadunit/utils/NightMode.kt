@@ -23,6 +23,7 @@ class NightMode(private val settings: Settings, val hasGPSLocation: Boolean) {
             return when (settings.nightMode){
                 Settings.NightMode.AUTO -> com.andrerinas.openheadunit.App.instance
                     ?.let { NightModeManager.carSkinNight(it) } ?: calculator.current
+                Settings.NightMode.SUN -> calculator.current
                 Settings.NightMode.DAY -> false
                 Settings.NightMode.NIGHT -> true
                 Settings.NightMode.MANUAL_TIME -> {
@@ -54,7 +55,8 @@ class NightMode(private val settings: Settings, val hasGPSLocation: Boolean) {
 
     override fun toString(): String {
         return when (settings.nightMode){
-            Settings.NightMode.AUTO -> "NightMode: ${calculator.current}"
+            Settings.NightMode.AUTO -> "NightMode: car or ${calculator.current}"
+            Settings.NightMode.SUN -> "NightMode: sun ${calculator.current}"
             Settings.NightMode.DAY -> "NightMode: DAY"
             Settings.NightMode.NIGHT -> "NightMode: NIGHT"
             Settings.NightMode.MANUAL_TIME -> {
