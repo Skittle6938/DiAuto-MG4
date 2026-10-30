@@ -1,3 +1,8 @@
+# DiAuto MG4+ 2.2.1-beta10
+
+- Pause is heard at once: some phones and players keep sending the music for several seconds after a pause, heard as a ~4 s delay. That audio is now dropped right away (up to 6 s, until you press play).
+- Music over Bluetooth: pause no longer resumes by itself after ~2 s. The car's Bluetooth already sends the phone the pause, and DiAuto sent a second play/pause toggle over Android Auto that undid it.
+
 # DiAuto MG4+ 2.2.1-beta9
 
 - Navigation prompts and the assistant sound like with the car's own Android Auto: measured on the car, it plays them at 48 kHz on a normal track, while DiAuto handed them at 16 kHz on a small buffer that the car turned into a fast track and resampled with its basic converter. DiAuto now converts them to 48 kHz itself with a much sharper filter (flat to 7 kHz, no audible images) and plays them on a normal track. Still no boost with separate audio streams.

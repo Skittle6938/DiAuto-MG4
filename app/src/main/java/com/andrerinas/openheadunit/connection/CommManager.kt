@@ -123,6 +123,8 @@ class CommManager(
     private var btMediaLinkCached: Boolean? = null
     private var btMediaLinkCheckedAt: Long? = null
     private val PAUSE_TAIL_FLUSH_MS = 400L
+    /** How long music the phone keeps sending after a pause is held back. */
+    private val PAUSE_SILENCE_MS = 6_000L
     private val BT_MEDIA_LINK_CACHE_MS = 2_000L
 
     private val _connectionState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected())
@@ -540,7 +542,11 @@ class CommManager(
         // not be sent again, or one press performs the action twice. See MediaKeyRoutingPolicy.
         // Only media keys can be held back, so nothing else pays for the Bluetooth probe.
         if (isMedia) {
-            val routing = settings.mediaKeyRouting
+            // Music over Bluetooth: the car's Bluetooth side already sends the phone the same
+            // pause or play (AVRCP), so a second toggle over Android Auto undid it ~2 s later.
+            val routing = settings.mediaKeyRouting.let {
+                if (settings.musicViaBluetooth && it == MediaKeyRoutingPolicy.Mode.ALWAYS) MediaKeyRoutingPolicy.Mode.AUTO else it
+            }
             if (!MediaKeyRoutingPolicy.shouldForward(routing, true, btMediaLinkForKeys())) {
                 AppLog.v("CommManager: Not sending media key $logicalCode to Android Auto " +
                         "(routing=$routing, src=$source)")
@@ -581,9 +587,15 @@ class CommManager(
      */
     private fun cutBufferedAudioOnPause(keyCode: Int) {
         val track = audioDecoder.getTrack(com.andrerinas.openheadunit.aap.protocol.Channel.ID_AUD) ?: return
+        // A toggle while the pause still holds the music back is a play.
+        if (track.isSilenced() && (keyCode == KeyEvent.KEYCODE_MEDIA_PLAY || keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE)) {
+            track.unsilence()
+            return
+        }
         val pauses = keyCode == KeyEvent.KEYCODE_MEDIA_PAUSE ||
             (keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE && track.isReceivingAudio())
         if (!pauses) return
+        track.silenceFor(PAUSE_SILENCE_MS)
         track.flushForTrackChange()
         _scope.launch {
             kotlinx.coroutines.delay(PAUSE_TAIL_FLUSH_MS)

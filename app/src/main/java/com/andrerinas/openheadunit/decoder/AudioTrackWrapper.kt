@@ -330,6 +330,11 @@ class AudioTrackWrapper(
         } else {
             applyGain(buffer, size)
             val track = audioTrack ?: return
+            if (android.os.SystemClock.elapsedRealtime() < silencedUntilMs) {
+                // Paused by the driver: what the phone still sends is not played.
+                lastWriteMs = android.os.SystemClock.elapsedRealtime()
+                return
+            }
             val up = upsampler
             val result = if (up != null) {
                 val bytes = upsample(buffer, size, up)
@@ -659,6 +664,23 @@ class AudioTrackWrapper(
             AppLog.w("AudioTrackWrapper: flush for track change failed: ${e.message}")
         }
     }
+
+    @Volatile private var silencedUntilMs = 0L
+
+    /**
+     * Pause heard at once: some phones and players keep sending the music for several seconds after
+     * a pause (a fade, or a slow stop), heard as a ~4 s delay. That audio is dropped until [ms] have
+     * passed, the stream stops, or [unsilence] is called for play.
+     */
+    fun silenceFor(ms: Long) {
+        silencedUntilMs = android.os.SystemClock.elapsedRealtime() + ms
+    }
+
+    fun unsilence() {
+        silencedUntilMs = 0L
+    }
+
+    fun isSilenced(): Boolean = android.os.SystemClock.elapsedRealtime() < silencedUntilMs
 
     /** The phone is still sending this stream (audio written in the last few hundred ms). */
     fun isReceivingAudio(): Boolean =
