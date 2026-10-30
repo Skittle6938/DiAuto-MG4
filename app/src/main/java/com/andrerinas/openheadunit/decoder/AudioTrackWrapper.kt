@@ -131,6 +131,13 @@ class AudioTrackWrapper(
     @Volatile private var lastWriteMs = 0L
 
 
+    /** The voice as the phone sent it, kept to compare with what the speakers play. */
+    private val voiceCapture: VoiceCapture? =
+        if (!isAac && sampleRateInHz == 16_000 && (channelId == com.andrerinas.openheadunit.aap.protocol.Channel.ID_AU1 ||
+                channelId == com.andrerinas.openheadunit.aap.protocol.Channel.ID_AU2))
+            VoiceCapture.open(com.andrerinas.openheadunit.aap.protocol.Channel.name(channelId), sampleRateInHz, channelCount)
+        else null
+
     init {
         this.name = "AudioPlaybackThread"
         val plan = if (mixer == null && mediaBufferMillis > 0) {
@@ -576,6 +583,7 @@ class AudioTrackWrapper(
             return
         }
 
+        voiceCapture?.add(buffer, offset, size)
         var data: ByteArray? = null
         try {
             data = obtainAudioBuffer(size)
@@ -629,6 +637,7 @@ class AudioTrackWrapper(
     }
 
     private fun cleanup() {
+        voiceCapture?.close()
         drainQueuedAudio()
         audioBufferPool.clear()
 
