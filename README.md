@@ -10,6 +10,12 @@ can plan your charging stops.
 > [EVHardware](https://github.com/fatihdonmezdev/MG4ABRP) library. For Apple CarPlay, use
 > **DiPlay-MG4** instead (do not run both at once).
 
+> [!WARNING]
+> **SWI68 R46 firmware: wireless Android Auto cannot work.** Its Bluetooth only allows one app
+> connection at a time, so the phone shows "connecting to Android Auto" and nothing happens. This is
+> a bug in the car's firmware that DiAuto cannot work around: ask your dealer to update the car to
+> **SWI68 R63** or later, where it works.
+
 <p align="center"><img src="docs/screenshots/tutorial_1.png" width="800" alt="DiAuto first-start tutorial"></p>
 
 ## What it does
