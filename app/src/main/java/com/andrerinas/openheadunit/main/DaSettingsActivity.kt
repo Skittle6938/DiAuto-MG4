@@ -147,21 +147,19 @@ class DaSettingsActivity : BaseActivity() {
         wifiChannelRow()
     }
 
-    /** Auto shows the channel in use, greyed, beside it. */
+    /** In Auto, the channel in use is shown greyed after the row's title. */
     private fun wifiChannelRow() {
         val channels = listOf(0) + com.andrerinas.openheadunit.utils.WifiChannelPicker.CHANNELS
-        val auto = getString(R.string.dset_wifi_channel_auto)
-        val autoLabel: CharSequence = if (settings.wifiChannel == 0) {
+        val title = getString(R.string.dset_wifi_channel)
+        val titleText: CharSequence = if (settings.wifiChannel == 0) {
             val current = com.andrerinas.openheadunit.utils.WifiChannelPicker.configuredChannel(this).toString()
-            android.text.SpannableString("$auto  $current").apply {
-                // Auto is the selected (light) button here: its dark text, faded, reads as grey.
-                setSpan(android.text.style.ForegroundColorSpan(androidx.core.graphics.ColorUtils.setAlphaComponent(
-                    ContextCompat.getColor(this@DaSettingsActivity, R.color.da_background), 0x8C)),
-                    auto.length, length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            android.text.SpannableString("$title  $current").apply {
+                setSpan(android.text.style.ForegroundColorSpan(ContextCompat.getColor(this@DaSettingsActivity, R.color.da_muted)),
+                    title.length, length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
-        } else auto
-        row(R.string.dset_wifi_channel, R.string.dset_wifi_channel_summary,
-            choices(listOf(autoLabel) + channels.drop(1).map { it.toString() }, channels.indexOf(settings.wifiChannel)) {
+        } else title
+        rowText(titleText, getString(R.string.dset_wifi_channel_summary),
+            choices(listOf(getString(R.string.dset_wifi_channel_auto)) + channels.drop(1).map { it.toString() }, channels.indexOf(settings.wifiChannel)) {
                 settings.wifiChannel = channels[it]
                 // Applied now when no phone is on the access point, else at its next start.
                 if (!App.provide(this).commManager.isConnected) {
@@ -449,7 +447,7 @@ class DaSettingsActivity : BaseActivity() {
 
     private fun row(title: Int, summary: Int, control: View) = rowText(getString(title), getString(summary), control)
 
-    private fun rowText(title: String, summary: String, control: View) {
+    private fun rowText(title: CharSequence, summary: String, control: View) {
         val v = layoutInflater.inflate(R.layout.da_settings_row, list, false)
         v.findViewById<TextView>(R.id.row_title).text = title
         v.findViewById<TextView>(R.id.row_summary).apply {
