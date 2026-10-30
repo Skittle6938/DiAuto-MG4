@@ -279,7 +279,7 @@ class Settings(private val context: Context) {
 
     /** Prompts and the assistant turned down by this many dB (0, 3 or 6) to leave headroom. */
     var voiceHeadroomDb: Int
-        get() = prefs.getInt("voice-headroom-db", 0).coerceIn(0, 6)
+        get() = prefs.getInt("voice-headroom-db", 6).coerceIn(0, 6)
         set(value) { prefs.edit().putInt("voice-headroom-db", value.coerceIn(0, 6)).apply() }
 
     /** The first-start tutorial was shown (or skipped). */

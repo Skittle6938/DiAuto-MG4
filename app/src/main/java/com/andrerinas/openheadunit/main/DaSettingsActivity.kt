@@ -200,8 +200,10 @@ class DaSettingsActivity : BaseActivity() {
         })
         // On its own channel the voice can be cleaned up instead (from the next prompt on).
         if (settings.separateAudioStreams || settings.musicViaBluetooth) {
+            note(R.string.dset_voice_experimental)
             row(R.string.dset_voice_enhance, R.string.dset_voice_enhance_summary,
-                choices(listOf(getString(R.string.dset_voice_enhance_standard), "C", "C+", "D"), settings.voiceEnhancement) {
+                choices(listOf(R.string.dset_voice_enhance_standard, R.string.dset_voice_enhance_light,
+                    R.string.dset_voice_enhance_strong, R.string.dset_voice_enhance_neural).map { getString(it) }, settings.voiceEnhancement) {
                     settings.voiceEnhancement = it
                 })
             row(R.string.dset_voice_clarity, R.string.dset_voice_clarity_summary, yesNo(settings.voiceClarity) {
@@ -443,6 +445,16 @@ class DaSettingsActivity : BaseActivity() {
     /** The phone reads this setting when it connects: ask to reconnect if a session is running. */
     private fun appliesOnReconnect() {
         if (App.provide(this).commManager.isConnected) reconnectNeeded = true
+    }
+
+    /** A line of explanation between rows. */
+    private fun note(text: Int) {
+        list.addView(TextView(this).apply {
+            this.text = getString(text)
+            textSize = 19f
+            setTextColor(ContextCompat.getColor(context, R.color.da_muted))
+            setPadding(dp(8), dp(20), dp(8), dp(4))
+        })
     }
 
     private fun row(title: Int, summary: Int, control: View) = rowText(getString(title), getString(summary), control)

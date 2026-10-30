@@ -1,3 +1,10 @@
+# DiAuto MG4+ 2.2.1-beta14
+
+- The car's own call window no longer covers Android Auto's during a call: DiAuto now tells the car's phone app that the Android Auto screen is showing and which phone runs it, as the stock Android Auto app does. Calls still go through the car's Bluetooth hands-free.
+- New *Settings → Connection → Wi-Fi channel*: Auto, 36, 40, 44 or 48 for the car's access point (it was always on 36, the busiest channel). Auto picks the least crowded one from the scan results the car already has, without slowing the connection, and only when the access point starts. The channel in use is shown next to the setting.
+- Experimental *Settings → Sound → Voice treble*, for prompts and the assistant with separate audio streams: recreates the treble the phone cuts off (light or strong exciter, or Opus 1.6's neural bandwidth extension). Feedback on which setting sounds best is welcome on GitHub.
+- Voice headroom is now -6 dB by default (for those who never changed it).
+
 # DiAuto MG4+ 2.2.1-beta11
 
 - Two settings for prompts and the assistant with separate audio streams (*Settings → Sound*), both off by default and applied from the next prompt: **voice clarity** (removes the low rumble below 150 Hz and lifts consonants around 3 kHz) and **voice headroom** (0, -3 or -6 dB, so the car's own processing does not saturate). Both are plain filters and gains, with no distortion of their own.

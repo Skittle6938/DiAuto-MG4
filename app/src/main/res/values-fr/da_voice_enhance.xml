@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="dset_voice_enhance">Aigus de la voix (test)</string>
-    <string name="dset_voice_enhance_summary">Recrée les aigus que le téléphone coupe. C et C+ : exciteur léger et fort. D : réseau de neurones Opus. Dès la prochaine annonce.</string>
-    <string name="dset_voice_enhance_standard">Non</string>
-</resources>

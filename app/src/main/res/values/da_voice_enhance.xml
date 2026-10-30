@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="dset_voice_enhance">Voice treble (test)</string>
-    <string name="dset_voice_enhance_summary">Recreates the treble the phone cuts off. C and C+: light and strong exciter. D: Opus neural network. From the next prompt.</string>
-    <string name="dset_voice_enhance_standard">Off</string>
-</resources>
