@@ -97,7 +97,8 @@ public final class RelayState {
             prefs.edit().putBoolean("active", active).putString("name", name).putString("mac", mac)
                     .putString("serial", serial).apply();
         }
-        Log.i(TAG, "DiAuto session " + (active ? "started" : "ended") + " (" + name + ")");
+        // No phone name: it often carries its owner's name, and this line ends up in shared logs.
+        Log.i(TAG, "DiAuto session " + (active ? "started" : "ended"));
         if (!active) {
             pairedMac = null;
             if (!changed) return;

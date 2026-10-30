@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.1-beta15
+
+- The exported log also includes the car's own lines about the Android Auto session and calls (its phone app, Bluetooth settings, rui), to diagnose cases like the car's call window showing over Android Auto. Bluetooth addresses, IP addresses, phone numbers, contact names and the phone's name are removed.
+
 # DiAuto MG4+ 2.2.1-beta14
 
 - The car's own call window no longer covers Android Auto's during a call: DiAuto now tells the car's phone app that the Android Auto screen is showing and which phone runs it, as the stock Android Auto app does. Calls still go through the car's Bluetooth hands-free.
