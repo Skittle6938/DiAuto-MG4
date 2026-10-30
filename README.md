@@ -51,7 +51,8 @@ internet over Bluetooth is not possible on the MG4: its Bluetooth stack has no n
   changed in *Settings → Car*, with a button to go back to automatic.
 - **Battery preheating before a charging stop** (off by default): when the next stop on the Maps
   route is a charger, DiAuto turns battery heating on a set time before you arrive (30 min by
-  default, 5 to 60 min) and turns it off again if the route changes.
+  default, 5 to 60 min) and turns it off again if the route changes. Offered on the SWI69 and
+  SWI131 firmwares, where the battery heating switch is verified.
 
 <p align="center"><img src="docs/screenshots/settings_car.png" width="800" alt="Settings, Car tab"></p>
 
