@@ -130,6 +130,26 @@ class AudioTrackWrapper(
     @Volatile private var mediaPlaybackStarted: Boolean = true
     @Volatile private var lastWriteMs = 0L
 
+    /** 16 kHz mono voice played straight to a track is upsampled here rather than by the car. */
+    private val upsampler: Upsampler3x? =
+        if (mixer == null && !isAac && sampleRateInHz == 16_000 && channelCount == 1 && bitDepth == 16) Upsampler3x() else null
+    private var upsampleIn = ShortArray(0)
+    private var upsampleOut = ShortArray(0)
+    private var upsampleBytes = ByteArray(0)
+
+    /** The chunk at 48 kHz, in a reused buffer; returns its size in bytes. */
+    private fun upsample(buffer: ByteArray, size: Int, upsampler: Upsampler3x): Int {
+        val samples = size / 2
+        if (upsampleIn.size < samples) upsampleIn = ShortArray(samples)
+        if (upsampleOut.size < samples * 3) upsampleOut = ShortArray(samples * 3)
+        if (upsampleBytes.size < samples * 6) upsampleBytes = ByteArray(samples * 6)
+        java.nio.ByteBuffer.wrap(buffer, 0, samples * 2).order(java.nio.ByteOrder.LITTLE_ENDIAN)
+            .asShortBuffer().get(upsampleIn, 0, samples)
+        val produced = upsampler.process(upsampleIn, samples, upsampleOut)
+        java.nio.ByteBuffer.wrap(upsampleBytes, 0, produced * 2).order(java.nio.ByteOrder.LITTLE_ENDIAN)
+            .asShortBuffer().put(upsampleOut, 0, produced)
+        return produced * 2
+    }
 
     /** The voice as the phone sent it, kept to compare with what the speakers play. */
     private val voiceCapture: VoiceCapture? =
@@ -160,7 +180,7 @@ class AudioTrackWrapper(
         audioTrack = if (mixer == null) {
             createAudioTrack(
                 stream,
-                sampleRateInHz,
+                if (upsampler != null) 48_000 else sampleRateInHz,
                 bitDepth,
                 channelCount,
                 audioLatencyMultiplier,
@@ -308,11 +328,15 @@ class AudioTrackWrapper(
             mixer.feed(channelId, buffer, 0, size)
             framesWritten += size / bytesPerFrame
         } else {
-            // Voice on its own channel is written exactly as the phone sent it: never boosted
-            // (AapAudio keeps its gain at 1) nor resampled; the car's audio system takes 16 kHz.
             applyGain(buffer, size)
             val track = audioTrack ?: return
-            val result = track.write(buffer, 0, size)
+            val up = upsampler
+            val result = if (up != null) {
+                val bytes = upsample(buffer, size, up)
+                track.write(upsampleBytes, 0, bytes)
+            } else {
+                track.write(buffer, 0, size)
+            }
             if (result > 0) {
                 lastWriteMs = android.os.SystemClock.elapsedRealtime()
                 framesWritten += result / bytesPerFrame
@@ -504,7 +528,16 @@ class AudioTrackWrapper(
                         .setEncoding(dataFormat)
                         .build()
                 )
-                .setBufferSizeInBytes(bufferSize)
+                // As the car's own Android Auto plays prompts: 48 kHz (converted by this wrapper)
+                // on a normal mixer track with a ~210 ms buffer. A small buffer became a fast
+                // track, which the car resampled from 16 kHz with its basic converter (measured
+                // 2026-10-30: AllGo 48 kHz, flags 0, 10240 frames; DiAuto 16 kHz, fast, 3104).
+                .setBufferSizeInBytes(maxOf(bufferSize, sampleRateInHz * channelCount * 2 * 210 / 1000))
+                .apply {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        setPerformanceMode(AudioTrack.PERFORMANCE_MODE_POWER_SAVING)
+                    }
+                }
                 .setTransferMode(AudioTrack.MODE_STREAM)
                 .build()
         }
