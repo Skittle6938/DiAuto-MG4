@@ -174,6 +174,17 @@ class DaSettingsActivity : BaseActivity() {
             appliesOnReconnect()
             showTab(selectedTab)
         })
+        // On its own channel the voice can be cleaned up instead (from the next prompt on).
+        if (settings.separateAudioStreams || settings.musicViaBluetooth) {
+            row(R.string.dset_voice_clarity, R.string.dset_voice_clarity_summary, yesNo(settings.voiceClarity) {
+                settings.voiceClarity = it
+            })
+            val pads = listOf(0, 3, 6)
+            row(R.string.dset_voice_headroom, R.string.dset_voice_headroom_summary,
+                choices(listOf("0 dB", "-3 dB", "-6 dB"), pads.indexOf(settings.voiceHeadroomDb).coerceAtLeast(0)) {
+                    settings.voiceHeadroomDb = pads[it]
+                })
+        }
         // Only mixed with the music can the voice be boosted (see AapAudio).
         if (!settings.separateAudioStreams && !settings.musicViaBluetooth) {
             row(R.string.dset_voice_volume, R.string.dset_voice_volume_summary, level(settings.assistantVolumeOffset) {

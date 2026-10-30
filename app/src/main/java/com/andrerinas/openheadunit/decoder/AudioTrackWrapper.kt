@@ -133,6 +133,11 @@ class AudioTrackWrapper(
     /** 16 kHz mono voice played straight to a track is upsampled here rather than by the car. */
     private val upsampler: Upsampler3x? =
         if (mixer == null && !isAac && sampleRateInHz == 16_000 && channelCount == 1 && bitDepth == 16) Upsampler3x() else null
+    /** Optional clarity filter and headroom for that voice, read when the prompt starts. */
+    private val voiceClarity: VoiceClarity? = upsampler?.let {
+        val s = com.andrerinas.openheadunit.App.instance?.let { app -> com.andrerinas.openheadunit.App.provide(app).settings }
+        s?.let { VoiceClarity(16_000, it.voiceClarity, it.voiceHeadroomDb) }?.takeIf { it.active }
+    }
     private var upsampleIn = ShortArray(0)
     private var upsampleOut = ShortArray(0)
     private var upsampleBytes = ByteArray(0)
@@ -336,6 +341,7 @@ class AudioTrackWrapper(
                 return
             }
             val up = upsampler
+            voiceClarity?.process(buffer, size)
             val result = if (up != null) {
                 val bytes = upsample(buffer, size, up)
                 track.write(upsampleBytes, 0, bytes)

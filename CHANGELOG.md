@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.1-beta11
+
+- Two settings for prompts and the assistant with separate audio streams (*Settings → Sound*), both off by default and applied from the next prompt: **voice clarity** (removes the low rumble below 150 Hz and lifts consonants around 3 kHz) and **voice headroom** (0, -3 or -6 dB, so the car's own processing does not saturate). Both are plain filters and gains, with no distortion of their own.
+
 # DiAuto MG4+ 2.2.1-beta10
 
 - Pause is heard at once: some phones and players keep sending the music for several seconds after a pause, heard as a ~4 s delay. That audio is now dropped right away (up to 6 s, until you press play).

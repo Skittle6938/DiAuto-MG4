@@ -254,6 +254,16 @@ class Settings(private val context: Context) {
         get() = prefs.getInt("station-restore-delay-s", 60).coerceIn(10, 300)
         set(value) { prefs.edit().putInt("station-restore-delay-s", value.coerceIn(10, 300)).apply() }
 
+    /** Clarity equaliser on prompts and the assistant (separate audio streams). */
+    var voiceClarity: Boolean
+        get() = prefs.getBoolean("voice-clarity", false)
+        set(value) { prefs.edit().putBoolean("voice-clarity", value).apply() }
+
+    /** Prompts and the assistant turned down by this many dB (0, 3 or 6) to leave headroom. */
+    var voiceHeadroomDb: Int
+        get() = prefs.getInt("voice-headroom-db", 0).coerceIn(0, 6)
+        set(value) { prefs.edit().putInt("voice-headroom-db", value.coerceIn(0, 6)).apply() }
+
     /** The first-start tutorial was shown (or skipped). */
     var tutorialShown: Boolean
         get() = prefs.getBoolean("tutorial-shown", false)
