@@ -154,7 +154,9 @@ class DaSettingsActivity : BaseActivity() {
         val autoLabel: CharSequence = if (settings.wifiChannel == 0) {
             val current = com.andrerinas.openheadunit.utils.WifiChannelPicker.configuredChannel(this).toString()
             android.text.SpannableString("$auto  $current").apply {
-                setSpan(android.text.style.ForegroundColorSpan(ContextCompat.getColor(this@DaSettingsActivity, R.color.da_muted)),
+                // Auto is the selected (light) button here: its dark text, faded, reads as grey.
+                setSpan(android.text.style.ForegroundColorSpan(androidx.core.graphics.ColorUtils.setAlphaComponent(
+                    ContextCompat.getColor(this@DaSettingsActivity, R.color.da_background), 0x8C)),
                     auto.length, length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
         } else auto

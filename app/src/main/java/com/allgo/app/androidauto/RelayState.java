@@ -56,12 +56,14 @@ public final class RelayState {
     /** rui asked for the session after our last announce: it knows the phone is there. */
     private static boolean ruiAcked;
     private static android.content.SharedPreferences prefs;
+    private static android.content.Context appContext;
 
     /** The last state DiAuto sent survives a restart of this process (an update, a kill). */
     public static synchronized void load(android.content.Context context) {
         if (loaded) return;
         loaded = true;
-        prefs = context.getApplicationContext().getSharedPreferences("relay", 0);
+        appContext = context.getApplicationContext();
+        prefs = appContext.getSharedPreferences("relay", 0);
         // Not restored: after a car start DiAuto has not reconnected yet, and a stale "connected"
         // would light the Android Auto tile with no phone. DiAuto repeats it at every track change.
         active = false;
@@ -99,6 +101,7 @@ public final class RelayState {
         if (!active) {
             pairedMac = null;
             if (!changed) return;
+            tellPhoneApp(false);
             for (IBinder cb : sessionCallbacks) callWithDevice(cb, SESSION_CB, TX_SESSION_CLOSED, false);
             for (IBinder cb : deviceCallbacks) callWithDevice(cb, DEVICE_CB, TX_DEVICE_DISCONNECTED, false);
             return;
@@ -150,6 +153,31 @@ public final class RelayState {
         }
         for (IBinder cb : sessionCallbacks) callWithDevice(cb, SESSION_CB, TX_SESSION_STARTED, true);
         sendScreen();
+        tellPhoneApp(true);
+    }
+
+    /**
+     * The car's phone app (BTCall PhoneService) only hides its call window for the phone it was
+     * told runs Android Auto (MODE_COMMAND_ANDROID_AUTO_STATE with that phone's MAC). The stock
+     * launcher sends it from its home screen's Android Auto model, which never runs when another
+     * launcher is the home app: send it here as well.
+     */
+    private static void tellPhoneApp(boolean on) {
+        if (appContext == null) return;
+        try {
+            com.saicmotor.common.CommandParcelable cmd = new com.saicmotor.common.CommandParcelable();
+            cmd.pkg = "com.saicmotor.btphone";
+            cmd.event = 16400; // ModeConstants.MODE_COMMAND_ANDROID_AUTO_STATE
+            cmd.targetState = on ? 1 : 0;
+            cmd.params.putString("btMac", on ? mac : "");
+            android.content.Intent intent = new android.content.Intent();
+            intent.setComponent(new android.content.ComponentName("com.saicmotor.btphone", "com.saicmotor.btphone.service.PhoneService"));
+            intent.putExtra(com.saicmotor.common.CommandParcelable.COMMAND_KEY, cmd);
+            appContext.startService(intent);
+            Log.i(TAG, "Android Auto " + (on ? "on" : "off") + " told to the car's phone app");
+        } catch (Exception e) {
+            Log.w(TAG, "car phone app not told: " + e);
+        }
     }
 
     /** The projection came on screen or left it. */
