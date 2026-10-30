@@ -30,14 +30,13 @@ object ChargeStopPreheatPolicy {
     )
 
     /**
-     * Battery heating (DRVNG_PTC_HEAT, zone 0, read 0 = on) is verified on the A9 SWI69 only, the
-     * SWI131 being the same platform. Other firmwares reach it another way (SWI133 through its
-     * VPM) or may read it the other way round: the option stays off there until someone checks.
+     * Battery heating is DRVNG_PTC_HEAT 0x2140f429 in zone 0 on every MT2712 firmware, written 1 / 2
+     * and read 0 = on, as the cars' own apps do (decompiled SWI69, SWI132, SWI68, SWI133; measured
+     * on an SWI69). Off on a firmware DiAuto does not recognise, where the property may differ
+     * (the A11 platform uses another ID).
      */
-    fun supportedOnThisCar(): Boolean = when (com.evsuite.hardware.FirmwareInfo.getGeneration()) {
-        com.evsuite.hardware.FirmwareInfo.Gen.SWI69, com.evsuite.hardware.FirmwareInfo.Gen.SWI131 -> true
-        else -> false
-    }
+    fun supportedOnThisCar(): Boolean =
+        com.evsuite.hardware.FirmwareInfo.getGeneration() != com.evsuite.hardware.FirmwareInfo.Gen.UNKNOWN
 
     fun isCharger(stop: String?): Boolean {
         if (stop.isNullOrBlank()) return false

@@ -1,6 +1,6 @@
 # DiAuto MG4+ 2.2.1-beta6
 
-- Battery preheating before a charging stop is offered on the SWI69 and SWI131 firmwares only, where the battery heating switch is verified. It is hidden on the other firmwares until it is checked there.
+- Battery preheating before a charging stop drives the battery heating switch exactly as the car's own apps do (zone 0, 1 / 2, read 0 = on), on every MG4 firmware DiAuto recognises; it stays off on an unrecognised one.
 
 # DiAuto MG4+ 2.2.1-beta5
 
