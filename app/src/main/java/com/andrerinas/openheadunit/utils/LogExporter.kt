@@ -194,9 +194,13 @@ object LogExporter {
         }
     }
 
-    /** Car app lines that say how the car sees the Android Auto session (calls, Bluetooth, rui). */
-    private val carAppLine = Regex("A9_Btphone|BootService|DiAutoRelay|CarplayAAPModel")
-    private val carAppTopic = Regex("(?i)androidAuto|aaSwitch|AAScreen|CallingWindow|onCPAA|onAA|disconnectAABt|onSession|DiAutoRelay|HFP state|AUDIO_STATE")
+    /**
+     * Car app lines that say how the car sees the Android Auto session (calls, Bluetooth, rui).
+     * SWI69: phone app A9_Btphone, Settings BootService. SWI68/SWI133: call service BtCall_*
+     * (CpaaManager hides the call screen only while rui reports an Android Auto session).
+     */
+    private val carAppLine = Regex("A9_Btphone|BootService|DiAutoRelay|CarplayAAPModel|BtCall")
+    private val carAppTopic = Regex("(?i)androidAuto|aaSwitch|AAScreen|CallingWindow|onCPAA|onAA|disconnectAABt|onSession|onScreen|onDevice|Device type|connecting|BtCallActivity|DiAutoRelay|HFP state|AUDIO_STATE")
     private val callDetails = Regex("(?i)(number|name)=[^,]*")
     private val digits = Regex("\\+?\\d[\\d ]{6,}\\d")
 
