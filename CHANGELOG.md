@@ -1,3 +1,8 @@
+# DiAuto MG4+ 2.2.1-beta9
+
+- Navigation prompts and the assistant sound like with the car's own Android Auto: measured on the car, it plays them at 48 kHz on a normal track, while DiAuto handed them at 16 kHz on a small buffer that the car turned into a fast track and resampled with its basic converter. DiAuto now converts them to 48 kHz itself with a much sharper filter (flat to 7 kHz, no audible images) and plays them on a normal track. Still no boost with separate audio streams.
+- The last voice prompts are kept as received from the phone (WAV, in OpenHeadunitLogs/voice) to check their quality.
+
 # DiAuto MG4+ 2.2.1-beta6
 
 - Battery preheating before a charging stop drives the battery heating switch exactly as the car's own apps do (zone 0, 1 / 2, read 0 = on), on every MG4 firmware DiAuto recognises; it stays off on an unrecognised one.
