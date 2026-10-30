@@ -36,6 +36,7 @@ class NightModeManager(
     private var isSensorRegistered = false
     private var isObserverRegistered = false
     private var isCarSignalObserverRegistered = false
+    private var isCarSkinObserverRegistered = false
     
     private val handler = Handler(Looper.getMainLooper())
 
@@ -61,6 +62,13 @@ class NightModeManager(
     // Car ILL+ is a binary signal already debounced by the car hardware, so emit
     // immediately instead of going through the 2s sensor-noise debounce.
     private val carSignalObserver = object : ContentObserver(handler) {
+        override fun onChange(selfChange: Boolean) {
+            update(debounce = false)
+        }
+    }
+
+    // The car's own day/night skin (headlights or its night-mode setting): follow it at once.
+    private val carSkinObserver = object : ContentObserver(handler) {
         override fun onChange(selfChange: Boolean) {
             update(debounce = false)
         }
@@ -110,6 +118,10 @@ class NightModeManager(
         if (isCarSignalObserverRegistered) {
             context.contentResolver.unregisterContentObserver(carSignalObserver)
             isCarSignalObserverRegistered = false
+        }
+        if (isCarSkinObserverRegistered) {
+            context.contentResolver.unregisterContentObserver(carSkinObserver)
+            isCarSkinObserverRegistered = false
         }
         handler.removeCallbacks(debounceRunnable)
     }
@@ -179,6 +191,36 @@ class NightModeManager(
                 isCarSignalObserverRegistered = false
             }
         }
+
+        // 4. The car's day/night skin, for Auto on cars that have one
+        if (settings.nightMode == Settings.NightMode.AUTO && carSkinNight(context) != null) {
+            if (!isCarSkinObserverRegistered) {
+                context.contentResolver.registerContentObserver(
+                    SystemSettings.System.getUriFor(CAR_SKIN_KEY), false, carSkinObserver
+                )
+                isCarSkinObserverRegistered = true
+            }
+        } else if (isCarSkinObserverRegistered) {
+            context.contentResolver.unregisterContentObserver(carSkinObserver)
+            isCarSkinObserverRegistered = false
+        }
+    }
+
+    companion object {
+        /**
+         * The MG4's day/night skin, written by the car's CarAdapterService (AutoSkinObserver) from
+         * its night-mode setting and the headlights: 0 = dark, 1 = light. The launcher, top bar
+         * and the stock Android Auto follow it. Read at start too, so a car started with the
+         * lights already on comes up dark.
+         */
+        const val CAR_SKIN_KEY = "SKIN_THEME_CONFIG"
+
+        /** True at night, false by day, null on a head unit without the key. */
+        fun carSkinNight(context: Context): Boolean? = try {
+            SystemSettings.System.getInt(context.contentResolver, CAR_SKIN_KEY) == 0
+        } catch (_: Exception) {
+            null
+        }
     }
 
     // Made public so Service can force an update
@@ -238,7 +280,11 @@ class NightModeManager(
                     isNight = lastEmittedValue ?: false
                 }
             }
-            // Delegate to standard calculator for other modes (Auto, Day, Night, Manual)
+            // Auto follows the car's own day/night skin where there is one.
+            Settings.NightMode.AUTO -> {
+                isNight = carSkinNight(context) ?: nightModeCalculator.current
+            }
+            // Delegate to standard calculator for other modes (Day, Night, Manual)
             else -> {
                 // Ensure calculator has latest settings reference/values
                 isNight = nightModeCalculator.current

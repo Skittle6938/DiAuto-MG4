@@ -21,7 +21,8 @@ class NightMode(private val settings: Settings, val hasGPSLocation: Boolean) {
     var current: Boolean = false
         get()  {
             return when (settings.nightMode){
-                Settings.NightMode.AUTO -> calculator.current
+                Settings.NightMode.AUTO -> com.andrerinas.openheadunit.App.instance
+                    ?.let { NightModeManager.carSkinNight(it) } ?: calculator.current
                 Settings.NightMode.DAY -> false
                 Settings.NightMode.NIGHT -> true
                 Settings.NightMode.MANUAL_TIME -> {
