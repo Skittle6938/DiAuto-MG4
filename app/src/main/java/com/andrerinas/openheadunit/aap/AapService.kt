@@ -1407,6 +1407,9 @@ class AapService : Service(), UsbReceiver.Listener {
     private fun onDisconnected(state: CommManager.ConnectionState.Disconnected) {
         AllgoRelayNotifier.sessionEnded(this)
         com.andrerinas.openheadunit.hud.SaicNavigationOutputs.stop()
+        // Fresh scan results for the next automatic channel choice; never during a session, where a
+        // scan takes the radio off the access point's channel.
+        com.andrerinas.openheadunit.utils.WifiChannelPicker.scanSoon(this)
         // Give the car Wi-Fi back once wireless Android Auto has stayed down for a while.
         stationRestoreJob?.cancel()
         stationRestoreJob = serviceScope.launch(Dispatchers.IO) {

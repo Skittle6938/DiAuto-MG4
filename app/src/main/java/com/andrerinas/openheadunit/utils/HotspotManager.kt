@@ -110,7 +110,8 @@ object HotspotManager {
         val stored = SoftApConfigCompat.legacyBandAndChannel(context)
         AppLog.i("HotspotManager: stored AP config apBand=${stored?.first} apChannel=${stored?.second}")
         val configIs5Ghz = stored != null &&
-            stored.first == SoftApBandPolicy.legacyApBand(ApBand.BAND_5GHZ) && stored.second == 0
+            stored.first == SoftApBandPolicy.legacyApBand(ApBand.BAND_5GHZ) &&
+            (stored.second == 0 || stored.second in WifiChannelPicker.CHANNELS)
         if (configIs5Ghz && !pausedStation) return
         if (!isApUp(context)) return // the next start requests 5 GHz with the channel cleared
         AppLog.i(

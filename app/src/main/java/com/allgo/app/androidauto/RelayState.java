@@ -19,6 +19,14 @@ public final class RelayState {
     private static final int TX_SESSION_CLOSED = 2;
     /** IAndroidAutoSessionCallback.onSessionBTPairingRequest(String mac): rui stores the phone's MAC. */
     private static final int TX_BT_PAIRING_REQUEST = 10;
+    /**
+     * IAndroidAutoSessionCallback.onScreenStarted() / onScreenStopped(): rui passes them on as the
+     * Android Auto screen state, and the car's phone app (BTCall) skips its own call window while
+     * that screen is shown for the phone whose MAC rui was given (PhonePresenter: mAndroidAutoOn
+     * && AAScreenState). Without them the car's call banner covered Android Auto's.
+     */
+    private static final int TX_SCREEN_STARTED = 8;
+    private static final int TX_SCREEN_STOPPED = 9;
     /** The launcher can lose the session (after a car start, an AA reconnect): say it again this often. */
     private static final long REANNOUNCE_MS = 30_000L;
     private static final long PAIRING_DELAY_MS = 1500L;
@@ -32,6 +40,8 @@ public final class RelayState {
     private static final int SESSION_STARTED = 2;
 
     private static boolean active;
+    /** DiAuto's projection is on screen. */
+    private static boolean screenShown;
     private static String name = "Android Auto";
     private static String mac = RuiRepair.validMac(null);
     /** rui knows DiAuto by this USB serial: it stays the same when the phone's MAC changes. */
@@ -139,6 +149,31 @@ public final class RelayState {
             }
         }
         for (IBinder cb : sessionCallbacks) callWithDevice(cb, SESSION_CB, TX_SESSION_STARTED, true);
+        sendScreen();
+    }
+
+    /** The projection came on screen or left it. */
+    public static synchronized void screen(boolean shown) {
+        if (shown == screenShown) return;
+        screenShown = shown;
+        if (active) sendScreen();
+    }
+
+    /** rui only has a device to attach the screen state to after "session started". */
+    private static void sendScreen() {
+        if (!active || sessionCallbacks.isEmpty()) return;
+        Log.i(TAG, "screen " + (screenShown ? "started" : "stopped") + " to rui");
+        for (IBinder cb : sessionCallbacks) {
+            Parcel data = Parcel.obtain();
+            try {
+                data.writeInterfaceToken(SESSION_CB);
+                cb.transact(screenShown ? TX_SCREEN_STARTED : TX_SCREEN_STOPPED, data, null, IBinder.FLAG_ONEWAY);
+            } catch (Exception e) {
+                Log.w(TAG, "screen state to rui failed: " + e);
+            } finally {
+                data.recycle();
+            }
+        }
     }
 
     /** rui asked to start (or resume) the session: answer as AllGo does once it has started. */
@@ -147,6 +182,7 @@ public final class RelayState {
         ruiAcked = true;
         if (!active) return;
         for (IBinder cb : sessionCallbacks) callWithDevice(cb, SESSION_CB, TX_SESSION_STARTED, true);
+        sendScreen();
         schedulePairing();
     }
 

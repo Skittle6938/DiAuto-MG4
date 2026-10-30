@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dset_wifi_channel">Canal Wi-Fi</string>
+    <string name="dset_wifi_channel_summary">Canal du point d\'accès de la voiture. Auto choisit le moins encombré au démarrage du point d\'accès, jamais pendant une connexion.</string>
+    <string name="dset_wifi_channel_auto">Auto</string>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dset_wifi_channel">Wi-Fi channel</string>
+    <string name="dset_wifi_channel_summary">Channel of the car\'s access point. Auto picks the least crowded one when the access point starts, never during a connection.</string>
+    <string name="dset_wifi_channel_auto">Auto</string>
+</resources>

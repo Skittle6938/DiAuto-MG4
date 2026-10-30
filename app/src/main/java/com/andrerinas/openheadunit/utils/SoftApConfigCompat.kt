@@ -153,9 +153,9 @@ object SoftApConfigCompat {
             val channelField = config.javaClass.getField("apChannel")
             AppLog.i("SoftApConfigCompat: stored AP config before: apBand=${field.getInt(config)} apChannel=${channelField.getInt(config)}")
             field.setInt(config, SoftApBandPolicy.legacyApBand(band))
-            // Android 9 only picks a channel when apChannel is 0; a stored 2.4 GHz channel (7 on
-            // the MG4) otherwise keeps the AP on 2.4 GHz whatever apBand says.
-            channelField.setInt(config, 0)
+            // A stored 2.4 GHz channel (7 on the MG4) keeps the AP on 2.4 GHz whatever apBand says:
+            // 0 (the framework picks) for 2.4 GHz, one of the 5 GHz channels 36-48 otherwise.
+            channelField.setInt(config, if (band == ApBand.BAND_5GHZ) WifiChannelPicker.channelForNextStart(context) else 0)
             val applied = wifiManager.javaClass.getMethod(
                 "setWifiApConfiguration", android.net.wifi.WifiConfiguration::class.java
             ).invoke(wifiManager, config) as? Boolean ?: false

@@ -963,6 +963,7 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
     override fun onPause() {
         isForeground = false
         AppLog.i("AapProjectionActivity: onPause")
+        com.allgo.app.androidauto.RelayState.screen(false)
         super.onPause()
         // Clear any activity-local fullscreen override when leaving the Activity so
         // the stored settings remain authoritative on next resume.
@@ -996,6 +997,7 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
         super.onResume()
         isForeground = true
         AppLog.i("AapProjectionActivity: onResume")
+        com.allgo.app.androidauto.RelayState.screen(true)
         // Show the one-time rename notice even here, on top of an active projection.
         applyStickyOrientation()
         watchdogHandler.postDelayed(watchdogRunnable, 2000)

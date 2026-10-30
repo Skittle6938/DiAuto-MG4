@@ -144,6 +144,30 @@ class DaSettingsActivity : BaseActivity() {
             choices(listOf("10 s", "30 s", "1 min", "2 min", "5 min"), delay) {
                 settings.stationRestoreDelaySeconds = delays[it]
             })
+        wifiChannelRow()
+    }
+
+    /** Auto shows the channel in use, greyed, beside it. */
+    private fun wifiChannelRow() {
+        val channels = listOf(0) + com.andrerinas.openheadunit.utils.WifiChannelPicker.CHANNELS
+        val auto = getString(R.string.dset_wifi_channel_auto)
+        val autoLabel: CharSequence = if (settings.wifiChannel == 0) {
+            val current = com.andrerinas.openheadunit.utils.WifiChannelPicker.configuredChannel(this).toString()
+            android.text.SpannableString("$auto  $current").apply {
+                setSpan(android.text.style.ForegroundColorSpan(ContextCompat.getColor(this@DaSettingsActivity, R.color.da_muted)),
+                    auto.length, length, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+        } else auto
+        row(R.string.dset_wifi_channel, R.string.dset_wifi_channel_summary,
+            choices(listOf(autoLabel) + channels.drop(1).map { it.toString() }, channels.indexOf(settings.wifiChannel)) {
+                settings.wifiChannel = channels[it]
+                // Applied now when no phone is on the access point, else at its next start.
+                if (!App.provide(this).commManager.isConnected) {
+                    val app = applicationContext
+                    Thread { com.andrerinas.openheadunit.utils.HotspotManager.restart(app) }.start()
+                }
+                showTab(selectedTab)
+            })
     }
 
     private fun displayTab() {
@@ -437,7 +461,7 @@ class DaSettingsActivity : BaseActivity() {
     private fun yesNo(on: Boolean, onChange: (Boolean) -> Unit): View =
         choices(listOf(getString(R.string.dset_no), getString(R.string.dset_yes)), if (on) 1 else 0) { onChange(it == 1) }
 
-    private fun choices(labels: List<String>, selected: Int, onChange: (Int) -> Unit): View {
+    private fun choices(labels: List<CharSequence>, selected: Int, onChange: (Int) -> Unit): View {
         val accent = ContextCompat.getColor(this, R.color.da_accent)
         val surface = ContextCompat.getColor(this, R.color.da_surface)
         val dark = ContextCompat.getColor(this, R.color.da_background)
