@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.1-beta16
+
+- The exported log also keeps the call service lines of SWI68 / SWI133 cars (they use other names than on SWI69), to diagnose the car's call window showing over Android Auto.
+
 # DiAuto MG4+ 2.2.1-beta15
 
 - The exported log also includes the car's own lines about the Android Auto session and calls (its phone app, Bluetooth settings, rui), to diagnose cases like the car's call window showing over Android Auto. Bluetooth addresses, IP addresses, phone numbers, contact names and the phone's name are removed.
