@@ -259,6 +259,14 @@ class Settings(private val context: Context) {
         get() = prefs.getBoolean("voice-clarity", false)
         set(value) { prefs.edit().putBoolean("voice-clarity", value).apply() }
 
+    /**
+     * How the 16 kHz voice is brought to 48 kHz: 0 standard filter, 1 light exciter, 2 strong
+     * exciter, 3 Opus neural bandwidth extension (see VoiceUpsampler).
+     */
+    var voiceEnhancement: Int
+        get() = prefs.getInt("voice-enhancement", 0).coerceIn(0, 3)
+        set(value) { prefs.edit().putInt("voice-enhancement", value.coerceIn(0, 3)).apply() }
+
     /** Prompts and the assistant turned down by this many dB (0, 3 or 6) to leave headroom. */
     var voiceHeadroomDb: Int
         get() = prefs.getInt("voice-headroom-db", 0).coerceIn(0, 6)

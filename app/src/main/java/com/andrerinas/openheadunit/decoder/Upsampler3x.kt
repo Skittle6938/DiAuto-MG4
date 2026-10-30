@@ -13,12 +13,12 @@ import kotlin.math.sin
  * linearly, and a 16 kHz AudioTrack left the job to the car's resampler. Either way the prompts
  * sounded harsh and metallic. Keeps its history across calls, so chunk joins are seamless.
  */
-internal class Upsampler3x {
+internal class Upsampler3x : VoiceUpsampler {
 
     private val history = FloatArray(TAPS_PER_PHASE)
 
     /** Writes `count * 3` samples into [out] and returns that number. */
-    fun process(input: ShortArray, count: Int, out: ShortArray): Int {
+    override fun process(input: ShortArray, count: Int, out: ShortArray): Int {
         var o = 0
         for (i in 0 until count) {
             // Shift the newest sample in; history[0] is x[k].
@@ -34,7 +34,7 @@ internal class Upsampler3x {
         return o
     }
 
-    fun reset() = history.fill(0f)
+    override fun reset() = history.fill(0f)
 
     companion object {
         private const val TAPS_PER_PHASE = 64

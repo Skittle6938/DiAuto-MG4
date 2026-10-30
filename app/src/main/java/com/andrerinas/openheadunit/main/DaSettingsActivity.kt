@@ -176,6 +176,10 @@ class DaSettingsActivity : BaseActivity() {
         })
         // On its own channel the voice can be cleaned up instead (from the next prompt on).
         if (settings.separateAudioStreams || settings.musicViaBluetooth) {
+            row(R.string.dset_voice_enhance, R.string.dset_voice_enhance_summary,
+                choices(listOf(getString(R.string.dset_voice_enhance_standard), "C", "C+", "D"), settings.voiceEnhancement) {
+                    settings.voiceEnhancement = it
+                })
             row(R.string.dset_voice_clarity, R.string.dset_voice_clarity_summary, yesNo(settings.voiceClarity) {
                 settings.voiceClarity = it
             })

@@ -131,23 +131,26 @@ class AudioTrackWrapper(
     @Volatile private var lastWriteMs = 0L
 
     /** 16 kHz mono voice played straight to a track is upsampled here rather than by the car. */
-    private val upsampler: Upsampler3x? =
-        if (mixer == null && !isAac && sampleRateInHz == 16_000 && channelCount == 1 && bitDepth == 16) Upsampler3x() else null
+    private val voiceSettings = if (mixer == null && !isAac && sampleRateInHz == 16_000 && channelCount == 1 && bitDepth == 16)
+        com.andrerinas.openheadunit.App.instance?.let { app -> com.andrerinas.openheadunit.App.provide(app).settings } else null
+    private val upsampler: VoiceUpsampler? =
+        if (mixer == null && !isAac && sampleRateInHz == 16_000 && channelCount == 1 && bitDepth == 16)
+            VoiceUpsampler.create(voiceSettings?.voiceEnhancement ?: 0) else null
     /** Optional clarity filter and headroom for that voice, read when the prompt starts. */
-    private val voiceClarity: VoiceClarity? = upsampler?.let {
-        val s = com.andrerinas.openheadunit.App.instance?.let { app -> com.andrerinas.openheadunit.App.provide(app).settings }
-        s?.let { VoiceClarity(16_000, it.voiceClarity, it.voiceHeadroomDb) }?.takeIf { it.active }
-    }
+    private val voiceClarity: VoiceClarity? = voiceSettings?.let {
+        VoiceClarity(16_000, it.voiceClarity, it.voiceHeadroomDb)
+    }?.takeIf { upsampler != null && it.active }
     private var upsampleIn = ShortArray(0)
     private var upsampleOut = ShortArray(0)
     private var upsampleBytes = ByteArray(0)
 
     /** The chunk at 48 kHz, in a reused buffer; returns its size in bytes. */
-    private fun upsample(buffer: ByteArray, size: Int, upsampler: Upsampler3x): Int {
+    private fun upsample(buffer: ByteArray, size: Int, upsampler: VoiceUpsampler): Int {
         val samples = size / 2
         if (upsampleIn.size < samples) upsampleIn = ShortArray(samples)
-        if (upsampleOut.size < samples * 3) upsampleOut = ShortArray(samples * 3)
-        if (upsampleBytes.size < samples * 6) upsampleBytes = ByteArray(samples * 6)
+        val room = samples * 3 + VoiceUpsampler.MAX_EXTRA
+        if (upsampleOut.size < room) upsampleOut = ShortArray(room)
+        if (upsampleBytes.size < room * 2) upsampleBytes = ByteArray(room * 2)
         java.nio.ByteBuffer.wrap(buffer, 0, samples * 2).order(java.nio.ByteOrder.LITTLE_ENDIAN)
             .asShortBuffer().get(upsampleIn, 0, samples)
         val produced = upsampler.process(upsampleIn, samples, upsampleOut)
