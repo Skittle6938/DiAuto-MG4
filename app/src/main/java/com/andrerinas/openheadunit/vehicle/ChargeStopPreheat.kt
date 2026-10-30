@@ -32,8 +32,7 @@ object ChargeStopPreheatPolicy {
     /**
      * Battery heating is DRVNG_PTC_HEAT 0x2140f429 in zone 0 on every MT2712 firmware, written 1 / 2
      * and read 0 = on, as the cars' own apps do (decompiled SWI69, SWI132, SWI68, SWI133; measured
-     * on an SWI69). Off on a firmware DiAuto does not recognise, where the property may differ
-     * (the A11 platform uses another ID).
+     * on an SWI69). Off on a firmware DiAuto does not recognise, where the property may differ.
      */
     fun supportedOnThisCar(): Boolean =
         com.evsuite.hardware.FirmwareInfo.getGeneration() != com.evsuite.hardware.FirmwareInfo.Gen.UNKNOWN
