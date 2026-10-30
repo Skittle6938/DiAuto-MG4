@@ -29,6 +29,16 @@ object ChargeStopPreheatPolicy {
         "iberdrola", "wenea", "tesla destination",
     )
 
+    /**
+     * Battery heating (DRVNG_PTC_HEAT, zone 0, read 0 = on) is verified on the A9 SWI69 only, the
+     * SWI131 being the same platform. Other firmwares reach it another way (SWI133 through its
+     * VPM) or may read it the other way round: the option stays off there until someone checks.
+     */
+    fun supportedOnThisCar(): Boolean = when (com.evsuite.hardware.FirmwareInfo.getGeneration()) {
+        com.evsuite.hardware.FirmwareInfo.Gen.SWI69, com.evsuite.hardware.FirmwareInfo.Gen.SWI131 -> true
+        else -> false
+    }
+
     fun isCharger(stop: String?): Boolean {
         if (stop.isNullOrBlank()) return false
         val s = stop.lowercase()
@@ -96,6 +106,7 @@ object ChargeStopPreheater {
     fun update(context: Context, navigating: Boolean, nextStop: String?, secondsToStop: Int?, stopsAhead: Int) {
         val settings = App.provide(context).settings
         if (!settings.batteryPreheatBeforeCharger && !ownedByUs) return
+        if (!ChargeStopPreheatPolicy.supportedOnThisCar()) return
         if (navigating && secondsToStop != null) lastSecondsToStop = secondsToStop
         val charger = ChargeStopPreheatPolicy.isCharger(nextStop) || stopsAhead >= 2
         // Only with the option on, once per stop: how chargers are named is still being learned.

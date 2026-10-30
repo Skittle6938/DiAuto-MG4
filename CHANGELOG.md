@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.1-beta6
+
+- Battery preheating before a charging stop is offered on the SWI69 and SWI131 firmwares only, where the battery heating switch is verified. It is hidden on the other firmwares until it is checked there.
+
 # DiAuto MG4+ 2.2.1-beta5
 
 - With separate audio streams, navigation prompts and the assistant now reach the car exactly as the phone sends them: no boost and no resampling in DiAuto (the 16 kHz voice was converted to 48 kHz since 2.2.0-beta12).
