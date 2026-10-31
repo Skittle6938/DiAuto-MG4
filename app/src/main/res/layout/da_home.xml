@@ -43,6 +43,25 @@
             android:textSize="22sp" />
     </LinearLayout>
 
+    <!-- Firmware known not to run wireless Android Auto (see FirmwareCompat). -->
+    <TextView
+        android:id="@+id/home_firmware_warning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/da_warning"
+        android:drawableStart="@android:drawable/stat_sys_warning"
+        android:drawablePadding="16dp"
+        android:drawableTint="#FF8A8A"
+        android:gravity="center_vertical"
+        android:paddingStart="24dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="16dp"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:visibility="gone" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

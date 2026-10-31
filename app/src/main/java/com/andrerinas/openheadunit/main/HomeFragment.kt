@@ -49,6 +49,12 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, state: Bundle?) {
         view.findViewById<TextView>(R.id.home_version).text =
             BuildConfig.VERSION_NAME.removeSuffix("-debug").removeSuffix("-phone")
+        FirmwareCompat.warning(requireContext(), com.evsuite.hardware.FirmwareInfo.getDetectedString())?.let { text ->
+            view.findViewById<TextView>(R.id.home_firmware_warning).apply {
+                this.text = text
+                visibility = View.VISIBLE
+            }
+        }
         view.findViewById<View>(R.id.home_main_button).setOnClickListener {
             if (app.commManager.isConnected) openProjection()
             else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
