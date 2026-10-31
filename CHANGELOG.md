@@ -1,3 +1,10 @@
+# DiAuto MG4+ 2.2.1-beta20
+
+- **Battery recognised automatically:** DiAuto reads the battery type from the car's configuration, the same byte the stock charging app uses (Standard 51 kWh recognised at once). For the state of health, and when the type is not enough, it measures the capacity while you drive (energy out of the battery ÷ drop in charge, after about 15 %).
+- **Red banner on the home screen** for car firmwares known not to run wireless Android Auto (SWI68 R46, SWI131 R05).
+- **Test mode** (*Settings → About*, off by default) shows the features being tested: the model format sent to Maps, consumption from MG4Dash (needs MG4Dash), and voice treble, clarity and headroom. Off, they use their defaults (format C; MG4Dash consumption off; treble off, clarity off, headroom -6 dB).
+- Settings reopen on the tab used last, until the app restarts.
+
 # DiAuto MG4+ 2.2.1-beta17
 
 - Night mode (*Settings → Display*) has four choices: **Like the car** (default) follows the car's lights, as the car's own screens do, and is right from start-up even when the lights were already on; **Sun** is dark from sunset to sunrise at the car's position (the former automatic mode); **Day**; **Night**.
