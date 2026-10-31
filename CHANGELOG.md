@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.1-beta22
+
+- No more "Switching USB device to accessory mode…" and "Failed" messages when a phone or a wireless Android Auto dongle is plugged in by USB: the connection was made anyway, they now only go to the log.
+
 # DiAuto MG4+ 2.2.1-beta21
 
 - Pause heard at once with music over Android Auto (Wi-Fi): some phones send the music in bursts, and a press between two bursts read as "nothing playing", so DiAuto let the ~4 s the phone still sends after a pause play out. Music now counts as playing for 3 s after the last sound received.
