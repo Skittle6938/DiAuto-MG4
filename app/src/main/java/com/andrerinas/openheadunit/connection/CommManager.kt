@@ -593,7 +593,7 @@ class CommManager(
             return
         }
         val pauses = keyCode == KeyEvent.KEYCODE_MEDIA_PAUSE ||
-            (keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE && track.isReceivingAudio())
+            (keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE && track.isPlayingMusic())
         if (!pauses) return
         track.silenceFor(PAUSE_SILENCE_MS)
         track.flushForTrackChange()

@@ -51,6 +51,7 @@ class AudioTrackWrapper(
         /** Where the voice limiter starts rounding peaks off (about -6 dBFS). */
         private const val LIMIT_KNEE = 16_384
         private const val RECEIVING_WINDOW_MS = 300L
+        private const val PLAYING_WINDOW_MS = 3_000L
         private const val AUDIO_BUFFER_POOL_LIMIT = 16
         private const val MIN_POOLED_AUDIO_BUFFER_SIZE = 4096
         private const val INPUT_BUFFER_POLL_MS = 100L
@@ -694,6 +695,15 @@ class AudioTrackWrapper(
     /** The phone is still sending this stream (audio written in the last few hundred ms). */
     fun isReceivingAudio(): Boolean =
         android.os.SystemClock.elapsedRealtime() - lastWriteMs < RECEIVING_WINDOW_MS
+
+    /**
+     * Music is playing on this stream, for the pause key: audio written in the last few seconds.
+     * Over Wi-Fi the phone can send the music in bursts, so the last write may be well over
+     * [RECEIVING_WINDOW_MS] old while the music plays on from the buffers; that read as "not
+     * playing" and the pause cut was skipped (issue #3, SWI173).
+     */
+    fun isPlayingMusic(): Boolean =
+        android.os.SystemClock.elapsedRealtime() - lastWriteMs < PLAYING_WINDOW_MS
 
     fun stopPlayback() {
         isRunning = false
