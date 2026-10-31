@@ -254,6 +254,11 @@ class Settings(private val context: Context) {
         get() = prefs.getInt("station-restore-delay-s", 60).coerceIn(10, 300)
         set(value) { prefs.edit().putInt("station-restore-delay-s", value.coerceIn(10, 300)).apply() }
 
+    /** Experimental: Maps' energy model from MG4Dash's consumption map instead of the car's average. */
+    var mg4dashConsumption: Boolean
+        get() = prefs.getBoolean("mg4dash-consumption", false)
+        set(value) { prefs.edit().putBoolean("mg4dash-consumption", value).apply() }
+
     /** The car access point's 5 GHz channel: 0 automatic, or 36, 40, 44, 48 (see WifiChannelPicker). */
     var wifiChannel: Int
         get() = prefs.getInt("wifi-channel", 0).let { if (it in WifiChannelPicker.CHANNELS) it else 0 }

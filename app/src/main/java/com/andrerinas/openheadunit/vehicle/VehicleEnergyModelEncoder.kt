@@ -64,6 +64,8 @@ object VehicleEnergyModelEncoder {
         val variant: Mg4Variant? = null,
         val outsideTempC: Float? = null,
         val layout: Layout = Layout.LEGACY,
+        /** Measured road load (MG4Dash's consumption map, experimental); null = from the range. */
+        val roadLoad: ConsumptionMapFit.RoadLoad? = null,
     )
 
     fun encode(snapshot: Snapshot): ByteArray {
@@ -81,7 +83,8 @@ object VehicleEnergyModelEncoder {
         val layout = snapshot.layout
         val variant = snapshot.variant
         cos.writeByteArray(1, encodeBattery(snapshot, withVehicle = layout != Layout.LEGACY))
-        cos.writeByteArray(2, encodeRoadLoad(constantForceN))
+        val load = snapshot.roadLoad
+        cos.writeByteArray(2, if (load != null) encodeRoadLoad(load.a, load.b, load.c) else encodeRoadLoad(constantForceN))
         val curveOnField4 = variant != null && (layout == Layout.DC_CURVE || layout == Layout.FULL)
         if (curveOnField4) {
             cos.writeByteArray(4, encodeChargeCurve(snapshot.capacityWh, variant!!))
@@ -127,6 +130,13 @@ object VehicleEnergyModelEncoder {
      * Only the constant term is populated so arrival energy tracks the pack's
      * implied Wh/km without a huge v² term.
      */
+    /** All three terms, from a measured consumption curve. */
+    private fun encodeRoadLoad(a: Float, b: Float, c: Float): ByteArray = message { cos ->
+        cos.writeByteArray(1, encodeCoeff(a, 10f))
+        cos.writeByteArray(2, encodeCoeff(b, 0.25f))
+        cos.writeByteArray(3, encodeCoeff(c, 0.125f))
+    }
+
     private fun encodeRoadLoad(constantForceN: Float): ByteArray = message { cos ->
         cos.writeByteArray(1, encodeCoeff(constantForceN, 10f))
         cos.writeByteArray(2, encodeCoeff(0f, 0.25f))

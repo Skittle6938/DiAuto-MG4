@@ -95,6 +95,12 @@ object Mg4EnergyReporter {
         val outsideTemp = if (snap.demo || layout == VehicleEnergyModelEncoder.Layout.LEGACY) null else runCatching {
             com.evsuite.hardware.saic.SaicClimate.outsideTempCelsius() ?: com.evsuite.hardware.EVHardware.getOutsideTempCelsius()
         }.getOrNull()
+        val roadLoad = App.instance?.takeIf { !snap.demo && App.provide(it).settings.mg4dashConsumption }?.let { app ->
+            val temp = outsideTemp ?: runCatching {
+                com.evsuite.hardware.saic.SaicClimate.outsideTempCelsius() ?: com.evsuite.hardware.EVHardware.getOutsideTempCelsius()
+            }.getOrNull()
+            Mg4DashConsumption.roadLoad(app, temp?.takeIf { it in -40f..60f })
+        }
         val encoded = VehicleEnergyModelEncoder.Snapshot(
             capacityWh = snap.capacityWh,
             currentWh = snap.currentWh,
@@ -103,6 +109,7 @@ object Mg4EnergyReporter {
             variant = variant,
             outsideTempC = outsideTemp?.takeIf { it in -40f..60f },
             layout = layout,
+            roadLoad = roadLoad,
         )
 
         // Prefer whichever the phone started; if none yet but force, try both.
@@ -126,7 +133,8 @@ object Mg4EnergyReporter {
             AppLog.i(
                 "$TAG vem tx capacity=${snap.capacityWh}Wh current=${snap.currentWh}Wh " +
                     "range=${snap.rangeKm}km battery=${"%.1f".format(snap.batteryPercent)}% " +
-                    "variant=${variant.key} maxDc=${variant.maxDcW / 1000}kW layout=${layout.key} outside=${outsideTemp ?: "-"} types=$types",
+                    "variant=${variant.key} maxDc=${variant.maxDcW / 1000}kW layout=${layout.key} outside=${outsideTemp ?: "-"} types=$types" +
+                    (roadLoad?.let { " roadLoad=%.0f/%.2f/%.3f (%d speeds, %.0f km)".format(it.a, it.b, it.c, it.points, it.km) } ?: ""),
             )
         } else {
             AppLog.i("$TAG vem tx dropped (sensors $types not started or transport not alive)")

@@ -254,6 +254,12 @@ class DaSettingsActivity : BaseActivity() {
             settings.batteryForGoogleMaps = it
         })
         row(R.string.dset_ev_layout, R.string.dset_ev_layout_summary, value(evLayoutLabel(settings.evModelLayout)) { pickEvLayout() })
+        // Only with MG4Dash on the car: it measures the consumption map.
+        if (com.andrerinas.openheadunit.vehicle.Mg4DashConsumption.installed(this)) {
+            row(R.string.dset_mg4dash_consumption, R.string.dset_mg4dash_consumption_summary, yesNo(settings.mg4dashConsumption) {
+                settings.mg4dashConsumption = it
+            })
+        }
         if (com.andrerinas.openheadunit.vehicle.ChargeStopPreheatPolicy.supportedOnThisCar()) {
             row(R.string.dset_preheat, R.string.dset_preheat_summary, yesNo(settings.batteryPreheatBeforeCharger) {
                 settings.batteryPreheatBeforeCharger = it
