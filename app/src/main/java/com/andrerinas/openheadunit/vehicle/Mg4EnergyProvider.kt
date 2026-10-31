@@ -197,6 +197,14 @@ object Mg4EnergyProvider {
         if (!initialized) return
 
         val percent = EVHardware.getBatterySocPercent()?.toDouble() ?: return
+        // DiAuto's own capacity measurement, for cars that publish no capacity (see the meter).
+        runCatching {
+            BatteryCapacityMeter.reading(
+                ctx, EVHardware.getPackPowerW(), percent.toFloat(),
+                charging = EVHardware.isChargePortConnected() == true,
+                nowMs = SystemClock.elapsedRealtime(),
+            )
+        }
         // Prefer live range; keep last good range so a late range does not block SoC.
         val rangeKm = EVHardware.getRemainingRangeKm()?.takeIf { it > 0 }
             ?: latest?.rangeKm?.takeIf { it > 0 }

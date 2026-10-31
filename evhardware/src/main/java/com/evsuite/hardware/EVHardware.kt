@@ -494,6 +494,22 @@ object EVHardware {
     /** A 400 V pack under load; outside this the pair is not the pair we think it is. */
     private val PACK_VOLTAGE_RANGE = 200f..500f
 
+    /**
+     * Pack power in W from the BMS (voltage × current, positive when energy leaves the pack), as
+     * MG4Dash measures it on SWI68/SWI69. null when the car does not answer.
+     */
+    fun getPackPowerW(): Float? = supportedTelemetryRead {
+        // Published in the global area on SWI69; MG4Dash reads them with area 0.
+        val v = (getFloatPropertyCPM(PROP_BMS_PACK_VOLTAGE, AREA_GLOBAL) ?: getFloatPropertyCPM(PROP_BMS_PACK_VOLTAGE, 0))
+            ?.takeIf { it in 100f..900f }
+        val i = (getFloatPropertyCPM(PROP_BMS_PACK_CURRENT, AREA_GLOBAL) ?: getFloatPropertyCPM(PROP_BMS_PACK_CURRENT, 0))
+            ?.takeIf { it.isFinite() && kotlin.math.abs(it) < 1_000f }
+        if (v == null || i == null) null else v * i
+    }
+
+    private const val PROP_BMS_PACK_VOLTAGE = 560002054 // V
+    private const val PROP_BMS_PACK_CURRENT = 560002055 // A, positive when discharging
+
     /** Battery power in kW: positive traction/accessory draw, negative charging/regen. */
     fun getBatteryPowerKw(): Float? = supportedTelemetryRead {
         getFloatPropertyCPM(PROP_EV_INSTANTANEOUS_CHARGE_RATE, AREA_GLOBAL)

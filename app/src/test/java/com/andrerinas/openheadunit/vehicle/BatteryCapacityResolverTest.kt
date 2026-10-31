@@ -12,7 +12,29 @@ class BatteryCapacityResolverTest {
         manualSoh: Float? = null,
         car: Float? = null,
         dash: Mg4DashBattery.Reading? = null,
-    ) = BatteryCapacityResolver.resolve(manualNet, manualSoh, car, dash)
+        measured: Float? = null,
+    ) = BatteryCapacityResolver.resolve(manualNet, manualSoh, car, dash, measured)
+
+    @Test
+    fun `a measured capacity picks the battery and its health`() {
+        // Issue #8: a Standard 51 kWh at 92 %, measured 46.7 kWh.
+        val r = resolve(measured = 46.7f)
+        assertEquals(51, r.pack)
+        assertEquals(Source.MEASURED, r.netSource)
+        assertEquals(Source.MEASURED, r.sohSource)
+        assertEquals(91.9f, r.sohPercent, 0.1f)
+        // A 64 kWh at 85 %.
+        assertEquals(64, resolve(measured = 52.4f).pack)
+        // A 77 kWh at 95 %.
+        assertEquals(77, resolve(measured = 70.7f).pack)
+    }
+
+    @Test
+    fun `MG4 Dash and the car win over the measurement`() {
+        val dash = Mg4DashBattery.Reading(pack = 64, packChosen = true, measuredKwh = 58f, sohPercent = 94f)
+        assertEquals(Source.MG4DASH, resolve(dash = dash, measured = 46.7f).netSource)
+        assertEquals(Source.CAR, resolve(car = 64f, measured = 46.7f).netSource)
+    }
 
     @Test
     fun `without any source the 64 kWh battery and 100 percent are used`() {

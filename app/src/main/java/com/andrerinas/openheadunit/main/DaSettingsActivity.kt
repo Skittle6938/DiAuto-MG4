@@ -391,6 +391,7 @@ class DaSettingsActivity : BaseActivity() {
         settings.batteryCapacityManual = false
         settings.batterySohManual = false
         settings.mg4Variant = com.andrerinas.openheadunit.vehicle.Mg4Variant.AUTO
+        com.andrerinas.openheadunit.vehicle.BatteryCapacityMeter.clear(this)
         com.andrerinas.openheadunit.vehicle.Mg4EnergyProvider.refresh()
         showTab(selectedTab)
     }
