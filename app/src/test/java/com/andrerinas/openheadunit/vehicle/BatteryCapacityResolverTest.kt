@@ -13,7 +13,21 @@ class BatteryCapacityResolverTest {
         car: Float? = null,
         dash: Mg4DashBattery.Reading? = null,
         measured: Float? = null,
-    ) = BatteryCapacityResolver.resolve(manualNet, manualSoh, car, dash, measured)
+        type: Int? = null,
+    ) = BatteryCapacityResolver.resolve(manualNet, manualSoh, car, dash, measured, type)
+
+    @Test
+    fun `the car's battery type code names the battery`() {
+        // SWI69 Standard 51 kWh reads 16.
+        val r = resolve(type = 16)
+        assertEquals(51, r.pack)
+        assertEquals(Source.CAR, r.netSource)
+        // 7 / 9: 64 or 77, settled by the measurement, else 64.
+        assertEquals(77, resolve(type = 7, measured = 70f).pack)
+        assertEquals(64, resolve(type = 9).pack)
+        // Unknown code: as before.
+        assertEquals(Source.DEFAULT, resolve(type = 3).netSource)
+    }
 
     @Test
     fun `a measured capacity picks the battery and its health`() {

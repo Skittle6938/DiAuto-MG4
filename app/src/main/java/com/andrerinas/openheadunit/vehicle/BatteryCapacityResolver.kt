@@ -50,8 +50,22 @@ object BatteryCapacityResolver {
      * 80 and 102 %, the highest if two do (a worn 64 kWh and a new 51 kWh overlap below ~83 %),
      * else the nearest.
      */
-    fun packForMeasured(kwh: Float): Int =
-        PACKS.filter { kwh / it.second in 0.80f..1.02f }.maxByOrNull { kwh / it.second }?.first ?: nearestPack(kwh)
+    fun packForMeasured(kwh: Float, among: List<Int> = PACKS.map { it.first }): Int {
+        val candidates = PACKS.filter { it.first in among }
+        return candidates.filter { kwh / it.second in 0.80f..1.02f }.maxByOrNull { kwh / it.second }?.first
+            ?: candidates.minByOrNull { abs(it.second - kwh) }!!.first
+    }
+
+    /**
+     * Batteries the car's configuration byte allows (EVHardware.getBatteryTypeCode): 16 on an
+     * SWI69 Standard 51 kWh (measured), 1 = LFP for the stock charging app; 7 and 9 are the packs
+     * that take a charge target, so not the LFP one. null for an unknown code.
+     */
+    fun packsForTypeCode(code: Int?): List<Int>? = when (code) {
+        1, 16 -> listOf(51)
+        7, 9 -> listOf(64, 77)
+        else -> null
+    }
 
     fun resolve(
         manualNetKwh: Float?,
@@ -59,12 +73,24 @@ object BatteryCapacityResolver {
         carKwh: Float?,
         mg4Dash: Mg4DashBattery.Reading?,
         measuredKwh: Float? = null,
+        carTypeCode: Int? = null,
     ): Resolved {
         val car = carKwh?.let(::carUsableKwh)
         val measured = measuredKwh?.takeIf { it.isFinite() && it in 30f..100f }
+        val typePacks = packsForTypeCode(carTypeCode)
+        // The car's type settles the battery when it names one; between two, MG4 Dash's choice
+        // or the measurement decides, else the larger share (64 kWh).
+        val typePack = typePacks?.let { packs ->
+            packs.singleOrNull()
+                ?: mg4Dash?.pack?.takeIf { it in packs }
+                ?: measured?.let { packForMeasured(it, packs) }
+                ?: DEFAULT_PACK.takeIf { it in packs }
+                ?: packs.first()
+        }
         val (net, netSource) = when {
             manualNetKwh != null -> manualNetKwh.coerceIn(1f, 200f) to Source.MANUAL
             car != null -> car to Source.CAR
+            typePack != null -> usableKwh(typePack) to Source.CAR
             mg4Dash?.pack != null -> usableKwh(mg4Dash.pack) to Source.MG4DASH
             measured != null -> usableKwh(packForMeasured(measured)) to Source.MEASURED
             else -> usableKwh(DEFAULT_PACK) to Source.DEFAULT
@@ -101,10 +127,28 @@ object BatteryCapacityResolver {
             carKwh = carCapacityKwh(),
             mg4Dash = Mg4DashBattery.read(context),
             measuredKwh = BatteryCapacityMeter.capacityKwh(context),
+            carTypeCode = carBatteryType(),
         ).also(::logChange)
     }
 
     /** Car capacity, read once; retried every minute while the car has not answered. */
+    @Volatile private var typeLogged = false
+
+    /** Battery type code from the car's configuration, logged once (see EVHardware.getBatteryTypeCode). */
+    @Volatile private var typeCode: Int? = null
+
+    /** Read once: the configuration does not change while the car runs. */
+    fun carBatteryType(): Int? {
+        typeCode?.let { return it }
+        return runCatching { EVHardware.getBatteryTypeCode() }.getOrNull()?.also {
+            typeCode = it
+            if (!typeLogged) {
+                typeLogged = true
+                AppLog.i("$TAG battery type code from the car configuration: $it (bytes ${EVHardware.lastVehicleConfigBytes})")
+            }
+        }
+    }
+
     fun carCapacityKwh(): Float? {
         carKwh?.let { return it }
         val now = SystemClock.elapsedRealtime()

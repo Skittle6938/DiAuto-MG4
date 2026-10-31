@@ -738,6 +738,34 @@ object EVHardware {
         probeProperty("HVAC_AMBIENT_TEMPERATURE", PROP_HVAC_AMBIENT_TEMP_SWI68, AREA_GLOBAL, Float::class.javaObjectType),
     )
 
+    /**
+     * The car's battery type code, as the stock charging app (EvCharge) reads it: the last byte of
+     * the configuration bytes CAL_360_camera_config 0x21704244 (global area). 1 = LFP
+     * (isOrthophosphoricAcidBattery); 7 and 9 are the EH32 EU/UK packs that allow a charge target.
+     * null when the car does not answer.
+     */
+    fun getBatteryTypeCode(): Int? = supportedTelemetryRead {
+        val cpm = sCarPropertyManager ?: return@supportedTelemetryRead null
+        cacheCarPropertyMethods(cpm)
+        val getProperty = sCpmGetPropertyMethod ?: return@supportedTelemetryRead null
+        try {
+            val holder = getProperty.invoke(cpm, ByteArray::class.java, PROP_VEHICLE_CONFIG_BATTERY, AREA_GLOBAL)
+                ?: return@supportedTelemetryRead null
+            (holder.javaClass.getMethod("getValue").invoke(holder) as? ByteArray)
+                ?.takeIf { it.isNotEmpty() }
+                ?.also { lastVehicleConfigBytes = it.joinToString(" ") { b -> "%02x".format(b) } }
+                ?.last()?.toInt()
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    private const val PROP_VEHICLE_CONFIG_BATTERY = 0x21704244
+
+    /** The whole configuration bytes last read, for the log. */
+    @Volatile var lastVehicleConfigBytes: String? = null
+        private set
+
     private fun probeProperty(name: String, propId: Int, areaId: Int, boxed: Class<*>): PropertyReport {
         val cpm = sCarPropertyManager
             ?: return PropertyReport(name, propId, areaId, "CarPropertyManager not connected")
