@@ -11,10 +11,11 @@ can plan your charging stops.
 > **DiPlay-MG4** instead (do not run both at once).
 
 > [!WARNING]
-> **SWI68 R46 firmware: wireless Android Auto cannot work.** Its Bluetooth only allows one app
-> connection at a time, so the phone shows "connecting to Android Auto" and nothing happens. This is
-> a bug in the car's firmware that DiAuto cannot work around: ask your dealer to update the car to
-> **SWI68 R63** or later, where it works.
+> **SWI68 R46 and SWI131 (R05) firmwares: wireless Android Auto cannot work.** Their Bluetooth
+> only allows one app connection at a time, so the phone never opens the Android Auto connection
+> ("connecting to Android Auto", then nothing). This is a bug in the car's firmware that DiAuto
+> cannot work around. On SWI68, ask your dealer to update the car to **SWI68 R63** or later, where
+> it works; on SWI131, ask whether a newer firmware is available.
 
 <p align="center"><img src="docs/screenshots/tutorial_1.png" width="800" alt="DiAuto first-start tutorial"></p>
 
