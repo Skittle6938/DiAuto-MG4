@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.1-beta21
+
+- Pause heard at once with music over Android Auto (Wi-Fi): some phones send the music in bursts, and a press between two bursts read as "nothing playing", so DiAuto let the ~4 s the phone still sends after a pause play out. Music now counts as playing for 3 s after the last sound received.
+
 # DiAuto MG4+ 2.2.1-beta20
 
 - **Battery recognised automatically:** DiAuto reads the battery type from the car's configuration, the same byte the stock charging app uses (Standard 51 kWh recognised at once). For the state of health, and when the type is not enough, it measures the capacity while you drive (energy out of the battery ÷ drop in charge, after about 15 %).
