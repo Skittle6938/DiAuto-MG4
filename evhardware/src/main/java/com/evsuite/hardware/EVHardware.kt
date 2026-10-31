@@ -777,6 +777,20 @@ object EVHardware {
     // VehicleAreaWindow bits: front windshield + the four door windows.
     private val WINDOW_AREA_CANDIDATES = intArrayOf(0x0001, 0x0010, 0x0040, 0x0100, 0x0400)
 
+    /**
+     * Lights on, as MG4Dash reads it (measured on an SWI69 car): VEH_SIDE_LGHT 0x21409323 is not 0,
+     * or PMS_SYSTEM_DAY_NIGHT_MODE 0x11408a0d is 3 (night), both in the global area. null when the
+     * car answers neither.
+     */
+    fun getLightsOn(): Boolean? = supportedTelemetryRead {
+        val side = getIntPropertyCPM(PROP_SIDE_LIGHTS, AREA_GLOBAL)
+        val dayNight = getIntPropertyCPM(PROP_SYSTEM_DAY_NIGHT, AREA_GLOBAL)
+        if (side < 0 && dayNight < 0) null else side > 0 || dayNight == 3
+    }
+
+    private const val PROP_SIDE_LIGHTS = 0x21409323     // VEH_SIDE_LGHT, 0 = off
+    private const val PROP_SYSTEM_DAY_NIGHT = 0x11408a0d // PMS_SYSTEM_DAY_NIGHT_MODE, 3 = night
+
     fun getAcOn(): Boolean?          = readHvacBool(PROP_HVAC_AC_ON)
     fun getHvacAutoOn(): Boolean?    = readHvacBool(PROP_HVAC_AUTO_ON)
     fun getRecircOn(): Boolean?      = readHvacBool(PROP_HVAC_RECIRC_ON)

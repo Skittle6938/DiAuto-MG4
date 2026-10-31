@@ -74,6 +74,14 @@ class NightModeManager(
         }
     }
 
+    // The car's lights have no change callback here: read them every few seconds, as MG4Dash does.
+    private val lightsPoll = object : Runnable {
+        override fun run() {
+            update(debounce = false)
+            handler.postDelayed(this, LIGHTS_POLL_MS)
+        }
+    }
+
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.action == LocationUpdateIntent.action) {
@@ -124,6 +132,7 @@ class NightModeManager(
             isCarSkinObserverRegistered = false
         }
         handler.removeCallbacks(debounceRunnable)
+        handler.removeCallbacks(lightsPoll)
     }
 
     fun resendCurrentState() {
@@ -192,7 +201,11 @@ class NightModeManager(
             }
         }
 
-        // 4. The car's day/night skin, for Auto on cars that have one
+        // 4. The car's lights, for Auto (Like the car)
+        handler.removeCallbacks(lightsPoll)
+        if (settings.nightMode == Settings.NightMode.AUTO) handler.postDelayed(lightsPoll, LIGHTS_POLL_MS)
+
+        // 5. The car's day/night skin, for Auto on cars that have one
         if (settings.nightMode == Settings.NightMode.AUTO && carSkinNight(context) != null) {
             if (!isCarSkinObserverRegistered) {
                 context.contentResolver.registerContentObserver(
@@ -214,6 +227,15 @@ class NightModeManager(
          * lights already on comes up dark.
          */
         const val CAR_SKIN_KEY = "SKIN_THEME_CONFIG"
+        private const val LIGHTS_POLL_MS = 3_000L
+
+        /**
+         * Like the car: the lights first (the skin can be pinned to dark or light in the car's
+         * settings and then never follows them), then the car's skin, else null.
+         */
+        fun carNight(context: Context): Boolean? =
+            try { com.evsuite.hardware.EVHardware.getLightsOn() } catch (_: Throwable) { null }
+                ?: carSkinNight(context)
 
         /** True at night, false by day, null on a head unit without the key. */
         fun carSkinNight(context: Context): Boolean? = try {
@@ -282,7 +304,7 @@ class NightModeManager(
             }
             // Auto follows the car's own day/night skin where there is one.
             Settings.NightMode.AUTO -> {
-                isNight = carSkinNight(context) ?: nightModeCalculator.current
+                isNight = carNight(context) ?: nightModeCalculator.current
             }
             // Delegate to standard calculator for other modes (Day, Night, Manual)
             else -> {

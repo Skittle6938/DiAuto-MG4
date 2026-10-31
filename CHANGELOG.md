@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.1-beta17
+
+- Night mode (*Settings → Display*) has four choices: **Like the car** (default) follows the car's lights, as the car's own screens do, and is right from start-up even when the lights were already on; **Sun** is dark from sunset to sunrise at the car's position (the former automatic mode); **Day**; **Night**.
+
 # DiAuto MG4+ 2.2.1-beta16
 
 - The exported log also keeps the call service lines of SWI68 / SWI133 cars (they use other names than on SWI69), to diagnose the car's call window showing over Android Auto.
