@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dset_test_mode">Modo de teste</string>
+    <string name="dset_test_mode_summary">Mostra nos ajustes as funções em teste: o formato do modelo enviado ao Maps e o consumo do MG4Dash. Desligado, elas usam os valores padrão.</string>
+</resources>

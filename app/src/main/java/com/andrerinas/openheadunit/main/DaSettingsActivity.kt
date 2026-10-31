@@ -253,9 +253,12 @@ class DaSettingsActivity : BaseActivity() {
         row(R.string.dset_maps_range, R.string.dset_maps_range_summary, yesNo(settings.batteryForGoogleMaps) {
             settings.batteryForGoogleMaps = it
         })
-        row(R.string.dset_ev_layout, R.string.dset_ev_layout_summary, value(evLayoutLabel(settings.evModelLayout)) { pickEvLayout() })
+        // Features being tested: only in test mode (Settings > About).
+        if (settings.testMode) {
+            row(R.string.dset_ev_layout, R.string.dset_ev_layout_summary, value(evLayoutLabel(settings.evModelLayout)) { pickEvLayout() })
+        }
         // Only with MG4Dash on the car: it measures the consumption map.
-        if (com.andrerinas.openheadunit.vehicle.Mg4DashConsumption.installed(this)) {
+        if (settings.testMode && com.andrerinas.openheadunit.vehicle.Mg4DashConsumption.installed(this)) {
             row(R.string.dset_mg4dash_consumption, R.string.dset_mg4dash_consumption_summary, yesNo(settings.mg4dashConsumption) {
                 settings.mg4dashConsumption = it
             })
@@ -293,6 +296,11 @@ class DaSettingsActivity : BaseActivity() {
             button(getString(R.string.tuto_settings_button)) { startActivity(DaTutorialActivity.intent(this)) })
         row(R.string.compat_report, R.string.compat_report_description,
             button(getString(R.string.dset_open)) { CompatibilityReport.show(this) })
+        row(R.string.dset_test_mode, R.string.dset_test_mode_summary, yesNo(settings.testMode) {
+            settings.testMode = it
+            // The energy model sent to Maps may change with it.
+            appliesOnReconnect()
+        })
         row(R.string.dset_logs, R.string.dset_logs_summary, button(getString(R.string.dset_export)) { exportLogs() })
         row(R.string.restore_allgo, R.string.dset_restore_summary, button(getString(R.string.dset_restore), danger = true) {
             MaterialAlertDialogBuilder(this, R.style.DarkAlertDialog)

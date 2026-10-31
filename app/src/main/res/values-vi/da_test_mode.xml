@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dset_test_mode">Chế độ thử nghiệm</string>
+    <string name="dset_test_mode_summary">Hiện trong cài đặt các tính năng đang thử nghiệm: định dạng mô hình gửi cho Maps và mức tiêu thụ từ MG4Dash. Tắt: dùng giá trị mặc định.</string>
+</resources>

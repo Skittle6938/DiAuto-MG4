@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dset_test_mode">Tryb testowy</string>
+    <string name="dset_test_mode_summary">Pokazuje w ustawieniach testowane funkcje: format modelu wysyłanego do Map i zużycie z MG4Dash. Wyłączony: używają wartości domyślnych.</string>
+</resources>

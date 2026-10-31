@@ -256,7 +256,7 @@ class Settings(private val context: Context) {
 
     /** Experimental: Maps' energy model from MG4Dash's consumption map instead of the car's average. */
     var mg4dashConsumption: Boolean
-        get() = prefs.getBoolean("mg4dash-consumption", false)
+        get() = testMode && prefs.getBoolean("mg4dash-consumption", false)
         set(value) { prefs.edit().putBoolean("mg4dash-consumption", value).apply() }
 
     /** The car access point's 5 GHz channel: 0 automatic, or 36, 40, 44, 48 (see WifiChannelPicker). */
@@ -485,8 +485,17 @@ class Settings(private val context: Context) {
         set(value) { prefs.edit().putString("mg4-variant", value).apply() }
 
     /** Which sections of the Maps energy model are sent (see VehicleEnergyModelEncoder.Layout). */
+    /**
+     * Test mode (off by default): shows the features still being tested in Settings. Off, they
+     * use their defaults whatever was chosen while it was on (the choices are kept for next time).
+     */
+    var testMode: Boolean
+        get() = prefs.getBoolean("test-mode", false)
+        set(value) { prefs.edit().putBoolean("test-mode", value).apply() }
+
+    /** Model format sent to Maps: C (dc_curve) outside test mode. */
     var evModelLayout: String
-        get() = prefs.getString("ev-model-layout", "dc_curve")!!
+        get() = if (testMode) prefs.getString("ev-model-layout", "dc_curve")!! else "dc_curve"
         set(value) { prefs.edit().putString("ev-model-layout", value).apply() }
 
     /** Switch battery heating on before a charging stop on the route (off by default). */
