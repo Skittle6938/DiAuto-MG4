@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dset_test_mode">وضع الاختبار</string>
-    <string name="dset_test_mode_summary">يعرض في الإعدادات الميزات قيد الاختبار: صيغة النموذج المرسل إلى الخرائط والاستهلاك من MG4Dash. عند إيقافه تُستخدم القيم الافتراضية.</string>
+    <string name="dset_test_mode_summary">يعرض في الإعدادات الميزات قيد الاختبار: النموذج المرسل إلى الخرائط، والاستهلاك من MG4Dash، وحدّة الصوت ووضوحه وهامشه. عند إيقافه تُستخدم القيم الافتراضية.</string>
 </resources>

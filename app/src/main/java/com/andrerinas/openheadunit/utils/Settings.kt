@@ -271,7 +271,7 @@ class Settings(private val context: Context) {
 
     /** Clarity equaliser on prompts and the assistant (separate audio streams). */
     var voiceClarity: Boolean
-        get() = prefs.getBoolean("voice-clarity", false)
+        get() = testMode && prefs.getBoolean("voice-clarity", false)
         set(value) { prefs.edit().putBoolean("voice-clarity", value).apply() }
 
     /**
@@ -279,12 +279,12 @@ class Settings(private val context: Context) {
      * exciter, 3 Opus neural bandwidth extension (see VoiceUpsampler).
      */
     var voiceEnhancement: Int
-        get() = prefs.getInt("voice-enhancement", 0).coerceIn(0, 3)
+        get() = if (testMode) prefs.getInt("voice-enhancement", 0).coerceIn(0, 3) else 0
         set(value) { prefs.edit().putInt("voice-enhancement", value.coerceIn(0, 3)).apply() }
 
     /** Prompts and the assistant turned down by this many dB (0, 3 or 6) to leave headroom. */
     var voiceHeadroomDb: Int
-        get() = prefs.getInt("voice-headroom-db", 6).coerceIn(0, 6)
+        get() = if (testMode) prefs.getInt("voice-headroom-db", 6).coerceIn(0, 6) else 6
         set(value) { prefs.edit().putInt("voice-headroom-db", value.coerceIn(0, 6)).apply() }
 
     /** The first-start tutorial was shown (or skipped). */

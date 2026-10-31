@@ -60,7 +60,7 @@ class DaSettingsActivity : BaseActivity() {
         tabBox = findViewById(R.id.settings_tabs)
         list = findViewById(R.id.settings_list)
         findViewById<View>(R.id.settings_back).setOnClickListener { finish() }
-        selectedTab = savedInstanceState?.getInt(KEY_TAB) ?: intent.getIntExtra(EXTRA_TAB, 0)
+        selectedTab = savedInstanceState?.getInt(KEY_TAB) ?: intent.getIntExtra(EXTRA_TAB, lastTab)
         ota = OtaController(this).also { controller ->
             controller.setStateListener { status ->
                 otaStatus = status
@@ -88,6 +88,7 @@ class DaSettingsActivity : BaseActivity() {
 
     private fun showTab(index: Int) {
         selectedTab = index
+        lastTab = index
         buildTabs()
         list.removeAllViews()
         when (Tab.values()[index]) {
@@ -199,7 +200,8 @@ class DaSettingsActivity : BaseActivity() {
             showTab(selectedTab)
         })
         // On its own channel the voice can be cleaned up instead (from the next prompt on).
-        if (settings.separateAudioStreams || settings.musicViaBluetooth) {
+        // Voice processing is still being tested: only in test mode (Settings > About).
+        if (settings.testMode && (settings.separateAudioStreams || settings.musicViaBluetooth)) {
             note(R.string.dset_voice_experimental)
             row(R.string.dset_voice_enhance, R.string.dset_voice_enhance_summary,
                 choices(listOf(R.string.dset_voice_enhance_standard, R.string.dset_voice_enhance_light,
@@ -638,7 +640,11 @@ class DaSettingsActivity : BaseActivity() {
         private const val DPI_AUTO = 0
         private const val DPI_LARGE = 260
 
-        fun intent(context: Context, tab: Int = 0): Intent =
-            Intent(context, DaSettingsActivity::class.java).putExtra(EXTRA_TAB, tab)
+        /** The tab open last, kept while the app runs: a restart (car start) opens the first one. */
+        private var lastTab = 0
+
+        /** Opens on [tab], or on the tab used last when none is given. */
+        fun intent(context: Context, tab: Int? = null): Intent =
+            Intent(context, DaSettingsActivity::class.java).apply { tab?.let { putExtra(EXTRA_TAB, it) } }
     }
 }
