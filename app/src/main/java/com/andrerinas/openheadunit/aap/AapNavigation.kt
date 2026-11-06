@@ -135,6 +135,7 @@ class AapNavigation(
                     )
                     // How many stops the phone names, never where: log files are posted on GitHub.
                     logOnChange("destinations", "${state.destinationsCount}")
+                    if (settings.testMode) logOnChange("state unknown fields", NavUnknownFields.describe(state))
                     snapshot.navigationState = AapNavigationHelper.TimedMessage(state, helper.nowElapsedRealtimeMs())
                     val firstStepRoad = state.stepsList.firstOrNull()
                         ?.takeIf { it.hasRoad() && it.road.hasName() }
@@ -154,6 +155,7 @@ class AapNavigation(
             NavigationStatus.MsgType.INSTRUMENT_CLUSTER_NAVIGATION_CURRENT_POSITION_VALUE -> {
                 try {
                     val position = message.parse(NavigationStatus.NavigationCurrentPosition.newBuilder()).build()
+                    if (settings.testMode) logOnChange("position unknown fields", NavUnknownFields.describe(position))
                     snapshot.currentPosition = AapNavigationHelper.TimedMessage(position, helper.nowElapsedRealtimeMs())
                     val road = position
                         .takeIf { it.hasCurrentRoad() && it.currentRoad.hasName() }
