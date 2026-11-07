@@ -1248,6 +1248,8 @@ class NativeAaHandshakeManager(
 
             AppLog.i("NativeAA: Phone connected. Current credentials state: SSID=${credentials?.ssid ?: "<null>"}, IP=${credentials?.ip ?: "<null>"}")
             AppLog.i("NativeAA: Waiting for WiFi credentials to be ready (Max ${CREDENTIALS_WAIT_MS / 1000}s)...")
+            // The hotspot only comes up for a linked phone: one the car didn't expect asks for it here.
+            if (credentials == null) context.refreshAccessPoint()
 
             // Wait for credentials (P2P group / hotspot bring-up can be slow), servicing the
             // phone's messages while we do: an early Type 2 or Type 5 lands here, not in the loop

@@ -190,6 +190,16 @@ class SoftApCredentialsProvider(
         beginResolve()
     }
 
+    val running: Boolean get() = isRunning
+
+    /** Stops watching; true when the access point was one this provider switched on. */
+    @Synchronized
+    fun stopAndTellIfOurs(): Boolean {
+        val ours = autoEnabled
+        stop()
+        return ours
+    }
+
     @Synchronized
     fun stop() {
         isRunning = false

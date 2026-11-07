@@ -1044,6 +1044,7 @@ class AapService : Service(), UsbReceiver.Listener {
      */
     private fun onConnected() {
         joinFailures = 0
+        if (!commManager.isWirelessSession) releaseAccessPoint("USB session")
         isSwitchingToAccessory.set(false)
         updateNotification()
         acquireWifiLock()
@@ -1736,6 +1737,7 @@ class AapService : Service(), UsbReceiver.Listener {
     /** Brings up wireless Android Auto over the car's hotspot, unless it is off in the settings. */
     /** Bluetooth auto-start, once the Wi-Fi radio is free: poke the phone or arm the handshake. */
     private fun startNativeAaForPhone(mac: String?) {
+        startAccessPoint("phone linked over Bluetooth")
         if (!mac.isNullOrEmpty() &&
             SystemClock.elapsedRealtime() - lastWatchdogPokeMs < WATCHDOG_POKE_SETTLE_MS) {
             // The phone is back because of the watchdog's own poke, which is still
@@ -1798,7 +1800,10 @@ class AapService : Service(), UsbReceiver.Listener {
                 HotspotManager.ensure5GhzBeforeSession(this@AapService, pauseStation = phoneLinked && !usbSession)
             }
             if (!phoneLinked) scheduleStationRestore()
-            softApCredentialsProvider?.start()
+            // The car has one Wi-Fi radio: an access point up for nobody slows its Wi-Fi client
+            // down. It comes up once the phone is linked, and never for a USB session.
+            if (phoneLinked && !usbSession) softApCredentialsProvider?.start()
+            else AppLog.i("AapService: no phone linked over Bluetooth yet - the hotspot waits for it")
             // Start the official Bluetooth handshake servers
             nativeAaHandshakeManager?.start()
         }
@@ -2032,7 +2037,10 @@ class AapService : Service(), UsbReceiver.Listener {
                     }
                 }
             }
-            ACTION_BT_PHONE_LEFT -> scheduleStationRestore()
+            ACTION_BT_PHONE_LEFT -> {
+                scheduleStationRestore()
+                if (!commManager.isConnected) releaseAccessPoint("phone left")
+            }
             ACTION_DISCONNECT            -> {
                 AppLog.i("Disconnect action received.")
                 // Cancel any pending post-disconnect wait/poke so pill cancel
@@ -2789,7 +2797,29 @@ class AapService : Service(), UsbReceiver.Listener {
 
     fun refreshAccessPoint() {
         AppLog.i("AapService: Access point refresh requested.")
-        softApCredentialsProvider?.refresh()
+        val provider = softApCredentialsProvider ?: return
+        if (provider.running) provider.refresh() else startAccessPoint("a phone asked for it")
+    }
+
+    /** The access point a phone needs for wireless Android Auto, unless a USB session runs. */
+    private fun startAccessPoint(reason: String) {
+        if (!wirelessEnabled()) return
+        if (commManager.isConnected && !commManager.isWirelessSession) return
+        val provider = softApCredentialsProvider ?: return
+        if (provider.running) return
+        AppLog.i("AapService: $reason - bringing up the hotspot")
+        provider.start()
+    }
+
+    /** No phone to serve, or a USB session: an access point DiAuto switched on goes off again. */
+    private fun releaseAccessPoint(reason: String) {
+        if (commManager.isConnected && commManager.isWirelessSession) return
+        val provider = softApCredentialsProvider ?: return
+        if (!provider.running) return
+        val ours = provider.stopAndTellIfOurs()
+        nativeAaHandshakeManager?.invalidateCredentials()
+        AppLog.i("AapService: $reason - hotspot no longer needed (switched off: $ours)")
+        if (ours) serviceScope.launch(Dispatchers.IO) { HotspotManager.setHotspotEnabled(this@AapService, false) }
     }
 
     private fun stopWirelessServer() {
