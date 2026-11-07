@@ -18,6 +18,9 @@
     <string name="dset_phone">الهاتف</string>
     <string name="dset_phone_summary">الهاتف الذي يشغّل Android Auto عند تشغيل السيارة.</string>
     <string name="dset_phone_none">لا شيء</string>
+    <string name="dset_phones">الهواتف (ترتيب الأولوية)</string>
+    <string name="dset_phones_summary">عند اتصال عدة هواتف عبر البلوتوث، يتصل لاسلكيًا أول هاتف في القائمة. الهاتف المتصل عبر USB له الأولوية دائمًا.</string>
+    <string name="dset_phones_hint">حدد الهواتف المراد توصيلها ثم رتّبها بالأسهم.</string>
     <string name="dset_fps">الإطارات في الثانية</string>
     <string name="dset_fps_summary">تكفي 30 إطارًا في السيارة وتخفف الحمل عن الهاتف. بدءًا من الاتصال التالي.</string>
     <string name="dset_ui_size">حجم الواجهة</string>

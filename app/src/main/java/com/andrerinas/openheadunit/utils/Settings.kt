@@ -949,6 +949,7 @@ class Settings(private val context: Context) {
             prefs.edit().putString("auto-connect-priority-order", value.joinToString(",")).apply()
         }
 
+    /** The phones DiAuto connects, in the driver's order of priority (first = preferred). */
     var autoStartBluetoothDeviceMacs: Set<String>
         get() {
             var macs = prefs.getStringSet("auto-start-bt-macs", null)
@@ -957,10 +958,14 @@ class Settings(private val context: Context) {
                 macs = if (legacyMac.isNotEmpty()) setOf(legacyMac) else emptySet()
                 prefs.edit().putStringSet("auto-start-bt-macs", macs).apply()
             }
-            return macs
+            val order = prefs.getString("auto-start-bt-order", "").orEmpty().split(',').filter { it in macs }
+            return LinkedHashSet(order + macs.sorted())
         }
         set(value) {
-            prefs.edit().putStringSet("auto-start-bt-macs", value).apply()
+            prefs.edit()
+                .putStringSet("auto-start-bt-macs", value)
+                .putString("auto-start-bt-order", value.joinToString(","))
+                .apply()
         }
 
     var autoStartBluetoothDeviceName: String

@@ -18,6 +18,9 @@
     <string name="dset_phone">Telefon</string>
     <string name="dset_phone_summary">Araç çalıştığında Android Auto’yu başlatan telefon.</string>
     <string name="dset_phone_none">Yok</string>
+    <string name="dset_phones">Telefonlar (öncelik sırası)</string>
+    <string name="dset_phones_summary">Bluetooth ile birden fazla bağlıysa listedeki ilk telefon kablosuz bağlanır. USB ile bağlı telefon her zaman önceliklidir.</string>
+    <string name="dset_phones_hint">Bağlanacak telefonları işaretleyin, sonra oklarla sıralayın.</string>
     <string name="dset_fps">Saniyedeki kare sayısı</string>
     <string name="dset_fps_summary">Araçta 30 yeterlidir ve telefonu yormaz. Bir sonraki bağlantıdan itibaren.</string>
     <string name="dset_ui_size">Arayüz boyutu</string>

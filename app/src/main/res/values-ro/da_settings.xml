@@ -18,6 +18,9 @@
     <string name="dset_phone">Telefon</string>
     <string name="dset_phone_summary">Cel care pornește Android Auto când pornește mașina.</string>
     <string name="dset_phone_none">Niciunul</string>
+    <string name="dset_phones">Telefoane (ordinea priorității)</string>
+    <string name="dset_phones_summary">Dacă mai multe sunt conectate prin Bluetooth, primul din listă se conectează wireless. Un telefon prin USB are mereu prioritate.</string>
+    <string name="dset_phones_hint">Bifează telefoanele de conectat, apoi ordonează-le cu săgețile.</string>
     <string name="dset_fps">Cadre pe secundă</string>
     <string name="dset_fps_summary">30 sunt suficiente în mașină și cruță telefonul. De la următoarea conexiune.</string>
     <string name="dset_ui_size">Dimensiunea interfeței</string>

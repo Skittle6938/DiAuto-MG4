@@ -18,6 +18,9 @@
     <string name="dset_phone">휴대전화</string>
     <string name="dset_phone_summary">차량 시동 시 Android Auto를 시작하는 휴대전화입니다.</string>
     <string name="dset_phone_none">없음</string>
+    <string name="dset_phones">휴대전화 (우선순위)</string>
+    <string name="dset_phones_summary">여러 대가 블루투스로 연결되어 있으면 목록의 첫 번째 휴대전화가 무선으로 연결됩니다. USB로 연결된 휴대전화가 항상 우선합니다.</string>
+    <string name="dset_phones_hint">연결할 휴대전화를 선택한 뒤 화살표로 순서를 정하세요.</string>
     <string name="dset_fps">초당 프레임 수</string>
     <string name="dset_fps_summary">차량에서는 30이면 충분하고 휴대전화 부담도 줄어듭니다. 다음 연결부터 적용됩니다.</string>
     <string name="dset_ui_size">인터페이스 크기</string>

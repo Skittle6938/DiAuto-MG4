@@ -18,6 +18,9 @@
     <string name="dset_phone">Móvil</string>
     <string name="dset_phone_summary">El que inicia Android Auto al arrancar el coche.</string>
     <string name="dset_phone_none">Ninguno</string>
+    <string name="dset_phones">Teléfonos (orden de prioridad)</string>
+    <string name="dset_phones_summary">Si hay varios conectados por Bluetooth, el primero de la lista se conecta sin cables. Un teléfono por USB siempre va primero.</string>
+    <string name="dset_phones_hint">Marca los teléfonos que se conectarán y ordénalos con las flechas.</string>
     <string name="dset_fps">Fotogramas por segundo</string>
     <string name="dset_fps_summary">30 es suficiente en el coche y descarga el móvil. A partir de la próxima conexión.</string>
     <string name="dset_ui_size">Tamaño de la interfaz</string>

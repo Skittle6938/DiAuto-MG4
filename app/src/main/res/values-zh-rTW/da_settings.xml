@@ -18,6 +18,9 @@
     <string name="dset_phone">手機</string>
     <string name="dset_phone_summary">車輛啟動時用來啟動 Android Auto 的手機。</string>
     <string name="dset_phone_none">無</string>
+    <string name="dset_phones">手機（優先順序）</string>
+    <string name="dset_phones_summary">多支手機同時透過藍牙連線時，清單中的第一支會無線連線。透過 USB 連線的手機一律優先。</string>
+    <string name="dset_phones_hint">勾選要連線的手機，然後用箭頭排序。</string>
     <string name="dset_fps">每秒影格數</string>
     <string name="dset_fps_summary">車上 30 就足夠，也能減輕手機負擔。下次連線時生效。</string>
     <string name="dset_ui_size">介面大小</string>

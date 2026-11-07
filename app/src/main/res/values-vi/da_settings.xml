@@ -18,6 +18,9 @@
     <string name="dset_phone">Điện thoại</string>
     <string name="dset_phone_summary">Điện thoại sẽ khởi động Android Auto khi xe khởi động.</string>
     <string name="dset_phone_none">Không có</string>
+    <string name="dset_phones">Điện thoại (thứ tự ưu tiên)</string>
+    <string name="dset_phones_summary">Khi nhiều máy kết nối Bluetooth, máy đầu tiên trong danh sách sẽ kết nối không dây. Điện thoại qua USB luôn được ưu tiên.</string>
+    <string name="dset_phones_hint">Đánh dấu các điện thoại cần kết nối rồi sắp xếp bằng các mũi tên.</string>
     <string name="dset_fps">Khung hình mỗi giây</string>
     <string name="dset_fps_summary">30 là đủ trên xe và giảm tải cho điện thoại. Áp dụng từ lần kết nối sau.</string>
     <string name="dset_ui_size">Kích thước giao diện</string>

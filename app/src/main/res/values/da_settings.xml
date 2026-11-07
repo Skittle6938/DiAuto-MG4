@@ -18,6 +18,9 @@
     <string name="dset_phone">Phone</string>
     <string name="dset_phone_summary">The one that starts Android Auto when the car starts.</string>
     <string name="dset_phone_none">None</string>
+    <string name="dset_phones">Phones (order of priority)</string>
+    <string name="dset_phones_summary">When several are linked over Bluetooth, the first of the list goes wireless. A phone on USB always comes first.</string>
+    <string name="dset_phones_hint">Tick the phones to connect, then put them in order with the arrows.</string>
     <string name="dset_fps">Frames per second</string>
     <string name="dset_fps_summary">30 is enough in a car and spares the phone. From the next connection.</string>
     <string name="dset_ui_size">Interface size</string>

@@ -18,6 +18,9 @@
     <string name="dset_phone">Telefoon</string>
     <string name="dset_phone_summary">De telefoon die Android Auto start als de auto start.</string>
     <string name="dset_phone_none">Geen</string>
+    <string name="dset_phones">Telefoons (volgorde van voorrang)</string>
+    <string name="dset_phones_summary">Zijn er meerdere via Bluetooth verbonden, dan gaat de eerste van de lijst draadloos. Een telefoon via USB gaat altijd voor.</string>
+    <string name="dset_phones_hint">Vink de telefoons aan die verbinden en zet ze op volgorde met de pijlen.</string>
     <string name="dset_fps">Beelden per seconde</string>
     <string name="dset_fps_summary">30 is genoeg in een auto en spaart de telefoon. Vanaf de volgende verbinding.</string>
     <string name="dset_ui_size">Grootte van de interface</string>

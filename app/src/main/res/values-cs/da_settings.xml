@@ -18,6 +18,9 @@
     <string name="dset_phone">Telefon</string>
     <string name="dset_phone_summary">Ten, který spustí Android Auto při nastartování auta.</string>
     <string name="dset_phone_none">Žádný</string>
+    <string name="dset_phones">Telefony (pořadí priority)</string>
+    <string name="dset_phones_summary">Je-li přes Bluetooth připojeno více telefonů, bezdrátově se připojí první ze seznamu. Telefon přes USB má vždy přednost.</string>
+    <string name="dset_phones_hint">Zaškrtněte telefony k připojení a seřaďte je šipkami.</string>
     <string name="dset_fps">Snímky za sekundu</string>
     <string name="dset_fps_summary">30 v autě stačí a šetří telefon. Od příštího připojení.</string>
     <string name="dset_ui_size">Velikost rozhraní</string>

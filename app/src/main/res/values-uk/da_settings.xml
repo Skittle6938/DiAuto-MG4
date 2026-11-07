@@ -18,6 +18,9 @@
     <string name="dset_phone">Телефон</string>
     <string name="dset_phone_summary">Той, що запускає Android Auto під час запуску автомобіля.</string>
     <string name="dset_phone_none">Не вибрано</string>
+    <string name="dset_phones">Телефони (порядок пріоритету)</string>
+    <string name="dset_phones_summary">Якщо через Bluetooth підключено кілька, бездротово підключається перший у списку. Телефон через USB завжди має перевагу.</string>
+    <string name="dset_phones_hint">Позначте телефони для підключення й упорядкуйте їх стрілками.</string>
     <string name="dset_fps">Кадрів за секунду</string>
     <string name="dset_fps_summary">30 достатньо в авто, і це береже телефон. З наступного підключення.</string>
     <string name="dset_ui_size">Розмір інтерфейсу</string>

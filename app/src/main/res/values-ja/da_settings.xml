@@ -18,6 +18,9 @@
     <string name="dset_phone">スマートフォン</string>
     <string name="dset_phone_summary">車の起動時に Android Auto を開始するスマートフォンです。</string>
     <string name="dset_phone_none">なし</string>
+    <string name="dset_phones">スマートフォン（優先順位）</string>
+    <string name="dset_phones_summary">複数が Bluetooth で接続されている場合、リストの最初の 1 台がワイヤレスで接続します。USB 接続のスマートフォンが常に優先されます。</string>
+    <string name="dset_phones_hint">接続するスマートフォンにチェックを入れ、矢印で並べ替えてください。</string>
     <string name="dset_fps">フレームレート</string>
     <string name="dset_fps_summary">車内では 30 で十分で、スマートフォンの負担も減ります。次回の接続から反映されます。</string>
     <string name="dset_ui_size">インターフェースのサイズ</string>

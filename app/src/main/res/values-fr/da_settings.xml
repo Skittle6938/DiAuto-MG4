@@ -18,6 +18,9 @@
     <string name="dset_phone">Téléphone</string>
     <string name="dset_phone_summary">Celui qui lance Android Auto au démarrage.</string>
     <string name="dset_phone_none">Aucun</string>
+    <string name="dset_phones">Téléphones (ordre de priorité)</string>
+    <string name="dset_phones_summary">Si plusieurs sont connectés en Bluetooth, le premier de la liste passe en sans fil. Un téléphone en USB passe toujours avant.</string>
+    <string name="dset_phones_hint">Cochez les téléphones à connecter, puis classez-les avec les flèches.</string>
     <string name="dset_fps">Images par seconde</string>
     <string name="dset_fps_summary">30 suffit en voiture et soulage le téléphone. À la prochaine connexion.</string>
     <string name="dset_ui_size">Taille de l’interface</string>

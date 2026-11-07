@@ -1384,7 +1384,13 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
         commManager.disconnect(sendByeBye = true, isUserExit = false)
         // The phone does not come back by itself after a bye-bye: call it, as the home
         // screen's connect button does, once the service has re-armed wireless.
-        val mac = settings.autoStartBluetoothDeviceMacs.firstOrNull() ?: return
+        val linked = try {
+            com.andrerinas.openheadunit.utils.BluetoothHelper.connectedBondedDevices(this).map { it.address }
+        } catch (_: SecurityException) {
+            emptyList()
+        }
+        val mac = com.andrerinas.openheadunit.connection.PhonePriority.pick(settings.autoStartBluetoothDeviceMacs.toList(), linked)
+            ?: settings.autoStartBluetoothDeviceMacs.firstOrNull() ?: return
         val app = applicationContext
         android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
             androidx.core.content.ContextCompat.startForegroundService(app,

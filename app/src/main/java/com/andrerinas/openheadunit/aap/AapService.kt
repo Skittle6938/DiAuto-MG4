@@ -290,6 +290,7 @@ class AapService : Service(), UsbReceiver.Listener {
     private var saicAaMediaClaimJob: Job? = null
     private var relayAnnounceJob: Job? = null
     private var handsFreeRestoreJob: Job? = null
+    private var watchdogTurn = 0
     @Volatile private var joinFailures = 0
 
     /** How long the handshake waits before waking the phone again. */
@@ -461,7 +462,7 @@ class AapService : Service(), UsbReceiver.Listener {
     private fun restoreCarHandsFreeSoon() {
         handsFreeRestoreJob?.cancel()
         if (!commManager.isWirelessSession) return
-        val mac = settings.autoStartBluetoothDeviceMacs.firstOrNull() ?: return
+        val mac = preferredLinkedPhone() ?: settings.autoStartBluetoothDeviceMacs.firstOrNull() ?: return
         handsFreeRestoreJob = serviceScope.launch(Dispatchers.IO) {
             repeat(HANDS_FREE_RESTORE_TRIES) { attempt ->
                 delay(HANDS_FREE_RESTORE_DELAY_MS)
@@ -1753,6 +1754,16 @@ class AapService : Service(), UsbReceiver.Listener {
         }
     }
 
+    /** The highest-priority remembered phone linked over Bluetooth right now, or null. */
+    private fun preferredLinkedPhone(): String? = try {
+        com.andrerinas.openheadunit.connection.PhonePriority.pick(
+            settings.autoStartBluetoothDeviceMacs.toList(),
+            BluetoothHelper.connectedBondedDevices(this).map { it.address },
+        )
+    } catch (_: SecurityException) {
+        null
+    }
+
     /** A phone DiAuto starts Android Auto with is connected over Bluetooth right now. */
     private fun rememberedPhoneLinked(): Boolean {
         val remembered = settings.autoStartBluetoothDeviceMacs
@@ -2016,7 +2027,8 @@ class AapService : Service(), UsbReceiver.Listener {
                 // whole life of a working session — without the connection check below, any
                 // later ACL_CONNECTED (the phone's own Bluetooth profiles reconnecting, or one
                 // of our pokes) would tear down a session that is projecting fine.
-                val mac = intent?.getStringExtra(EXTRA_MAC)
+                // Several remembered phones linked at once: the driver's first choice goes wireless.
+                val mac = preferredLinkedPhone() ?: intent?.getStringExtra(EXTRA_MAC)
                 val sessionUp = commManager.isConnected ||
                     commManager.connectionState.value is CommManager.ConnectionState.Connecting
                 if (sessionUp) {
@@ -3253,14 +3265,17 @@ class AapService : Service(), UsbReceiver.Listener {
                 val settings = App.provide(this@AapService).settings
                 if (!wirelessEnabled() || userExitedAA) continue
                 if (commManager.isBusy || nativeAaPokeJob?.isActive == true) continue
-                val mac = settings.autoStartBluetoothDeviceMacs.firstOrNull() ?: continue
+                val phones = settings.autoStartBluetoothDeviceMacs.toList()
+                if (phones.isEmpty()) continue
                 val linked = try {
-                    BluetoothHelper.connectedBondedDevices(this@AapService)
-                        .any { it.address.equals(mac, ignoreCase = true) }
+                    val here = BluetoothHelper.connectedBondedDevices(this@AapService).map { it.address }
+                    com.andrerinas.openheadunit.connection.PhonePriority.pick(phones, here) != null
                 } catch (_: SecurityException) {
                     true
                 }
                 if (linked) continue
+                // None of them is here: wake them in turn, the preferred one first.
+                val mac = phones[watchdogTurn++ % phones.size]
                 // connectedBondedDevices can miss a phone that has just come back; a Bluetooth
                 // connect in the last few minutes means the handshake is under way, so let it run.
                 if (SystemClock.elapsedRealtime() - lastPhoneBtConnectMs < RECENT_BT_CONNECT_MS) continue

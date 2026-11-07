@@ -18,6 +18,9 @@
     <string name="dset_phone">Telefon</string>
     <string name="dset_phone_summary">Ez a telefon indítja az Android Auto alkalmazást, amikor az autó elindul.</string>
     <string name="dset_phone_none">Nincs</string>
+    <string name="dset_phones">Telefonok (prioritási sorrend)</string>
+    <string name="dset_phones_summary">Ha több is csatlakozik Bluetoothon, a lista első eleme csatlakozik vezeték nélkül. Az USB-n csatlakozó telefon mindig elsőbbséget élvez.</string>
+    <string name="dset_phones_hint">Jelölje be a csatlakoztatandó telefonokat, majd rendezze őket a nyilakkal.</string>
     <string name="dset_fps">Képkocka másodpercenként</string>
     <string name="dset_fps_summary">Autóban 30 is elég, és kíméli a telefont. A következő csatlakozástól.</string>
     <string name="dset_ui_size">Felület mérete</string>

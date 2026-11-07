@@ -18,6 +18,9 @@
     <string name="dset_phone">ტელეფონი</string>
     <string name="dset_phone_summary">ტელეფონი, რომელიც Android Auto-ს უშვებს მანქანის ჩართვისას.</string>
     <string name="dset_phone_none">არცერთი</string>
+    <string name="dset_phones">ტელეფონები (პრიორიტეტის რიგი)</string>
+    <string name="dset_phones_summary">თუ რამდენიმე უკავშირდება Bluetooth-ით, უსადენოდ უკავშირდება სიის პირველი. USB-ით დაკავშირებულ ტელეფონს ყოველთვის აქვს უპირატესობა.</string>
+    <string name="dset_phones_hint">მონიშნეთ დასაკავშირებელი ტელეფონები და დაალაგეთ ისრებით.</string>
     <string name="dset_fps">კადრი წამში</string>
     <string name="dset_fps_summary">მანქანაში 30 საკმარისია და ტელეფონს ზოგავს. შემდეგი დაკავშირებიდან.</string>
     <string name="dset_ui_size">ინტერფეისის ზომა</string>

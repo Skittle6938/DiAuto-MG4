@@ -135,12 +135,13 @@ class HomeFragment : Fragment() {
 
             val connected = BluetoothHelper.connectedBondedDevices(requireContext())
             val preferredMacs = app.settings.autoStartBluetoothDeviceMacs
-            val preferredConnected = connected.filter { preferredMacs.contains(it.address) }
+            // In the driver's order of priority.
+            val preferredConnected = preferredMacs.mapNotNull { mac -> connected.firstOrNull { it.address == mac } }
 
             val target = when {
                 preferredConnected.size == 1 -> preferredConnected[0]
                 preferredConnected.isEmpty() && connected.size == 1 -> connected[0]
-                preferredConnected.size > 1 -> null // ambiguous preferred set
+                preferredConnected.size > 1 -> preferredConnected[0]
                 connected.size > 1 -> null
                 // Per-device isConnected unavailable: fall back to a single preferred bonded MAC.
                 preferredMacs.size == 1 -> bonded.firstOrNull { it.address == preferredMacs.first() }

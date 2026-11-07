@@ -137,8 +137,7 @@ class DaSettingsActivity : BaseActivity() {
         row(R.string.dset_open_on_connect, R.string.dset_open_on_connect_summary, yesNo(settings.openProjectionOnConnect) {
             settings.openProjectionOnConnect = it
         })
-        val phone = settings.autoStartBluetoothDeviceName.ifBlank { getString(R.string.dset_phone_none) }
-        row(R.string.dset_phone, R.string.dset_phone_summary, value(phone) { pickPhone() })
+        row(R.string.dset_phones, R.string.dset_phones_summary, value(phonesLabel()) { pickPhone() })
         row(R.string.dset_usb_wifi, R.string.dset_usb_wifi_summary, yesNo(settings.usbWifiClient) {
             settings.usbWifiClient = it
         })
@@ -496,23 +495,88 @@ class DaSettingsActivity : BaseActivity() {
             .show()
     }
 
-    private fun pickPhone() {
-        val bonded = try {
-            BluetoothHelper.getBluetoothAdapter(this)?.bondedDevices.orEmpty().sortedBy { it.name ?: it.address }
-        } catch (_: SecurityException) {
-            emptyList()
+    private fun bondedPhones(): List<android.bluetooth.BluetoothDevice> = try {
+        BluetoothHelper.getBluetoothAdapter(this)?.bondedDevices.orEmpty().sortedBy { it.name ?: it.address }
+    } catch (_: SecurityException) {
+        emptyList()
+    }
+
+    private fun phonesLabel(): String {
+        val names = bondedPhones().associate { it.address to (it.name ?: getString(R.string.da_device)) }
+        val chosen = settings.autoStartBluetoothDeviceMacs.mapNotNull { names[it] }
+        return chosen.joinToString(", ").ifBlank {
+            settings.autoStartBluetoothDeviceName.ifBlank { getString(R.string.dset_phone_none) }
         }
+    }
+
+    /** The phones to connect, ticked, and their order: the first one present goes wireless. */
+    private fun pickPhone() {
+        val bonded = bondedPhones()
         if (bonded.isEmpty()) {
             Toast.makeText(this, R.string.da_no_paired, Toast.LENGTH_LONG).show()
             return
         }
+        val names = bonded.associate { it.address to (it.name ?: getString(R.string.da_device)) }
+        var chosen = settings.autoStartBluetoothDeviceMacs.filter { it in names }
+        val box = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(24), dp(8), dp(24), 0)
+        }
+        fun arrow(text: String, enabled: Boolean, onClick: () -> Unit) = TextView(this).apply {
+            this.text = text
+            textSize = 30f
+            gravity = android.view.Gravity.CENTER
+            setTextColor(ContextCompat.getColor(context, if (enabled) R.color.da_accent else R.color.da_muted))
+            isEnabled = enabled
+            setOnClickListener { onClick() }
+        }
+        fun render() {
+            box.removeAllViews()
+            box.addView(TextView(this).apply {
+                setText(R.string.dset_phones_hint)
+                textSize = 18f
+                setTextColor(ContextCompat.getColor(context, R.color.da_muted))
+                setPadding(0, 0, 0, dp(8))
+            })
+            val others = bonded.map { it.address }.filter { it !in chosen }
+            (chosen + others).forEach { mac ->
+                val rank = chosen.indexOf(mac)
+                box.addView(LinearLayout(this).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                    gravity = android.view.Gravity.CENTER_VERTICAL
+                    minimumHeight = dp(72)
+                    addView(android.widget.CheckBox(context).apply {
+                        isChecked = rank >= 0
+                        text = if (rank >= 0) "${rank + 1}.  ${names[mac]}" else names[mac]
+                        textSize = 22f
+                        setTextColor(ContextCompat.getColor(context, R.color.da_text))
+                        setOnCheckedChangeListener { _, on ->
+                            chosen = if (on) chosen + mac else chosen - mac
+                            render()
+                        }
+                    }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+                    if (rank >= 0) {
+                        addView(arrow("▲", rank > 0) {
+                            chosen = com.andrerinas.openheadunit.connection.PhonePriority.move(chosen, mac, -1)
+                            render()
+                        }, LinearLayout.LayoutParams(dp(72), dp(72)))
+                        addView(arrow("▼", rank < chosen.lastIndex) {
+                            chosen = com.andrerinas.openheadunit.connection.PhonePriority.move(chosen, mac, 1)
+                            render()
+                        }, LinearLayout.LayoutParams(dp(72), dp(72)))
+                    }
+                })
+            }
+        }
+        render()
         MaterialAlertDialogBuilder(this, R.style.DarkAlertDialog)
-            .setTitle(R.string.dset_phone)
-            .setItems(bonded.map { it.name ?: getString(R.string.da_device) }.toTypedArray()) { _, i ->
-                val device = bonded[i]
-                settings.autoStartBluetoothDeviceMacs = setOf(device.address)
-                settings.autoStartBluetoothDeviceName = device.name ?: getString(R.string.da_device)
-                Settings.syncAutoStartBtMacsToDeviceStorage(this, setOf(device.address))
+            .setTitle(R.string.dset_phones)
+            .setView(android.widget.ScrollView(this).apply { addView(box) })
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                val macs = LinkedHashSet(chosen)
+                settings.autoStartBluetoothDeviceMacs = macs
+                settings.autoStartBluetoothDeviceName = chosen.firstOrNull()?.let { names[it] }.orEmpty()
+                Settings.syncAutoStartBtMacsToDeviceStorage(this, macs)
                 showTab(selectedTab)
             }
             .setNegativeButton(R.string.cancel, null)
