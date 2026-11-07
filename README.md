@@ -36,7 +36,11 @@ can plan your charging stops.
   picture and sound). The client comes back once no phone is linked (after 10 s by default, 10 s to
   5 min in *Settings → Connection*). At a car start with no phone linked, DiAuto switches it on, so
   the car joins its own Wi-Fi networks, such as your home network.
-- The hotspot's 5 GHz channel is chosen automatically, or by you in *Settings → Connection*.
+- The hotspot's 5 GHz channel is chosen automatically, or by you in *Settings → Connection*. The
+  hotspot only comes up once your phone is linked over Bluetooth, and never at the same time as the
+  car's own Wi-Fi client.
+- Several phones can be listed in order of priority in *Settings → Connection*: when more than one
+  is linked over Bluetooth, the first of the list goes wireless. A phone on USB always comes first.
 - Calls go through the car's hands-free. On SWI69, the car's call window no longer covers Android
   Auto (SWI68 is still being looked at).
 - DiAuto installs as an **update of the car's original Android Auto app** (AllGo). The car's

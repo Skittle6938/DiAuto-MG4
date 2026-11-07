@@ -1,3 +1,9 @@
+# DiAuto MG4+ 2.2.3-beta2
+
+- Several phones in order of priority (*Settings → Connection → Phones*): the first one linked over Bluetooth goes wireless; a phone on USB still comes first.
+- Never the hotspot and the car's Wi-Fi client at once: the hotspot goes off before the client comes back, and the client before the hotspot comes up.
+- The trip button on the home screen only shows with a phone connected.
+
 # DiAuto MG4+ 2.2.3-beta1
 
 - The car's hotspot comes up only once the phone is linked over Bluetooth, never for a USB session, and goes off again when DiAuto switched it on and it's no longer needed. With one Wi-Fi radio, a hotspot up for nobody slowed the car's own Wi-Fi.
