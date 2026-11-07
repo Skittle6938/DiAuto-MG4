@@ -1460,6 +1460,13 @@ class AapService : Service(), UsbReceiver.Listener {
         stationRestoreJob = serviceScope.launch(Dispatchers.IO) {
             delay(settings.stationRestoreDelaySeconds * 1000L)
             if (!commManager.isBusy && !rememberedPhoneLinked()) {
+                // Never the access point and the car's Wi-Fi client at once: one radio for both.
+                softApCredentialsProvider?.stop()
+                nativeAaHandshakeManager?.invalidateCredentials()
+                if (HotspotManager.isApUp(this@AapService)) {
+                    AppLog.i("AapService: no phone - switching the hotspot off before the car Wi-Fi comes back")
+                    HotspotManager.setHotspotEnabled(this@AapService, false)
+                }
                 HotspotManager.restorePausedStation(this@AapService, evenIfNotPaused)
             }
         }
@@ -1780,7 +1787,7 @@ class AapService : Service(), UsbReceiver.Listener {
 
         stopWirelessServer()
         nativeAaHandshakeManager?.stop()
-        softApCredentialsProvider?.stop()
+        val hotspotWasOurs = softApCredentialsProvider?.stopAndTellIfOurs() == true
 
         wirelessInitialized = true
         activeWirelessEnabled = wirelessEnabled()
@@ -1813,8 +1820,12 @@ class AapService : Service(), UsbReceiver.Listener {
             if (!phoneLinked) scheduleStationRestore()
             // The car has one Wi-Fi radio: an access point up for nobody slows its Wi-Fi client
             // down. It comes up once the phone is linked, and never for a USB session.
-            if (phoneLinked && !usbSession) softApCredentialsProvider?.start()
-            else AppLog.i("AapService: no phone linked over Bluetooth yet - the hotspot waits for it")
+            if (phoneLinked && !usbSession) {
+                softApCredentialsProvider?.start()
+            } else {
+                AppLog.i("AapService: no phone linked over Bluetooth yet - the hotspot waits for it")
+                if (hotspotWasOurs) serviceScope.launch(Dispatchers.IO) { HotspotManager.setHotspotEnabled(this@AapService, false) }
+            }
             // Start the official Bluetooth handshake servers
             nativeAaHandshakeManager?.start()
         }
@@ -2810,7 +2821,14 @@ class AapService : Service(), UsbReceiver.Listener {
     fun refreshAccessPoint() {
         AppLog.i("AapService: Access point refresh requested.")
         val provider = softApCredentialsProvider ?: return
-        if (provider.running) provider.refresh() else startAccessPoint("a phone asked for it")
+        when {
+            provider.running -> provider.refresh()
+            // A wake-up sent to a phone that isn't there must not bring the hotspot up next to the
+            // car's Wi-Fi client; once the phone answers over Bluetooth, it comes up for it.
+            BluetoothHelper.connectedBondedDevices(this).isEmpty() ->
+                AppLog.i("AapService: no phone linked over Bluetooth - the hotspot stays off")
+            else -> startAccessPoint("a phone asked for it")
+        }
     }
 
     /** The access point a phone needs for wireless Android Auto, unless a USB session runs. */
@@ -2820,7 +2838,11 @@ class AapService : Service(), UsbReceiver.Listener {
         val provider = softApCredentialsProvider ?: return
         if (provider.running) return
         AppLog.i("AapService: $reason - bringing up the hotspot")
-        provider.start()
+        // The car's Wi-Fi client goes off first: never both on the one radio.
+        serviceScope.launch(Dispatchers.IO) {
+            HotspotManager.ensure5GhzBeforeSession(this@AapService, pauseStation = true)
+            withContext(Dispatchers.Main) { provider.start() }
+        }
     }
 
     /** No phone to serve, or a USB session: an access point DiAuto switched on goes off again. */
