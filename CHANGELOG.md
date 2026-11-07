@@ -1,3 +1,8 @@
+# DiAuto MG4+ 2.2.3-beta1
+
+- The car's hotspot comes up only once the phone is linked over Bluetooth, never for a USB session, and goes off again when DiAuto switched it on and it's no longer needed. With one Wi-Fi radio, a hotspot up for nobody slowed the car's own Wi-Fi.
+- Test mode: navigation fields Android Auto sends that DiAuto doesn't know yet go to the log, without text or coordinates.
+
 # DiAuto MG4+ 2.2.2
 
 - Official release of the 2.2.2 betas: consumption model for Maps on by default, new battery capacities, connection without taking the screen, two-finger gesture back to the launcher, wheel keys on the source playing, fewer Bluetooth drops at connection, hotspot warning, uncompressed music option, optional trip recording.
