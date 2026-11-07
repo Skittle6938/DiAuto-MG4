@@ -88,6 +88,7 @@ class HomeFragment : Fragment() {
                         if (connected) R.string.dhome_connected_hint else R.string.dhome_waiting_hint)
                     view.findViewById<TextView>(R.id.home_main_label).setText(
                         if (app.commManager.isConnected) R.string.da_open else R.string.da_connect)
+                    showTripTile()
                 }
             }
         }
@@ -98,7 +99,9 @@ class HomeFragment : Fragment() {
 
     private fun showTripTile() {
         val view = view ?: return
-        val on = App.provide(requireContext()).settings.tripRecording
+        // Nothing to record while no phone is connected.
+        val app = App.provide(requireContext())
+        val on = app.settings.tripRecording && app.commManager.isConnected
         view.findViewById<View>(R.id.home_trip).visibility = if (on) View.VISIBLE else View.GONE
         if (on) view.findViewById<TextView>(R.id.home_trip_label).setText(TripDialogs.buttonLabel(requireActivity()))
     }
