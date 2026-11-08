@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.3
+
+Official release, with everything from 2.2.3-beta1 to beta5: hotspot only when a phone needs it and never with the car's Wi-Fi client, several phones in order of priority, Start with the car with a background choice, music back after the assistant, unlock message when Android blocks the assistant's microphone, and Hello MG support on SWI68.
+
 # DiAuto MG4+ 2.2.3-beta5
 
 - Voice: the assistant focus is only taken on SWI68 cars ("Hello MG"), and only while the mic is open: on SWI69 it kept the answer and the music from coming back. The mic records from the default source again.
