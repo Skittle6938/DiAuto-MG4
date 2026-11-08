@@ -171,10 +171,10 @@ internal class AapControlMedia(
         AppLog.i("Mic request: open=${micRequest.open} anc=${micRequest.ancEnabled} ec=${micRequest.ecEnabled} maxUnacked=${micRequest.maxUnacked}")
         if (!micRequest.open) {
             micGeneration.incrementAndGet()
-            val openMs = if (micOpenedAtMs == 0L) -1L else android.os.SystemClock.elapsedRealtime() - micOpenedAtMs
+            val openMs = VoiceSessionPolicy.micOpenDuration(micOpenedAtMs, android.os.SystemClock.elapsedRealtime())
             micOpenedAtMs = 0L
             synchronized(micRecorder) { micRecorder.stop() }
-            if (openMs in 0L until PHONE_REFUSED_MIC_MS) micRecorder.phoneClosedMicAtOnce(openMs)
+            if (VoiceSessionPolicy.phoneRefusedMic(openMs)) micRecorder.phoneClosedMicAtOnce(openMs)
             aapAudio.releaseAssistantFocus()
             sendMicResponse(Common.MessageStatus.STATUS_SUCCESS_VALUE)
             return 0
@@ -214,11 +214,6 @@ internal class AapControlMedia(
     }
 
     companion object {
-        /**
-         * The phone closing the mic this soon is not the driver: nobody speaks and stops within
-         * 0.4 s. It is what Android does when the Google app may not record (issue #16).
-         */
-        private const val PHONE_REFUSED_MIC_MS = 400L
         /** Time window for counting consecutive VIDEO_FOCUS_NATIVE requests. */
         private const val NATIVE_FOCUS_DEBOUNCE_MS = 5000L
         /** Number of NATIVE focus requests within the debounce window before stopping. */

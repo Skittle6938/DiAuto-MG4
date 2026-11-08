@@ -713,7 +713,7 @@ internal class AapAudio(
      */
     fun requestAssistantFocus() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || assistantFocusRequest != null) return
-        if (com.evsuite.hardware.FirmwareInfo.getGeneration() != com.evsuite.hardware.FirmwareInfo.Gen.SWI68) return
+        if (!VoiceSessionPolicy.assistantFocusWanted(com.evsuite.hardware.FirmwareInfo.getGeneration())) return
         lastOwnFocusRequestMs = SystemClock.elapsedRealtime()
         val request = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
             .setAudioAttributes(
@@ -743,7 +743,7 @@ internal class AapAudio(
     var onMusicResumeWanted: (() -> Unit)? = null
     @Volatile private var lastMusicStopMs = 0L
     private val musicBackCheck = Runnable {
-        if (musicBeforeVoice && !isMediaPlaying) {
+        if (VoiceSessionPolicy.musicResumeWanted(musicBeforeVoice, isMediaPlaying)) {
             AppLog.i("AapAudio: the assistant is done and the music did not come back - giving the phone the audio focus and play")
             onPhoneFocusState?.invoke(Control.AudioFocusNotification.AudioFocusStateType.STATE_GAIN)
             // The focus alone did not restart it on the phone (2026-11-08); stock AllGo sends play too.
@@ -758,8 +758,8 @@ internal class AapAudio(
      */
     fun onVoiceSessionStarted() {
         handler.removeCallbacks(musicBackCheck)
-        val stoppedJustBefore = SystemClock.elapsedRealtime() - lastMusicStopMs < MUSIC_STOP_BEFORE_VOICE_MS
-        musicBeforeVoice = musicBeforeVoice || isMediaPlaying || stoppedJustBefore
+        musicBeforeVoice = VoiceSessionPolicy.musicBeforeVoice(
+            musicBeforeVoice, isMediaPlaying, SystemClock.elapsedRealtime(), lastMusicStopMs)
         if (musicBeforeVoice) AppLog.i("AapAudio: voice session over the music - it is given back afterwards if the phone does not restart it")
     }
 
@@ -770,7 +770,7 @@ internal class AapAudio(
      */
     fun onVoiceSessionStopped() {
         handler.removeCallbacks(musicBackCheck)
-        handler.postDelayed(musicBackCheck, MUSIC_BACK_CHECK_MS)
+        handler.postDelayed(musicBackCheck, VoiceSessionPolicy.MUSIC_BACK_CHECK_MS)
     }
 
     private fun releaseSpeechFocus(channel: Int) {
@@ -948,8 +948,6 @@ internal class AapAudio(
     }
 
     companion object {
-        private const val MUSIC_BACK_CHECK_MS = 1_500L
-        private const val MUSIC_STOP_BEFORE_VOICE_MS = 1_500L
         private const val AUDIO_BUFS_SIZE = 65536 * 4  // Up to 256 Kbytes
         private const val DUCK_VOLUME_FACTOR = 0.4f
         private const val UNDUCK_DELAY_MS = 1500L

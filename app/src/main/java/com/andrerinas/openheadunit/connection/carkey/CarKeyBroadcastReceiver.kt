@@ -238,7 +238,8 @@ class CarKeyBroadcastReceiver : BroadcastReceiver(), CarKeyReceiver {
         if (keyCode == SAIC_KEYCODE_VOICE) {
             // While the car's own assistant listens, stock AllGo leaves the key to it: Android
             // Auto's assistant would only get a silent mic (issue #16).
-            if (isDown) voiceKeyLeftToCar = com.evsuite.hardware.EVHardware.carVoiceAssistantActive() == true
+            voiceKeyLeftToCar = com.andrerinas.openheadunit.aap.VoiceSessionPolicy.voiceKeyLeftToCar(
+                isDown, if (isDown) com.evsuite.hardware.EVHardware.carVoiceAssistantActive() else null, voiceKeyLeftToCar)
             if (voiceKeyLeftToCar) {
                 AppLog.i("CarKeyReceiver: voice key ${if (isDown) "down" else "up"} - the car's assistant is listening, key left to it")
                 return

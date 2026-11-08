@@ -65,7 +65,6 @@ class MicRecorder(private val micSampleRate: Int, private val context: Context) 
         const val SOURCE_BLUETOOTH_SCO = 100
         private const val SCO_CONNECT_TIMEOUT_MS = 2_000L
         private const val SILENCE_CHECK_MS = 1_500L
-        private const val SILENCE_WARNING_EVERY_MS = 10 * 60_000L
         @Volatile private var lastSilenceWarningMs = 0L
         @Volatile private var lastLockedWarningMs = 0L
     }
@@ -119,7 +118,7 @@ class MicRecorder(private val micSampleRate: Int, private val context: Context) 
         if (!threadMicAudioActive || levelPeak > 0) return
         AppLog.w("MicRecorder: no sound from the car mic after $SILENCE_CHECK_MS ms (bytes=$levelBytes) - another app may hold it")
         val now = android.os.SystemClock.elapsedRealtime()
-        if (lastSilenceWarningMs != 0L && now - lastSilenceWarningMs < SILENCE_WARNING_EVERY_MS) return
+        if (!com.andrerinas.openheadunit.aap.VoiceSessionPolicy.micWarningDue(lastSilenceWarningMs, now)) return
         lastSilenceWarningMs = now
         com.andrerinas.openheadunit.utils.ToastUtils.showToast(
             context, context.getString(com.andrerinas.openheadunit.R.string.mic_silent_hello_mg), android.widget.Toast.LENGTH_LONG, force = true)
@@ -133,7 +132,7 @@ class MicRecorder(private val micSampleRate: Int, private val context: Context) 
     fun phoneClosedMicAtOnce(openMs: Long) {
         AppLog.w("MicRecorder: the phone closed the mic after $openMs ms - it may need unlocking once")
         val now = android.os.SystemClock.elapsedRealtime()
-        if (lastLockedWarningMs != 0L && now - lastLockedWarningMs < SILENCE_WARNING_EVERY_MS) return
+        if (!com.andrerinas.openheadunit.aap.VoiceSessionPolicy.micWarningDue(lastLockedWarningMs, now)) return
         lastLockedWarningMs = now
         handler.post {
             com.andrerinas.openheadunit.utils.ToastUtils.showToast(
