@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="mic_silent_hello_mg">Le micro de la voiture n\'envoie aucun son : l\'assistant vocal de la voiture (« Hello MG ») le garde peut-être. Désactivez son mot d\'éveil dans les réglages de la voiture.</string>
+    <string name="mic_phone_locked">Déverrouillez votre téléphone une fois : Android bloque le micro de l\'assistant tant que le téléphone est resté verrouillé depuis la connexion d\'Android Auto.</string>
 </resources>

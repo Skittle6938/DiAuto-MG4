@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="mic_silent_hello_mg">Micrô của xe không gửi âm thanh: có thể trợ lý giọng nói của xe (\"Hello MG\") đang giữ nó. Hãy tắt từ đánh thức trong cài đặt của xe.</string>
+    <string name="mic_phone_locked">Hãy mở khóa điện thoại một lần: Android chặn micrô của trợ lý khi điện thoại vẫn bị khóa kể từ lúc Android Auto kết nối.</string>
 </resources>

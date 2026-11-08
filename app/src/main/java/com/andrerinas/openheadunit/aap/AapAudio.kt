@@ -524,6 +524,8 @@ internal class AapAudio(
 
     fun releaseAllFocus() {
         releaseAssistantFocus()
+        handler.removeCallbacks(musicBackCheck)
+        musicBeforeVoice = false
         AppLog.i("AapAudio: Releasing all audio focus.")
         pendingCarLoss?.let { handler.removeCallbacks(it) }
         pendingCarLoss = null
@@ -703,12 +705,15 @@ internal class AapAudio(
     private var assistantFocusRequest: AudioFocusRequest? = null
 
     /**
-     * Stock AllGo asks the assistant focus (transient) for the whole voice session ("Voice
-     * Recognition Stream Focus GAIN Request"). On cars with "Hello MG", the car's own assistant
-     * otherwise keeps the cabin mic for its wake word and DiAuto records silence (issue #16).
+     * Stock AllGo holds the assistant focus (transient) while the phone listens, which is what
+     * makes the car's own assistant ("Hello MG") free the cabin mic (issue #16). It is held only
+     * while the mic is open: the answer that follows needs the guidance focus, which the car
+     * refuses while the assistant focus is held. Only on SWI68, the cars with "Hello MG": on an
+     * SWI69 it brought nothing and the car refused the phone's listening tone.
      */
     fun requestAssistantFocus() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || assistantFocusRequest != null) return
+        if (com.evsuite.hardware.FirmwareInfo.getGeneration() != com.evsuite.hardware.FirmwareInfo.Gen.SWI68) return
         lastOwnFocusRequestMs = SystemClock.elapsedRealtime()
         val request = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
             .setAudioAttributes(
@@ -721,7 +726,7 @@ internal class AapAudio(
             .build()
         assistantFocusRequest = request
         val result = audioManager.requestAudioFocus(request)
-        AppLog.i("AapAudio: voice session - assistant focus result=$result")
+        AppLog.i("AapAudio: mic open - assistant focus result=$result")
     }
 
     fun releaseAssistantFocus() {
@@ -730,7 +735,32 @@ internal class AapAudio(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             runCatching { audioManager.abandonAudioFocusRequest(request) }
         }
-        AppLog.i("AapAudio: voice session over - assistant focus released")
+        AppLog.i("AapAudio: mic closed - assistant focus released")
+    }
+
+    private var musicBeforeVoice = false
+    private val musicBackCheck = Runnable {
+        if (musicBeforeVoice && !isMediaPlaying) {
+            AppLog.i("AapAudio: the assistant is done and the music did not come back - giving the phone the audio focus")
+            onPhoneFocusState?.invoke(Control.AudioFocusNotification.AudioFocusStateType.STATE_GAIN)
+        }
+        musicBeforeVoice = false
+    }
+
+    /** Voice session start: remembers whether the phone's music was playing. */
+    fun onVoiceSessionStarted() {
+        handler.removeCallbacks(musicBackCheck)
+        musicBeforeVoice = musicBeforeVoice || isMediaPlaying
+    }
+
+    /**
+     * Voice session end: stock AllGo gives the phone the audio focus back ("Sent Audio Setup in
+     * AUDIOFOCUS_GAIN"), which is what restarts the music. Done here only when the phone has not
+     * restarted it by itself shortly after.
+     */
+    fun onVoiceSessionStopped() {
+        handler.removeCallbacks(musicBackCheck)
+        handler.postDelayed(musicBackCheck, MUSIC_BACK_CHECK_MS)
     }
 
     private fun releaseSpeechFocus(channel: Int) {
@@ -907,6 +937,7 @@ internal class AapAudio(
     }
 
     companion object {
+        private const val MUSIC_BACK_CHECK_MS = 1_500L
         private const val AUDIO_BUFS_SIZE = 65536 * 4  // Up to 256 Kbytes
         private const val DUCK_VOLUME_FACTOR = 0.4f
         private const val UNDUCK_DELAY_MS = 1500L

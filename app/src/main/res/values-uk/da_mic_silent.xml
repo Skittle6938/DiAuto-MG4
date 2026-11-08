@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="mic_silent_hello_mg">Мікрофон автомобіля не передає звук: можливо, його займає голосовий асистент автомобіля («Hello MG»). Вимкніть його слово активації в налаштуваннях автомобіля.</string>
+    <string name="mic_phone_locked">Розблокуйте телефон один раз: Android блокує мікрофон асистента, доки телефон залишається заблокованим із моменту підключення Android Auto.</string>
 </resources>

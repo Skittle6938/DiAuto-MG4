@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="mic_silent_hello_mg">Mikrofon vozu neposílá žádný zvuk: možná ho drží hlasový asistent vozu („Hello MG“). Vypněte jeho aktivační slovo v nastavení vozu.</string>
+    <string name="mic_phone_locked">Jednou odemkněte telefon: Android blokuje mikrofon asistenta, dokud telefon zůstává zamčený od připojení Android Auto.</string>
 </resources>

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="mic_silent_hello_mg">De microfoon van de auto geeft geen geluid: de spraakassistent van de auto (\"Hello MG\") houdt hem misschien vast. Zet het activeringswoord uit in de instellingen van de auto.</string>
+    <string name="mic_phone_locked">Ontgrendel uw telefoon één keer: Android blokkeert de microfoon van de assistent zolang de telefoon vergrendeld is gebleven sinds Android Auto verbinding maakte.</string>
 </resources>

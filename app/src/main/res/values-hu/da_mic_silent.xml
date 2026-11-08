@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="mic_silent_hello_mg">Az autó mikrofonja nem ad hangot: talán az autó hangasszisztense („Hello MG”) foglalja. Kapcsolja ki az ébresztőszavát az autó beállításaiban.</string>
+    <string name="mic_phone_locked">Egyszer oldja fel a telefont: az Android letiltja az asszisztens mikrofonját, amíg a telefon az Android Auto csatlakozása óta zárolva maradt.</string>
 </resources>

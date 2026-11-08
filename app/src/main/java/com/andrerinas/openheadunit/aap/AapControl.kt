@@ -32,6 +32,7 @@ internal class AapControlMedia(
     private var lastNativeFocusRequestTime = 0L
     private var nativeFocusRequestCount = 0
     private val micGeneration = java.util.concurrent.atomic.AtomicInteger()
+    @Volatile private var micOpenedAtMs = 0L
 
     override fun execute(message: AapMessage): Int {
 
@@ -170,11 +171,17 @@ internal class AapControlMedia(
         AppLog.i("Mic request: open=${micRequest.open} anc=${micRequest.ancEnabled} ec=${micRequest.ecEnabled} maxUnacked=${micRequest.maxUnacked}")
         if (!micRequest.open) {
             micGeneration.incrementAndGet()
+            val openMs = if (micOpenedAtMs == 0L) -1L else android.os.SystemClock.elapsedRealtime() - micOpenedAtMs
+            micOpenedAtMs = 0L
             synchronized(micRecorder) { micRecorder.stop() }
+            if (openMs in 0L until PHONE_REFUSED_MIC_MS) micRecorder.phoneClosedMicAtOnce(openMs)
+            aapAudio.releaseAssistantFocus()
             sendMicResponse(Common.MessageStatus.STATUS_SUCCESS_VALUE)
             return 0
         }
         aapTransport.micOpened(micRequest.maxUnacked)
+        micOpenedAtMs = android.os.SystemClock.elapsedRealtime()
+        aapAudio.requestAssistantFocus()
         // Answered at once, and the recorder started off the read thread: starting it takes
         // ~120 ms (the car's voice path needs 100 ms), which held every other message from the
         // phone behind it while Gemini was opening the mic.
@@ -207,6 +214,11 @@ internal class AapControlMedia(
     }
 
     companion object {
+        /**
+         * The phone closing the mic this soon is not the driver: nobody speaks and stops within
+         * 0.4 s. It is what Android does when the Google app may not record (issue #16).
+         */
+        private const val PHONE_REFUSED_MIC_MS = 400L
         /** Time window for counting consecutive VIDEO_FOCUS_NATIVE requests. */
         private const val NATIVE_FOCUS_DEBOUNCE_MS = 5000L
         /** Number of NATIVE focus requests within the debounce window before stopping. */
@@ -388,11 +400,11 @@ internal class AapControlService(
         if (request.status == Control.VoiceSessionNotification.VoiceSessionStatus.VOICE_STATUS_START) {
             AppLog.i("Voice Session Notification: START")
             aapTransport.isAssistantActive = true
-            aapTransport.aapAudio.requestAssistantFocus()
+            aapAudio.onVoiceSessionStarted()
         } else if (request.status == Control.VoiceSessionNotification.VoiceSessionStatus.VOICE_STATUS_STOP) {
             AppLog.i("Voice Session Notification: STOP")
             aapTransport.isAssistantActive = false
-            aapTransport.aapAudio.releaseAssistantFocus()
+            aapAudio.onVoiceSessionStopped()
         }
         return 0
     }

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="mic_silent_hello_mg">The car\'s microphone sends no sound: the car\'s voice assistant (\"Hello MG\") may be holding it. Switch off its wake word in the car\'s settings.</string>
+    <string name="mic_phone_locked">Unlock your phone once: Android blocks the assistant\'s microphone while the phone has stayed locked since Android Auto connected.</string>
 </resources>

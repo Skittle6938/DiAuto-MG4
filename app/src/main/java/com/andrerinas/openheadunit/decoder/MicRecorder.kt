@@ -67,6 +67,7 @@ class MicRecorder(private val micSampleRate: Int, private val context: Context) 
         private const val SILENCE_CHECK_MS = 1_500L
         private const val SILENCE_WARNING_EVERY_MS = 10 * 60_000L
         @Volatile private var lastSilenceWarningMs = 0L
+        @Volatile private var lastLockedWarningMs = 0L
     }
 
     interface Listener {
@@ -122,6 +123,22 @@ class MicRecorder(private val micSampleRate: Int, private val context: Context) 
         lastSilenceWarningMs = now
         com.andrerinas.openheadunit.utils.ToastUtils.showToast(
             context, context.getString(com.andrerinas.openheadunit.R.string.mic_silent_hello_mg), android.widget.Toast.LENGTH_LONG, force = true)
+    }
+
+    /**
+     * The phone closed the mic right after opening it. Android does this when Android Auto
+     * connected while the phone was locked: the Google app (Gemini) is not allowed to record
+     * ("FAILED_OPENING_OP_NOT_ALLOWED" in the phone's log) until the phone is unlocked once.
+     */
+    fun phoneClosedMicAtOnce(openMs: Long) {
+        AppLog.w("MicRecorder: the phone closed the mic after $openMs ms - it may need unlocking once")
+        val now = android.os.SystemClock.elapsedRealtime()
+        if (lastLockedWarningMs != 0L && now - lastLockedWarningMs < SILENCE_WARNING_EVERY_MS) return
+        lastLockedWarningMs = now
+        handler.post {
+            com.andrerinas.openheadunit.utils.ToastUtils.showToast(
+                context, context.getString(com.andrerinas.openheadunit.R.string.mic_phone_locked), android.widget.Toast.LENGTH_LONG, force = true)
+        }
     }
 
     fun stop() {

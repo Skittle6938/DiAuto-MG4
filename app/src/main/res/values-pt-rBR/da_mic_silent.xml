@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="mic_silent_hello_mg">O microfone do carro não envia som: talvez o assistente de voz do carro (\"Hello MG\") esteja usando. Desative a palavra de ativação nas configurações do carro.</string>
+    <string name="mic_phone_locked">Desbloqueie o telefone uma vez: o Android bloqueia o microfone do assistente enquanto o telefone continuar bloqueado desde a conexão do Android Auto.</string>
 </resources>

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="mic_silent_hello_mg">Il microfono dell\'auto non invia alcun suono: forse lo sta usando l\'assistente vocale dell\'auto («Hello MG»). Disattiva la sua parola di attivazione nelle impostazioni dell\'auto.</string>
+    <string name="mic_phone_locked">Sblocca il telefono una volta: Android blocca il microfono dell\'assistente finché il telefono resta bloccato dalla connessione di Android Auto.</string>
 </resources>

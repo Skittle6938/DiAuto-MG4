@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="mic_silent_hello_mg">ميكروفون السيارة لا يرسل أي صوت: ربما يحتفظ به المساعد الصوتي للسيارة (\"Hello MG\"). أوقف كلمة التنبيه الخاصة به في إعدادات السيارة.</string>
+    <string name="mic_phone_locked">افتح قفل هاتفك مرة واحدة: يحظر Android ميكروفون المساعد ما دام الهاتف مقفلًا منذ اتصال Android Auto.</string>
 </resources>

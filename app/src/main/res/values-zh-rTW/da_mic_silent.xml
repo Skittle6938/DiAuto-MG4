@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="mic_silent_hello_mg">車輛麥克風沒有聲音：可能被車輛的語音助理（「Hello MG」）佔用。請在車輛設定中關閉其喚醒詞。</string>
+    <string name="mic_phone_locked">請解鎖一次手機：自 Android Auto 連線後手機一直鎖定時，Android 會阻止助理使用麥克風。</string>
 </resources>
