@@ -739,18 +739,28 @@ internal class AapAudio(
     }
 
     private var musicBeforeVoice = false
+    /** Sends the phone a play key: the music the assistant paused did not come back. */
+    var onMusicResumeWanted: (() -> Unit)? = null
+    @Volatile private var lastMusicStopMs = 0L
     private val musicBackCheck = Runnable {
         if (musicBeforeVoice && !isMediaPlaying) {
-            AppLog.i("AapAudio: the assistant is done and the music did not come back - giving the phone the audio focus")
+            AppLog.i("AapAudio: the assistant is done and the music did not come back - giving the phone the audio focus and play")
             onPhoneFocusState?.invoke(Control.AudioFocusNotification.AudioFocusStateType.STATE_GAIN)
+            // The focus alone did not restart it on the phone (2026-11-08); stock AllGo sends play too.
+            onMusicResumeWanted?.invoke()
         }
         musicBeforeVoice = false
     }
 
-    /** Voice session start: remembers whether the phone's music was playing. */
+    /**
+     * Voice session start: remembers whether the phone's music was playing. The phone stops the
+     * music stream just before it announces the session, so a stop a moment ago counts too.
+     */
     fun onVoiceSessionStarted() {
         handler.removeCallbacks(musicBackCheck)
-        musicBeforeVoice = musicBeforeVoice || isMediaPlaying
+        val stoppedJustBefore = SystemClock.elapsedRealtime() - lastMusicStopMs < MUSIC_STOP_BEFORE_VOICE_MS
+        musicBeforeVoice = musicBeforeVoice || isMediaPlaying || stoppedJustBefore
+        if (musicBeforeVoice) AppLog.i("AapAudio: voice session over the music - it is given back afterwards if the phone does not restart it")
     }
 
     /**
@@ -925,6 +935,7 @@ internal class AapAudio(
 
     fun stopAudio(channel: Int) {
         AppLog.i("Audio Stop: " + Channel.name(channel))
+        if (channel == Channel.ID_AUD) lastMusicStopMs = SystemClock.elapsedRealtime()
         if ((channel == Channel.ID_AU1 || channel == Channel.ID_AU2) && staticAudioFocus) {
             // Keep the speech wrappers alive to prevent recreate overhead and keep state consistent.
             // Just restore media volume.
@@ -938,6 +949,7 @@ internal class AapAudio(
 
     companion object {
         private const val MUSIC_BACK_CHECK_MS = 1_500L
+        private const val MUSIC_STOP_BEFORE_VOICE_MS = 1_500L
         private const val AUDIO_BUFS_SIZE = 65536 * 4  // Up to 256 Kbytes
         private const val DUCK_VOLUME_FACTOR = 0.4f
         private const val UNDUCK_DELAY_MS = 1500L

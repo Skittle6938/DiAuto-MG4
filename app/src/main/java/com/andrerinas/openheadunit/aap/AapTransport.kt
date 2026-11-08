@@ -412,6 +412,10 @@ class AapTransport(
         // unacked window ahead of what is played (see AudioTrackWrapper.onChunkDone).
         audioDecoder.mediaAck = { channel -> sendMediaAck(channel) }
         aapAudio.onPhoneFocusState = { state -> sendCarFocusState(state) }
+        aapAudio.onMusicResumeWanted = {
+            send(KeyEvent.KEYCODE_MEDIA_PLAY, true)
+            send(KeyEvent.KEYCODE_MEDIA_PLAY, false)
+        }
         aapAudio.onMediaPlaybackStarted = { onMediaPlaybackStarted?.invoke() }
         aapAudio.onSpeechEndedDuringMedia = { onSpeechEndedDuringMedia?.invoke() }
         aapVideo = AapVideo(videoDecoder, settings) {

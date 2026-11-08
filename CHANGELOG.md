@@ -2,7 +2,7 @@
 
 - Voice: the assistant focus is only taken on SWI68 cars ("Hello MG"), and only while the mic is open: on SWI69 it kept the answer and the music from coming back. The mic records from the default source again.
 - When the phone closes the mic at once, a message says to unlock it once: Android keeps the Google app (Gemini) from using the mic while the phone has stayed locked since Android Auto connected.
-- After the assistant, if the music was playing and has not come back, DiAuto gives the phone the audio focus back, as the car's own Android Auto does.
+- After the assistant, if the music was playing and has not come back, DiAuto gives the phone the audio focus back and sends play, as the car's own Android Auto does.
 
 # DiAuto MG4+ 2.2.3-beta4
 
