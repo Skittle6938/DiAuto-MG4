@@ -523,6 +523,7 @@ internal class AapAudio(
     }
 
     fun releaseAllFocus() {
+        releaseAssistantFocus()
         AppLog.i("AapAudio: Releasing all audio focus.")
         pendingCarLoss?.let { handler.removeCallbacks(it) }
         pendingCarLoss = null
@@ -697,6 +698,39 @@ internal class AapAudio(
             audioFocusToken?.let { carFocus.abandoned(it) }
             audioFocusToken = null
         }
+    }
+
+    private var assistantFocusRequest: AudioFocusRequest? = null
+
+    /**
+     * Stock AllGo asks the assistant focus (transient) for the whole voice session ("Voice
+     * Recognition Stream Focus GAIN Request"). On cars with "Hello MG", the car's own assistant
+     * otherwise keeps the cabin mic for its wake word and DiAuto records silence (issue #16).
+     */
+    fun requestAssistantFocus() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || assistantFocusRequest != null) return
+        lastOwnFocusRequestMs = SystemClock.elapsedRealtime()
+        val request = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
+            .setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ASSISTANT)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                    .build()
+            )
+            .setOnAudioFocusChangeListener { }
+            .build()
+        assistantFocusRequest = request
+        val result = audioManager.requestAudioFocus(request)
+        AppLog.i("AapAudio: voice session - assistant focus result=$result")
+    }
+
+    fun releaseAssistantFocus() {
+        val request = assistantFocusRequest ?: return
+        assistantFocusRequest = null
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            runCatching { audioManager.abandonAudioFocusRequest(request) }
+        }
+        AppLog.i("AapAudio: voice session over - assistant focus released")
     }
 
     private fun releaseSpeechFocus(channel: Int) {

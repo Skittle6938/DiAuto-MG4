@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.3-beta4
+
+- Voice on cars with "Hello MG" (#16): during a voice request DiAuto now asks the car for the assistant audio focus and records from the MIC source, as the car's own Android Auto does. The voice key is left to the car while its own assistant listens, and a message says when the car's microphone sends no sound.
+
 # DiAuto MG4+ 2.2.3-beta3
 
 - *Start with the car* now offers three choices: **No** (nothing connects until you open DiAuto), **In the background** (the phone connects without taking the screen and shows up at once as the Android Auto source in other launchers such as MG4 Dash) and **Yes** (Android Auto also takes the screen). It replaces *Open Android Auto when connected*.

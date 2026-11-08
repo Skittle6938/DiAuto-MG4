@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mic_silent_hello_mg">Aracın mikrofonu ses göndermiyor: aracın sesli asistanı (\"Hello MG\") onu tutuyor olabilir. Uyandırma sözcüğünü aracın ayarlarından kapatın.</string>
+</resources>

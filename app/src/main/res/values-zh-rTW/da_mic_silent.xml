@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mic_silent_hello_mg">車輛麥克風沒有聲音：可能被車輛的語音助理（「Hello MG」）佔用。請在車輛設定中關閉其喚醒詞。</string>
+</resources>

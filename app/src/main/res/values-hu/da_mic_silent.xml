@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mic_silent_hello_mg">Az autó mikrofonja nem ad hangot: talán az autó hangasszisztense („Hello MG”) foglalja. Kapcsolja ki az ébresztőszavát az autó beállításaiban.</string>
+</resources>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mic_silent_hello_mg">The car\'s microphone sends no sound: the car\'s voice assistant (\"Hello MG\") may be holding it. Switch off its wake word in the car\'s settings.</string>
+</resources>

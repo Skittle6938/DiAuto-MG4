@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mic_silent_hello_mg">El micrófono del coche no envía sonido: puede que el asistente de voz del coche («Hello MG») lo esté usando. Desactiva su palabra de activación en los ajustes del coche.</string>
+</resources>

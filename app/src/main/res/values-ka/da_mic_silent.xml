@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mic_silent_hello_mg">მანქანის მიკროფონი ხმას არ გადასცემს: შესაძლოა მას მანქანის ხმოვანი ასისტენტი („Hello MG“) იკავებს. გამორთეთ მისი გამოღვიძების სიტყვა მანქანის პარამეტრებში.</string>
+</resources>

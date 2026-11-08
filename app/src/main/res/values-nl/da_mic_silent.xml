@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mic_silent_hello_mg">De microfoon van de auto geeft geen geluid: de spraakassistent van de auto (\"Hello MG\") houdt hem misschien vast. Zet het activeringswoord uit in de instellingen van de auto.</string>
+</resources>

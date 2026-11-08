@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mic_silent_hello_mg">Mikrofon samochodu nie przesyła dźwięku: być może zajmuje go asystent głosowy samochodu („Hello MG”). Wyłącz jego słowo aktywujące w ustawieniach samochodu.</string>
+</resources>

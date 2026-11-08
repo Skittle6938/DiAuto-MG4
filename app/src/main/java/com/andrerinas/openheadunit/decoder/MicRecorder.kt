@@ -64,6 +64,9 @@ class MicRecorder(private val micSampleRate: Int, private val context: Context) 
         // Sentinel value stored in settings to indicate Bluetooth SCO mode
         const val SOURCE_BLUETOOTH_SCO = 100
         private const val SCO_CONNECT_TIMEOUT_MS = 2_000L
+        private const val SILENCE_CHECK_MS = 1_500L
+        private const val SILENCE_WARNING_EVERY_MS = 10 * 60_000L
+        @Volatile private var lastSilenceWarningMs = 0L
     }
 
     interface Listener {
@@ -103,7 +106,26 @@ class MicRecorder(private val micSampleRate: Int, private val context: Context) 
         levelZeroSamples = 0L
     }
 
+    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val silenceCheck = Runnable { checkSilence() }
+
+    /**
+     * Nothing at all from the car's mic a moment after the start: on cars with "Hello MG", the
+     * car's own assistant can keep the mic for its wake word, and the phone only hears silence
+     * (issue #16). The driver is told once in a while how to free it.
+     */
+    private fun checkSilence() {
+        if (!threadMicAudioActive || levelPeak > 0) return
+        AppLog.w("MicRecorder: no sound from the car mic after $SILENCE_CHECK_MS ms (bytes=$levelBytes) - another app may hold it")
+        val now = android.os.SystemClock.elapsedRealtime()
+        if (lastSilenceWarningMs != 0L && now - lastSilenceWarningMs < SILENCE_WARNING_EVERY_MS) return
+        lastSilenceWarningMs = now
+        com.andrerinas.openheadunit.utils.ToastUtils.showToast(
+            context, context.getString(com.andrerinas.openheadunit.R.string.mic_silent_hello_mg), android.widget.Toast.LENGTH_LONG, force = true)
+    }
+
     fun stop() {
+        handler.removeCallbacks(silenceCheck)
         AppLog.i("MicRecorder: Stopping. Active: $threadMicAudioActive")
         logLevelAndReset()
         CarVoicePath.disable(context)
@@ -227,6 +249,8 @@ class MicRecorder(private val micSampleRate: Int, private val context: Context) 
 
         return if (ok && audioRecord?.state == AudioRecord.STATE_INITIALIZED) {
             AppLog.i("MicRecorder: start OK (source=${getAudioSourceName(configuredSource)})")
+            handler.removeCallbacks(silenceCheck)
+            handler.postDelayed(silenceCheck, SILENCE_CHECK_MS)
             0
         } else {
             AppLog.e("MicRecorder: start failed — AudioRecord not initialized")

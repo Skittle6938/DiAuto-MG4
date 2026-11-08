@@ -809,7 +809,7 @@ class Settings(private val context: Context) {
         set(value) { prefs.edit().putBoolean("separate-audio-streams-v3", value).apply() }
 
     var micInputSource: Int
-        get() = prefs.getInt("mic-input-source", 0) // Default: DEFAULT
+        get() = prefs.getInt("mic-input-source", 1) // Default: MIC, the source stock AllGo records from
         set(value) { prefs.edit().putInt("mic-input-source", value).apply() }
 
     var audioLatencyMultiplier: Int

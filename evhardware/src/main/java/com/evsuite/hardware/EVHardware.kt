@@ -226,6 +226,19 @@ object EVHardware {
 
     @Volatile private var sAppContext: Context? = null
     @Volatile private var sCar: Any? = null
+
+    /**
+     * Whether the car's own voice assistant holds the voice command focus
+     * (CarAppFocusManager.APP_FOCUS_TYPE_VOICE_COMMAND, 2), as stock AllGo watches it. Null when
+     * the car service can't tell.
+     */
+    fun carVoiceAssistantActive(): Boolean? = try {
+        val car = sCar
+        val manager = car?.javaClass?.getMethod("getCarManager", String::class.java)?.invoke(car, "app_focus")
+        (manager?.javaClass?.getMethod("getActiveAppTypes")?.invoke(manager) as? IntArray)?.contains(2)
+    } catch (e: Exception) {
+        null
+    }
     @Volatile private var sCarPropertyManager: Any? = null
     @Volatile private var sCarHvacManager: Any? = null
     @Volatile private var sCpmGetIntMethod: java.lang.reflect.Method? = null

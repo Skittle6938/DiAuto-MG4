@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mic_silent_hello_mg">Microfonul mașinii nu transmite niciun sunet: poate îl ține asistentul vocal al mașinii („Hello MG”). Dezactivați cuvântul de activare din setările mașinii.</string>
+</resources>

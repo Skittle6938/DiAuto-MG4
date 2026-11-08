@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mic_silent_hello_mg">Das Mikrofon des Autos liefert keinen Ton: Der Sprachassistent des Autos (\"Hello MG\") belegt es vielleicht. Schalten Sie sein Aktivierungswort in den Einstellungen des Autos aus.</string>
+</resources>

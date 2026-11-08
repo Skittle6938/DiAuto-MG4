@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mic_silent_hello_mg">Le micro de la voiture n\'envoie aucun son : l\'assistant vocal de la voiture (« Hello MG ») le garde peut-être. Désactivez son mot d\'éveil dans les réglages de la voiture.</string>
+</resources>

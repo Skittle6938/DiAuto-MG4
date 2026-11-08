@@ -31,6 +31,8 @@ class CarKeyBroadcastReceiver : BroadcastReceiver(), CarKeyReceiver {
         private const val SAIC_KEYCODE_PLAY_PAUSE = 301
         /** Steering-wheel voice key (stock AllGo KEYCODE_VOICE). */
         private const val SAIC_KEYCODE_VOICE = 287
+        /** The voice key press went to the car's own assistant: its release goes there too. */
+        @Volatile private var voiceKeyLeftToCar = false
         /** Steering-wheel phone key. (Hardkey 3 is the car's home key, handled by the car.) */
         private const val SAIC_KEYCODE_PHONE = 291
         private const val PLAY_PAUSE_RUI_WAIT_MS = 400L
@@ -234,6 +236,13 @@ class CarKeyBroadcastReceiver : BroadcastReceiver(), CarKeyReceiver {
         }
 
         if (keyCode == SAIC_KEYCODE_VOICE) {
+            // While the car's own assistant listens, stock AllGo leaves the key to it: Android
+            // Auto's assistant would only get a silent mic (issue #16).
+            if (isDown) voiceKeyLeftToCar = com.evsuite.hardware.EVHardware.carVoiceAssistantActive() == true
+            if (voiceKeyLeftToCar) {
+                AppLog.i("CarKeyReceiver: voice key ${if (isDown) "down" else "up"} - the car's assistant is listening, key left to it")
+                return
+            }
             if (!isLong) {
                 App.provide(context).commManager.sendKey(KeyEvent.KEYCODE_SEARCH, isDown, null, "steering-voice")
                 AppLog.i("CarKeyReceiver: voice key ${if (isDown) "down" else "up"} -> Android Auto assistant key")

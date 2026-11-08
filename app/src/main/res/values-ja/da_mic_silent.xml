@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mic_silent_hello_mg">車のマイクから音が届きません。車の音声アシスタント（「Hello MG」）がマイクを使用している可能性があります。車の設定でウェイクワードをオフにしてください。</string>
+</resources>
