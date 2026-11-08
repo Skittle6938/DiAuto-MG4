@@ -359,7 +359,7 @@ class AapService : Service(), UsbReceiver.Listener {
      * card shows the phone is there.
      */
     private fun announceMediaCardPlaceholder() {
-        if (lastAaMediaMetadata != null) return
+        if (lastAaMediaMetadata != null || settings.projectionOnConnect == Settings.PROJECTION_HIDDEN) return
         val aa = getString(R.string.video)
         allgoMediaCard.sessionStarted()
         allgoMediaCard.metadata(aa, getString(R.string.media_session_aa_status_placeholder), aa, null, 0L)

@@ -14,7 +14,8 @@
     <string name="dset_start_with_car">Uruchamiaj z samochodem</string>
     <string name="dset_start_with_car_summary">Android Auto wraca samo, gdy wsiadasz.</string>
     <string name="dset_open_on_connect">Otwórz Android Auto po połączeniu</string>
-    <string name="dset_open_on_connect_summary">Przy Nie łączy się w tle: otwórz je przyciskiem Android Auto w samochodzie.</string>
+    <string name="dset_open_on_connect_summary">W tle łączy się bez zajmowania ekranu i pojawia się jako źródło Android Auto w innych launcherach. Przy Nie Android Auto pozostaje ukryte, dopóki nie otworzysz go przyciskiem Android Auto w samochodzie.</string>
+    <string name="dset_open_background">W tle</string>
     <string name="dset_phone">Telefon</string>
     <string name="dset_phone_summary">Ten, który uruchamia Android Auto przy starcie samochodu.</string>
     <string name="dset_phone_none">Brak</string>

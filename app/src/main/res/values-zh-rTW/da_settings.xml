@@ -14,7 +14,8 @@
     <string name="dset_start_with_car">隨車啟動</string>
     <string name="dset_start_with_car_summary">上車後 Android Auto 會自動恢復。</string>
     <string name="dset_open_on_connect">連線時開啟 Android Auto</string>
-    <string name="dset_open_on_connect_summary">選擇「否」時在背景連線：請用車上的 Android Auto 按鈕開啟。</string>
+    <string name="dset_open_on_connect_summary">背景模式下，連線時不切換螢幕，並在其他啟動器中顯示為 Android Auto 音源。選擇「否」時，Android Auto 保持隱藏，直到用車輛的 Android Auto 按鈕開啟。</string>
+    <string name="dset_open_background">背景</string>
     <string name="dset_phone">手機</string>
     <string name="dset_phone_summary">車輛啟動時用來啟動 Android Auto 的手機。</string>
     <string name="dset_phone_none">無</string>

@@ -14,7 +14,8 @@
     <string name="dset_start_with_car">Arrancar con el coche</string>
     <string name="dset_start_with_car_summary">Android Auto vuelve solo cuando te subes al coche.</string>
     <string name="dset_open_on_connect">Abrir Android Auto al conectarse</string>
-    <string name="dset_open_on_connect_summary">Con No, se conecta en segundo plano: ábrelo con el botón Android Auto del coche.</string>
+    <string name="dset_open_on_connect_summary">En segundo plano, se conecta sin ocupar la pantalla y aparece como fuente Android Auto en otros launchers. Con No, Android Auto queda oculto hasta que lo abras con el botón Android Auto del coche.</string>
+    <string name="dset_open_background">En segundo plano</string>
     <string name="dset_phone">Móvil</string>
     <string name="dset_phone_summary">El que inicia Android Auto al arrancar el coche.</string>
     <string name="dset_phone_none">Ninguno</string>

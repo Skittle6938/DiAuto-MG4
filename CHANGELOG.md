@@ -1,6 +1,6 @@
 # DiAuto MG4+ 2.2.3-beta3
 
-- With *Open Android Auto when connected* set to **No**, the phone now shows up as the Android Auto source in other launchers (MG4 Dash) before any track plays.
+- *Open Android Auto when connected* now offers three choices: **No** (hidden until the car's Android Auto button opens it), **In the background** (connected without taking the screen, and shown at once as the Android Auto source in other launchers such as MG4 Dash) and **Yes**.
 
 # DiAuto MG4+ 2.2.3-beta2
 

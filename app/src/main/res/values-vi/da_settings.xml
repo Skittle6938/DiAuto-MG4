@@ -14,7 +14,8 @@
     <string name="dset_start_with_car">Khởi động cùng xe</string>
     <string name="dset_start_with_car_summary">Android Auto tự quay lại khi bạn lên xe.</string>
     <string name="dset_open_on_connect">Mở Android Auto khi kết nối</string>
-    <string name="dset_open_on_connect_summary">Nếu chọn Không, ứng dụng kết nối ở nền: hãy mở bằng nút Android Auto của xe.</string>
+    <string name="dset_open_on_connect_summary">Ở chế độ chạy nền, ứng dụng kết nối mà không chiếm màn hình và xuất hiện như nguồn Android Auto trong các launcher khác. Khi chọn Không, Android Auto bị ẩn cho đến khi bạn mở bằng nút Android Auto của xe.</string>
+    <string name="dset_open_background">Chạy nền</string>
     <string name="dset_phone">Điện thoại</string>
     <string name="dset_phone_summary">Điện thoại sẽ khởi động Android Auto khi xe khởi động.</string>
     <string name="dset_phone_none">Không có</string>

@@ -134,9 +134,18 @@ class DaSettingsActivity : BaseActivity() {
         row(R.string.dset_start_with_car, R.string.dset_start_with_car_summary, yesNo(settings.autoStartOnBoot) {
             settings.autoStartOnBoot = it
         })
-        row(R.string.dset_open_on_connect, R.string.dset_open_on_connect_summary, yesNo(settings.openProjectionOnConnect) {
-            settings.openProjectionOnConnect = it
-        })
+        val projectionLabels = listOf(R.string.dset_no, R.string.dset_open_background, R.string.dset_yes).map { getString(it) }
+        row(R.string.dset_open_on_connect, R.string.dset_open_on_connect_summary,
+            value(projectionLabels[settings.projectionOnConnect.coerceIn(0, 2)]) {
+                MaterialAlertDialogBuilder(this, R.style.DarkAlertDialog)
+                    .setTitle(R.string.dset_open_on_connect)
+                    .setItems(projectionLabels.toTypedArray()) { _, i ->
+                        settings.projectionOnConnect = i
+                        showTab(selectedTab)
+                    }
+                    .setNegativeButton(R.string.cancel, null)
+                    .show()
+            })
         row(R.string.dset_phones, R.string.dset_phones_summary, value(phonesLabel()) { pickPhone() })
         row(R.string.dset_usb_wifi, R.string.dset_usb_wifi_summary, yesNo(settings.usbWifiClient) {
             settings.usbWifiClient = it
