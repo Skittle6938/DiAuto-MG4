@@ -352,6 +352,20 @@ class AapService : Service(), UsbReceiver.Listener {
         }
     }
 
+    /**
+     * Until the phone sends a track, the AllGo media card is empty, and MG4 Dash only offers the
+     * Android Auto source once that card has something: a session left in the background (no
+     * projection on screen, so no source switch either) was never offered. A paused "Android Auto"
+     * card shows the phone is there.
+     */
+    private fun announceMediaCardPlaceholder() {
+        if (lastAaMediaMetadata != null) return
+        val aa = getString(R.string.video)
+        allgoMediaCard.sessionStarted()
+        allgoMediaCard.metadata(aa, getString(R.string.media_session_aa_status_placeholder), aa, null, 0L)
+        allgoMediaCard.playback(false, 0)
+    }
+
     private fun refreshMediaSessionMetadataForPrefsChange() {
         if (isDestroying) return
         val sync = App.provide(this).settings.syncMediaSessionWithAaMetadata
@@ -877,6 +891,7 @@ class AapService : Service(), UsbReceiver.Listener {
                     is CommManager.ConnectionState.TransportStarted -> {
                         hasEverConnected = true
                         notifyAllgoRelay()
+                        announceMediaCardPlaceholder()
                         // The launcher can lose the session, and with the radio playing no track
                         // change would tell it again: its media card would stay on "Unknown".
                         restoreCarHandsFreeSoon()

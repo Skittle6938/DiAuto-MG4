@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.3-beta3
+
+- With *Open Android Auto when connected* set to **No**, the phone now shows up as the Android Auto source in other launchers (MG4 Dash) before any track plays.
+
 # DiAuto MG4+ 2.2.3-beta2
 
 - Several phones in order of priority (*Settings → Connection → Phones*): the first one linked over Bluetooth goes wireless; a phone on USB still comes first.
