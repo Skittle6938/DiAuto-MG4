@@ -12,9 +12,7 @@
     <string name="dset_wireless">Android Auto wireless</string>
     <string name="dset_wireless_summary">Tramite l’hotspot dell’auto. Anche un cavo USB funziona sempre.</string>
     <string name="dset_start_with_car">Avvia con l’auto</string>
-    <string name="dset_start_with_car_summary">Android Auto torna da solo quando sali in auto.</string>
-    <string name="dset_open_on_connect">Apri Android Auto alla connessione</string>
-    <string name="dset_open_on_connect_summary">In background si connette senza occupare lo schermo e compare come sorgente Android Auto negli altri launcher. Con No, Android Auto resta nascosto finché non lo apri con il tasto Android Auto dell\'auto.</string>
+    <string name="dset_start_with_car_summary">In background il telefono si connette senza occupare lo schermo e compare come sorgente Android Auto negli altri launcher. Con Sì, Android Auto occupa anche lo schermo. Con No, nulla si connette finché non apri DiAuto.</string>
     <string name="dset_open_background">In background</string>
     <string name="dset_phone">Telefono</string>
     <string name="dset_phone_summary">Quello che avvia Android Auto all’accensione dell’auto.</string>

@@ -12,9 +12,7 @@
     <string name="dset_wireless">უსადენო Android Auto</string>
     <string name="dset_wireless_summary">მანქანის ჰოტსპოტის მეშვეობით. USB კაბელიც ყოველთვის მუშაობს.</string>
     <string name="dset_start_with_car">მანქანასთან ერთად გაშვება</string>
-    <string name="dset_start_with_car_summary">Android Auto თავისით ბრუნდება, როცა მანქანაში ჯდებით.</string>
-    <string name="dset_open_on_connect">Android Auto-ს გახსნა დაკავშირებისას</string>
-    <string name="dset_open_on_connect_summary">ფონურ რეჟიმში ის უკავშირდება ეკრანის დაკავების გარეშე და სხვა ლაუნჩერებში Android Auto-ს წყაროდ ჩანს. „არა“-ზე Android Auto დამალული რჩება, სანამ მანქანის Android Auto ღილაკით არ გახსნით.</string>
+    <string name="dset_start_with_car_summary">ფონურ რეჟიმში ტელეფონი უკავშირდება ეკრანის დაკავების გარეშე და სხვა ლაუნჩერებში Android Auto-ს წყაროდ ჩანს. „დიახ“-ზე Android Auto ეკრანსაც იკავებს. „არა“-ზე არაფერი უკავშირდება, სანამ DiAuto-ს არ გახსნით.</string>
     <string name="dset_open_background">ფონურ რეჟიმში</string>
     <string name="dset_phone">ტელეფონი</string>
     <string name="dset_phone_summary">ტელეფონი, რომელიც Android Auto-ს უშვებს მანქანის ჩართვისას.</string>

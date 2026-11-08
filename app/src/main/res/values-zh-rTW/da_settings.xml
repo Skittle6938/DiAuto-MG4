@@ -12,9 +12,7 @@
     <string name="dset_wireless">無線 Android Auto</string>
     <string name="dset_wireless_summary">透過車輛熱點連線。USB 傳輸線也隨時可用。</string>
     <string name="dset_start_with_car">隨車啟動</string>
-    <string name="dset_start_with_car_summary">上車後 Android Auto 會自動恢復。</string>
-    <string name="dset_open_on_connect">連線時開啟 Android Auto</string>
-    <string name="dset_open_on_connect_summary">背景模式下，連線時不切換螢幕，並在其他啟動器中顯示為 Android Auto 音源。選擇「否」時，Android Auto 保持隱藏，直到用車輛的 Android Auto 按鈕開啟。</string>
+    <string name="dset_start_with_car_summary">背景模式下，手機連線時不切換螢幕，並在其他啟動器中顯示為 Android Auto 音源。選擇「是」時，Android Auto 也會佔用螢幕。選擇「否」時，在開啟 DiAuto 之前不會連線任何裝置。</string>
     <string name="dset_open_background">背景</string>
     <string name="dset_phone">手機</string>
     <string name="dset_phone_summary">車輛啟動時用來啟動 Android Auto 的手機。</string>

@@ -12,9 +12,7 @@
     <string name="dset_wireless">ワイヤレス Android Auto</string>
     <string name="dset_wireless_summary">車のホットスポット経由で接続します。USB ケーブルもいつでも使えます。</string>
     <string name="dset_start_with_car">車と一緒に起動</string>
-    <string name="dset_start_with_car_summary">乗車すると Android Auto が自動で戻ります。</string>
-    <string name="dset_open_on_connect">接続時に Android Auto を開く</string>
-    <string name="dset_open_on_connect_summary">バックグラウンドでは画面を切り替えずに接続し、他のランチャーで Android Auto ソースとして表示されます。「いいえ」の場合、車の Android Auto ボタンで開くまで Android Auto は表示されません。</string>
+    <string name="dset_start_with_car_summary">バックグラウンドでは画面を切り替えずに電話が接続し、他のランチャーで Android Auto ソースとして表示されます。「はい」では Android Auto が画面にも表示されます。「いいえ」では DiAuto を開くまで何も接続しません。</string>
     <string name="dset_open_background">バックグラウンド</string>
     <string name="dset_phone">スマートフォン</string>
     <string name="dset_phone_summary">車の起動時に Android Auto を開始するスマートフォンです。</string>

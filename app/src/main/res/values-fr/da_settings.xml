@@ -12,9 +12,7 @@
     <string name="dset_wireless">Android Auto sans fil</string>
     <string name="dset_wireless_summary">Par le point d’accès de la voiture. Le câble USB marche toujours.</string>
     <string name="dset_start_with_car">Démarrer avec la voiture</string>
-    <string name="dset_start_with_car_summary">Android Auto revient tout seul quand vous montez.</string>
-    <string name="dset_open_on_connect">Ouvrir Android Auto à la connexion</string>
-    <string name="dset_open_on_connect_summary">En arrière-plan, il se connecte sans prendre l\'écran et apparaît comme source Android Auto dans les autres launchers. Sur Non, Android Auto reste caché tant que vous ne l\'ouvrez pas avec le bouton Android Auto de la voiture.</string>
+    <string name="dset_start_with_car_summary">En arrière-plan, le téléphone se connecte sans prendre l\'écran et apparaît comme source Android Auto dans les autres launchers. Sur Oui, Android Auto prend aussi l\'écran. Sur Non, rien ne se connecte tant que vous n\'ouvrez pas DiAuto.</string>
     <string name="dset_open_background">En arrière-plan</string>
     <string name="dset_phone">Téléphone</string>
     <string name="dset_phone_summary">Celui qui lance Android Auto au démarrage.</string>

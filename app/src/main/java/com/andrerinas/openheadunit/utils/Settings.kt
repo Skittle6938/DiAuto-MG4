@@ -880,18 +880,12 @@ class Settings(private val context: Context) {
         set(value) { prefs.edit().putBoolean("auto-start-on-usb", value).apply() }
 
     /**
-     * What a phone connection does: [PROJECTION_HIDDEN] stays out of sight until the car's Android
-     * Auto button opens it, [PROJECTION_BACKGROUND] is offered to the launchers as the Android Auto
-     * source without taking the screen, [PROJECTION_OPEN] takes the screen. The former Yes / No
-     * setting maps to open / hidden.
+     * Android Auto takes the screen when the phone connects; otherwise it stays in the background,
+     * offered to the launchers as the Android Auto source, until the car's Android Auto button opens it.
      */
-    var projectionOnConnect: Int
-        get() = prefs.getInt("projection-on-connect",
-            if (prefs.getBoolean("open-projection-on-connect", true)) PROJECTION_OPEN else PROJECTION_HIDDEN)
-        set(value) { prefs.edit().putInt("projection-on-connect", value).apply() }
-
-    /** Android Auto takes the screen when the phone connects; otherwise the car's Android Auto button opens it. */
-    val openProjectionOnConnect: Boolean get() = projectionOnConnect == PROJECTION_OPEN
+    var openProjectionOnConnect: Boolean
+        get() = prefs.getBoolean("open-projection-on-connect", true)
+        set(value) { prefs.edit().putBoolean("open-projection-on-connect", value).apply() }
 
     var autoStartOnBoot: Boolean
         get() = prefs.getBoolean("auto-start-on-boot", true)
@@ -1214,9 +1208,6 @@ class Settings(private val context: Context) {
         }
 
     companion object {
-        const val PROJECTION_HIDDEN = 0
-        const val PROJECTION_BACKGROUND = 1
-        const val PROJECTION_OPEN = 2
         /** Voice (assistant + navigation) level above the music, in %; the slider runs -50 … +200. */
         const val DEFAULT_VOICE_VOLUME_OFFSET = 0
         const val MAX_VOICE_VOLUME_OFFSET = 200

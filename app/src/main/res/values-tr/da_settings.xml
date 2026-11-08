@@ -12,9 +12,7 @@
     <string name="dset_wireless">Kablosuz Android Auto</string>
     <string name="dset_wireless_summary">Aracın erişim noktası üzerinden. USB kablosu da her zaman çalışır.</string>
     <string name="dset_start_with_car">Araçla birlikte başlat</string>
-    <string name="dset_start_with_car_summary">Araca bindiğinde Android Auto kendiliğinden geri gelir.</string>
-    <string name="dset_open_on_connect">Bağlanınca Android Auto\'yu aç</string>
-    <string name="dset_open_on_connect_summary">Arka planda ekranı almadan bağlanır ve diğer başlatıcılarda Android Auto kaynağı olarak görünür. Hayır seçiliyken Android Auto, aracın Android Auto düğmesiyle açana kadar gizli kalır.</string>
+    <string name="dset_start_with_car_summary">Arka planda telefon ekranı almadan bağlanır ve diğer başlatıcılarda Android Auto kaynağı olarak görünür. Evet seçiliyken Android Auto ekranı da alır. Hayır seçiliyken DiAuto\'yu açana kadar hiçbir şey bağlanmaz.</string>
     <string name="dset_open_background">Arka planda</string>
     <string name="dset_phone">Telefon</string>
     <string name="dset_phone_summary">Araç çalıştığında Android Auto’yu başlatan telefon.</string>

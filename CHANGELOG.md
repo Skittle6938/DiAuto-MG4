@@ -1,6 +1,6 @@
 # DiAuto MG4+ 2.2.3-beta3
 
-- *Open Android Auto when connected* now offers three choices: **No** (hidden until the car's Android Auto button opens it), **In the background** (connected without taking the screen, and shown at once as the Android Auto source in other launchers such as MG4 Dash) and **Yes**.
+- *Start with the car* now offers three choices: **No** (nothing connects until you open DiAuto), **In the background** (the phone connects without taking the screen and shows up at once as the Android Auto source in other launchers such as MG4 Dash) and **Yes** (Android Auto also takes the screen). It replaces *Open Android Auto when connected*.
 
 # DiAuto MG4+ 2.2.3-beta2
 

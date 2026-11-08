@@ -131,12 +131,18 @@ class DaSettingsActivity : BaseActivity() {
             modes.add(Settings.ConnectionMode.USB)
             settings.connectionModes = modes
         })
-        row(R.string.dset_start_with_car, R.string.dset_start_with_car_summary, yesNo(settings.autoStartOnBoot) {
-            settings.autoStartOnBoot = it
+        // One choice for both: No starts nothing until DiAuto is opened, In the background connects
+        // without taking the screen, Yes connects and takes it.
+        val startLabels = listOf(R.string.dset_no, R.string.dset_open_background, R.string.dset_yes).map { getString(it) }
+        val start = when {
+            !settings.autoStartOnBoot -> 0
+            settings.openProjectionOnConnect -> 2
+            else -> 1
+        }
+        row(R.string.dset_start_with_car, R.string.dset_start_with_car_summary, choices(startLabels, start) {
+            settings.autoStartOnBoot = it > 0
+            if (it > 0) settings.openProjectionOnConnect = it == 2
         })
-        val projectionLabels = listOf(R.string.dset_no, R.string.dset_open_background, R.string.dset_yes).map { getString(it) }
-        row(R.string.dset_open_on_connect, R.string.dset_open_on_connect_summary,
-            choices(projectionLabels, settings.projectionOnConnect.coerceIn(0, 2)) { settings.projectionOnConnect = it })
         row(R.string.dset_phones, R.string.dset_phones_summary, value(phonesLabel()) { pickPhone() })
         row(R.string.dset_usb_wifi, R.string.dset_usb_wifi_summary, yesNo(settings.usbWifiClient) {
             settings.usbWifiClient = it

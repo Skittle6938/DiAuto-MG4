@@ -12,9 +12,7 @@
     <string name="dset_wireless">Бездротовий Android Auto</string>
     <string name="dset_wireless_summary">Через точку доступу автомобіля. USB-кабель теж завжди працює.</string>
     <string name="dset_start_with_car">Запуск разом з автомобілем</string>
-    <string name="dset_start_with_car_summary">Android Auto сам повертається, коли ви сідаєте в авто.</string>
-    <string name="dset_open_on_connect">Відкривати Android Auto під час підключення</string>
-    <string name="dset_open_on_connect_summary">У фоні підключається, не займаючи екран, і з\'являється як джерело Android Auto в інших лаунчерах. При «Ні» Android Auto залишається прихованим, доки ви не відкриєте його кнопкою Android Auto автомобіля.</string>
+    <string name="dset_start_with_car_summary">У фоні телефон підключається, не займаючи екран, і з\'являється як джерело Android Auto в інших лаунчерах. При «Так» Android Auto також займає екран. При «Ні» нічого не підключається, доки ви не відкриєте DiAuto.</string>
     <string name="dset_open_background">У фоні</string>
     <string name="dset_phone">Телефон</string>
     <string name="dset_phone_summary">Той, що запускає Android Auto під час запуску автомобіля.</string>

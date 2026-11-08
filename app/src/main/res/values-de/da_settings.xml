@@ -12,9 +12,7 @@
     <string name="dset_wireless">Android Auto kabellos</string>
     <string name="dset_wireless_summary">Über den Hotspot des Autos. Ein USB-Kabel funktioniert immer auch.</string>
     <string name="dset_start_with_car">Mit dem Auto starten</string>
-    <string name="dset_start_with_car_summary">Android Auto kommt von selbst zurück, wenn Sie einsteigen.</string>
-    <string name="dset_open_on_connect">Android Auto beim Verbinden öffnen</string>
-    <string name="dset_open_on_connect_summary">Im Hintergrund verbindet es sich, ohne den Bildschirm zu übernehmen, und erscheint in anderen Launchern als Android-Auto-Quelle. Bei Nein bleibt Android Auto verborgen, bis Sie es mit der Android-Auto-Taste des Autos öffnen.</string>
+    <string name="dset_start_with_car_summary">Im Hintergrund verbindet sich das Telefon, ohne den Bildschirm zu übernehmen, und erscheint in anderen Launchern als Android-Auto-Quelle. Bei Ja übernimmt Android Auto auch den Bildschirm. Bei Nein verbindet sich nichts, bis Sie DiAuto öffnen.</string>
     <string name="dset_open_background">Im Hintergrund</string>
     <string name="dset_phone">Telefon</string>
     <string name="dset_phone_summary">Das Telefon, das Android Auto beim Start des Autos startet.</string>

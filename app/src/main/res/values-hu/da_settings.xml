@@ -12,9 +12,7 @@
     <string name="dset_wireless">Vezeték nélküli Android Auto</string>
     <string name="dset_wireless_summary">Az autó hotspotján keresztül. USB-kábellel is mindig működik.</string>
     <string name="dset_start_with_car">Indítás az autóval</string>
-    <string name="dset_start_with_car_summary">Az Android Auto magától visszajön, amikor beszállsz.</string>
-    <string name="dset_open_on_connect">Android Auto megnyitása csatlakozáskor</string>
-    <string name="dset_open_on_connect_summary">Háttérben a képernyő átvétele nélkül csatlakozik, és más launcherekben Android Auto forrásként jelenik meg. Nem esetén az Android Auto rejtve marad, amíg meg nem nyitja az autó Android Auto gombjával.</string>
+    <string name="dset_start_with_car_summary">Háttérben a telefon a képernyő átvétele nélkül csatlakozik, és más launcherekben Android Auto forrásként jelenik meg. Igen esetén az Android Auto a képernyőt is átveszi. Nem esetén semmi sem csatlakozik, amíg meg nem nyitja a DiAutót.</string>
     <string name="dset_open_background">Háttérben</string>
     <string name="dset_phone">Telefon</string>
     <string name="dset_phone_summary">Ez a telefon indítja az Android Auto alkalmazást, amikor az autó elindul.</string>
