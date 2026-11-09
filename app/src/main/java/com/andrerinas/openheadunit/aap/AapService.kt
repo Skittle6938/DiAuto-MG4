@@ -601,6 +601,42 @@ class AapService : Service(), UsbReceiver.Listener {
      * not manifest-declared ones — that's why the manifest-based BootCompleteReceiver
      * can't catch it and we need this service-based approach.
      */
+    /** Opens the Native AA listeners as soon as the car's Bluetooth is on (issue #17). */
+    private val bluetoothStateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.action != android.bluetooth.BluetoothAdapter.ACTION_STATE_CHANGED) return
+            val state = intent.getIntExtra(android.bluetooth.BluetoothAdapter.EXTRA_STATE, -1)
+            if (state == android.bluetooth.BluetoothAdapter.STATE_ON) onBluetoothOn()
+        }
+    }
+
+    private fun onBluetoothOn() {
+        val phones = App.provide(this).settings.autoStartBluetoothDeviceMacs.toList()
+        val linked = try {
+            val here = BluetoothHelper.connectedBondedDevices(this).map { it.address }
+            com.andrerinas.openheadunit.connection.PhonePriority.pick(phones, here) != null
+        } catch (_: SecurityException) {
+            false
+        }
+        val action = BluetoothWakePolicy.onBluetoothOn(
+            wirelessOn = wirelessInitialized && activeWirelessEnabled == true,
+            userExited = userExitedAA,
+            sessionBusy = commManager.isConnected || commManager.isBusy || nativeAaPokeJob?.isActive == true,
+            listenersOpen = nativeAaHandshakeManager?.isActive() == true,
+            phonesRemembered = phones.isNotEmpty(),
+            phoneLinked = linked
+        )
+        AppLog.i("AapService: Bluetooth is on - $action")
+        when (action) {
+            BluetoothWakePolicy.BluetoothOnAction.NOTHING -> Unit
+            BluetoothWakePolicy.BluetoothOnAction.OPEN_LISTENERS -> scheduleNativeAaArm("Bluetooth on")
+            BluetoothWakePolicy.BluetoothOnAction.OPEN_AND_POKE -> {
+                lastWatchdogPokeMs = SystemClock.elapsedRealtime()
+                scheduleNativeAaPoke(phones.first(), reason = "Bluetooth on")
+            }
+        }
+    }
+
     private val wakeDetectReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action ?: return
@@ -1755,6 +1791,11 @@ class AapService : Service(), UsbReceiver.Listener {
             ContextCompat.RECEIVER_EXPORTED
         )
         AppLog.i("Registered wake detection receiver (${wakeFilter.countActions()} actions)")
+        ContextCompat.registerReceiver(
+            this, bluetoothStateReceiver,
+            IntentFilter(android.bluetooth.BluetoothAdapter.ACTION_STATE_CHANGED),
+            ContextCompat.RECEIVER_EXPORTED
+        )
     }
 
     /** Brings up wireless Android Auto over the car's hotspot, unless it is off in the settings. */
@@ -1955,6 +1996,7 @@ class AapService : Service(), UsbReceiver.Listener {
         try { unregisterReceiver(usbReceiver) } catch (_: Exception) {}
         try { unregisterReceiver(mediaButtonReceiver) } catch (_: Exception) {}
         try { unregisterReceiver(wakeDetectReceiver) } catch (_: Exception) {}
+        try { unregisterReceiver(bluetoothStateReceiver) } catch (_: Exception) {}
         try { App.provide(this).carKeysManager.unregisterReceivers() } catch (e: Exception) { AppLog.w("AapService: Error unregistering carKeysManager: ${e.message}") }
         try {
             if (::uiModeManager.isInitialized) {

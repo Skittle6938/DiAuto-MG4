@@ -78,4 +78,26 @@ object VoiceSessionPolicy {
      */
     fun voiceKeyLeftToCar(isDown: Boolean, carAssistantActive: Boolean?, leftOnPress: Boolean): Boolean =
         if (isDown) carAssistantActive == true else leftOnPress
+
+    /**
+     * On SWI68, the cars with their own assistant, stock AllGo leaves a short press of the voice
+     * key to the car's assistant and opens Android Auto's on a long press. Sending Android Auto
+     * the short press too opened both at once (2.2.3-beta5, issue #16).
+     */
+    fun voiceKeyLongPressOnly(generation: FirmwareInfo.Gen): Boolean =
+        generation == FirmwareInfo.Gen.SWI68
+
+    enum class VoiceKeySend { NONE, PRESS, RELEASE }
+
+    /**
+     * Long-press-only voice key: Android Auto gets the press once the car reports the key held,
+     * and the release that ends it. A short press sends nothing.
+     *
+     * @param pressSent whether this press already went to Android Auto
+     */
+    fun longPressVoiceKey(isDown: Boolean, isLong: Boolean, pressSent: Boolean): VoiceKeySend = when {
+        isDown && isLong && !pressSent -> VoiceKeySend.PRESS
+        !isDown && pressSent -> VoiceKeySend.RELEASE
+        else -> VoiceKeySend.NONE
+    }
 }

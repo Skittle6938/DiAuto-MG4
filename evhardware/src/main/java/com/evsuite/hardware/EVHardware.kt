@@ -233,11 +233,70 @@ object EVHardware {
      * the car service can't tell.
      */
     fun carVoiceAssistantActive(): Boolean? = try {
-        val car = sCar
-        val manager = car?.javaClass?.getMethod("getCarManager", String::class.java)?.invoke(car, "app_focus")
-        (manager?.javaClass?.getMethod("getActiveAppTypes")?.invoke(manager) as? IntArray)?.contains(2)
+        // The focus has one owner: while DiAuto holds it, the car's assistant does not.
+        if (sOwnVoiceFocus) false else {
+            val manager = appFocusManager()
+            (manager?.javaClass?.getMethod("getActiveAppTypes")?.invoke(manager) as? IntArray)?.contains(APP_FOCUS_VOICE_COMMAND)
+        }
     } catch (e: Exception) {
         null
+    }
+
+    private const val APP_FOCUS_VOICE_COMMAND = 2
+    @Volatile private var sVoiceFocusCallback: Any? = null
+    @Volatile private var sOwnVoiceFocus = false
+
+    private fun appFocusManager(): Any? {
+        val car = sCar ?: return null
+        return car.javaClass.getMethod("getCarManager", String::class.java).invoke(car, "app_focus")
+    }
+
+    private fun voiceFocusCallbackClass(): Class<*> =
+        Class.forName("android.car.CarAppFocusManager\$OnAppFocusOwnershipCallback")
+
+    /**
+     * Takes the car's voice command focus for an Android Auto voice request, as stock AllGo's
+     * RemoteUIService does, so the car's own assistant ("Hello MG") lets go of the cabin mic
+     * (issue #16). True when granted, false when refused, null when the car service can't tell.
+     */
+    fun requestVoiceCommandFocus(): Boolean? = try {
+        val manager = appFocusManager()
+        if (manager == null) null else {
+            val cbClass = voiceFocusCallbackClass()
+            val cb = sVoiceFocusCallback ?: Proxy.newProxyInstance(cbClass.classLoader, arrayOf(cbClass)) { proxy, method, args ->
+                when (method.name) {
+                    "hashCode" -> System.identityHashCode(proxy)
+                    "equals" -> proxy === args?.getOrNull(0)
+                    "toString" -> "DiAutoVoiceCommandFocus"
+                    else -> {
+                        if (method.name == "onAppFocusOwnershipLost") sOwnVoiceFocus = false
+                        AppLogger.i(TAG, "voice command focus: ${method.name}")
+                        null
+                    }
+                }
+            }.also { sVoiceFocusCallback = it }
+            val result = manager.javaClass.getMethod("requestAppFocus", Int::class.javaPrimitiveType, cbClass)
+                .invoke(manager, APP_FOCUS_VOICE_COMMAND, cb) as? Int
+            sOwnVoiceFocus = result == 1 // APP_FOCUS_REQUEST_SUCCEEDED
+            sOwnVoiceFocus
+        }
+    } catch (e: Exception) {
+        AppLogger.w(TAG, "voice command focus request failed: ${(e.cause ?: e).message}")
+        null
+    }
+
+    /** Gives the voice command focus back once the Android Auto voice request is over. */
+    fun abandonVoiceCommandFocus() {
+        val cb = sVoiceFocusCallback ?: return
+        if (!sOwnVoiceFocus) return
+        sOwnVoiceFocus = false
+        try {
+            val manager = appFocusManager() ?: return
+            manager.javaClass.getMethod("abandonAppFocus", voiceFocusCallbackClass(), Int::class.javaPrimitiveType)
+                .invoke(manager, cb, APP_FOCUS_VOICE_COMMAND)
+        } catch (e: Exception) {
+            AppLogger.w(TAG, "voice command focus abandon failed: ${(e.cause ?: e).message}")
+        }
     }
     @Volatile private var sCarPropertyManager: Any? = null
     @Volatile private var sCarHvacManager: Any? = null

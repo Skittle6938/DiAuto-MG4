@@ -726,7 +726,10 @@ internal class AapAudio(
             .build()
         assistantFocusRequest = request
         val result = audioManager.requestAudioFocus(request)
-        AppLog.i("AapAudio: mic open - assistant focus result=$result")
+        // The audio focus alone did not free the mic from "Hello MG" (2.2.3-beta5): stock AllGo
+        // also takes the car's voice command focus.
+        val voiceFocus = com.evsuite.hardware.EVHardware.requestVoiceCommandFocus()
+        AppLog.i("AapAudio: mic open - assistant focus result=$result, voice command focus=$voiceFocus")
     }
 
     fun releaseAssistantFocus() {
@@ -735,6 +738,7 @@ internal class AapAudio(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             runCatching { audioManager.abandonAudioFocusRequest(request) }
         }
+        com.evsuite.hardware.EVHardware.abandonVoiceCommandFocus()
         AppLog.i("AapAudio: mic closed - assistant focus released")
     }
 

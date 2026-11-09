@@ -130,4 +130,25 @@ class VoiceSessionPolicyTest {
         assertTrue(VoiceSessionPolicy.voiceKeyLeftToCar(isDown = false, carAssistantActive = false, leftOnPress = true))
         assertFalse(VoiceSessionPolicy.voiceKeyLeftToCar(isDown = false, carAssistantActive = true, leftOnPress = false))
     }
+
+    // --- long-press-only voice key (SWI68) ---
+
+    @Test
+    fun `only SWI68 leaves the short press to the car's assistant`() {
+        assertTrue(VoiceSessionPolicy.voiceKeyLongPressOnly(com.evsuite.hardware.FirmwareInfo.Gen.SWI68))
+        assertFalse(VoiceSessionPolicy.voiceKeyLongPressOnly(com.evsuite.hardware.FirmwareInfo.Gen.SWI69))
+    }
+
+    @Test
+    fun `a short press sends nothing to Android Auto`() {
+        assertEquals(VoiceSessionPolicy.VoiceKeySend.NONE, VoiceSessionPolicy.longPressVoiceKey(isDown = true, isLong = false, pressSent = false))
+        assertEquals(VoiceSessionPolicy.VoiceKeySend.NONE, VoiceSessionPolicy.longPressVoiceKey(isDown = false, isLong = false, pressSent = false))
+    }
+
+    @Test
+    fun `a long press sends one press and its release`() {
+        assertEquals(VoiceSessionPolicy.VoiceKeySend.PRESS, VoiceSessionPolicy.longPressVoiceKey(isDown = true, isLong = true, pressSent = false))
+        assertEquals(VoiceSessionPolicy.VoiceKeySend.NONE, VoiceSessionPolicy.longPressVoiceKey(isDown = true, isLong = true, pressSent = true))
+        assertEquals(VoiceSessionPolicy.VoiceKeySend.RELEASE, VoiceSessionPolicy.longPressVoiceKey(isDown = false, isLong = false, pressSent = true))
+    }
 }

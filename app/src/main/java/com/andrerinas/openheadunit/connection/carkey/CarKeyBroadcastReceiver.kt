@@ -33,6 +33,8 @@ class CarKeyBroadcastReceiver : BroadcastReceiver(), CarKeyReceiver {
         private const val SAIC_KEYCODE_VOICE = 287
         /** The voice key press went to the car's own assistant: its release goes there too. */
         @Volatile private var voiceKeyLeftToCar = false
+        /** A long press of the voice key went to Android Auto: its release goes there too. */
+        @Volatile private var voiceKeyPressSent = false
         /** Steering-wheel phone key. (Hardkey 3 is the car's home key, handled by the car.) */
         private const val SAIC_KEYCODE_PHONE = 291
         private const val PLAY_PAUSE_RUI_WAIT_MS = 400L
@@ -242,6 +244,23 @@ class CarKeyBroadcastReceiver : BroadcastReceiver(), CarKeyReceiver {
                 isDown, if (isDown) com.evsuite.hardware.EVHardware.carVoiceAssistantActive() else null, voiceKeyLeftToCar)
             if (voiceKeyLeftToCar) {
                 AppLog.i("CarKeyReceiver: voice key ${if (isDown) "down" else "up"} - the car's assistant is listening, key left to it")
+                return
+            }
+            if (com.andrerinas.openheadunit.aap.VoiceSessionPolicy.voiceKeyLongPressOnly(com.evsuite.hardware.FirmwareInfo.getGeneration())) {
+                when (com.andrerinas.openheadunit.aap.VoiceSessionPolicy.longPressVoiceKey(isDown, isLong, voiceKeyPressSent)) {
+                    com.andrerinas.openheadunit.aap.VoiceSessionPolicy.VoiceKeySend.PRESS -> {
+                        voiceKeyPressSent = true
+                        App.provide(context).commManager.sendKey(KeyEvent.KEYCODE_SEARCH, true, null, "steering-voice-long")
+                        AppLog.i("CarKeyReceiver: voice key held -> Android Auto assistant key")
+                    }
+                    com.andrerinas.openheadunit.aap.VoiceSessionPolicy.VoiceKeySend.RELEASE -> {
+                        voiceKeyPressSent = false
+                        App.provide(context).commManager.sendKey(KeyEvent.KEYCODE_SEARCH, false, null, "steering-voice-long")
+                        AppLog.i("CarKeyReceiver: voice key released -> Android Auto assistant key")
+                    }
+                    com.andrerinas.openheadunit.aap.VoiceSessionPolicy.VoiceKeySend.NONE ->
+                        if (isDown && !isLong) AppLog.i("CarKeyReceiver: voice key short press left to the car's assistant")
+                }
                 return
             }
             if (!isLong) {

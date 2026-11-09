@@ -120,4 +120,27 @@ object BluetoothWakePolicy {
      */
     fun shouldForget(reading: BondReading): Boolean =
         reading == BondReading.NOT_BONDED || reading == BondReading.MALFORMED
+
+    /** What DiAuto does when the car's Bluetooth comes on (issue #17). */
+    enum class BluetoothOnAction { NOTHING, OPEN_LISTENERS, OPEN_AND_POKE }
+
+    /**
+     * At a cold start the car's Bluetooth can come up after DiAuto: the handshake listeners could
+     * not open then, and only the reconnect watchdog reopened them, up to 2.5 min later. As soon
+     * as Bluetooth is on they are opened, and a remembered phone that is not linked yet is woken
+     * at once. Nothing is done while a session is up or being set up, after the driver left
+     * Android Auto, or when the listeners are already open.
+     */
+    fun onBluetoothOn(
+        wirelessOn: Boolean,
+        userExited: Boolean,
+        sessionBusy: Boolean,
+        listenersOpen: Boolean,
+        phonesRemembered: Boolean,
+        phoneLinked: Boolean
+    ): BluetoothOnAction = when {
+        !wirelessOn || userExited || sessionBusy || listenersOpen -> BluetoothOnAction.NOTHING
+        phonesRemembered && !phoneLinked -> BluetoothOnAction.OPEN_AND_POKE
+        else -> BluetoothOnAction.OPEN_LISTENERS
+    }
 }
