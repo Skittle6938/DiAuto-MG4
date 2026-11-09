@@ -39,26 +39,14 @@ class SettingsDefaultsTest {
 
     @Test
     fun `Android Auto takes the screen when the phone connects by default`() {
-        assertEquals(Settings.PROJECTION_OPEN, settings.projectionOnConnect)
         assertTrue(settings.openProjectionOnConnect)
     }
 
     @Test
-    fun `the former Open Android Auto when connected setting maps to the new choices`() {
-        prefs().edit().putBoolean("open-projection-on-connect", false).commit()
-        assertEquals(Settings.PROJECTION_HIDDEN, settings.projectionOnConnect)
+    fun `Start with the car in the background keeps Android Auto off the screen`() {
+        settings.openProjectionOnConnect = false
         assertFalse(settings.openProjectionOnConnect)
-
-        prefs().edit().putBoolean("open-projection-on-connect", true).commit()
-        assertEquals(Settings.PROJECTION_OPEN, settings.projectionOnConnect)
-    }
-
-    @Test
-    fun `the new choice wins over the former setting`() {
-        prefs().edit().putBoolean("open-projection-on-connect", true).commit()
-        settings.projectionOnConnect = Settings.PROJECTION_BACKGROUND
-        assertEquals(Settings.PROJECTION_BACKGROUND, settings.projectionOnConnect)
-        assertFalse(settings.openProjectionOnConnect)
+        assertTrue(settings.autoStartOnBoot)
     }
 
     @Test
