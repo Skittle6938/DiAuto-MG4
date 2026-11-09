@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.4
+
+Official release, with 2.2.4-beta1: the assistant no longer keeps the car's audio focus after a voice request (music back, wheel volume keys back on the music), short press of the voice key left to the car's assistant on SWI68, the car's voice command focus taken for "Hello MG", and a faster connection at a cold start.
+
 # DiAuto MG4+ 2.2.4-beta1
 
 - Fixed: after a voice request, the assistant could keep the car's audio focus for the rest of the drive. The music did not come back, the radio stayed silent and the wheel volume keys only set the assistant's volume. The phone goes from the assistant to its music without releasing it in between, and DiAuto now gives the assistant focus back itself.
