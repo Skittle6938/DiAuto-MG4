@@ -45,4 +45,15 @@ object ProtocolFocusRoute {
      */
     fun asksSystem(kind: Kind, musicViaBluetooth: Boolean): Boolean =
         !(kind == Kind.MEDIA && musicViaBluetooth)
+
+    /**
+     * The phone can go from one request to the next without a RELEASE in between, e.g. from the
+     * assistant (GAIN_TRANSIENT) straight to its music (GAIN) after a voice request. The request
+     * it replaces is then given back: kept, the assistant focus stayed on top of the car's stack
+     * for the rest of the drive, the car refused the music and the wheel keys only set the
+     * assistant's volume (2026-11-09). A request of another kind is given back before the new one,
+     * since the car refuses the music while the assistant holds focus; one of the same kind after
+     * it, so the radio never gets the focus in between.
+     */
+    fun releaseBefore(previous: Kind?, next: Kind): Boolean = previous != null && previous != next
 }

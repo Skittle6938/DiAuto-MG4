@@ -1,5 +1,6 @@
 # DiAuto MG4+ 2.2.4-beta1
 
+- Fixed: after a voice request, the assistant could keep the car's audio focus for the rest of the drive. The music did not come back, the radio stayed silent and the wheel volume keys only set the assistant's volume. The phone goes from the assistant to its music without releasing it in between, and DiAuto now gives the assistant focus back itself.
 - Voice key on SWI68 (#16): a short press is left to the car's own assistant and a long press opens Android Auto's, as the car's own Android Auto does. A short press opened both at once.
 - Voice on cars with "Hello MG" (#16): during a voice request DiAuto also takes the car's voice command focus, as the car's own Android Auto does, so the car's assistant can let go of the microphone.
 - Faster connection at a cold start (#17): when the car's Bluetooth comes up after DiAuto, the phone is called as soon as Bluetooth is on instead of up to 2.5 min later.

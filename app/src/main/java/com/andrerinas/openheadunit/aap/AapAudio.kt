@@ -309,6 +309,14 @@ internal class AapAudio(
         return honour
     }
 
+    /** Gives back one of the phone's focus requests, on both audio managers as RELEASE does. */
+    private fun abandonProtocolRequest(request: AudioFocusRequest, token: Any?) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+        runCatching { mediaAudioManager.abandonAudioFocusRequest(request) }
+        runCatching { audioManager.abandonAudioFocusRequest(request) }
+        token?.let { carFocus.abandoned(it) }
+    }
+
     fun requestFocusChange(stream: Int, focusRequest: Int, callback: AudioManager.OnAudioFocusChangeListener): Int {
         lastOwnFocusRequestMs = SystemClock.elapsedRealtime()
         // Notification/voice GAIN_TRANSIENT pauses A2DP (AVRCP) on this HU; duck instead.
@@ -361,6 +369,13 @@ internal class AapAudio(
                 val usage = kind.usage
 
                 val focusAm = if (tagsSource) mediaAudioManager else audioManager
+                val previousRequest = audioFocusRequest
+                val previousToken = audioFocusToken
+                val releaseFirst = ProtocolFocusRoute.releaseBefore(audioFocusKind, kind)
+                if (previousRequest != null && releaseFirst) {
+                    AppLog.i("Audio Focus Request: giving back the ${audioFocusKind?.name} focus the phone replaced without a release")
+                    abandonProtocolRequest(previousRequest, previousToken)
+                }
                 val token = Any()
                 audioFocusRequest = AudioFocusRequest.Builder(effectiveFocus)
                         .setAudioAttributes(audioAttributes)
@@ -374,6 +389,7 @@ internal class AapAudio(
 
                 result = focusAm.requestAudioFocus(audioFocusRequest!!)
                 AppLog.i("Audio focus request result: ${if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) "GRANTED" else "FAILED ($result)"}")
+                if (previousRequest != null && !releaseFirst) abandonProtocolRequest(previousRequest, previousToken)
             }
         } else { // API < 26
             @Suppress("DEPRECATION")

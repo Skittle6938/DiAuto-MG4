@@ -53,4 +53,16 @@ class ProtocolFocusRouteTest {
         assertEquals(Kind.CALL, ProtocolFocusRoute.kind(AudioManager.STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK))
         assertFalse(ProtocolFocusRoute.tagsCarSource(Kind.NOTIFICATION, musicViaBluetooth = false))
     }
+
+    @Test
+    fun `the assistant focus is given back before the music the phone asks for without a release`() {
+        assertTrue(ProtocolFocusRoute.releaseBefore(Kind.ASSISTANT, Kind.MEDIA))
+        assertTrue(ProtocolFocusRoute.releaseBefore(Kind.GUIDANCE, Kind.MEDIA))
+    }
+
+    @Test
+    fun `a request of the same kind is replaced after the new one, and nothing to give back at first`() {
+        assertFalse(ProtocolFocusRoute.releaseBefore(Kind.MEDIA, Kind.MEDIA))
+        assertFalse(ProtocolFocusRoute.releaseBefore(null, Kind.MEDIA))
+    }
 }
