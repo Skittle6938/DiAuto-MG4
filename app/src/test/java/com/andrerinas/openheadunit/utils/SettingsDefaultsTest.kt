@@ -11,11 +11,14 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
+import org.robolectric.annotation.ConscryptMode
 
 /**
  * Defaults a fresh install gets, and the migration of older settings: a changed default reaches
  * every driver at the next update, so each one here was chosen on purpose.
  */
+// Settings tests do not use TLS; the app bundles an Android-only Conscrypt native library.
+@ConscryptMode(ConscryptMode.Mode.OFF)
 @RunWith(RobolectricTestRunner::class)
 @Config(application = Application::class, sdk = [28])
 class SettingsDefaultsTest {
