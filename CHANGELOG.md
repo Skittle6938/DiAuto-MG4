@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.5-beta5
+
+- Live data to ABRP (*Settings → Car*, off by default): with the token from the ABRP app, DiAuto sends the charge, power, speed, position, charging state and temperatures to A Better Routeplanner over the car's own internet (T-box), so ABRP plans from the real battery level without an OBD dongle or the iSMART gateway. About every 10 s while driving, every 30 s while charging and every 5 min when parked; a reading that cannot be sent is dropped, never queued, so a dead zone or a used-up data plan costs nothing.
+
 # DiAuto MG4+ 2.2.5-beta4
 
 - Ending Android Auto by hand (three-finger gesture or *Disconnect*) now gives the car its Wi-Fi back at once: the hotspot goes off and the car's Wi-Fi client comes back, even with the phone still connected over Bluetooth for calls. Android Auto does not restart by itself after that; it comes back when you ask for it from DiAuto, or on the next trip.

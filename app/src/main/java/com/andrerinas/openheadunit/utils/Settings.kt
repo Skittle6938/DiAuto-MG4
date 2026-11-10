@@ -262,6 +262,24 @@ class Settings(private val context: Context) {
         get() = prefs.getInt("station-restore-delay-s", 10).coerceIn(10, 300)
         set(value) { prefs.edit().putInt("station-restore-delay-s", value.coerceIn(10, 300)).apply() }
 
+    /** Live telemetry to ABRP over the car's T-box (vehicle/AbrpUploader). Off by default. */
+    var abrpEnabled: Boolean
+        get() = prefs.getBoolean("abrp-enabled", false)
+        set(value) { prefs.edit().putBoolean("abrp-enabled", value).apply() }
+
+    /** The token ABRP gives for this car (ABRP app: car settings, Live data, Generic). */
+    var abrpToken: String
+        get() = prefs.getString("abrp-token", "") ?: ""
+        set(value) { prefs.edit().putString("abrp-token", value.trim()).apply() }
+
+    /**
+     * The telemetry API key identifying DiAuto to ABRP. Empty here means DiAuto's own key
+     * ([ABRP_DEFAULT_API_KEY]); a user may set another one.
+     */
+    var abrpApiKey: String
+        get() = (prefs.getString("abrp-api-key", "") ?: "").ifBlank { ABRP_DEFAULT_API_KEY }
+        set(value) { prefs.edit().putString("abrp-api-key", value.trim()).apply() }
+
     /** DiAuto's own energy model for Maps (vehicle/Mg4MapsEnergyModel); off = the car's average consumption. */
     var mapsEnergyModel: Boolean
         get() = prefs.getBoolean("maps-energy-model", true)
@@ -1208,6 +1226,13 @@ class Settings(private val context: Context) {
         }
 
     companion object {
+        /**
+         * DiAuto's own ABRP "Telemetry-Only" API key (free, from abetterrouteplanner.com/resources/api).
+         * Not a secret: it names the app sending, the user's token names the car. Empty until the
+         * project has one; the setting then asks for a key.
+         */
+        const val ABRP_DEFAULT_API_KEY = ""
+
         /** Voice (assistant + navigation) level above the music, in %; the slider runs -50 … +200. */
         const val DEFAULT_VOICE_VOLUME_OFFSET = 0
         const val MAX_VOICE_VOLUME_OFFSET = 200

@@ -310,6 +310,21 @@ class DaSettingsActivity : BaseActivity() {
                 settings.mapsModelOverlay = it
             })
         }
+        // ABRP live data over the car's T-box: off by default, the token is the user's.
+        row(R.string.dset_abrp, R.string.dset_abrp_summary, yesNo(settings.abrpEnabled) {
+            settings.abrpEnabled = it
+            showTab(selectedTab)
+        })
+        if (settings.abrpEnabled) {
+            rowText(getString(R.string.dset_abrp_token), getString(R.string.dset_abrp_token_summary),
+                value(masked(settings.abrpToken)) {
+                    editText(R.string.dset_abrp_token, settings.abrpToken) { settings.abrpToken = it }
+                })
+            rowText(getString(R.string.dset_abrp_key), getString(R.string.dset_abrp_key_summary),
+                value(masked(settings.abrpApiKey)) {
+                    editText(R.string.dset_abrp_key, settings.abrpApiKey) { settings.abrpApiKey = it }
+                })
+        }
         if (com.andrerinas.openheadunit.vehicle.ChargeStopPreheatPolicy.supportedOnThisCar()) {
             row(R.string.dset_preheat, R.string.dset_preheat_summary, yesNo(settings.batteryPreheatBeforeCharger) {
                 settings.batteryPreheatBeforeCharger = it
@@ -441,6 +456,33 @@ class DaSettingsActivity : BaseActivity() {
                 settings.batteryCapacityManual = false
                 settings.mg4Variant = com.andrerinas.openheadunit.vehicle.Mg4Variant.AUTO
                 com.andrerinas.openheadunit.vehicle.Mg4EnergyProvider.refresh()
+                showTab(selectedTab)
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    /** A token or key: enough of it to recognise, not enough to read off the screen. */
+    private fun masked(text: String): String =
+        if (text.isBlank()) getString(R.string.dset_abrp_not_set) else "••••" + text.takeLast(4)
+
+    private fun editText(title: Int, current: String, onSave: (String) -> Unit) {
+        val input = android.widget.EditText(this).apply {
+            inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+            setText(current)
+            textSize = 24f
+            setSelectAllOnFocus(true)
+            minWidth = dp(560)
+        }
+        val box = FrameLayout(this).apply {
+            setPadding(dp(32), dp(16), dp(32), dp(8))
+            addView(input)
+        }
+        MaterialAlertDialogBuilder(this, R.style.DarkAlertDialog)
+            .setTitle(title)
+            .setView(box)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                onSave(input.text.toString().trim())
                 showTab(selectedTab)
             }
             .setNegativeButton(R.string.cancel, null)

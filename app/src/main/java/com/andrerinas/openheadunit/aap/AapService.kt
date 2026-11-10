@@ -871,6 +871,8 @@ class AapService : Service(), UsbReceiver.Listener {
 
         initWifiMode()
         startPhoneReconnectWatchdog()
+        // ABRP live data: sends nothing until the user turns it on and enters a token.
+        com.andrerinas.openheadunit.vehicle.AbrpUploader.start(this)
         checkAlreadyConnectedUsb()
         if (SystemClock.elapsedRealtime() < PRESENT_USB_BOOT_WINDOW_MS) {
             takeOverPresentUsbPhone("boot")
@@ -1981,6 +1983,7 @@ class AapService : Service(), UsbReceiver.Listener {
 
     override fun onDestroy() {
         com.andrerinas.openheadunit.hud.SaicNavigationOutputs.stop()
+        com.andrerinas.openheadunit.vehicle.AbrpUploader.stop()
         AppLog.i("AapService destroying... (wakeLock held=${bootWakeLock?.isHeld == true})")
         isDestroying = true
         mediaMetadataDecodeJob?.cancel()

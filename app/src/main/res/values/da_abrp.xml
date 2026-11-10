@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dset_abrp">Live data to ABRP</string>
+    <string name="dset_abrp_summary">Sends the charge, power, speed and position to A Better Routeplanner over the car\'s own internet connection (T-box), so ABRP plans from the real battery level. About every 10 s while driving, less when parked. Uses the car\'s mobile data.</string>
+    <string name="dset_abrp_token">ABRP token</string>
+    <string name="dset_abrp_token_summary">In the ABRP app: your car\'s settings, Live data, then Generic. Copy the token shown there.</string>
+    <string name="dset_abrp_key">ABRP API key</string>
+    <string name="dset_abrp_key_summary">Identifies DiAuto to ABRP. Leave it as it is unless you use your own telemetry key.</string>
+    <string name="dset_abrp_not_set">Not set</string>
+</resources>
