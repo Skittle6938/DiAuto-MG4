@@ -37,6 +37,14 @@ class AbrpTelemetryTest {
     }
 
     @Test
+    fun `each reading gets up to 3 s of offset`() {
+        assertEquals(0L, AbrpSchedule.jitterMs(0.0))
+        assertEquals(1_500L, AbrpSchedule.jitterMs(0.5))
+        assertEquals(AbrpSchedule.MAX_JITTER_MS, AbrpSchedule.jitterMs(1.0))
+        assertEquals(AbrpSchedule.MAX_JITTER_MS, AbrpSchedule.jitterMs(7.0))
+    }
+
+    @Test
     fun `the log line never carries the position`() {
         val json = AbrpTelemetry.json(
             AbrpSample(utc = 1L, soc = 50.0, lat = 48.7, lon = 2.1, elevation = 120.0, heading = 90.0, speedKmh = 30.0)

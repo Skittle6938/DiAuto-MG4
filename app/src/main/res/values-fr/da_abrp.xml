@@ -5,6 +5,6 @@
     <string name="dset_abrp_token">Jeton ABRP</string>
     <string name="dset_abrp_token_summary">Dans l\'app ABRP : réglages de votre voiture, Données en direct, puis Générique. Copiez le jeton affiché.</string>
     <string name="dset_abrp_key">Clé API ABRP</string>
-    <string name="dset_abrp_key_summary">Identifie DiAuto auprès d\'ABRP. Laissez-la telle quelle, sauf si vous utilisez votre propre clé de télémétrie.</string>
+    <string name="dset_abrp_key_summary">Identifie DiAuto auprès d\'ABRP. Laissez-la telle quelle, sauf si vous utilisez votre propre clé de télémétrie. Si ABRP refuse souvent les données, créez votre propre clé de télémétrie gratuite sur abetterrouteplanner.com/resources/api.</string>
     <string name="dset_abrp_not_set">Non renseigné</string>
 </resources>

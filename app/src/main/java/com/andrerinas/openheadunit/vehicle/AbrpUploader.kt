@@ -26,10 +26,12 @@ object AbrpUploader {
     private const val TAG = "ABRP"
     private const val TICK_MS = 5_000L
     private const val TIMEOUT_MS = 8_000
+    private const val HTTP_TOO_MANY_REQUESTS = 429
 
     @Volatile private var app: Context? = null
     private var tick: ScheduledFuture<*>? = null
     private var lastSentAt = 0L
+    private var jitterMs = 0L
     private var failures = 0
     private var reportedFirstSuccess = false
     private val executor = Executors.newSingleThreadScheduledExecutor { r ->
@@ -68,8 +70,10 @@ object AbrpUploader {
         EVHardware.init(context)
         val sample = read(context)
         val now = SystemClock.elapsedRealtime()
-        val interval = AbrpSchedule.intervalMs(sample, failures)
+        val interval = AbrpSchedule.intervalMs(sample, failures) + jitterMs
         if (lastSentAt != 0L && now - lastSentAt < interval) return
+        // A new offset for each reading: the cars share one API key and its 2 requests/s.
+        jitterMs = AbrpSchedule.jitterMs(kotlin.random.Random.nextDouble())
         if (!AbrpTelemetry.worthSending(sample)) return
         lastSentAt = now
         send(apiKey, token, AbrpTelemetry.json(sample))
@@ -130,7 +134,13 @@ object AbrpUploader {
             } else {
                 failures++
                 // A wrong token or key fails the same way every time: say so once, then quietly.
-                if (failures == 1 || failures % 60 == 0) AppLog.w("$TAG: ABRP refused the telemetry: HTTP $code $body")
+                if (failures == 1 || failures % 60 == 0) {
+                    if (code == HTTP_TOO_MANY_REQUESTS) {
+                        AppLog.w("$TAG: rate limit of the API key reached (HTTP 429) - a personal telemetry key avoids it")
+                    } else {
+                        AppLog.w("$TAG: ABRP refused the telemetry: HTTP $code $body")
+                    }
+                }
             }
         } catch (e: java.io.IOException) {
             failures++
@@ -155,6 +165,12 @@ object AbrpSchedule {
     const val CHARGING_MS = 30_000L
     const val PARKED_MS = 300_000L
     const val BACKOFF_MS = 120_000L
+
+    /** Up to this much added to each interval, so the cars do not all send in the same second. */
+    const val MAX_JITTER_MS = 3_000L
+
+    /** [random] in 0..1 (Random.nextDouble), gives 0..[MAX_JITTER_MS]. */
+    fun jitterMs(random: Double): Long = (random.coerceIn(0.0, 1.0) * MAX_JITTER_MS).toLong()
 
     fun intervalMs(sample: AbrpSample, failures: Int): Long {
         val base = when {

@@ -5,6 +5,6 @@
     <string name="dset_abrp_token">ABRP token</string>
     <string name="dset_abrp_token_summary">In the ABRP app: your car\'s settings, Live data, then Generic. Copy the token shown there.</string>
     <string name="dset_abrp_key">ABRP API key</string>
-    <string name="dset_abrp_key_summary">Identifies DiAuto to ABRP. Leave it as it is unless you use your own telemetry key.</string>
+    <string name="dset_abrp_key_summary">Identifies DiAuto to ABRP. Leave it as it is unless you use your own telemetry key. If ABRP often refuses the data, create your own free telemetry key at abetterrouteplanner.com/resources/api.</string>
     <string name="dset_abrp_not_set">Not set</string>
 </resources>
