@@ -1228,10 +1228,9 @@ class Settings(private val context: Context) {
     companion object {
         /**
          * DiAuto's own ABRP "Telemetry-Only" API key (free, from abetterrouteplanner.com/resources/api).
-         * Not a secret: it names the app sending, the user's token names the car. Empty until the
-         * project has one; the setting then asks for a key.
+         * Not a secret: it names the app sending, the user's token names the car.
          */
-        const val ABRP_DEFAULT_API_KEY = ""
+        const val ABRP_DEFAULT_API_KEY = "7278aff7-d840-4a1e-a2c8-86676efd5e77"
 
         /** Voice (assistant + navigation) level above the music, in %; the slider runs -50 … +200. */
         const val DEFAULT_VOICE_VOLUME_OFFSET = 0
