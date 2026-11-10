@@ -25,6 +25,7 @@ import com.andrerinas.openheadunit.aap.AapProjectionActivity
 import com.andrerinas.openheadunit.aap.AapService
 import com.andrerinas.openheadunit.connection.CommManager
 import com.andrerinas.openheadunit.ota.OtaController
+import com.andrerinas.openheadunit.utils.AppLog
 import com.andrerinas.openheadunit.utils.BluetoothHelper
 import com.andrerinas.openheadunit.utils.Settings
 import com.google.android.material.button.MaterialButton
@@ -129,7 +130,17 @@ class HomeFragment : Fragment() {
                 return
             }
             if (BluetoothHelper.anyConnectedDeviceState(requireContext()) == false) {
-                showBluetoothHelp(R.string.da_no_connected_bluetooth)
+                // No phone linked over Bluetooth: wake the remembered one, the driver's first
+                // choice, as the watchdog does. The poke opens the Bluetooth link itself. Only
+                // a car with no remembered phone still needs to be paired by hand.
+                val remembered = app.settings.autoStartBluetoothDeviceMacs
+                    .firstNotNullOfOrNull { mac -> bonded.firstOrNull { it.address == mac } }
+                if (remembered != null) {
+                    AppLog.i("Connect: no phone linked over Bluetooth - waking ${remembered.address}")
+                    startNativeAa(remembered)
+                } else {
+                    showBluetoothHelp(R.string.da_no_connected_bluetooth)
+                }
                 return
             }
 

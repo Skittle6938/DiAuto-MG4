@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.5-beta7
+
+- *Connect phone* with no phone linked over Bluetooth now wakes the remembered phone, as DiAuto does on its own at start-up, instead of asking you to connect it in the car's Bluetooth screen first. The message stays for a car with no remembered phone.
+
 # DiAuto MG4+ 2.2.5-beta6
 
 Faster connection at a cold start when the car does not reconnect the phone by itself (#17, thanks @Pampel02 for reading the log so closely):
