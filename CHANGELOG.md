@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.5-beta2
+
+- Test option for #18 (*Settings → About → Test mode*, then *Battery for Android Auto apps*, off by default): DiAuto announces the car's charge, range and odometer as Android Auto's standard sensors, which the phone hands to Android Auto apps such as ABRP. Applies at the next connection. Still to check: whether ABRP reads them, and that Maps' battery forecast is unchanged.
+
 # DiAuto MG4+ 2.2.5-beta1
 
 - Diagnostics for the car's call card over Android Auto on SWI68 (#4): the exported log now shows every call the car's apps (phone service, rui, launcher) make to DiAuto's Android Auto service, with the calling app, and what DiAuto answers.

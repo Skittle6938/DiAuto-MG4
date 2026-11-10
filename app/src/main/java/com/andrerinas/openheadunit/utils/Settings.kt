@@ -272,6 +272,14 @@ class Settings(private val context: Context) {
         get() = prefs.getBoolean("trip-recording", false)
         set(value) { prefs.edit().putBoolean("trip-recording", value).apply() }
 
+    /**
+     * Test mode (#18): the car's charge and odometer sent as Android Auto's standard sensors, for
+     * Android Auto apps such as ABRP (vehicle/CarDataSensors). Off by default.
+     */
+    var carDataForApps: Boolean
+        get() = testMode && prefs.getBoolean("car-data-for-apps", false)
+        set(value) { prefs.edit().putBoolean("car-data-for-apps", value).apply() }
+
     /** Test mode: live figures of the Maps energy model over the projection (vehicle/MapsModelTrip). */
     var mapsModelOverlay: Boolean
         get() = testMode && prefs.getBoolean("maps-model-overlay", false)

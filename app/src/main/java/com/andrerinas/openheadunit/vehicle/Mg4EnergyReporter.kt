@@ -44,7 +44,8 @@ object Mg4EnergyReporter {
         // during the locked boot never does, and no reading ever reached the phone. A connection
         // means the profile is unlocked, and start() is harmless when it is already running.
         App.instance?.let { app ->
-            if (App.provide(app).settings.batteryForGoogleMaps) Mg4EnergyProvider.start(app)
+            val settings = App.provide(app).settings
+            if (settings.batteryForGoogleMaps || settings.carDataForApps) Mg4EnergyProvider.start(app)
         }
         if (tickFuture == null) {
             tickFuture = executor.scheduleWithFixedDelay(::tick, 1_000L, 1_000L, TimeUnit.MILLISECONDS)
@@ -60,12 +61,21 @@ object Mg4EnergyReporter {
         if (transport == null || transportRef.get() !== transport) return
         transportRef.set(null)
         requestedTypes.clear()
+        carDataTypes.clear()
+        carDataSentMs = 0L
         vemEverSent.set(false)
         tickFuture?.cancel(false)
         tickFuture = null
     }
 
     fun onSensorStart(type: Int) {
+        if (CarDataSensors.isCarDataType(type)) {
+            carDataTypes.add(type)
+            carDataSentMs = 0L
+            AppLog.i("$TAG phone requested car data sensor type=$type (active=$carDataTypes)")
+            executor.execute(::sendCarData)
+            return
+        }
         if (type == 23 || type == 25) {
             requestedTypes.add(type)
             AppLog.i("$TAG phone requested VEM sensor type=$type (active=$requestedTypes)")
@@ -89,8 +99,36 @@ object Mg4EnergyReporter {
     /** Sends the model again now, e.g. after test values changed. */
     fun resend() = executor.execute { sendNow(force = true) }
 
+    private val carDataTypes = ConcurrentHashMap.newKeySet<Int>()
+    @Volatile private var carDataSentMs = 0L
+    private var carDataSentCount = 0
+
+    /** FUEL_LEVEL and ODOMETER for Android Auto apps (#18), only once the phone started them. */
+    private fun sendCarData() {
+        val now = SystemClock.elapsedRealtime()
+        if (!CarDataSensors.due(carDataTypes.isNotEmpty(), carDataSentMs, now)) return
+        val transport = transportRef.get() ?: return
+        val snap = Mg4EnergyProvider.snapshot() ?: run { Mg4EnergyProvider.refresh(); return }
+        if (snap.demo) return
+        carDataSentMs = now
+        val fuel = CarDataSensors.fuel(snap.batteryPercent, snap.rangeKm)
+        val odometer = CarDataSensors.odometerTenths(runCatching { com.evsuite.hardware.EVHardware.getOdometerKm() }.getOrNull())
+        val sentFuel = fuel != null && CarDataSensors.TYPE_FUEL_LEVEL in carDataTypes &&
+            transport.send(com.andrerinas.openheadunit.aap.protocol.messages.FuelLevelEvent(fuel))
+        val sentOdometer = odometer != null && CarDataSensors.TYPE_ODOMETER in carDataTypes &&
+            transport.send(com.andrerinas.openheadunit.aap.protocol.messages.OdometerEvent(odometer))
+        // The first sends and then one a minute: every 5 s would fill the log.
+        if (carDataSentCount++ % 12 == 0) {
+            AppLog.i(
+                "$TAG car data tx fuel=${fuel?.let { "${it.levelPercent}% ${it.rangeKm}km low=${it.low}" } ?: "-"} " +
+                    "sent=$sentFuel odometer=${odometer?.let { "${it / 10.0}km" } ?: "-"} sent=$sentOdometer types=$carDataTypes",
+            )
+        }
+    }
+
     private fun tick() {
         sampleDebugTrip()
+        sendCarData()
         if (requestedTypes.isEmpty()) return
         val due = SystemClock.elapsedRealtime() - lastSentElapsed >= INTERVAL_MS
         if (due || !vemEverSent.get()) sendNow(force = !vemEverSent.get())
