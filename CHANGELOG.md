@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.5-beta4
+
+- Ending Android Auto by hand (three-finger gesture or *Disconnect*) now gives the car its Wi-Fi back at once: the hotspot goes off and the car's Wi-Fi client comes back, even with the phone still connected over Bluetooth for calls. Android Auto does not restart by itself after that; it comes back when you ask for it from DiAuto, or on the next trip.
+
 # DiAuto MG4+ 2.2.5-beta3
 
 - Diagnostics for #4: each call the car's apps make to DiAuto's Android Auto service now shows the calling process in the exported log. On the car they all share one system id, so the package list alone did not say which app it was.

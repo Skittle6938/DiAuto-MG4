@@ -280,6 +280,14 @@ class AapService : Service(), UsbReceiver.Listener {
     private var userExitedAA = false
     @Volatile private var userExitCooldownUntil = 0L
 
+    /**
+     * Set when the user ends wireless Android Auto by hand: the car gets its Wi-Fi client back at
+     * once, and nothing brings the hotspot up again on its own, even with the phone still linked
+     * over Bluetooth for calls. Cleared when the user asks for Android Auto again, when the phone
+     * leaves, and at the next car start (a new service).
+     */
+    @Volatile private var wifiHandedBackOnExit = false
+
     /** In-flight poke that may be waiting out [USER_EXIT_COOLDOWN_MS]. */
     private var nativeAaPokeJob: Job? = null
     private var phoneReconnectJob: Job? = null
@@ -1572,6 +1580,7 @@ class AapService : Service(), UsbReceiver.Listener {
         // the next connection. OpenHU keeps its session alive the entire service lifetime.
         safeMediaSessionCall { it.isActive = false }
         updateMediaSessionState(false)
+        if (state.isUserExit && !preemptingWirelessForUsb && wirelessEnabled()) wifiHandedBackOnExit = true
         serviceScope.launch(Dispatchers.IO) {
 
             val settings = App.provide(this@AapService).settings
@@ -1621,7 +1630,15 @@ class AapService : Service(), UsbReceiver.Listener {
                 // own long after the user has finished with it.
                 softApCredentialsProvider?.stop()
                 when (action) {
-                    HotspotExitAction.DISABLE -> {
+                    HotspotExitAction.DISABLE -> if (wifiHandedBackOnExit) {
+                        // Marc's call (2026-11-10): the user said no to Android Auto, so the car's
+                        // Wi-Fi client comes back now. Taking the hotspot down also puts the phone
+                        // off it; it comes back up when the user asks for Android Auto again.
+                        AppLog.i("AapService: CommManager teardown complete. User exit - switching the hotspot off and the car Wi-Fi back on now.")
+                        nativeAaHandshakeManager?.invalidateCredentials()
+                        HotspotManager.setHotspotEnabled(this@AapService, false)
+                        HotspotManager.restorePausedStation(this@AapService, evenIfNotPaused = true)
+                    } else {
                         AppLog.i("AapService: CommManager teardown complete. Restarting the hotspot so the phone leaves the network.")
                         if (!HotspotManager.restart(this@AapService)) {
                             // The one way to learn that this radio will not host an access point
@@ -1867,7 +1884,8 @@ class AapService : Service(), UsbReceiver.Listener {
             AppLog.i("AapService: Native AA on the head unit hotspot — resolving access point credentials.")
             // The car's Wi-Fi client is only switched off once the phone is linked over Bluetooth
             // (here, or on the Bluetooth auto-start below), so with no phone it stays on.
-            val phoneLinked = rememberedPhoneLinked()
+            // After a user exit the car keeps its Wi-Fi client, as if no phone were here.
+            val phoneLinked = rememberedPhoneLinked() && !wifiHandedBackOnExit
             // A USB session keeps the client: the car uses it for internet (UsbWifiClient).
             val usbSession = AccessPointPolicy.usbSession(commManager.isConnected, commManager.isWirelessSession)
             serviceScope.launch(Dispatchers.IO) {
@@ -2069,6 +2087,7 @@ class AapService : Service(), UsbReceiver.Listener {
             ACTION_START_WIRELESS        -> initWifiMode()
             ACTION_START_WIRELESS_SCAN   -> {
                 // [FIX] Reset exit flags on manual scan start
+                wifiHandedBackOnExit = false
                 userExitedAA = false
                 userExitCooldownUntil = 0L
                 initWifiMode(force = true)
@@ -2078,6 +2097,8 @@ class AapService : Service(), UsbReceiver.Listener {
                 val mac = intent?.getStringExtra(EXTRA_MAC)
                 if (mac != null) {
                     AppLog.i("AapService: Received manual Native-AA poke request for $mac")
+                    // The user asks for Android Auto again: the hotspot may come back.
+                    wifiHandedBackOnExit = false
                     scheduleNativeAaPoke(mac, reason = "manual poke")
                 }
             }
@@ -2101,6 +2122,8 @@ class AapService : Service(), UsbReceiver.Listener {
                     commManager.connectionState.value is CommManager.ConnectionState.Connecting
                 if (sessionUp) {
                     AppLog.d("AapService: Bluetooth auto-start ignored — session already up.")
+                } else if (wifiHandedBackOnExit) {
+                    AppLog.i("AapService: Bluetooth auto-start ignored — the user ended Android Auto; it comes back when they ask for it.")
                 } else if (!wirelessEnabled()) {
                     AppLog.d("AapService: Bluetooth auto-start ignored — wireless Android Auto is off.")
                 } else {
@@ -2118,6 +2141,8 @@ class AapService : Service(), UsbReceiver.Listener {
                 }
             }
             ACTION_BT_PHONE_LEFT -> {
+                // Next time the phone links, it is a new trip: Android Auto starts by itself again.
+                wifiHandedBackOnExit = false
                 scheduleStationRestore()
                 if (!commManager.isConnected) releaseAccessPoint("phone left")
             }
@@ -2891,6 +2916,10 @@ class AapService : Service(), UsbReceiver.Listener {
     /** The access point a phone needs for wireless Android Auto, unless a USB session runs. */
     private fun startAccessPoint(reason: String) {
         val provider = softApCredentialsProvider ?: return
+        if (wifiHandedBackOnExit) {
+            AppLog.i("AapService: $reason - the user ended Android Auto, so the hotspot stays off until they ask for it again")
+            return
+        }
         if (!AccessPointPolicy.shouldStart(wirelessEnabled(), commManager.isConnected, commManager.isWirelessSession, provider.running)) return
         AppLog.i("AapService: $reason - bringing up the hotspot")
         // The car's Wi-Fi client goes off first: never both on the one radio.
@@ -3339,7 +3368,7 @@ class AapService : Service(), UsbReceiver.Listener {
             while (isActive) {
                 delay(PHONE_RECONNECT_INTERVAL_MS)
                 val settings = App.provide(this@AapService).settings
-                if (!wirelessEnabled() || userExitedAA) continue
+                if (!wirelessEnabled() || userExitedAA || wifiHandedBackOnExit) continue
                 if (commManager.isBusy || nativeAaPokeJob?.isActive == true) continue
                 val phones = settings.autoStartBluetoothDeviceMacs.toList()
                 if (phones.isEmpty()) continue
