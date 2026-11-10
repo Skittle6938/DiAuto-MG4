@@ -1,3 +1,10 @@
+# DiAuto MG4+ 2.2.5-beta6
+
+Faster connection at a cold start when the car does not reconnect the phone by itself (#17, thanks @Pampel02 for reading the log so closely):
+- DiAuto now calls the phone 15 s after it starts, instead of 30 s. Later calls stay every 30 s.
+- No 4 s wait before that call: DiAuto was waiting for the hotspot's details, but the hotspot only comes up once the phone has answered over Bluetooth.
+- The hotspot comes up as soon as the phone is linked over Bluetooth, without first waiting 5 s for one to appear.
+
 # DiAuto MG4+ 2.2.5-beta5
 
 - Live data to ABRP (*Settings → Car*, off by default): with the token from the ABRP app, DiAuto sends the charge, power, speed, position, charging state and temperatures to A Better Routeplanner over the car's own internet (T-box), so ABRP plans from the real battery level without an OBD dongle or the iSMART gateway. About every 10 s while driving, every 30 s while charging and every 5 min when parked; a reading that cannot be sent is dropped, never queued, so a dead zone or a used-up data plan costs nothing.

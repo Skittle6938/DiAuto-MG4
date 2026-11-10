@@ -2916,16 +2916,22 @@ class AapService : Service(), UsbReceiver.Listener {
         softApCredentialsProvider?.refresh()
     }
 
-    fun refreshAccessPoint() {
+    /**
+     * @return false when the hotspot stays off for now (no phone linked over Bluetooth), so a
+     *   caller has no credentials to wait for: they only come once the phone answers (#17).
+     */
+    fun refreshAccessPoint(): Boolean {
         AppLog.i("AapService: Access point refresh requested.")
-        val provider = softApCredentialsProvider ?: return
+        val provider = softApCredentialsProvider ?: return false
         // A wake-up sent to a phone that isn't there must not bring the hotspot up next to the
         // car's Wi-Fi client; once the phone answers over Bluetooth, it comes up for it.
-        when (AccessPointPolicy.onPhoneRequest(provider.running) { BluetoothHelper.connectedBondedDevices(this).size }) {
-            AccessPointPolicy.Request.REFRESH -> provider.refresh()
-            AccessPointPolicy.Request.STAY_OFF ->
+        return when (AccessPointPolicy.onPhoneRequest(provider.running) { BluetoothHelper.connectedBondedDevices(this).size }) {
+            AccessPointPolicy.Request.REFRESH -> { provider.refresh(); true }
+            AccessPointPolicy.Request.STAY_OFF -> {
                 AppLog.i("AapService: no phone linked over Bluetooth - the hotspot stays off")
-            AccessPointPolicy.Request.START -> startAccessPoint("a phone asked for it")
+                false
+            }
+            AccessPointPolicy.Request.START -> { startAccessPoint("a phone asked for it"); true }
         }
     }
 
@@ -2941,7 +2947,10 @@ class AapService : Service(), UsbReceiver.Listener {
         // The car's Wi-Fi client goes off first: never both on the one radio.
         serviceScope.launch(Dispatchers.IO) {
             HotspotManager.ensure5GhzBeforeSession(this@AapService, pauseStation = true)
-            withContext(Dispatchers.Main) { provider.start(enableNow = takeHotspotDownByUserExit()) }
+            // The phone is linked and DiAuto drives this hotspot: switch it on at once rather than
+            // first waiting 5 s for one to appear (#17). ensure5Ghz has already freed the radio.
+            takeHotspotDownByUserExit()
+            withContext(Dispatchers.Main) { provider.start(enableNow = settings.autoEnableHotspot) }
         }
     }
 
@@ -3381,8 +3390,13 @@ class AapService : Service(), UsbReceiver.Listener {
     private fun startPhoneReconnectWatchdog() {
         phoneReconnectJob?.cancel()
         phoneReconnectJob = serviceScope.launch {
+            var first = true
             while (isActive) {
-                delay(PHONE_RECONNECT_INTERVAL_MS)
+                // The first round comes early (#17): a car that does not reconnect the phone by
+                // itself otherwise waits a full interval. Not earlier than this, so a car that
+                // does reconnect it has time to, and a poke never takes its hands-free link.
+                delay(if (first) PHONE_RECONNECT_FIRST_MS else PHONE_RECONNECT_INTERVAL_MS)
+                first = false
                 val settings = App.provide(this@AapService).settings
                 if (!wirelessEnabled() || userExitedAA || wifiHandedBackOnExit) continue
                 if (commManager.isBusy || nativeAaPokeJob?.isActive == true) continue
@@ -3531,6 +3545,7 @@ class AapService : Service(), UsbReceiver.Listener {
         private const val USER_EXIT_COOLDOWN_MS = 15_000L
         private const val PROMPT_SOURCE_CHECK_DELAY_MS = 1_500L
         private const val PHONE_RECONNECT_INTERVAL_MS = 30_000L
+        private const val PHONE_RECONNECT_FIRST_MS = 15_000L
         private const val WATCHDOG_POKE_SETTLE_MS = 30_000L
         private const val RECENT_BT_CONNECT_MS = 180_000L
         private const val TRACK_SKIP_FLUSH_DELAY_MS = 250L

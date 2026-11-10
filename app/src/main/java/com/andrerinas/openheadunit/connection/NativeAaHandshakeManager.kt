@@ -809,9 +809,11 @@ class NativeAaHandshakeManager(
                     // If RFCOMM connects before WiFi credentials exist, the phone times out after 10s waiting for WifiStartRequest.
                     if (credentials == null) {
                         AppLog.i("NativeAA: WiFi credentials not ready before poke. Requesting WiFi refresh...")
-                        (context as? AapService)?.refreshAccessPoint()
+                        // No phone linked: the hotspot comes up only once the poke links it, so
+                        // there is nothing to wait for (#17).
+                        val apComing = (context as? AapService)?.refreshAccessPoint() ?: true
                         var waitedMs = 0
-                        while (credentials == null && waitedMs < 4000 && isRunning && isActive) {
+                        while (apComing && credentials == null && waitedMs < 4000 && isRunning && isActive) {
                             delay(200)
                             waitedMs += 200
                         }
@@ -875,9 +877,11 @@ class NativeAaHandshakeManager(
                 // Pre-flight: Ensure WiFi credentials (SSID/IP) are ready before connecting RFCOMM to phone.
                 if (credentials == null) {
                     AppLog.i("NativeAA: WiFi credentials not ready before manual poke. Requesting WiFi refresh...")
-                    (context as? AapService)?.refreshAccessPoint()
+                    // No phone linked: the hotspot comes up only once the poke links it, so
+                    // there is nothing to wait for (#17).
+                    val apComing = (context as? AapService)?.refreshAccessPoint() ?: true
                     var waitedMs = 0
-                    while (credentials == null && waitedMs < 4000 && isRunning && isActive) {
+                    while (apComing && credentials == null && waitedMs < 4000 && isRunning && isActive) {
                         delay(200)
                         waitedMs += 200
                     }
