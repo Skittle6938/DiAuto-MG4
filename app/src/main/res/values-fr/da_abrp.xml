@@ -7,4 +7,14 @@
     <string name="dset_abrp_key">Clé API ABRP</string>
     <string name="dset_abrp_key_summary">Identifie DiAuto auprès d\'ABRP. Laissez-la telle quelle, sauf si vous utilisez votre propre clé de télémétrie. Si ABRP refuse souvent les données, créez votre propre clé de télémétrie gratuite sur abetterrouteplanner.com/resources/api.</string>
     <string name="dset_abrp_not_set">Non renseigné</string>
+    <string name="dset_abrp_token_hint">Collez ici le jeton ABRP</string>
+    <string name="dset_abrp_save">Enregistrer</string>
+    <string name="dset_abrp_test">Tester</string>
+    <string name="dset_abrp_token_empty">Saisissez d\'abord le jeton.</string>
+    <string name="dset_abrp_testing">Envoi d\'une mesure à ABRP…</string>
+    <string name="dset_abrp_test_ok">ABRP a accepté la mesure : votre voiture devrait maintenant afficher les données en direct dans ABRP.</string>
+    <string name="dset_abrp_test_refused">ABRP a refusé la mesure (%1$s). Vérifiez le jeton.</string>
+    <string name="dset_abrp_test_rate">ABRP reçoit trop de mesures sur la clé de DiAuto en ce moment. Réessayez dans une minute, ou utilisez votre propre clé de télémétrie.</string>
+    <string name="dset_abrp_test_offline">Pas d\'internet dans la voiture pour l\'instant (T-box sans réseau ou forfait épuisé). Le jeton est gardé, et les mesures partiront dès qu\'il y aura une connexion.</string>
+    <string name="dset_abrp_test_no_soc">La voiture n\'a pas encore donné son niveau de charge. Réessayez dans quelques secondes.</string>
 </resources>

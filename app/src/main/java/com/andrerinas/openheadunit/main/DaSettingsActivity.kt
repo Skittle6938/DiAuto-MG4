@@ -311,15 +311,18 @@ class DaSettingsActivity : BaseActivity() {
             })
         }
         // ABRP live data over the car's T-box: off by default, the token is the user's.
-        row(R.string.dset_abrp, R.string.dset_abrp_summary, yesNo(settings.abrpEnabled) {
-            settings.abrpEnabled = it
-            showTab(selectedTab)
+        // Turning it on asks for the token first, with a test; cancelling leaves it off.
+        row(R.string.dset_abrp, R.string.dset_abrp_summary, yesNo(settings.abrpEnabled) { on ->
+            if (on) {
+                abrpTokenDialog(enabling = true)
+            } else {
+                settings.abrpEnabled = false
+                showTab(selectedTab)
+            }
         })
         if (settings.abrpEnabled) {
             rowText(getString(R.string.dset_abrp_token), getString(R.string.dset_abrp_token_summary),
-                value(masked(settings.abrpToken)) {
-                    editText(R.string.dset_abrp_token, settings.abrpToken) { settings.abrpToken = it }
-                })
+                value(masked(settings.abrpToken)) { abrpTokenDialog(enabling = false) })
             rowText(getString(R.string.dset_abrp_key), getString(R.string.dset_abrp_key_summary),
                 value(masked(settings.abrpApiKey)) {
                     editText(R.string.dset_abrp_key, settings.abrpApiKey) { settings.abrpApiKey = it }
@@ -460,6 +463,86 @@ class DaSettingsActivity : BaseActivity() {
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
+    }
+
+    /**
+     * The ABRP token, with a button that sends one reading now and says what ABRP answered.
+     * [enabling]: opened by switching the option on, which only stays on once a token is saved.
+     */
+    private fun abrpTokenDialog(enabling: Boolean) {
+        val input = android.widget.EditText(this).apply {
+            inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+            setText(settings.abrpToken)
+            hint = getString(R.string.dset_abrp_token_hint)
+            textSize = 24f
+            setSelectAllOnFocus(true)
+            minWidth = dp(560)
+        }
+        val result = TextView(this).apply {
+            textSize = 20f
+            setTextColor(ContextCompat.getColor(context, R.color.da_text))
+            setPadding(0, dp(16), 0, 0)
+        }
+        val box = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setPadding(dp(32), dp(16), dp(32), dp(8))
+            addView(TextView(context).apply {
+                text = getString(R.string.dset_abrp_token_summary)
+                textSize = 20f
+                setTextColor(ContextCompat.getColor(context, R.color.da_text))
+                setPadding(0, 0, 0, dp(12))
+            })
+            addView(input)
+            addView(result)
+        }
+        val dialog = MaterialAlertDialogBuilder(this, R.style.DarkAlertDialog)
+            .setTitle(R.string.dset_abrp_token)
+            .setView(box)
+            .setPositiveButton(R.string.dset_abrp_save, null)
+            .setNeutralButton(R.string.dset_abrp_test, null)
+            .setNegativeButton(R.string.cancel, null)
+            .setOnDismissListener { showTab(selectedTab) }
+            .create()
+        dialog.setOnShowListener {
+            dialog.getButton(android.content.DialogInterface.BUTTON_POSITIVE).setOnClickListener {
+                val token = input.text.toString().trim()
+                if (token.isEmpty()) {
+                    result.text = getString(R.string.dset_abrp_token_empty)
+                    return@setOnClickListener
+                }
+                settings.abrpToken = token
+                if (enabling) settings.abrpEnabled = true
+                dialog.dismiss()
+            }
+            dialog.getButton(android.content.DialogInterface.BUTTON_NEUTRAL).setOnClickListener { button ->
+                val token = input.text.toString().trim()
+                if (token.isEmpty()) {
+                    result.text = getString(R.string.dset_abrp_token_empty)
+                    return@setOnClickListener
+                }
+                button.isEnabled = false
+                result.text = getString(R.string.dset_abrp_testing)
+                val key = settings.abrpApiKey
+                Thread {
+                    val (outcome, detail) = runCatching {
+                        com.andrerinas.openheadunit.vehicle.AbrpUploader.test(this, token, key)
+                    }.getOrElse {
+                        com.andrerinas.openheadunit.vehicle.AbrpUploader.Outcome.NO_INTERNET to (it.message ?: "")
+                    }
+                    runOnUiThread {
+                        button.isEnabled = true
+                        result.text = when (outcome) {
+                            com.andrerinas.openheadunit.vehicle.AbrpUploader.Outcome.ACCEPTED -> getString(R.string.dset_abrp_test_ok)
+                            com.andrerinas.openheadunit.vehicle.AbrpUploader.Outcome.REFUSED -> getString(R.string.dset_abrp_test_refused, detail)
+                            com.andrerinas.openheadunit.vehicle.AbrpUploader.Outcome.RATE_LIMITED -> getString(R.string.dset_abrp_test_rate)
+                            com.andrerinas.openheadunit.vehicle.AbrpUploader.Outcome.NO_INTERNET -> getString(R.string.dset_abrp_test_offline)
+                            com.andrerinas.openheadunit.vehicle.AbrpUploader.Outcome.NO_CHARGE -> getString(R.string.dset_abrp_test_no_soc)
+                        }
+                    }
+                }.apply { isDaemon = true }.start()
+            }
+        }
+        dialog.show()
     }
 
     /** A token or key: enough of it to recognise, not enough to read off the screen. */

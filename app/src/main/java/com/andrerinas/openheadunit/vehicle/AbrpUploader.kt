@@ -79,6 +79,20 @@ object AbrpUploader {
         send(apiKey, token, AbrpTelemetry.json(sample))
     }
 
+    /** What happened to one reading. */
+    enum class Outcome { ACCEPTED, REFUSED, RATE_LIMITED, NO_INTERNET, NO_CHARGE }
+
+    /**
+     * Sends one reading now with [token], for the settings' test button. Blocking: call it off the
+     * main thread. Does not touch the schedule.
+     */
+    fun test(context: Context, token: String, apiKey: String): Pair<Outcome, String> {
+        EVHardware.init(context)
+        val sample = read(context.applicationContext)
+        if (!AbrpTelemetry.worthSending(sample)) return Outcome.NO_CHARGE to ""
+        return send(apiKey.trim(), token.trim(), AbrpTelemetry.json(sample))
+    }
+
     private fun read(context: Context): AbrpSample {
         val power = EVHardware.getBatteryPowerKw()?.toDouble()
         val speed = EVHardware.getVehicleSpeedKmh()?.let { kotlin.math.abs(it).toDouble() }
@@ -104,7 +118,7 @@ object AbrpUploader {
         )
     }
 
-    private fun send(apiKey: String, token: String, tlm: String) {
+    private fun send(apiKey: String, token: String, tlm: String): Pair<Outcome, String> {
         val url = URL(
             AbrpTelemetry.API_URL +
                 "?token=" + URLEncoder.encode(token, "UTF-8") +
@@ -131,6 +145,7 @@ object AbrpUploader {
                 }
                 reportedFirstSuccess = true
                 failures = 0
+                return Outcome.ACCEPTED to ""
             } else {
                 failures++
                 // A wrong token or key fails the same way every time: say so once, then quietly.
@@ -141,12 +156,15 @@ object AbrpUploader {
                         AppLog.w("$TAG: ABRP refused the telemetry: HTTP $code $body")
                     }
                 }
+                return (if (code == HTTP_TOO_MANY_REQUESTS) Outcome.RATE_LIMITED else Outcome.REFUSED) to
+                    "HTTP $code $body".trim()
             }
         } catch (e: java.io.IOException) {
             failures++
             if (failures == 1 || failures % 60 == 0) {
                 AppLog.w("$TAG: no internet for ABRP (${e.javaClass.simpleName}: ${e.message}) - reading dropped")
             }
+            return Outcome.NO_INTERNET to (e.message ?: e.javaClass.simpleName)
         } finally {
             // Keeps the TLS connection in the pool for the next reading: a new handshake each
             // time would cost the T-box several times the reading itself.
