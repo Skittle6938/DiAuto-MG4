@@ -79,14 +79,6 @@ class ServiceDiscoveryResponse(private val context: Context)
                                 "(demo=${settings.batteryDemoMode}, available=${Mg4EnergyProvider.available(context)})",
                         )
                     }
-
-                    // Test option (#18): the charge and odometer as standard sensors, which the
-                    // phone passes on to Android Auto apps such as ABRP (see CarDataSensors).
-                    if (settings.carDataForApps && Mg4EnergyProvider.available(context)) {
-                        sources.addSensors(makeSensorType(Sensors.SensorType.FUEL_LEVEL))
-                        sources.addSensors(makeSensorType(Sensors.SensorType.ODOMETER))
-                        AppLog.i("[ServiceDiscovery] Announcing FUEL_LEVEL + ODOMETER sensors for Android Auto apps")
-                    }
                 }.build()
             }.build()
 

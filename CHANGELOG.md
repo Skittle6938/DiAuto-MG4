@@ -1,6 +1,7 @@
 # DiAuto MG4+ 2.2.5-beta3
 
 - Diagnostics for #4: each call the car's apps make to DiAuto's Android Auto service now shows the calling process in the exported log. On the car they all share one system id, so the package list alone did not say which app it was.
+- The *Battery for Android Auto apps* test option from beta2 is removed (#18 closed: ABRP only runs on Android Auto with ABRP Premium, and its own iSMART gateway or an OBD dongle already give it the car's data).
 
 # DiAuto MG4+ 2.2.5-beta2
 

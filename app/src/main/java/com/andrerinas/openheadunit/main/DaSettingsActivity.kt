@@ -310,12 +310,6 @@ class DaSettingsActivity : BaseActivity() {
                 settings.mapsModelOverlay = it
             })
         }
-        // Announced when the phone connects: a change only applies at the next connection.
-        if (settings.testMode) {
-            row(R.string.dset_car_data_apps, R.string.dset_car_data_apps_summary, yesNo(settings.carDataForApps) {
-                settings.carDataForApps = it
-            })
-        }
         if (com.andrerinas.openheadunit.vehicle.ChargeStopPreheatPolicy.supportedOnThisCar()) {
             row(R.string.dset_preheat, R.string.dset_preheat_summary, yesNo(settings.batteryPreheatBeforeCharger) {
                 settings.batteryPreheatBeforeCharger = it

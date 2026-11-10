@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="dset_car_data_apps">Batterie pour les apps Android Auto</string>
-    <string name="dset_car_data_apps_summary">Envoie la charge, l\'autonomie et le kilométrage aux apps comme ABRP par Android Auto. S\'applique à la prochaine connexion.</string>
-</resources>
