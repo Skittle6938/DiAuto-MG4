@@ -39,14 +39,14 @@ final class RuiRepair {
                 } else {
                     edit.remove(key == null ? "" : key);
                     changed = true;
-                    Log.w(RelayState.TAG, "removed invalid rui device key '" + key + "'");
+                    RelayLog.w("removed invalid rui device key '" + key + "'");
                 }
             }
             if (changed) {
                 edit.putStringSet(MASTER, kept).commit();
             }
         } catch (Exception e) {
-            Log.w(RelayState.TAG, "rui repair failed: " + e);
+            RelayLog.w("rui repair failed: " + e);
         }
     }
 

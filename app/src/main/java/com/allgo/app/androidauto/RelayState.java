@@ -70,7 +70,7 @@ public final class RelayState {
         name = prefs.getString("name", name);
         mac = RuiRepair.validMac(prefs.getString("mac", mac));
         serial = prefs.getString("serial", serialFor(mac));
-        Log.i(TAG, "state loaded: active=" + active);
+        RelayLog.i("state loaded: active=" + active);
     }
 
     /** For the compatibility report. */
@@ -98,7 +98,7 @@ public final class RelayState {
                     .putString("serial", serial).apply();
         }
         // No phone name: it often carries its owner's name, and this line ends up in shared logs.
-        Log.i(TAG, "DiAuto session " + (active ? "started" : "ended"));
+        RelayLog.i("DiAuto session " + (active ? "started" : "ended"));
         if (!active) {
             pairedMac = null;
             if (!changed) return;
@@ -139,7 +139,7 @@ public final class RelayState {
     private static synchronized void sendPairingNow() {
         if (!active || !RuiRepair.isPhoneMac(mac) || mac.equals(pairedMac) || sessionCallbacks.isEmpty()) return;
         pairedMac = mac;
-        Log.i(TAG, "phone MAC to rui (Bluetooth pairing request)");
+        RelayLog.i("phone MAC to rui (Bluetooth pairing request)");
         for (IBinder cb : sessionCallbacks) {
             Parcel data = Parcel.obtain();
             try {
@@ -147,7 +147,7 @@ public final class RelayState {
                 data.writeString(mac);
                 cb.transact(TX_BT_PAIRING_REQUEST, data, null, IBinder.FLAG_ONEWAY);
             } catch (Exception e) {
-                Log.w(TAG, "pairing request to rui failed: " + e);
+                RelayLog.w("pairing request to rui failed: " + e);
             } finally {
                 data.recycle();
             }
@@ -175,9 +175,9 @@ public final class RelayState {
             intent.setComponent(new android.content.ComponentName("com.saicmotor.btphone", "com.saicmotor.btphone.service.PhoneService"));
             intent.putExtra(com.saicmotor.common.CommandParcelable.COMMAND_KEY, cmd);
             appContext.startService(intent);
-            Log.i(TAG, "Android Auto " + (on ? "on" : "off") + " told to the car's phone app");
+            RelayLog.i("Android Auto " + (on ? "on" : "off") + " told to the car's phone app");
         } catch (Exception e) {
-            Log.w(TAG, "car phone app not told: " + e);
+            RelayLog.w("car phone app not told: " + e);
         }
     }
 
@@ -191,14 +191,14 @@ public final class RelayState {
     /** rui only has a device to attach the screen state to after "session started". */
     private static void sendScreen() {
         if (!active || sessionCallbacks.isEmpty()) return;
-        Log.i(TAG, "screen " + (screenShown ? "started" : "stopped") + " to rui");
+        RelayLog.i("screen " + (screenShown ? "started" : "stopped") + " to rui");
         for (IBinder cb : sessionCallbacks) {
             Parcel data = Parcel.obtain();
             try {
                 data.writeInterfaceToken(SESSION_CB);
                 cb.transact(screenShown ? TX_SCREEN_STARTED : TX_SCREEN_STOPPED, data, null, IBinder.FLAG_ONEWAY);
             } catch (Exception e) {
-                Log.w(TAG, "screen state to rui failed: " + e);
+                RelayLog.w("screen state to rui failed: " + e);
             } finally {
                 data.recycle();
             }
@@ -207,7 +207,7 @@ public final class RelayState {
 
     /** rui asked to start (or resume) the session: answer as AllGo does once it has started. */
     static synchronized void sessionRequested() {
-        Log.i(TAG, "rui asked for the session (active=" + active + ")");
+        RelayLog.i("rui asked for the session (active=" + active + ")");
         ruiAcked = true;
         if (!active) return;
         for (IBinder cb : sessionCallbacks) callWithDevice(cb, SESSION_CB, TX_SESSION_STARTED, true);
@@ -220,7 +220,7 @@ public final class RelayState {
         pairedMac = null;
         deviceCallbacks.removeIf(b -> !b.isBinderAlive());
         sessionCallbacks.removeIf(b -> !b.isBinderAlive());
-        Log.i(TAG, "register device=" + (deviceCb != null) + " session=" + (sessionCb != null) + " active=" + active);
+        RelayLog.i("register device=" + (deviceCb != null) + " session=" + (sessionCb != null) + " active=" + active);
         if (deviceCb != null && !deviceCallbacks.contains(deviceCb)) {
             deviceCallbacks.add(deviceCb);
             if (active) callWithDevice(deviceCb, DEVICE_CB, TX_DEVICE_CONNECTED, false);
@@ -253,7 +253,7 @@ public final class RelayState {
     private static void callWithDevice(IBinder cb, String descriptor, int code, boolean launchStatus) {
         Parcel data = Parcel.obtain();
         Parcel reply = Parcel.obtain();
-        Log.i(TAG, "announce " + descriptor.substring(descriptor.lastIndexOf(46) + 1) + "#" + code + " active=" + active);
+        RelayLog.i("announce " + descriptor.substring(descriptor.lastIndexOf(46) + 1) + "#" + code + " active=" + active);
         try {
             data.writeInterfaceToken(descriptor);
             data.writeInt(1);
@@ -262,7 +262,7 @@ public final class RelayState {
             // One-way: rui may call back into this service from its handler; never hold it waiting.
             cb.transact(code, data, reply, IBinder.FLAG_ONEWAY);
         } catch (Exception e) {
-            Log.w(TAG, "callback " + descriptor + "#" + code + " failed: " + e);
+            RelayLog.w("callback " + descriptor + "#" + code + " failed: " + e);
         } finally {
             reply.recycle();
             data.recycle();

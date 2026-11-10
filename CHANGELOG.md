@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.5-beta1
+
+- Diagnostics for the car's call card over Android Auto on SWI68 (#4): the exported log now shows every call the car's apps (phone service, rui, launcher) make to DiAuto's Android Auto service, with the calling app, and what DiAuto answers.
+
 # DiAuto MG4+ 2.2.4
 
 Official release, with 2.2.4-beta1: the assistant no longer keeps the car's audio focus after a voice request (music back, wheel volume keys back on the music), short press of the voice key left to the car's assistant on SWI68, the car's voice command focus taken for "Hello MG", and a faster connection at a cold start.

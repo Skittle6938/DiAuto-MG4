@@ -24,7 +24,7 @@ final class DiAutoLink {
         if (AllgoMediaKeys.fromRui(context, code)) return;
         MediaController controller = diAutoSession(context);
         if (controller == null) {
-            Log.w(RelayState.TAG, "media control " + code + ": no DiAuto media session");
+            RelayLog.w("media control " + code + ": no DiAuto media session");
             return;
         }
         MediaController.TransportControls t = controller.getTransportControls();
@@ -33,9 +33,9 @@ final class DiAutoLink {
             case 2: t.pause(); break;
             case 3: t.skipToNext(); break;
             case 4: t.skipToPrevious(); break;
-            default: Log.i(RelayState.TAG, "media control " + code + " ignored"); return;
+            default: RelayLog.i("media control " + code + " ignored"); return;
         }
-        Log.i(RelayState.TAG, "media control " + code + " sent to DiAuto");
+        RelayLog.i("media control " + code + " sent to DiAuto");
     }
 
     /**
@@ -44,7 +44,7 @@ final class DiAutoLink {
      * the Android Auto screen comes up, and for phone or music the phone opens that app.
      */
     static void launchApp(Context context, int app) {
-        Log.i(RelayState.TAG, "launch app " + app);
+        RelayLog.i("launch app " + app);
         openScreen(context);
         if (!RelayState.isActive()) return;
         int key;
@@ -63,7 +63,7 @@ final class DiAutoLink {
 
     /** IAndroidAutoMainService.launchGoogleAssistant: as the steering wheel voice key. */
     static void launchAssistant(Context context) {
-        Log.i(RelayState.TAG, "launch assistant");
+        RelayLog.i("launch assistant");
         if (!RelayState.isActive()) return;
         AllgoMediaKeys.click(context, android.view.KeyEvent.KEYCODE_SEARCH, "allgo-assistant");
     }
@@ -75,7 +75,7 @@ final class DiAutoLink {
                 if (context.getPackageName().equals(c.getPackageName())) return c;
             }
         } catch (Exception e) {
-            Log.w(RelayState.TAG, "media sessions unreadable: " + e);
+            RelayLog.w("media sessions unreadable: " + e);
         }
         return null;
     }
@@ -87,7 +87,7 @@ final class DiAutoLink {
         try {
             context.startActivity(intent);
         } catch (Exception e) {
-            Log.w(RelayState.TAG, "open DiAuto failed: " + e);
+            RelayLog.w("open DiAuto failed: " + e);
             context.startActivity(new Intent().setClassName(context, MAIN).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         }
     }

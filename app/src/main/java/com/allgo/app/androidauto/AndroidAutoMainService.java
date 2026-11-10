@@ -26,6 +26,16 @@ public class AndroidAutoMainService extends Service {
      * launcher) and MG4 Dash: this service hands out the phone's name and Bluetooth address and
      * drives the assistant and the media, so any other app installed on the car is refused.
      */
+    /** uid and package, so a log says which car app asked. */
+    private String callerName(int uid) {
+        try {
+            String[] packages = getPackageManager().getPackagesForUid(uid);
+            if (packages != null && packages.length > 0) return "uid " + uid + " " + String.join(",", packages);
+        } catch (Exception ignored) {
+        }
+        return "uid " + uid;
+    }
+
     private boolean callerAllowed(int uid) {
         if (uid < android.os.Process.FIRST_APPLICATION_UID || uid == android.os.Process.myUid()) return true;
         android.content.pm.PackageManager pm = getPackageManager();
@@ -38,7 +48,7 @@ public class AndroidAutoMainService extends Service {
                 }
             }
         } catch (Exception e) {
-            Log.w(RelayState.TAG, "caller check failed: " + e);
+            RelayLog.w("caller check failed: " + e);
         }
         return false;
     }
@@ -53,11 +63,11 @@ public class AndroidAutoMainService extends Service {
             data.enforceInterface(DESCRIPTOR);
             int uid = Binder.getCallingUid();
             if (!callerAllowed(uid)) {
-                Log.w(RelayState.TAG, "call " + code + " refused for uid " + uid);
+                RelayLog.w("call " + code + " refused for " + callerName(uid));
                 reply.writeException(new SecurityException("not a car app"));
                 return true;
             }
-            Log.i(RelayState.TAG, "call " + code + " from uid " + uid);
+            RelayLog.i("call " + code + " from " + callerName(uid));
             switch (code) {
                 case 1: // register(deviceCb, sessionCb)
                     RelayState.register(data.readStrongBinder(), data.readStrongBinder());
@@ -116,7 +126,7 @@ public class AndroidAutoMainService extends Service {
                     reply.writeNoException();
                     return true;
                 default: // every other call returns an int status: 0 = OK
-                    Log.i(RelayState.TAG, "rui call " + code + " answered OK");
+                    RelayLog.i("rui call " + code + " answered OK");
                     reply.writeNoException();
                     reply.writeInt(0);
                     return true;
@@ -133,7 +143,7 @@ public class AndroidAutoMainService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        Log.i(RelayState.TAG, "bound by " + intent);
+        RelayLog.i("bound by " + intent);
         RuiRepair.run(this);
         return binder;
     }
