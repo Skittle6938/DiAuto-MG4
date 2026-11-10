@@ -1803,7 +1803,7 @@ class AapService : Service(), UsbReceiver.Listener {
     private fun startNativeAaForPhone(mac: String?) {
         startAccessPoint("phone linked over Bluetooth")
         if (!mac.isNullOrEmpty() &&
-            SystemClock.elapsedRealtime() - lastWatchdogPokeMs < WATCHDOG_POKE_SETTLE_MS) {
+            BluetoothWakePolicy.recentPhoneConnect(SystemClock.elapsedRealtime(), lastWatchdogPokeMs, WATCHDOG_POKE_SETTLE_MS)) {
             // The phone is back because of the watchdog's own poke, which is still
             // holding its socket; a second poke on top of it kept the phone's Android
             // Auto channel out for two minutes (2026-10-26, 19:01-19:03).

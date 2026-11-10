@@ -19,6 +19,7 @@ object BluetoothWakePolicy {
      * watchdog should let the handshake run instead of poking. [lastConnectMs] is 0 until a phone
      * has connected once. Comparing 0 against the uptime held the watchdog back for the first
      * [windowMs] after the car started, so a cold start waited about 3 minutes for its first poke.
+     * Also used for the watchdog's own last poke, which is 0 until it has poked once.
      */
     fun recentPhoneConnect(nowMs: Long, lastConnectMs: Long, windowMs: Long): Boolean =
         lastConnectMs > 0L && nowMs - lastConnectMs < windowMs
