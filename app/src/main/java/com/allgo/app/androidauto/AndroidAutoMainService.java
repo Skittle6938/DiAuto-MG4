@@ -26,14 +26,46 @@ public class AndroidAutoMainService extends Service {
      * launcher) and MG4 Dash: this service hands out the phone's name and Bluetooth address and
      * drives the assistant and the media, so any other app installed on the car is refused.
      */
-    /** uid and package, so a log says which car app asked. */
-    private String callerName(int uid) {
+    /**
+     * Which car app asked. On the car every caller runs as uid 1000, which ~45 packages share:
+     * only the calling process tells which app it is (issue #4). The package list is kept for
+     * when the process is unknown.
+     */
+    private String callerName(int uid, int pid) {
+        String process = pid > 0 ? processName(pid) : null;
+        if (process != null) return "pid " + pid + " " + process + " (uid " + uid + ")";
         try {
             String[] packages = getPackageManager().getPackagesForUid(uid);
-            if (packages != null && packages.length > 0) return "uid " + uid + " " + String.join(",", packages);
+            if (packages != null && packages.length > 0) {
+                return "pid " + pid + " uid " + uid + " " + String.join(",", packages);
+            }
         } catch (Exception ignored) {
         }
-        return "uid " + uid;
+        return "pid " + pid + " uid " + uid;
+    }
+
+    /** The running process with this pid, else its /proc command line. Not cached: pids are reused. */
+    private String processName(int pid) {
+        try {
+            android.app.ActivityManager am = getSystemService(android.app.ActivityManager.class);
+            java.util.List<android.app.ActivityManager.RunningAppProcessInfo> running =
+                    am != null ? am.getRunningAppProcesses() : null;
+            if (running != null) {
+                for (android.app.ActivityManager.RunningAppProcessInfo info : running) {
+                    if (info.pid == pid) return info.processName;
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        try (java.io.FileInputStream in = new java.io.FileInputStream("/proc/" + pid + "/cmdline")) {
+            byte[] buf = new byte[256];
+            int n = in.read(buf);
+            int end = 0;
+            while (end < n && buf[end] != 0) end++;
+            if (end > 0) return new String(buf, 0, end, java.nio.charset.StandardCharsets.UTF_8);
+        } catch (Exception ignored) {
+        }
+        return null;
     }
 
     private boolean callerAllowed(int uid) {
@@ -62,12 +94,13 @@ public class AndroidAutoMainService extends Service {
             }
             data.enforceInterface(DESCRIPTOR);
             int uid = Binder.getCallingUid();
+            int pid = Binder.getCallingPid();
             if (!callerAllowed(uid)) {
-                RelayLog.w("call " + code + " refused for " + callerName(uid));
+                RelayLog.w("call " + code + " refused for " + callerName(uid, pid));
                 reply.writeException(new SecurityException("not a car app"));
                 return true;
             }
-            RelayLog.i("call " + code + " from " + callerName(uid));
+            RelayLog.i("call " + code + " from " + callerName(uid, pid));
             switch (code) {
                 case 1: // register(deviceCb, sessionCb)
                     RelayState.register(data.readStrongBinder(), data.readStrongBinder());
