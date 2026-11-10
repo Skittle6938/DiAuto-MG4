@@ -2,6 +2,7 @@
 
 - Diagnostics for #4: each call the car's apps make to DiAuto's Android Auto service now shows the calling process in the exported log. On the car they all share one system id, so the package list alone did not say which app it was.
 - The *Battery for Android Auto apps* test option from beta2 is removed (#18 closed: ABRP only runs on Android Auto with ABRP Premium, and its own iSMART gateway or an OBD dongle already give it the car's data).
+- Faster connection at a cold start (#17): when the car does not reconnect the phone over Bluetooth by itself, DiAuto now calls it within 30 s of starting. A mistake held its first call back for 3 minutes after the car started.
 
 # DiAuto MG4+ 2.2.5-beta2
 

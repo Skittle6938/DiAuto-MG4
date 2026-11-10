@@ -3354,7 +3354,7 @@ class AapService : Service(), UsbReceiver.Listener {
                 val mac = phones[watchdogTurn++ % phones.size]
                 // connectedBondedDevices can miss a phone that has just come back; a Bluetooth
                 // connect in the last few minutes means the handshake is under way, so let it run.
-                if (SystemClock.elapsedRealtime() - lastPhoneBtConnectMs < RECENT_BT_CONNECT_MS) continue
+                if (BluetoothWakePolicy.recentPhoneConnect(SystemClock.elapsedRealtime(), lastPhoneBtConnectMs, RECENT_BT_CONNECT_MS)) continue
                 AppLog.i("AapService: remembered phone $mac is not linked and no session is up — poking it again")
                 lastWatchdogPokeMs = SystemClock.elapsedRealtime()
                 scheduleNativeAaPoke(mac, reason = "reconnect watchdog")

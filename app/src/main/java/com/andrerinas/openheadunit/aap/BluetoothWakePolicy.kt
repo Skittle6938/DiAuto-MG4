@@ -14,6 +14,15 @@ import java.util.UUID
  */
 object BluetoothWakePolicy {
 
+    /**
+     * Issue #17: whether a phone Bluetooth connect happened recently enough that the reconnect
+     * watchdog should let the handshake run instead of poking. [lastConnectMs] is 0 until a phone
+     * has connected once. Comparing 0 against the uptime held the watchdog back for the first
+     * [windowMs] after the car started, so a cold start waited about 3 minutes for its first poke.
+     */
+    fun recentPhoneConnect(nowMs: Long, lastConnectMs: Long, windowMs: Long): Boolean =
+        lastConnectMs > 0L && nowMs - lastConnectMs < windowMs
+
     /** Handsfree Profile — Audio Gateway. The phone's hands-free side; a call rides on this. */
     val HFP_AG_UUID: UUID = UUID.fromString("0000111f-0000-1000-8000-00805f9b34fb")
 
