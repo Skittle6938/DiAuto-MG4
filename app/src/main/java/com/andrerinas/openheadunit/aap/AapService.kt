@@ -288,6 +288,11 @@ class AapService : Service(), UsbReceiver.Listener {
      */
     @Volatile private var wifiHandedBackOnExit = false
 
+    /** DiAuto took the hotspot down at a user exit: the next start switches it on without waiting. */
+    @Volatile private var hotspotDownByUserExit = false
+
+    private fun takeHotspotDownByUserExit(): Boolean = hotspotDownByUserExit.also { hotspotDownByUserExit = false }
+
     /** In-flight poke that may be waiting out [USER_EXIT_COOLDOWN_MS]. */
     private var nativeAaPokeJob: Job? = null
     private var phoneReconnectJob: Job? = null
@@ -1637,6 +1642,7 @@ class AapService : Service(), UsbReceiver.Listener {
                         AppLog.i("AapService: CommManager teardown complete. User exit - switching the hotspot off and the car Wi-Fi back on now.")
                         nativeAaHandshakeManager?.invalidateCredentials()
                         HotspotManager.setHotspotEnabled(this@AapService, false)
+                        hotspotDownByUserExit = true
                         HotspotManager.restorePausedStation(this@AapService, evenIfNotPaused = true)
                     } else {
                         AppLog.i("AapService: CommManager teardown complete. Restarting the hotspot so the phone leaves the network.")
@@ -1888,14 +1894,21 @@ class AapService : Service(), UsbReceiver.Listener {
             val phoneLinked = rememberedPhoneLinked() && !wifiHandedBackOnExit
             // A USB session keeps the client: the car uses it for internet (UsbWifiClient).
             val usbSession = AccessPointPolicy.usbSession(commManager.isConnected, commManager.isWirelessSession)
-            serviceScope.launch(Dispatchers.IO) {
-                HotspotManager.ensure5GhzBeforeSession(this@AapService, pauseStation = phoneLinked && !usbSession)
-            }
-            if (!phoneLinked) scheduleStationRestore()
             // The car has one Wi-Fi radio: an access point up for nobody slows its Wi-Fi client
             // down. It comes up once the phone is linked, and never for a USB session.
-            if (AccessPointPolicy.startAtLaunch(phoneLinked, commManager.isConnected, commManager.isWirelessSession)) {
+            val startAp = AccessPointPolicy.startAtLaunch(phoneLinked, commManager.isConnected, commManager.isWirelessSession)
+            // After a user exit DiAuto took the access point down itself: switch it on at once,
+            // but only once the car's Wi-Fi client is off, never both on the one radio.
+            val enableNow = startAp && takeHotspotDownByUserExit()
+            serviceScope.launch(Dispatchers.IO) {
+                HotspotManager.ensure5GhzBeforeSession(this@AapService, pauseStation = phoneLinked && !usbSession)
+                if (enableNow) withContext(Dispatchers.Main) { softApCredentialsProvider?.start(enableNow = true) }
+            }
+            if (!phoneLinked) scheduleStationRestore()
+            if (startAp && !enableNow) {
                 softApCredentialsProvider?.start()
+            } else if (startAp) {
+                AppLog.i("AapService: the hotspot was taken down at the user exit - switching it on as soon as the car Wi-Fi is off")
             } else {
                 AppLog.i("AapService: no phone linked over Bluetooth yet - the hotspot waits for it")
                 if (hotspotWasOurs) serviceScope.launch(Dispatchers.IO) { HotspotManager.setHotspotEnabled(this@AapService, false) }
@@ -2925,7 +2938,7 @@ class AapService : Service(), UsbReceiver.Listener {
         // The car's Wi-Fi client goes off first: never both on the one radio.
         serviceScope.launch(Dispatchers.IO) {
             HotspotManager.ensure5GhzBeforeSession(this@AapService, pauseStation = true)
-            withContext(Dispatchers.Main) { provider.start() }
+            withContext(Dispatchers.Main) { provider.start(enableNow = takeHotspotDownByUserExit()) }
         }
     }
 

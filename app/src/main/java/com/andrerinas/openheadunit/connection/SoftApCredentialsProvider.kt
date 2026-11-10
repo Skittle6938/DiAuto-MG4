@@ -156,13 +156,21 @@ class SoftApCredentialsProvider(
         this.onInvalidated = callback
     }
 
+    /** How long this run waits for an access point before switching one on itself. */
+    private var autoEnableAfterMs = AUTO_ENABLE_AFTER_MS
+
+    /**
+     * @param enableNow the app itself took the access point down (a user exit), so there is no
+     *   user-configured one to wait for: switch it on at the first look instead of after 5 s.
+     */
     @Synchronized
-    fun start() {
+    fun start(enableNow: Boolean = false) {
         if (isRunning) {
             refresh()
             return
         }
         isRunning = true
+        autoEnableAfterMs = if (enableNow) 0L else AUTO_ENABLE_AFTER_MS
         // elapsedRealtime survives head-unit wall-clock jumps (seen as "after 245014311s").
         runStartedAt = SystemClock.elapsedRealtime()
         triedAutoEnable = false
@@ -283,7 +291,7 @@ class SoftApCredentialsProvider(
                         // here, so an access point that is up but unreadable never triggers it.
                         val waited = SystemClock.elapsedRealtime() - runStartedAt
                         reportBudgetExhaustedOnce(waited)
-                        if (!triedAutoEnable && waited >= AUTO_ENABLE_AFTER_MS && settings.autoEnableHotspot) {
+                        if (!triedAutoEnable && waited >= autoEnableAfterMs && settings.autoEnableHotspot) {
                             triedAutoEnable = true
                             AppLog.i("SoftApCredentials: No access point after ${waited / 1000}s — trying to switch this device's hotspot on.")
                             // Best effort; most unrooted units lack the permission. Keep polling
