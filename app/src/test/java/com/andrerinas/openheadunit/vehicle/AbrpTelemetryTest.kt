@@ -37,6 +37,17 @@ class AbrpTelemetryTest {
     }
 
     @Test
+    fun `the log line never carries the position`() {
+        val json = AbrpTelemetry.json(
+            AbrpSample(utc = 1L, soc = 50.0, lat = 48.7, lon = 2.1, elevation = 120.0, heading = 90.0, speedKmh = 30.0)
+        )
+        val logged = AbrpTelemetry.withoutPosition(json)
+        assertFalse(logged.contains("lat") || logged.contains("lon") || logged.contains("elevation") || logged.contains("heading"))
+        assertTrue(logged.contains("\"soc\":50") && logged.contains("\"speed\":30"))
+        assertTrue(logged.startsWith("{") && logged.endsWith("}") && !logged.contains(",}") && !logged.contains(",,"))
+    }
+
+    @Test
     fun `driving sends often, parked rarely, and a dead connection backs off`() {
         val driving = AbrpSample(utc = 1L, soc = 50.0, speedKmh = 50.0, isParked = false)
         val charging = AbrpSample(utc = 1L, soc = 50.0, isCharging = true, isParked = true)

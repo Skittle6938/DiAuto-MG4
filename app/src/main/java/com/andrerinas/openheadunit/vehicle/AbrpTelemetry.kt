@@ -56,6 +56,11 @@ object AbrpTelemetry {
             .joinToString(",", "{", "}") { (k, v) -> "\"$k\":${literal(v!!)}" }
     }
 
+    private val POSITION_FIELDS = Regex("\"(lat|lon|elevation|heading)\":[^,}]*,?")
+
+    /** The JSON as the log may show it: exported logs end up in public issues, never the position. */
+    fun withoutPosition(json: String): String = json.replace(POSITION_FIELDS, "").replace(",}", "}")
+
     /**
      * Charging when a cable is in and the pack takes power. Power alone also goes negative under
      * regeneration, and the cable alone stays in after a charge has finished.

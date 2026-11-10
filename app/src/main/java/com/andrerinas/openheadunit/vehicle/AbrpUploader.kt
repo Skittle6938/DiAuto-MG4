@@ -122,7 +122,8 @@ object AbrpUploader {
             }.getOrNull().orEmpty()
             if (code in 200..299 && !body.contains("\"error\"")) {
                 if (!reportedFirstSuccess || failures > 0) {
-                    AppLog.i("$TAG: telemetry accepted ($tlm)")
+                    // Never the position in the log: exported logs end up in public issues.
+                    AppLog.i("$TAG: telemetry accepted (${AbrpTelemetry.withoutPosition(tlm)})")
                 }
                 reportedFirstSuccess = true
                 failures = 0
