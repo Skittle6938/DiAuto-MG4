@@ -546,8 +546,6 @@
 
     <!-- New strings merged from 2.3.1 -->
     <string name="bt_devices_selected">أجهزة محددة</string>
-    <string name="static_audio_focus">تركيز الصوت الثابت</string>
-    <string name="static_audio_focus_description">إجبار الهاتف على الاعتقاد بأن تركيز الصوت مستمر دائمًا، مما يمنع فقدان توجيه الصوت على وحدات الرأس العامة. يقوم أيضًا بخفض الصوت برمجيًا أثناء التوجيهات الصوتية للملاحة.</string>
     <string name="bluetooth_adapter_label">محول البلوتوث</string>
     <string name="bluetooth_adapter_description">اختر محول/وحدة تحكم البلوتوث لاستخدامها في المصافحة. مفيد للأنظمة التي تحتوي على منفذي بلوتوث.</string>
     <string name="select_bt_adapter">حدد محول البلوتوث</string>

@@ -602,8 +602,6 @@
 
     <!-- New strings merged from 2.3.1 -->
     <string name="bt_devices_selected">cihaz seçildi</string>
-    <string name="static_audio_focus">Statik Ses Odağı</string>
-    <string name="static_audio_focus_description">Telefonun ses odağının her zaman korunduğuna inanmasını sağlayarak genel ana ünitelerde ses yönlendirme kayıplarını önler. Ayrıca navigasyon sesli komutları sırasında yazılımsal ses kısma (ducking) işlemi gerçekleştirir.</string>
     <string name="bluetooth_adapter_label">Bluetooth Adaptörü</string>
     <string name="bluetooth_adapter_description">Bağlantı kurulumu (handshake) için kullanılacak Bluetooth adaptörünü/denetleyicisini seçin. Çift Bluetooth sistemleri için kullanışlıdır.</string>
     <string name="select_bt_adapter">Bluetooth Adaptörünü Seçin</string>

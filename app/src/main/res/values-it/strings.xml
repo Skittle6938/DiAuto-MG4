@@ -553,8 +553,6 @@
 
     <!-- New strings merged from 2.3.1 -->
     <string name="bt_devices_selected">dispositivi selezionati</string>
-    <string name="static_audio_focus">Focus audio statico</string>
-    <string name="static_audio_focus_description">Forza il telefono a credere che il focus audio sia sempre attivo, prevenendo perdite di instradamento dell\'audio sulle unità principali generiche. Esegue anche l\'attenuazione software del volume (ducking) durante le istruzioni vocali di navigazione.</string>
     <string name="bluetooth_adapter_label">Adattatore Bluetooth</string>
     <string name="bluetooth_adapter_description">Seleziona l\'adattatore/controller Bluetooth da utilizzare per l\'handshake. Utile per i sistemi con doppio Bluetooth.</string>
     <string name="select_bt_adapter">Seleziona adattatore Bluetooth</string>

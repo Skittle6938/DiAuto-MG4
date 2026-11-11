@@ -1,9 +1,8 @@
 package com.andrerinas.openheadunit.aap
 
 /**
- * Whether to take system audio focus away from other players on the head unit, for both routes that
- * do it: [shouldAcquire] for the dynamic path, which holds focus while an AA audio channel plays,
- * and [shouldAcquirePermanent] for static mode, which holds it for the whole session.
+ * Whether to take system audio focus away from other players on the head unit while an AA audio
+ * channel plays ([shouldAcquire]).
  *
  * Taking focus exists so a *local* player — typically the car's FM radio — pauses while AA audio
  * plays and resumes when it stops. It backfires when the other player is the head unit's Bluetooth
@@ -12,9 +11,6 @@ package com.andrerinas.openheadunit.aap
  * path the phone pauses, Android Auto tears the audio sink down, we release focus, the phone
  * resumes, and the whole thing repeats every few seconds. Nothing in the focus API distinguishes
  * the two cases, so this decides it from context instead.
- *
- * The two entry points are exact complements on the `staticAudioFocus` axis: whichever route is
- * live, the other declines, so they can never both hold focus. A test asserts it.
  *
  * Pure and unit-tested; the I/O and the runtime bookkeeping live in [AapAudio] and [AapService].
  */
@@ -39,8 +35,6 @@ object PlaybackFocusPolicy {
 
     /**
      * @param isAudioChannel   the channel is one of AUDIO / AUDIO1 / AUDIO2.
-     * @param staticAudioFocus static mode holds focus permanently and manages it elsewhere, so the
-     *                         dynamic path must keep its hands off entirely.
      * @param btMediaLinkActive a Bluetooth media (A2DP) link to this head unit is up, so the
      *                          "other player" we would silence is very likely the phone itself.
      *                          Callers that cannot tell should pass `true`: a car radio playing over
@@ -58,50 +52,17 @@ object PlaybackFocusPolicy {
 
     fun shouldAcquire(
         mode: Mode,
-        staticAudioFocus: Boolean,
         audioSinkEnabled: Boolean,
         isAudioChannel: Boolean,
         btMediaLinkActive: Boolean,
         selfDefeatingLatched: Boolean
     ): Boolean {
-        // Pre-existing gates, unchanged: these decide whether the dynamic path runs at all.
-        if (staticAudioFocus || !audioSinkEnabled || !isAudioChannel) return false
+        if (!audioSinkEnabled || !isAudioChannel) return false
 
         return when (mode) {
             Mode.NEVER -> false
             Mode.ALWAYS -> true
             Mode.AUTO -> !btMediaLinkActive && !selfDefeatingLatched
-        }
-    }
-
-    /**
-     * The static-mode counterpart of [shouldAcquire]: whether to take the permanent
-     * `AUDIOFOCUS_GAIN` that static mode holds for a whole session, grabbed at connect time before
-     * any audio exists.
-     *
-     * Same trigger as the dynamic path — an A2DP sink answers our focus loss by pausing the phone we
-     * project — but a permanent `AUDIOFOCUS_LOSS` is not a `LOSS_TRANSIENT`: the sink pauses once and
-     * does not resume when we abandon focus, so the failure is a session that starts silent rather
-     * than one that cycles.
-     *
-     * There is no latch parameter because there is nothing here for the latch to observe. It counts
-     * media channels closing shortly after a grab, and static mode grabs once, outside any channel's
-     * lifetime. The Bluetooth probe is the only signal available on this path, which is why a unit
-     * whose probe reads nothing needs [Mode.NEVER] set by hand.
-     */
-    fun shouldAcquirePermanent(
-        mode: Mode,
-        staticAudioFocus: Boolean,
-        audioSinkEnabled: Boolean,
-        btMediaLinkActive: Boolean
-    ): Boolean {
-        // Pre-existing gates, unchanged: the permanent grab belongs to static mode alone.
-        if (!staticAudioFocus || !audioSinkEnabled) return false
-
-        return when (mode) {
-            Mode.NEVER -> false
-            Mode.ALWAYS -> true
-            Mode.AUTO -> !btMediaLinkActive
         }
     }
 

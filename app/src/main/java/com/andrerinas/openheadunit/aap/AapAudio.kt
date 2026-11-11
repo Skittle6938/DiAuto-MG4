@@ -31,7 +31,6 @@ internal class AapAudio(
     private val mediaAudioManager: AudioManager =
         SaicCarAudioSource.audioManager(context) ?: audioManager
 
-    private val staticAudioFocus = settings.staticAudioFocus
 
     // Hybrid Bluetooth music: keep assistant/nav off STREAM_MUSIC so Gemini is not lost under A2DP.
     private val separateAudioStreams =
@@ -192,14 +191,6 @@ internal class AapAudio(
         return resumed
     }
 
-    /** A change on the static path's permanent request, the only focus this app holds there. */
-    fun onPermanentFocusChange(focusChange: Int) {
-        carFocus.onUntrackedFocusChange(focusChange)?.let { state ->
-            AppLog.i("AapAudio: the car changed permanent audio focus ($focusChange) - telling the phone $state")
-            onPhoneFocusState?.invoke(state)
-        }
-    }
-
     @Volatile
     private var playbackFocusRequest: AudioFocusRequest? = null
     @Volatile
@@ -209,8 +200,7 @@ internal class AapAudio(
     // when media starts (the always-grant handshake makes them assume the head unit always holds
     // focus), so relying on the protocol notification alone leaves the car radio playing alongside
     // AA audio. Instead we hold system audio focus for as long as any AA audio channel is actively
-    // playing and release it when the last one stops. Static mode manages focus permanently and is
-    // left untouched.
+    // playing and release it when the last one stops.
     //
     // Whether we take it at all is PlaybackFocusPolicy's call: on a head unit that is also the
     // phone's Bluetooth A2DP sink, the focus grab makes the sink service AVRCP-pause that same
@@ -229,40 +219,7 @@ internal class AapAudio(
     @Volatile
     private var selfDefeatingLatched = false
 
-    @Volatile
-    private var isDucked = false
     private val handler = Handler(Looper.getMainLooper())
-    private val unduckRunnable = Runnable {
-        unduckMedia()
-    }
-
-    private fun duckMedia() {
-        if (!isDucked) {
-            val mediaTrack = audioDecoder.getTrack(Channel.ID_AUD)
-            if (mediaTrack != null) {
-                val duckedVolume = getMediaGain() * DUCK_VOLUME_FACTOR
-                AppLog.i("Static Audio Focus: Ducking media volume to $duckedVolume")
-                mediaTrack.setVolume(duckedVolume)
-                isDucked = true
-            }
-        }
-    }
-
-    private fun unduckMedia() {
-        if (isDucked) {
-            val mediaTrack = audioDecoder.getTrack(Channel.ID_AUD)
-            if (mediaTrack != null) {
-                val originalVolume = getMediaGain()
-                AppLog.i("Static Audio Focus: Restoring media volume to $originalVolume")
-                mediaTrack.setVolume(originalVolume)
-            }
-            isDucked = false
-        }
-    }
-
-    private fun getMediaGain(): Float {
-        return (1.0f + (mediaVolumeOffset / 100.0f)).coerceIn(0.0f, 2.0f)
-    }
 
     /**
      * Whether a focus request the phone asked for over the protocol should reach the system.
@@ -295,7 +252,6 @@ internal class AapAudio(
         }
         val honour = PlaybackFocusPolicy.shouldAcquire(
                 mode = mode,
-                staticAudioFocus = staticAudioFocus,
                 audioSinkEnabled = enableAudioSink,
                 isAudioChannel = true,
                 btMediaLinkActive = btMediaLinkActive,
@@ -502,7 +458,7 @@ internal class AapAudio(
      * for the rest of the session.
      */
     fun reclaimPlaybackFocusIfNeeded() {
-        if (staticAudioFocus || !enableAudioSink) return
+        if (!enableAudioSink) return
         if (holdingPlaybackFocus) return
         val channel = synchronized(activeAudioChannels) {
             when {
@@ -515,7 +471,6 @@ internal class AapAudio(
         val mode = playbackFocusModeForChannel(channel)
         val acquire = PlaybackFocusPolicy.shouldAcquire(
             mode = mode,
-            staticAudioFocus = staticAudioFocus,
             audioSinkEnabled = enableAudioSink,
             isAudioChannel = true,
             btMediaLinkActive = btMediaLinkActive,
@@ -639,8 +594,7 @@ internal class AapAudio(
             gain,
             effectiveMultiplier,
             audioQueueCapacity,
-            staticAudioFocus,
-            attachHwDspEqualizer,
+            attachHwDspEqualizer = attachHwDspEqualizer,
             mediaBufferMillis = jitterMs,
         )
         onAudioPlaybackStarted(channel)
@@ -801,7 +755,7 @@ internal class AapAudio(
     }
 
     private fun onAudioPlaybackStarted(channel: Int) {
-        if (staticAudioFocus || !enableAudioSink || !Channel.isAudio(channel)) return
+        if (!enableAudioSink || !Channel.isAudio(channel)) return
         // A prompt the phone already asked focus for on the control channel needs nothing more:
         // a second request made the SAIC radio drop focus and stay silent after it. The phone does
         // not always ask, though, and then the prompt asks here, with the same guidance usage.
@@ -829,7 +783,6 @@ internal class AapAudio(
             playbackFocusModeForChannel(channel), isSpeech = channel != Channel.ID_AUD)
         val acquire = PlaybackFocusPolicy.shouldAcquire(
                 mode = mode,
-                staticAudioFocus = staticAudioFocus,
                 audioSinkEnabled = enableAudioSink,
                 isAudioChannel = true,
                 btMediaLinkActive = btMediaLinkActive,
@@ -858,11 +811,11 @@ internal class AapAudio(
      */
     private fun onAudioPlaybackStopped(channel: Int) {
         // The car may switch its source for a prompt and not come back to Android Auto; the
-        // service checks. Before the gates below: static focus mode has the same problem.
+        // service checks. Before the gates below, which a disabled audio sink also stops at.
         if ((channel == Channel.ID_AU1 || channel == Channel.ID_AU2) && isMediaPlaying) {
             onSpeechEndedDuringMedia?.invoke()
         }
-        if (staticAudioFocus || !enableAudioSink || !Channel.isAudio(channel)) return
+        if (!enableAudioSink || !Channel.isAudio(channel)) return
         if (channel != Channel.ID_AUD) {
             releaseSpeechFocus(channel)
             return
@@ -908,12 +861,6 @@ internal class AapAudio(
         }
     }
 
-    fun precreateAudioTrack(channel: Int) {
-        if (!staticAudioFocus) return
-        if (channel != Channel.ID_AU2) return
-        startAudioTrack(channel)
-    }
-
     private fun decode(channel: Int, start: Int, buf: ByteArray, len: Int): Boolean {
         var length = len
         if (length > AUDIO_BUFS_SIZE) {
@@ -925,14 +872,7 @@ internal class AapAudio(
             startAudioTrack(channel)
         }
 
-        val deferred = audioDecoder.decode(channel, buf, start, length)
-
-        if ((channel == Channel.ID_AU1 || channel == Channel.ID_AU2) && staticAudioFocus) {
-            duckMedia()
-            handler.removeCallbacks(unduckRunnable)
-            handler.postDelayed(unduckRunnable, UNDUCK_DELAY_MS)
-        }
-        return deferred
+        return audioDecoder.decode(channel, buf, start, length)
     }
 
     fun updateGains() {
@@ -955,21 +895,12 @@ internal class AapAudio(
     fun stopAudio(channel: Int) {
         AppLog.i("Audio Stop: " + Channel.name(channel))
         if (channel == Channel.ID_AUD) lastMusicStopMs = SystemClock.elapsedRealtime()
-        if ((channel == Channel.ID_AU1 || channel == Channel.ID_AU2) && staticAudioFocus) {
-            // Keep the speech wrappers alive to prevent recreate overhead and keep state consistent.
-            // Just restore media volume.
-            handler.removeCallbacks(unduckRunnable)
-            unduckMedia()
-        } else {
-            audioDecoder.stop(channel)
-            onAudioPlaybackStopped(channel)
-        }
+        audioDecoder.stop(channel)
+        onAudioPlaybackStopped(channel)
     }
 
     companion object {
         private const val AUDIO_BUFS_SIZE = 65536 * 4  // Up to 256 Kbytes
-        private const val DUCK_VOLUME_FACTOR = 0.4f
-        private const val UNDUCK_DELAY_MS = 1500L
         private const val OWN_REQUEST_GRACE_MS = 1_000L
         private const val CAR_LOSS_DEBOUNCE_MS = 1_500L
         private const val SPEECH_IDLE_POLL_MS = 1_000L

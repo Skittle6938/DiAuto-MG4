@@ -538,8 +538,6 @@
 
     <!-- New strings merged from 2.3.1 -->
     <string name="bt_devices_selected">dispositivos seleccionados</string>
-    <string name="static_audio_focus">Enfoque de audio estático</string>
-    <string name="static_audio_focus_description">Fuerza al móvil a creer que el enfoque de audio se mantiene siempre, evitando pérdidas de enrutamiento de audio en unidades principales genéricas. También realiza atenuación de volumen por software durante las indicaciones de voz de navegación.</string>
     <string name="bluetooth_adapter_label">Adaptador Bluetooth</string>
     <string name="bluetooth_adapter_description">Seleccione el adaptador/controlador Bluetooth que se utilizará para el protocolo de enlace. Útil para sistemas con doble Bluetooth.</string>
     <string name="select_bt_adapter">Seleccionar adaptador Bluetooth</string>

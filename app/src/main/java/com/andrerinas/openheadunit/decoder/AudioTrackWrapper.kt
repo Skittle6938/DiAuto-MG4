@@ -28,7 +28,6 @@ class AudioTrackWrapper(
     gain: Float,
     private val audioLatencyMultiplier: Int = 8,
     private val audioQueueCapacity: Int = 0,
-    private val mixer: AudioMixer? = null,
     private val channelId: Int = -1,
     private val attachHwDspEqualizer: Boolean = false,
     /** >0 enables Wi‑Fi media jitter: larger track + delay play() until this many ms are queued. */
@@ -94,8 +93,6 @@ class AudioTrackWrapper(
             } catch (e: Exception) {
                 AppLog.e("Failed to set volume on AudioTrack", e)
             }
-        } else {
-            mixer?.setChannelGain(channelId, gain)
         }
     }
 
@@ -132,10 +129,10 @@ class AudioTrackWrapper(
     @Volatile private var lastWriteMs = 0L
 
     /** 16 kHz mono voice played straight to a track is upsampled here rather than by the car. */
-    private val voiceSettings = if (mixer == null && !isAac && sampleRateInHz == 16_000 && channelCount == 1 && bitDepth == 16)
+    private val voiceSettings = if (!isAac && sampleRateInHz == 16_000 && channelCount == 1 && bitDepth == 16)
         com.andrerinas.openheadunit.App.instance?.let { app -> com.andrerinas.openheadunit.App.provide(app).settings } else null
     private val upsampler: VoiceUpsampler? =
-        if (mixer == null && !isAac && sampleRateInHz == 16_000 && channelCount == 1 && bitDepth == 16)
+        if (!isAac && sampleRateInHz == 16_000 && channelCount == 1 && bitDepth == 16)
             VoiceUpsampler.create(voiceSettings?.voiceEnhancement ?: 0) else null
     /** Optional clarity filter and headroom for that voice, read when the prompt starts. */
     private val voiceClarity: VoiceClarity? = voiceSettings?.let {
@@ -170,7 +167,7 @@ class AudioTrackWrapper(
 
     init {
         this.name = "AudioPlaybackThread"
-        val plan = if (mixer == null && mediaBufferMillis > 0) {
+        val plan = if (mediaBufferMillis > 0) {
             val channelConfig =
                 if (channelCount == 2) AudioFormat.CHANNEL_OUT_STEREO else AudioFormat.CHANNEL_OUT_MONO
             val dataFormat =
@@ -187,18 +184,14 @@ class AudioTrackWrapper(
             null
         }
 
-        audioTrack = if (mixer == null) {
-            createAudioTrack(
-                stream,
-                if (upsampler != null) 48_000 else sampleRateInHz,
-                bitDepth,
-                channelCount,
-                audioLatencyMultiplier,
-                plan?.trackBufferBytes ?: 0,
-            )
-        } else {
-            null
-        }
+        audioTrack = createAudioTrack(
+            stream,
+            if (upsampler != null) 48_000 else sampleRateInHz,
+            bitDepth,
+            channelCount,
+            audioLatencyMultiplier,
+            plan?.trackBufferBytes ?: 0,
+        )
 
         mediaJitterStartBytes = run {
             val track = audioTrack
@@ -213,21 +206,16 @@ class AudioTrackWrapper(
         }
         mediaPlaybackStarted = mediaJitterStartBytes <= 0
 
-        if (mixer != null) {
-            mixer.registerChannel(channelId, sampleRateInHz, channelCount)
-            mixer.setChannelGain(channelId, gain)
-        } else {
-            setVolume(gain)
-            audioTrack?.let { track ->
-                attachHwDspEqualizerQuietly(track.audioSessionId)
-                if (mediaPlaybackStarted) {
-                    track.play()
-                } else {
-                    AppLog.i(
-                        "Media audio jitter: delaying play until ${mediaJitterStartBytes}B " +
-                            "(~${mediaBufferMillis}ms) buffered",
-                    )
-                }
+        setVolume(gain)
+        audioTrack?.let { track ->
+            attachHwDspEqualizerQuietly(track.audioSessionId)
+            if (mediaPlaybackStarted) {
+                track.play()
+            } else {
+                AppLog.i(
+                    "Media audio jitter: delaying play until ${mediaJitterStartBytes}B " +
+                        "(~${mediaBufferMillis}ms) buffered",
+                )
             }
         }
 
@@ -334,37 +322,32 @@ class AudioTrackWrapper(
     }
 
     private fun writeToTrack(buffer: ByteArray, size: Int) {
-        if (mixer != null) {
-            mixer.feed(channelId, buffer, 0, size)
-            framesWritten += size / bytesPerFrame
+        applyGain(buffer, size)
+        val track = audioTrack ?: return
+        if (android.os.SystemClock.elapsedRealtime() < silencedUntilMs) {
+            // Paused by the driver: what the phone still sends is not played.
+            lastWriteMs = android.os.SystemClock.elapsedRealtime()
+            return
+        }
+        val up = upsampler
+        voiceClarity?.process(buffer, size)
+        val result = if (up != null) {
+            val bytes = upsample(buffer, size, up)
+            track.write(upsampleBytes, 0, bytes)
         } else {
-            applyGain(buffer, size)
-            val track = audioTrack ?: return
-            if (android.os.SystemClock.elapsedRealtime() < silencedUntilMs) {
-                // Paused by the driver: what the phone still sends is not played.
-                lastWriteMs = android.os.SystemClock.elapsedRealtime()
-                return
-            }
-            val up = upsampler
-            voiceClarity?.process(buffer, size)
-            val result = if (up != null) {
-                val bytes = upsample(buffer, size, up)
-                track.write(upsampleBytes, 0, bytes)
-            } else {
-                track.write(buffer, 0, size)
-            }
-            if (result > 0) {
-                lastWriteMs = android.os.SystemClock.elapsedRealtime()
-                framesWritten += result / bytesPerFrame
-                if (!mediaPlaybackStarted) {
-                    bytesWrittenBeforePlay += result
-                    if (bytesWrittenBeforePlay >= mediaJitterStartBytes) {
-                        track.play()
-                        mediaPlaybackStarted = true
-                        AppLog.i(
-                            "Media audio jitter: play() after ${bytesWrittenBeforePlay}B buffered",
-                        )
-                    }
+            track.write(buffer, 0, size)
+        }
+        if (result > 0) {
+            lastWriteMs = android.os.SystemClock.elapsedRealtime()
+            framesWritten += result / bytesPerFrame
+            if (!mediaPlaybackStarted) {
+                bytesWrittenBeforePlay += result
+                if (bytesWrittenBeforePlay >= mediaJitterStartBytes) {
+                    track.play()
+                    mediaPlaybackStarted = true
+                    AppLog.i(
+                        "Media audio jitter: play() after ${bytesWrittenBeforePlay}B buffered",
+                    )
                 }
             }
         }
@@ -661,7 +644,7 @@ class AudioTrackWrapper(
      * with the Wi-Fi jitter buffer), so a skipped-to track is heard as soon as the phone sends it.
      */
     fun flushForTrackChange() {
-        if (!isRunning || mixer != null) return
+        if (!isRunning) return
         drainQueuedAudio()
         val track = audioTrack ?: return
         try {
@@ -735,10 +718,6 @@ class AudioTrackWrapper(
         } catch (e: InterruptedException) {
             AppLog.w("Audio write executor interrupted during shutdown")
             writeExecutor.shutdownNow()
-        }
-
-        if (mixer != null) {
-            mixer.unregisterChannel(channelId)
         }
 
         // 3. Gracefully stop the AudioTrack – stop() plays remaining buffer data

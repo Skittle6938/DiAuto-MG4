@@ -555,8 +555,6 @@
 
     <!-- New strings merged from 2.3.1 -->
     <string name="bt_devices_selected">個のデバイスを選択中</string>
-    <string name="static_audio_focus">静的オーディオフォーカス</string>
-    <string name="static_audio_focus_description">オーディオフォーカスが常に保持されているとスマートフォンに認識させ、一般的なヘッドユニットでのオーディオルーティングの切断を防ぎます。ナビゲーションの音声案内中には、ソフトウェアによる音量减衰（ダッキング）も実行します。</string>
     <string name="bluetooth_adapter_label">Bluetooth アダプター</string>
     <string name="bluetooth_adapter_description">ハンドシェイクに使用する Bluetooth アダプター/コントローラーを選択します。デュアル Bluetooth システムで役立ちます。</string>
     <string name="select_bt_adapter">Bluetooth アダプターの選択</string>

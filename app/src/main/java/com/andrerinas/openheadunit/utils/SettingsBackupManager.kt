@@ -104,7 +104,6 @@ object SettingsBackupManager {
         Settings.KEY_MUSIC_VIA_BLUETOOTH to ValueType.BOOLEAN,
         "force-bt-music-on-connect" to ValueType.BOOLEAN,
         "media-audio-buffer-ms" to ValueType.INT,
-        "static-audio-focus" to ValueType.BOOLEAN,
         // Enum-backed, but INT is safe: Settings.playbackFocusMode reads it through
         // PlaybackFocusPolicy.Mode.fromInt, which falls back to AUTO for anything out of range.
         "playback-focus-mode" to ValueType.INT,
@@ -193,7 +192,6 @@ object SettingsBackupManager {
         Settings.KEY_MUSIC_VIA_BLUETOOTH,
         "force-bt-music-on-connect",
         "media-audio-buffer-ms",
-        "static-audio-focus",
         "playback-focus-mode",
         "separate-audio-streams",
         "use-aac-audio",

@@ -264,8 +264,6 @@
     <string name="category_audio">აუდიო</string>
     <string name="enable_audio_sink">აუდიო მიმღები (Audio Sink)</string>
     <string name="enable_audio_sink_description">თუ გამორთულია, მონიტორი არ მიიღებს აუდიოს. ხმა ითამაშებს ტელეფონიდან.</string>
-    <string name="static_audio_focus">სტატიკური აუდიო ფოკუსი</string>
-    <string name="static_audio_focus_description">აიძულებს ტელეფონს ჩათვალოს, რომ აუდიო ფოკუსი ყოველთვის დაკავებულია, რაც თავიდან აცილებს ხმის დაკარგვას არაბრენდირებულ მონიტორებზე. ასევე ახდენს პროგრამულ ჩახშობას (ducking) ნავიგაციის ხმოვანი მითითებების დროს.</string>
     <string name="separate_audio_streams">აუდიო ნაკადების განცალკევება</string>
     <string name="separate_audio_streams_description">მუსიკის, ზარებისა და შეტყობინებების აუდიო არხების განცალკევება ერთი მულტიმედიური ნაკადის ნაცვლად (შეიძლება გამართულად არ იმუშაოს ზოგიერთ მოწყობილობაზე).</string>
     <string name="use_aac_audio">AAC აუდიოს გამოყენება</string>

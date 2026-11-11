@@ -415,9 +415,8 @@ class CommManager(
      * This ordering guarantees no video frame is ever decoded before a render target exists.
      *
      * On success:
-     * 1. In Static Audio Focus mode, claims permanent audio focus for `STREAM_MUSIC`.
-     * 2. Starts the [AapTransport] read loop.
-     * 3. Emits [ConnectionState.TransportStarted].
+     * 1. Starts the [AapTransport] read loop.
+     * 2. Emits [ConnectionState.TransportStarted].
      */
     suspend fun startReading() = withContext(Dispatchers.IO) {
         if (_connectionState.value !is ConnectionState.HandshakeComplete) return@withContext
@@ -427,32 +426,6 @@ class CommManager(
             // disconnect, so a stable local reference avoids racing reads and lets us bail out
             // early instead of emitting TransportStarted when no reading actually started.
             val transport = _transport ?: return@withContext
-            // Only grab permanent AUDIOFOCUS_GAIN in Static Audio Focus mode, matching the
-            // gating in AapService.requestPermanentAudioFocus and AapControl.audioFocusRequest.
-            // In the default (dynamic) mode focus is acquired on demand via the AA protocol, so
-            // an unconditional grab here would evict other media (e.g. the car radio) the moment
-            // the phone connects, before AA plays anything.
-            //
-            // And even in static mode, not when the player we would evict is the head unit's own
-            // A2DP sink: it answers by AVRCP-pausing the phone that is about to project to us.
-            if (settings.enableAudioSink && settings.staticAudioFocus) {
-                val mode = settings.effectivePlaybackFocusMode(context)
-                val btMediaLinkActive = BluetoothHelper.isA2dpMediaLinkActive(context)
-                if (PlaybackFocusPolicy.shouldAcquirePermanent(
-                        mode = mode,
-                        staticAudioFocus = true,
-                        audioSinkEnabled = true,
-                        btMediaLinkActive = btMediaLinkActive)) {
-                    transport.aapAudio?.requestFocusChange(
-                        AudioManager.STREAM_MUSIC,
-                        AudioManager.AUDIOFOCUS_GAIN,
-                        AudioManager.OnAudioFocusChangeListener { }
-                    )
-                } else {
-                    AppLog.i("CommManager: Static Audio Focus - leaving system audio focus alone " +
-                            "(mode=$mode, bluetoothMedia=$btMediaLinkActive)")
-                }
-            }
             transport.startReading()
             _connectionState.emit(ConnectionState.TransportStarted)
         } catch (e: Exception) {
@@ -765,7 +738,6 @@ class CommManager(
     val isMediaPlaying: Boolean
         get() = _transport?.aapAudio?.isMediaPlaying == true
 
-    /** Static audio focus: a change on AapService's permanent request, to pass on to the phone. */
     /** Drops the buffered audio of the track being skipped (see [com.andrerinas.openheadunit.decoder.AudioTrackWrapper.flushForTrackChange]). */
     fun flushMediaForTrackChange() {
         audioDecoder.getTrack(com.andrerinas.openheadunit.aap.protocol.Channel.ID_AUD)?.flushForTrackChange()
@@ -784,10 +756,6 @@ class CommManager(
 
     fun onCarSourceFocusChange(focusChange: Int) {
         _transport?.aapAudio?.onCarSourceFocusChange(focusChange)
-    }
-
-    fun onPermanentFocusChange(focusChange: Int) {
-        _transport?.aapAudio?.onPermanentFocusChange(focusChange)
     }
 
     // -----------------------------------------------------------------------------------------

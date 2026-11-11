@@ -492,8 +492,6 @@
     <string name="category_audio">Audio</string>
     <string name="enable_audio_sink">Audio Sink</string>
     <string name="enable_audio_sink_description">If disabled, the headunit will not receive audio. Sound will play from the phone.</string>
-    <string name="static_audio_focus">Static Audio Focus</string>
-    <string name="static_audio_focus_description">Force the phone to believe audio focus is always held, preventing audio routing losses on generic headunits. Also performs software ducking during navigation voice prompts.</string>
     <string name="media_key_routing">Send Media Buttons To Android Auto</string>
     <string name="media_key_routing_always">Always</string>
     <string name="media_key_routing_auto">Automatic</string>

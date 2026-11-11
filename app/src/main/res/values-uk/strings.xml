@@ -547,8 +547,6 @@
 
     <!-- New strings merged from 2.3.1 -->
     <string name="bt_devices_selected">пристроїв вибрано</string>
-    <string name="static_audio_focus">Статичний аудіофокус</string>
-    <string name="static_audio_focus_description">Примусово змушує телефон вважати, що аудіофокус утримується постійно, запобігаючи втраті маршрутизації звуку на універсальних магнітолах. Також виконує програмне приглушення звука (ducking) під час голосових підказок навігатора.</string>
     <string name="bluetooth_adapter_label">Bluetooth-адаптер</string>
     <string name="bluetooth_adapter_description">Виберіть Bluetooth-адаптер/контролер для встановлення зв\'язку. Корисно для систем із подвійним Bluetooth.</string>
     <string name="select_bt_adapter">Вибрати Bluetooth-адаптер</string>

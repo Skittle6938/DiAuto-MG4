@@ -117,7 +117,6 @@ internal class AapControlMedia(
 
         // Pushing AudioFocusNotification
         if (Channel.isAudio(channel)) {
-            aapAudio.precreateAudioTrack(channel)
             val focusNotification = Control.AudioFocusNotification.newBuilder()
                 .setFocusState(Control.AudioFocusNotification.AudioFocusStateType.STATE_GAIN)
                 .setUnsolicited(true)
@@ -427,25 +426,19 @@ internal class AapControlService(
         // The result is intentionally ignored for the protocol response above, which has already
         // been sent — only the system-level grab is in question here, never the always-grant reply.
         if (settings.enableAudioSink) {
-            if (settings.staticAudioFocus) {
-                AppLog.i("Static Audio Focus active - skipping dynamic system focus request to prevent routing loss")
-            } else {
-                // Gated at the call site, not inside requestFocusChange: that function is also the
-                // static path's permanent grab from CommManager, where the answer is the opposite.
-                val isRelease = notification.request.number ==
-                        Control.AudioFocusRequestNotification.AudioFocusRequestType.RELEASE_VALUE
-                val isMedia = notification.request.number ==
-                        Control.AudioFocusRequestNotification.AudioFocusRequestType.GAIN_VALUE
-                if (aapAudio.shouldHonourProtocolFocusRequest(isRelease, isMedia)) {
-                    val separate = settings.separateAudioStreams || settings.musicViaBluetooth
-                    aapAudio.requestFocusChange(
-                        AudioConfigs.stream(channel, separate),
-                        notification.request.number,
-                        AudioManager.OnAudioFocusChangeListener {
-                            AppLog.i("System audio focus changed: $it ${systemFocusName[it]}")
-                        },
-                    )
-                }
+            val isRelease = notification.request.number ==
+                    Control.AudioFocusRequestNotification.AudioFocusRequestType.RELEASE_VALUE
+            val isMedia = notification.request.number ==
+                    Control.AudioFocusRequestNotification.AudioFocusRequestType.GAIN_VALUE
+            if (aapAudio.shouldHonourProtocolFocusRequest(isRelease, isMedia)) {
+                val separate = settings.separateAudioStreams || settings.musicViaBluetooth
+                aapAudio.requestFocusChange(
+                    AudioConfigs.stream(channel, separate),
+                    notification.request.number,
+                    AudioManager.OnAudioFocusChangeListener {
+                        AppLog.i("System audio focus changed: $it ${systemFocusName[it]}")
+                    },
+                )
             }
         } else {
             AppLog.i("Audio Sink disabled - skipping system audio focus request for channel ${Channel.name(channel)}")

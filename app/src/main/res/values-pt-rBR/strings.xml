@@ -547,8 +547,6 @@
 
     <!-- New strings merged from 2.3.1 -->
     <string name="bt_devices_selected">dispositivos selecionados</string>
-    <string name="static_audio_focus">Foco de áudio estático</string>
-    <string name="static_audio_focus_description">Força o telefone a acreditar que o foco de áudio está sempre ativo, evitando perdas de roteamento de áudio em centrais multimídia genéricas. Também realiza atenuação de volume (ducking) por software durante as instruções de voz de navegação.</string>
     <string name="bluetooth_adapter_label">Adaptador Bluetooth</string>
     <string name="bluetooth_adapter_description">Selecione o adaptador/controlador Bluetooth a ser usado para a conexão. Útil para sistemas com Bluetooth duplo.</string>
     <string name="select_bt_adapter">Selecionar adaptador Bluetooth</string>

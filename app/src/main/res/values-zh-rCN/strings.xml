@@ -546,8 +546,6 @@
 
     <!-- New strings merged from 2.3.1 -->
     <string name="bt_devices_selected">个已选择的设备</string>
-    <string name="static_audio_focus">静态音频焦点</string>
-    <string name="static_audio_focus_description">强制让手机认为音频焦点一直被保留，以防止通用车机上的音频路由丢失。在导航语音提示期间也会运行软件音量衰减（Ducking）。</string>
     <string name="bluetooth_adapter_label">蓝牙适配器</string>
     <string name="bluetooth_adapter_description">选择用于交握的蓝牙适配器/控制器。适用于双蓝牙系统。</string>
     <string name="select_bt_adapter">选择蓝牙适配器</string>

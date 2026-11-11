@@ -546,8 +546,6 @@
 
     <!-- New strings merged from 2.3.1 -->
     <string name="bt_devices_selected">apparaten geselecteerd</string>
-    <string name="static_audio_focus">Statische audiofocus</string>
-    <string name="static_audio_focus_description">Dwingt de telefoon te geloven dat de audiofocus altijd behouden blijft, wat verlies van audioroutering op generieke headunits voorkomt. Voert ook softwarematige volumevermindering (ducking) uit tijdens navigatie-aanwijzingen.</string>
     <string name="bluetooth_adapter_label">Bluetooth-adapter</string>
     <string name="bluetooth_adapter_description">Selecteer de Bluetooth-adapter/-controller die moet worden gebruikt voor de handshake. Handig voor systemen met dubbele Bluetooth.</string>
     <string name="select_bt_adapter">Selecteer Bluetooth-adapter</string>

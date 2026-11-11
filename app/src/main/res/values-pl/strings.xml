@@ -547,8 +547,6 @@
 
     <!-- New strings merged from 2.3.1 -->
     <string name="bt_devices_selected">wybranych urządzeń</string>
-    <string name="static_audio_focus">Statyczne skupienie dźwięku</string>
-    <string name="static_audio_focus_description">Wymusza na telefonie przekonanie, że skupienie dźwięku jest zawsze utrzymywane, co zapobiega utracie routingu dźwięku na uniwersalnych jednostkach głównych. Wykonuje również programowe wyciszanie (ducking) podczas wskazówek głosowych nawigacji.</string>
     <string name="bluetooth_adapter_label">Adapter Bluetooth</string>
     <string name="bluetooth_adapter_description">Wybierz adapter/kontroler Bluetooth do użycia podczas uścisku dłoni (handshake). Przydatne w systemach z podwójnym Bluetooth.</string>
     <string name="select_bt_adapter">Wybierz adapter Bluetooth</string>

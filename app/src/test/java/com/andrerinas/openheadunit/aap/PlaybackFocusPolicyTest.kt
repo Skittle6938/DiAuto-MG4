@@ -10,14 +10,12 @@ class PlaybackFocusPolicyTest {
 
     private fun acquire(
         mode: Mode = Mode.AUTO,
-        staticAudioFocus: Boolean = false,
         audioSinkEnabled: Boolean = true,
         isAudioChannel: Boolean = true,
         btMediaLinkActive: Boolean = false,
         selfDefeatingLatched: Boolean = false
     ) = PlaybackFocusPolicy.shouldAcquire(
         mode = mode,
-        staticAudioFocus = staticAudioFocus,
         audioSinkEnabled = audioSinkEnabled,
         isAudioChannel = isAudioChannel,
         btMediaLinkActive = btMediaLinkActive,
@@ -25,13 +23,6 @@ class PlaybackFocusPolicyTest {
     )
 
     // --- the pre-existing gates, which no mode may override ---
-
-    @Test
-    fun `static focus mode never uses the dynamic path`() {
-        for (mode in Mode.values()) {
-            assertFalse("mode=$mode", acquire(mode = mode, staticAudioFocus = true))
-        }
-    }
 
     @Test
     fun `a disabled audio sink never takes focus`() {
@@ -80,86 +71,6 @@ class PlaybackFocusPolicyTest {
     @Test
     fun `never declines even when the detection is clean`() {
         assertFalse(acquire(mode = Mode.NEVER, btMediaLinkActive = false, selfDefeatingLatched = false))
-    }
-
-    // --- static mode's permanent grab ---
-
-    private fun acquirePermanent(
-        mode: Mode = Mode.AUTO,
-        staticAudioFocus: Boolean = true,
-        audioSinkEnabled: Boolean = true,
-        btMediaLinkActive: Boolean = false
-    ) = PlaybackFocusPolicy.shouldAcquirePermanent(
-        mode = mode,
-        staticAudioFocus = staticAudioFocus,
-        audioSinkEnabled = audioSinkEnabled,
-        btMediaLinkActive = btMediaLinkActive
-    )
-
-    @Test
-    fun `the permanent grab belongs to static mode alone`() {
-        for (mode in Mode.values()) {
-            assertFalse("mode=$mode", acquirePermanent(mode = mode, staticAudioFocus = false))
-        }
-    }
-
-    @Test
-    fun `a disabled audio sink never takes permanent focus`() {
-        for (mode in Mode.values()) {
-            assertFalse("mode=$mode", acquirePermanent(mode = mode, audioSinkEnabled = false))
-        }
-    }
-
-    @Test
-    fun `auto takes permanent focus when no bluetooth media link is up`() {
-        // Static mode's reason for existing — a generic head unit that loses audio routing —
-        // is untouched for everyone this bug does not affect.
-        assertTrue(acquirePermanent(mode = Mode.AUTO, btMediaLinkActive = false))
-    }
-
-    @Test
-    fun `auto declines the permanent grab while a bluetooth media link is up`() {
-        assertFalse(acquirePermanent(mode = Mode.AUTO, btMediaLinkActive = true))
-    }
-
-    @Test
-    fun `always and never override the probe on the permanent path too`() {
-        assertTrue(acquirePermanent(mode = Mode.ALWAYS, btMediaLinkActive = true))
-        assertFalse(acquirePermanent(mode = Mode.NEVER, btMediaLinkActive = false))
-    }
-
-    @Test
-    fun `the two paths are exact complements and never both take focus`() {
-        // Same shape as WifiModePolicy vs UserExitHotspotPolicy: one decision, split across two
-        // functions, so the split has to be airtight rather than merely plausible.
-        for (mode in Mode.values()) {
-            for (static in listOf(false, true)) {
-                for (sink in listOf(false, true)) {
-                    for (bt in listOf(false, true)) {
-                        for (latched in listOf(false, true)) {
-                            val dynamic = PlaybackFocusPolicy.shouldAcquire(
-                                mode = mode,
-                                staticAudioFocus = static,
-                                audioSinkEnabled = sink,
-                                isAudioChannel = true,
-                                btMediaLinkActive = bt,
-                                selfDefeatingLatched = latched
-                            )
-                            val permanent = acquirePermanent(
-                                mode = mode,
-                                staticAudioFocus = static,
-                                audioSinkEnabled = sink,
-                                btMediaLinkActive = bt
-                            )
-                            assertFalse(
-                                "mode=$mode static=$static sink=$sink bt=$bt latched=$latched",
-                                dynamic && permanent
-                            )
-                        }
-                    }
-                }
-            }
-        }
     }
 
     // --- the self-defeating detector ---

@@ -806,9 +806,6 @@ class Settings(private val context: Context) {
         get() = (context.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager)
             .defaultDisplay.refreshRate
 
-    var staticAudioFocus: Boolean
-        get() = prefs.getBoolean("static-audio-focus", false)
-        set(value) { prefs.edit().putBoolean("static-audio-focus", value).apply() }
 
     // Whether AA playback takes system audio focus, so another local player (typically the car
     // radio) pauses while it runs. AUTO skips it when a Bluetooth media link is up, because the
@@ -892,7 +889,7 @@ class Settings(private val context: Context) {
         get() = prefs.getBoolean("mic-echo-canceler", false)
         set(value) { prefs.edit().putBoolean("mic-echo-canceler", value).apply() }
 
-    // Attach dummy Equalizer effect to AudioTrack/AudioMixer session to force HW DSP hardware routing
+    // Attach dummy Equalizer effect to the AudioTrack session to force HW DSP hardware routing
     var attachHwDspEqualizer: Boolean
         get() = prefs.getBoolean("attach_hw_dsp_equalizer", false)
         set(value) { prefs.edit().putBoolean("attach_hw_dsp_equalizer", value).apply() }

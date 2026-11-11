@@ -273,8 +273,6 @@
     <string name="category_audio">오디오</string>
     <string name="enable_audio_sink">오디오 수신</string>
     <string name="enable_audio_sink_description">비활성화 시 헤드유닛이 오디오를 수신하지 않고, 소리는 휴대폰에서 재생됩니다.</string>
-    <string name="static_audio_focus">오디오 포커스 고정</string>
-    <string name="static_audio_focus_description">일반 헤드유닛에서 오디오 출력이 끊기는 문제를 방지하기 위해 휴대폰이 오디오 포커스를 항상 유지 중인 것으로 인식하게 합니다. 내비게이션 음성 안내 중에는 다른 오디오 볼륨을 자동으로 낮춥니다.</string>
     <string name="separate_audio_streams">오디오 스트림 분리</string>
     <string name="separate_audio_streams_description">하나의 멀티미디어 스트림 대신 음악, 통화, 알림에 별도의 오디오 채널을 사용합니다(일부 기기에서는 정상적으로 작동하지 않을 수 있음).</string>
     <string name="use_aac_audio">AAC 오디오 사용</string>

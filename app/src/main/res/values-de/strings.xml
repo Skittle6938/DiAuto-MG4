@@ -267,8 +267,6 @@
     <string name="category_audio">Audio</string>
     <string name="enable_audio_sink">Audio-Ausgabe</string>
     <string name="enable_audio_sink_description">Wenn deaktiviert, empfängt die Headunit keinen Ton. Der Ton wird über das Handy abgespielt.</string>
-    <string name="static_audio_focus">Statischer Audio-Fokus</string>
-    <string name="static_audio_focus_description">Zwingt das Telefon dazu, zu glauben, dass der Audio-Fokus dauerhaft gehalten wird. Verhindert Ton-Ausfälle auf chinesischen Headunits. Aktiviert Software-Ducking für Navigationsansagen.</string>
     <string name="separate_audio_streams">Separate Audio-Streams</string>
     <string name="separate_audio_streams_description">Trenne Audiokanäle für Musik, Anrufe und Benachrichtigungen statt eines einzelnen Multimedia-Streams (funktioniert auf einigen Geräten möglicherweise nicht richtig).</string>
     <string name="use_aac_audio">AAC-Audio verwenden</string>

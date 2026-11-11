@@ -254,8 +254,6 @@
     <string name="category_audio">Âm thanh</string>
     <string name="enable_audio_sink">Audio Sink</string>
     <string name="enable_audio_sink_description">Nếu tắt, headunit sẽ không nhận âm thanh. Tiếng sẽ phát ra từ điện thoại.</string>
-    <string name="static_audio_focus">Audio Focus tĩnh</string>
-    <string name="static_audio_focus_description">Ép điện thoại luôn cho rằng nó đang giữ audio focus, tránh mất định tuyến âm trên headunit phổ thông. Cũng thực hiện giảm âm bằng phần mềm khi điều hướng đọc lệnh.</string>
     <string name="separate_audio_streams">Tách luồng âm thanh</string>
     <string name="separate_audio_streams_description">Tách kênh âm thanh cho nhạc, gọi điện và thông báo thay vì một luồng đa phương tiện chung (có thể không chạy đúng trên một số máy).</string>
     <string name="use_aac_audio">Dùng âm thanh AAC</string>

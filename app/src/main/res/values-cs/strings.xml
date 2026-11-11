@@ -546,8 +546,6 @@
 
     <!-- New strings merged from 2.3.1 -->
     <string name="bt_devices_selected">vybraných zařízení</string>
-    <string name="static_audio_focus">Statické zaměření zvuku</string>
-    <string name="static_audio_focus_description">Vynutí, aby si telefon myslel, že má neustále zaměřený zvuk, což zabraňuje ztrátě směrování zvuku na běžných hlavních jednotkách. Také provádí softwarové ztlumení (ducking) během navigačních hlasových pokynů.</string>
     <string name="bluetooth_adapter_label">Adaptér Bluetooth</string>
     <string name="bluetooth_adapter_description">Vyberte adaptér/ovladač Bluetooth, který se má použít pro handshake. Užitečné pro systémy s duálním Bluetooth.</string>
     <string name="select_bt_adapter">Vybrat adaptér Bluetooth</string>

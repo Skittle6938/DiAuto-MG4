@@ -547,8 +547,6 @@
 
     <!-- New strings merged from 2.3.1 -->
     <string name="bt_devices_selected">dispozitive selectate</string>
-    <string name="static_audio_focus">Focus audio static</string>
-    <string name="static_audio_focus_description">Forțează telefonul să creadă că focusul audio este menținut mereu, prevenind pierderile de rutare audio pe unitățile auto generice. De asemenea, efectuează atenuarea volumului prin software (ducking) în timpul instrucțiunilor vocale de navigare.</string>
     <string name="bluetooth_adapter_label">Adaptor Bluetooth</string>
     <string name="bluetooth_adapter_description">Selectați adaptorul/controlerul Bluetooth de utilizat pentru handshake. Util pentru sistemele cu Bluetooth dual.</string>
     <string name="select_bt_adapter">Selectați adaptorul Bluetooth</string>
