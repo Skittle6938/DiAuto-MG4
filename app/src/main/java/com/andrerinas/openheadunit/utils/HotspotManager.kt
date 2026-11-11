@@ -200,6 +200,16 @@ object HotspotManager {
             return true
         }
 
+        // One radio, every start goes through here: the car's Wi-Fi client goes off first, or the
+        // access point follows the client's band and comes up on 2.4 GHz (Marc, 2026-11-11).
+        // pauseStation remembers it, so the client comes back once the access point is down.
+        val wifi = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        if (wifi.isWifiEnabled) pauseStation(context)
+        if (!OneRadioPolicy.mayStartAccessPoint(clientOn = wifi.isWifiEnabled)) {
+            AppLog.w("HotspotManager: the car Wi-Fi client is still on after ${AP_STATE_TIMEOUT_MS} ms - not starting the hotspot, it would follow the client's band (2.4 GHz)")
+            return false
+        }
+
         // Claimed before anything slow runs, or a second caller walks past while the first is
         // still waiting for the access point.
         synchronized(this) {
@@ -210,9 +220,8 @@ object HotspotManager {
             startInFlight = true
         }
 
-        // DiPlay CarHotspotController does not force the station radio off before SoftAP enable.
-        // On SAIC MG4 that call can disrupt the built-in car SoftAP path; the framework drops
-        // the station itself when tethering needs the radio.
+        // DiPlay CarHotspotController left the station on and let the framework drop it; on the
+        // MG4 the access point then took the station's band, hence the switch-off above.
         try {
             // 5 GHz first, 2.4 GHz only if the radio will not host an access point on it. See
             // SoftApBandPolicy for why the order is not a preference.
