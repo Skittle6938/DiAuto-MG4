@@ -36,6 +36,15 @@ class SettingsDefaultsTest {
     private fun prefs() = context.getSharedPreferences(Settings.PREFS_NAME, Context.MODE_PRIVATE)
 
     @Test
+    fun `the first call to the phone waits 15 s by default and stays within 0 to 60 s`() {
+        assertEquals(15, settings.firstPhoneCallDelaySeconds)
+        settings.firstPhoneCallDelaySeconds = 0
+        assertEquals(0, settings.firstPhoneCallDelaySeconds)
+        settings.firstPhoneCallDelaySeconds = 500
+        assertEquals(60, settings.firstPhoneCallDelaySeconds)
+    }
+
+    @Test
     fun `the mic records from the default source`() {
         assertEquals(0, settings.micInputSource)
     }

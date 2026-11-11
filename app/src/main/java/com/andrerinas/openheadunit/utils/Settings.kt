@@ -262,6 +262,15 @@ class Settings(private val context: Context) {
         get() = prefs.getInt("station-restore-delay-s", 10).coerceIn(10, 300)
         set(value) { prefs.edit().putInt("station-restore-delay-s", value.coerceIn(10, 300)).apply() }
 
+    /**
+     * Advanced (#17): how long after DiAuto starts the remembered phone is first called over
+     * Bluetooth when it is not linked yet. 15 s leaves a car that reconnects the phone by itself
+     * time to do it first; cars that never do (many SWI68) can call at once.
+     */
+    var firstPhoneCallDelaySeconds: Int
+        get() = prefs.getInt("first-phone-call-delay-s", 15).coerceIn(0, 60)
+        set(value) { prefs.edit().putInt("first-phone-call-delay-s", value.coerceIn(0, 60)).apply() }
+
     /** Live telemetry to ABRP over the car's T-box (vehicle/AbrpUploader). Off by default. */
     var abrpEnabled: Boolean
         get() = prefs.getBoolean("abrp-enabled", false)

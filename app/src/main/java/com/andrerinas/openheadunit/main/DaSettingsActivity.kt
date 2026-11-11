@@ -43,6 +43,8 @@ class DaSettingsActivity : BaseActivity() {
     private lateinit var tabBox: LinearLayout
     private lateinit var list: LinearLayout
     private var selectedTab = 0
+    /** Connection tab: advanced options folded away until asked for, each time Settings opens. */
+    private var showAdvanced = false
     private var ota: OtaController? = null
     private var otaStatus: OtaController.Status? = null
 
@@ -147,6 +149,18 @@ class DaSettingsActivity : BaseActivity() {
         row(R.string.dset_usb_wifi, R.string.dset_usb_wifi_summary, yesNo(settings.usbWifiClient) {
             settings.usbWifiClient = it
         })
+        // Fine-tuning most drivers never need: folded away so the tab stays short.
+        row(R.string.dset_advanced, R.string.dset_advanced_summary,
+            value(getString(if (showAdvanced) R.string.dset_advanced_hide else R.string.dset_advanced_show)) {
+                showAdvanced = !showAdvanced
+                showTab(selectedTab)
+            })
+        if (!showAdvanced) return
+        val firstCalls = listOf(0, 5, 15, 30)
+        row(R.string.dset_first_call_delay, R.string.dset_first_call_delay_summary,
+            choices(firstCalls.map { "$it s" }, firstCalls.indexOf(settings.firstPhoneCallDelaySeconds).takeIf { it >= 0 } ?: 2) {
+                settings.firstPhoneCallDelaySeconds = firstCalls[it]
+            })
         val delays = listOf(10, 30, 60, 120, 300)
         val delay = delays.indexOf(settings.stationRestoreDelaySeconds).takeIf { it >= 0 } ?: 2
         row(R.string.dset_station_delay, R.string.dset_station_delay_summary,

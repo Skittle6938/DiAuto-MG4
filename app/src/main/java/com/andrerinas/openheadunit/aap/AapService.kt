@@ -3401,7 +3401,8 @@ class AapService : Service(), UsbReceiver.Listener {
                 // The first round comes early (#17): a car that does not reconnect the phone by
                 // itself otherwise waits a full interval. Not earlier than this, so a car that
                 // does reconnect it has time to, and a poke never takes its hands-free link.
-                delay(if (first) PHONE_RECONNECT_FIRST_MS else PHONE_RECONNECT_INTERVAL_MS)
+                // The first delay is an advanced setting: cars that never reconnect it can call at once.
+                delay(if (first) settings.firstPhoneCallDelaySeconds * 1000L else PHONE_RECONNECT_INTERVAL_MS)
                 first = false
                 val settings = App.provide(this@AapService).settings
                 if (!wirelessEnabled() || userExitedAA || wifiHandedBackOnExit) continue
@@ -3551,7 +3552,6 @@ class AapService : Service(), UsbReceiver.Listener {
         private const val USER_EXIT_COOLDOWN_MS = 15_000L
         private const val PROMPT_SOURCE_CHECK_DELAY_MS = 1_500L
         private const val PHONE_RECONNECT_INTERVAL_MS = 30_000L
-        private const val PHONE_RECONNECT_FIRST_MS = 15_000L
         private const val WATCHDOG_POKE_SETTLE_MS = 30_000L
         private const val RECENT_BT_CONNECT_MS = 180_000L
         private const val TRACK_SKIP_FLUSH_DELAY_MS = 250L
