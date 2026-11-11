@@ -1906,11 +1906,12 @@ class AapService : Service(), UsbReceiver.Listener {
             val enableNow = downAtExit || (startAp && settings.autoEnableHotspot)
             serviceScope.launch(Dispatchers.IO) {
                 HotspotManager.ensure5GhzBeforeSession(this@AapService, pauseStation = phoneLinked && !usbSession)
-                if (enableNow) withContext(Dispatchers.Main) { softApCredentialsProvider?.start(enableNow = true) }
+                // Only now, with the car's Wi-Fi client off, may the provider switch the hotspot on.
+                if (startAp) withContext(Dispatchers.Main) { softApCredentialsProvider?.start(enableNow = enableNow) }
             }
             if (!phoneLinked) scheduleStationRestore()
             if (startAp && !enableNow) {
-                softApCredentialsProvider?.start()
+                AppLog.i("AapService: phone linked - the hotspot starts once the car Wi-Fi is off")
             } else if (startAp) {
                 AppLog.i(
                     if (downAtExit) "AapService: the hotspot was taken down at the user exit - switching it on as soon as the car Wi-Fi is off"

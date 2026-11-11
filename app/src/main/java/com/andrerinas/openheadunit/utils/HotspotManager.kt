@@ -165,6 +165,17 @@ object HotspotManager {
         prefs.edit().putBoolean(KEY_STATION_PAUSED, false).apply()
         val wifi = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         if (wifi.isWifiEnabled) return
+        // One radio: the client only comes back once the access point is really down. A client
+        // joining a 2.4 GHz network while the AP is still up drags the next AP onto 2.4 GHz.
+        val deadline = System.currentTimeMillis() + AP_STATE_TIMEOUT_MS
+        while (isApUp(context) && System.currentTimeMillis() < deadline) {
+            try { Thread.sleep(200) } catch (e: InterruptedException) { break }
+        }
+        if (isApUp(context)) {
+            AppLog.w("HotspotManager: the hotspot is still up after ${AP_STATE_TIMEOUT_MS} ms - leaving the car Wi-Fi off rather than both on the one radio")
+            prefs.edit().putBoolean(KEY_STATION_PAUSED, true).apply()
+            return
+        }
         @Suppress("DEPRECATION")
         val ok = try { wifi.setWifiEnabled(true) } catch (e: Exception) { false }
         AppLog.i("HotspotManager: no phone for wireless Android Auto - switching the car Wi-Fi back on (ok=$ok)")

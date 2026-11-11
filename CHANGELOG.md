@@ -1,6 +1,7 @@
 # DiAuto MG4+ 2.2.5-beta8
 
 - Cold start with the phone already linked over Bluetooth when DiAuto starts: the hotspot now comes up as soon as the car's Wi-Fi client is off, without first waiting 5 s for one to appear (beta6 only covered a phone linking after DiAuto started).
+- The car's Wi-Fi client and the hotspot are never on together, in both directions: at start-up the hotspot is only switched on once the client is off, and the client only comes back once the hotspot is really down. A client still joined to a 2.4 GHz network could otherwise pull the hotspot onto 2.4 GHz.
 
 # DiAuto MG4+ 2.2.5-beta7
 
