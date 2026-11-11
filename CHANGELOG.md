@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.5-beta8
+
+- Cold start with the phone already linked over Bluetooth when DiAuto starts: the hotspot now comes up as soon as the car's Wi-Fi client is off, without first waiting 5 s for one to appear (beta6 only covered a phone linking after DiAuto started).
+
 # DiAuto MG4+ 2.2.5-beta7
 
 - *Connect phone* with no phone linked over Bluetooth now wakes the remembered phone, as DiAuto does on its own at start-up, instead of asking you to connect it in the car's Bluetooth screen first. The message stays for a car with no remembered phone.

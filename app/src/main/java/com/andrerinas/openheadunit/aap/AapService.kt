@@ -1899,9 +1899,11 @@ class AapService : Service(), UsbReceiver.Listener {
             // The car has one Wi-Fi radio: an access point up for nobody slows its Wi-Fi client
             // down. It comes up once the phone is linked, and never for a USB session.
             val startAp = AccessPointPolicy.startAtLaunch(phoneLinked, commManager.isConnected, commManager.isWirelessSession)
-            // After a user exit DiAuto took the access point down itself: switch it on at once,
-            // but only once the car's Wi-Fi client is off, never both on the one radio.
-            val enableNow = startAp && takeHotspotDownByUserExit()
+            // After a user exit DiAuto took the access point down itself, and with a phone already
+            // linked at launch it is awaited at once: switch it on without the 5 s wait, but only
+            // once the car's Wi-Fi client is off, never both on the one radio.
+            val downAtExit = startAp && takeHotspotDownByUserExit()
+            val enableNow = downAtExit || (startAp && settings.autoEnableHotspot)
             serviceScope.launch(Dispatchers.IO) {
                 HotspotManager.ensure5GhzBeforeSession(this@AapService, pauseStation = phoneLinked && !usbSession)
                 if (enableNow) withContext(Dispatchers.Main) { softApCredentialsProvider?.start(enableNow = true) }
@@ -1910,7 +1912,10 @@ class AapService : Service(), UsbReceiver.Listener {
             if (startAp && !enableNow) {
                 softApCredentialsProvider?.start()
             } else if (startAp) {
-                AppLog.i("AapService: the hotspot was taken down at the user exit - switching it on as soon as the car Wi-Fi is off")
+                AppLog.i(
+                    if (downAtExit) "AapService: the hotspot was taken down at the user exit - switching it on as soon as the car Wi-Fi is off"
+                    else "AapService: phone already linked at launch - switching the hotspot on as soon as the car Wi-Fi is off"
+                )
             } else {
                 AppLog.i("AapService: no phone linked over Bluetooth yet - the hotspot waits for it")
                 if (hotspotWasOurs) serviceScope.launch(Dispatchers.IO) { HotspotManager.setHotspotEnabled(this@AapService, false) }
