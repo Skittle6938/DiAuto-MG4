@@ -878,8 +878,15 @@ class Settings(private val context: Context) {
      * over Wi‑Fi (hybrid off). Phone must accept the codec; turn off if audio fails to start.
      */
     var useAacAudio: Boolean
-        get() = prefs.getBoolean(KEY_USE_AAC_AUDIO, true)
+        get() = useAacAudioChoice ?: false
         set(value) { prefs.edit().putBoolean(KEY_USE_AAC_AUDIO, value).apply() }
+
+    /**
+     * The driver's own choice, or null when the option was never set: then uncompressed music by
+     * default, except on a 2.4 GHz hotspot (aap/MusicCodecPolicy).
+     */
+    val useAacAudioChoice: Boolean?
+        get() = if (prefs.contains(KEY_USE_AAC_AUDIO)) prefs.getBoolean(KEY_USE_AAC_AUDIO, true) else null
 
     var micEchoCanceler: Boolean
         get() = prefs.getBoolean("mic-echo-canceler", false)

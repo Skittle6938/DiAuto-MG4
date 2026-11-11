@@ -189,7 +189,14 @@ class ServiceDiscoveryResponse(private val context: Context)
 
             // AAC only for MEDIA (Wi‑Fi music trial). SPEECH/SYSTEM stay PCM so Gemini /
             // assistant TTS is not refused by phones that will not decode AAC on those sinks.
-            val mediaCodec = if (settings.useAacAudio) {
+            // PCM by default, AAC on a 2.4 GHz hotspot or when the driver chose it. Kept for the
+            // session, so the music decoder follows what the phone is told here.
+            val wireless = App.provide(context).commManager.isWirelessSession
+            val apBand = if (wireless) com.andrerinas.openheadunit.utils.HotspotManager.currentApBand(context) else null
+            val aac = com.andrerinas.openheadunit.aap.MusicCodecPolicy.useAac(settings.useAacAudioChoice, wireless, apBand)
+            com.andrerinas.openheadunit.aap.SessionMusicCodec.aac = aac
+            AppLog.i("[ServiceDiscovery] Music ${if (aac) "AAC" else "PCM"} (choice=${settings.useAacAudioChoice}, wireless=$wireless, band=$apBand)")
+            val mediaCodec = if (aac) {
                 Media.MediaCodecType.MEDIA_CODEC_AUDIO_AAC_LC
             } else {
                 Media.MediaCodecType.MEDIA_CODEC_AUDIO_PCM

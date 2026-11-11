@@ -49,7 +49,6 @@ internal class AapAudio(
     private val assistantVolumeOffset = if (separateAudioStreams) 0 else settings.assistantVolumeOffset
     private val navigationVolumeOffset = if (separateAudioStreams) 0 else settings.navigationVolumeOffset
     private val audioLatencyMultiplier = settings.audioLatencyMultiplier
-    private val useAacAudio = settings.useAacAudio
     private val audioQueueCapacity = settings.audioQueueCapacity
     private val enableAudioSink = settings.enableAudioSink
     private val attachHwDspEqualizer = settings.attachHwDspEqualizer
@@ -600,7 +599,7 @@ internal class AapAudio(
         val config = AudioConfigs.get(channel)
         val stream = AudioConfigs.stream(channel, separateAudioStreams)
         // AAC only on MEDIA — matches Service Discovery (SPEECH/SYSTEM are PCM).
-        val channelUsesAac = useAacAudio && channel == Channel.ID_AUD
+        val channelUsesAac = SessionMusicCodec.aac && channel == Channel.ID_AUD
 
         val offset = when (channel) {
             Channel.ID_AUD -> mediaVolumeOffset

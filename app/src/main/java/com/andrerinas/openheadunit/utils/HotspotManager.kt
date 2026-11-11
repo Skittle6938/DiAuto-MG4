@@ -234,6 +234,7 @@ object HotspotManager {
                 attemptedAny = attemptedAny || outcome.attempted
                 if (outcome.up) {
                     AppLog.i(describeApUp(outcome.configured, band))
+                    lastAcceptedBand = if (outcome.configured) band else null
                     return true
                 }
                 if (!outcome.configured) {
@@ -283,6 +284,17 @@ object HotspotManager {
      * arrives on a callback that needs NETWORK_SETTINGS — so the honest line names what was
      * requested and what became of the request, and nothing else.
      */
+    /** Band of the last access point this app started with the device taking the request, else null. */
+    @Volatile private var lastAcceptedBand: ApBand? = null
+
+    /**
+     * The access point's band as best known: the one this app's last start got, else the stored
+     * configuration. Null when neither says. Read by the music codec choice (aap/MusicCodecPolicy).
+     */
+    fun currentApBand(context: Context): ApBand? =
+        lastAcceptedBand ?: com.andrerinas.openheadunit.aap.MusicCodecPolicy.bandOfLegacy(
+            SoftApConfigCompat.legacyBandAndChannel(context)?.first)
+
     private fun describeApUp(configured: Boolean, band: ApBand): String =
         if (configured) {
             "HotspotManager: Hotspot is up, and this device accepted the request for ${SoftApBandPolicy.describe(band)}."
