@@ -1,3 +1,7 @@
+# DiAuto MG4+ 2.2.5-beta9
+
+- Settings: rows with a value and › (*Advanced options*, phones, battery…) now react to a tap anywhere on the row, not only on the text, which is easier to hit on the car's screen (#17, thanks @Pampel02).
+
 # DiAuto MG4+ 2.2.5-beta8
 
 - Cold start with the phone already linked over Bluetooth when DiAuto starts: the hotspot now comes up as soon as the car's Wi-Fi client is off, without first waiting 5 s for one to appear (beta6 only covered a phone linking after DiAuto started).

@@ -784,6 +784,15 @@ class DaSettingsActivity : BaseActivity() {
             visibility = if (summary.isEmpty()) View.GONE else View.VISIBLE
         }
         v.findViewById<FrameLayout>(R.id.row_control).addView(control)
+        // A value row (text with ›) reacts across its whole width: on the car's screen the text
+        // alone is a small target (#17). Buttons and choices keep their own targets.
+        if (control is TextView && control !is android.widget.Button && control.hasOnClickListeners()) {
+            v.setOnClickListener { control.performClick() }
+            val ripple = android.util.TypedValue()
+            if (theme.resolveAttribute(android.R.attr.selectableItemBackground, ripple, true)) {
+                v.foreground = ContextCompat.getDrawable(this, ripple.resourceId)
+            }
+        }
         list.addView(v)
     }
 
