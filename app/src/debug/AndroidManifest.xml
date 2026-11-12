@@ -2,6 +2,6 @@
 
     <permission android:name="com.andrerinas.openheadunit.permission.NAVIGATION_UPDATE" tools:node="remove" />
     <permission android:name="${applicationId}.permission.NAVIGATION_UPDATE" android:protectionLevel="signature" />
-    <application android:label="DiAuto MG4" tools:replace="android:label">
+    <application android:label="MG4Link" tools:replace="android:label">
     </application>
 </manifest>
