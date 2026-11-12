@@ -3,6 +3,7 @@
 - DiAuto MG4+ is now called **MG4Link**. Same app, same package (com.allgo.app.androidauto): settings are kept and updates keep coming in from the app and from MG4Dash as before.
 
 - Voice prompts (navigation, assistant) on their own audio stream: the neural filter (Opus bandwidth extension) that brings the 16 kHz voice to 48 kHz is now the default, for clearer speech.
+- Settings: every tab now ends with *Advanced options* (folded away), holding what most drivers never change: frames per second (Display), uncompressed music and the Wi‑Fi audio buffer (Sound), MG4 version, net capacity, battery health, steering wheel buttons and *Set everything back to automatic* (Car), compatibility report, log recording and test mode (About).
 - Settings: rows with a value and › (*Advanced options*, phones, battery…) now react to a tap anywhere on the row, not only on the text, which is easier to hit on the car's screen (#17, thanks @Pampel02).
 - Music uncompressed (PCM) by default (#11, thanks @Pampel02): better sound for ~1.5 Mbit/s more, which 5 GHz carries easily. On a 2.4 GHz hotspot the music stays compressed (AAC). If you set *Settings → Sound → Uncompressed music (PCM)* yourself, your choice is kept. The music buffer stays at 1 s.
 - Removed unused code inherited from the original app: a hidden *static audio focus* mode and its audio mixer, which no setting could switch on. Nothing changes in how DiAuto plays or takes the audio focus.

@@ -43,7 +43,7 @@ class DaSettingsActivity : BaseActivity() {
     private lateinit var tabBox: LinearLayout
     private lateinit var list: LinearLayout
     private var selectedTab = 0
-    /** Connection tab: advanced options folded away until asked for, each time Settings opens. */
+    /** Every tab: advanced options folded away until asked for, each time Settings opens. */
     private var showAdvanced = false
     private var ota: OtaController? = null
     private var otaStatus: OtaController.Status? = null
@@ -150,12 +150,7 @@ class DaSettingsActivity : BaseActivity() {
             settings.usbWifiClient = it
         })
         // Fine-tuning most drivers never need: folded away so the tab stays short.
-        row(R.string.dset_advanced, R.string.dset_advanced_summary,
-            value(getString(if (showAdvanced) R.string.dset_advanced_hide else R.string.dset_advanced_show)) {
-                showAdvanced = !showAdvanced
-                showTab(selectedTab)
-            })
-        if (!showAdvanced) return
+        if (!advancedRow(R.string.dset_advanced_summary)) return
         val firstCalls = listOf(0, 5, 15, 30)
         row(R.string.dset_first_call_delay, R.string.dset_first_call_delay_summary,
             choices(firstCalls.map { "$it s" }, firstCalls.indexOf(settings.firstPhoneCallDelaySeconds).takeIf { it >= 0 } ?: 2) {
@@ -168,6 +163,16 @@ class DaSettingsActivity : BaseActivity() {
                 settings.stationRestoreDelaySeconds = delays[it]
             })
         wifiChannelRow()
+    }
+
+    /** The "Advanced options" row that folds the rest of the tab away; true when it is open. */
+    private fun advancedRow(summary: Int = R.string.dset_advanced_summary_general): Boolean {
+        row(R.string.dset_advanced, summary,
+            value(getString(if (showAdvanced) R.string.dset_advanced_hide else R.string.dset_advanced_show)) {
+                showAdvanced = !showAdvanced
+                showTab(selectedTab)
+            })
+        return showAdvanced
     }
 
     /** In Auto, the channel in use is shown greyed after the row's title. */
@@ -194,11 +199,6 @@ class DaSettingsActivity : BaseActivity() {
     }
 
     private fun displayTab() {
-        row(R.string.dset_fps, R.string.dset_fps_summary,
-            choices(listOf("30", "60"), if (settings.fpsLimit == 60) 1 else 0) {
-                settings.fpsLimit = if (it == 1) 60 else 30
-                appliesOnReconnect()
-            })
         val sizes = listOf(DPI_SMALL, DPI_AUTO, DPI_LARGE)
         val size = sizes.indexOf(settings.dpiPixelDensity).takeIf { it >= 0 } ?: 1
         row(R.string.dset_ui_size, R.string.dset_ui_size_summary,
@@ -213,6 +213,12 @@ class DaSettingsActivity : BaseActivity() {
                 settings.nightMode = modes[it]
                 sendBroadcast(Intent(com.andrerinas.openheadunit.aap.AapService.ACTION_REQUEST_NIGHT_MODE_UPDATE).setPackage(packageName))
             })
+        if (!advancedRow()) return
+        row(R.string.dset_fps, R.string.dset_fps_summary,
+            choices(listOf("30", "60"), if (settings.fpsLimit == 60) 1 else 0) {
+                settings.fpsLimit = if (it == 1) 60 else 30
+                appliesOnReconnect()
+            })
     }
 
     private fun soundTab() {
@@ -221,12 +227,6 @@ class DaSettingsActivity : BaseActivity() {
             appliesOnReconnect()
             showTab(selectedTab)
         })
-        if (!settings.musicViaBluetooth) {
-            row(R.string.dset_music_pcm, R.string.dset_music_pcm_summary, yesNo(!settings.useAacAudio) {
-                settings.useAacAudio = !it
-                appliesOnReconnect()
-            })
-        }
         // On its own channel the voice can be cleaned up instead (from the next prompt on).
         // Voice processing is still being tested: only in test mode (Settings > About).
         if (settings.testMode && (settings.separateAudioStreams || settings.musicViaBluetooth)) {
@@ -259,6 +259,13 @@ class DaSettingsActivity : BaseActivity() {
             appliesOnReconnect()
             showTab(selectedTab)
         })
+        if (!advancedRow()) return
+        if (!settings.musicViaBluetooth) {
+            row(R.string.dset_music_pcm, R.string.dset_music_pcm_summary, yesNo(!settings.useAacAudio) {
+                settings.useAacAudio = !it
+                appliesOnReconnect()
+            })
+        }
         val buffers = listOf(500, 1000, 1500)
         val buffer = buffers.indexOf(settings.mediaAudioBufferMillis).takeIf { it >= 0 } ?: 1
         row(R.string.dset_buffer, R.string.dset_buffer_summary,
@@ -269,12 +276,6 @@ class DaSettingsActivity : BaseActivity() {
         // Each choice is saved at once; the reset button puts everything back on automatic.
         val battery = com.andrerinas.openheadunit.vehicle.BatteryCapacityResolver.current(this)
         // One choice for all: the version gives Maps its capacity, charging curve and consumption model.
-        rowText(getString(R.string.dset_variant), getString(R.string.dset_variant_summary),
-            value(variantLabel(battery)) { pickVariant() })
-        rowText(getString(R.string.battery_net_capacity_kwh), getString(R.string.battery_net_capacity_enter),
-            value(batteryCapacityText(this, battery)) { editCapacity(battery.netKwh) })
-        rowText(getString(R.string.battery_soh_percent), getString(R.string.dset_soh_summary),
-            value(batterySohText(this, battery)) { editSoh(battery.sohPercent) })
         com.andrerinas.openheadunit.vehicle.Mg4EnergyProvider.snapshot()?.takeIf { !it.demo }?.let { snap ->
             rowText(getString(R.string.battery_live_from_car), "", value(
                 "${snap.batteryPercent.roundToInt()} % · " + getString(R.string.battery_value_km, snap.rangeKm) + " · " +
@@ -349,6 +350,13 @@ class DaSettingsActivity : BaseActivity() {
             row(R.string.dset_preheat_lead, R.string.dset_preheat_lead_summary,
                 value(getString(R.string.dset_minutes, settings.batteryPreheatMinutes)) { pickPreheatLead() })
         }
+        if (!advancedRow()) return
+        rowText(getString(R.string.dset_variant), getString(R.string.dset_variant_summary),
+            value(variantLabel(battery)) { pickVariant() })
+        rowText(getString(R.string.battery_net_capacity_kwh), getString(R.string.battery_net_capacity_enter),
+            value(batteryCapacityText(this, battery)) { editCapacity(battery.netKwh) })
+        rowText(getString(R.string.battery_soh_percent), getString(R.string.dset_soh_summary),
+            value(batterySohText(this, battery)) { editSoh(battery.sohPercent) })
         val keys = SteeringKeyLog.recent().takeLast(5).joinToString(" · ").ifEmpty { "—" }
         row(R.string.dset_wheel_keys, R.string.dset_wheel_keys_summary, value(keys, null))
         row(R.string.dset_battery_reset, R.string.dset_battery_reset_summary,
@@ -373,18 +381,6 @@ class DaSettingsActivity : BaseActivity() {
         })
         row(R.string.tuto_settings_title, R.string.tuto_settings_summary,
             button(getString(R.string.tuto_settings_button)) { startActivity(DaTutorialActivity.intent(this)) })
-        row(R.string.compat_report, R.string.compat_report_description,
-            button(getString(R.string.dset_open)) { CompatibilityReport.show(this) })
-        row(R.string.dset_test_mode, R.string.dset_test_mode_summary, yesNo(settings.testMode) {
-            settings.testMode = it
-            // The energy model sent to Maps may change with it.
-            appliesOnReconnect()
-        })
-        row(R.string.dset_log_record, R.string.dset_log_record_summary, yesNo(settings.exporterCaptureEnabled) {
-            settings.exporterCaptureEnabled = it
-            AppLog.init(settings, applicationContext)
-            showTab(selectedTab)
-        })
         row(R.string.dset_logs, R.string.dset_logs_summary, button(getString(R.string.dset_export)) { exportLogs() })
         row(R.string.restore_allgo, R.string.dset_restore_summary, button(getString(R.string.dset_restore), danger = true) {
             MaterialAlertDialogBuilder(this, R.style.DarkAlertDialog)
@@ -393,6 +389,19 @@ class DaSettingsActivity : BaseActivity() {
                 .setPositiveButton(R.string.restore_allgo_confirm) { _, _ -> AllgoPackage.restoreAllgo(this) }
                 .setNegativeButton(R.string.cancel, null)
                 .show()
+        })
+        if (!advancedRow()) return
+        row(R.string.compat_report, R.string.compat_report_description,
+            button(getString(R.string.dset_open)) { CompatibilityReport.show(this) })
+        row(R.string.dset_log_record, R.string.dset_log_record_summary, yesNo(settings.exporterCaptureEnabled) {
+            settings.exporterCaptureEnabled = it
+            AppLog.init(settings, applicationContext)
+            showTab(selectedTab)
+        })
+        row(R.string.dset_test_mode, R.string.dset_test_mode_summary, yesNo(settings.testMode) {
+            settings.testMode = it
+            // The energy model sent to Maps may change with it.
+            appliesOnReconnect()
         })
     }
 

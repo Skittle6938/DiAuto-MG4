@@ -6,4 +6,5 @@
     <string name="dset_advanced_hide">Hide</string>
     <string name="dset_first_call_delay">First call to the phone after</string>
     <string name="dset_first_call_delay_summary">When the car starts and the phone is not linked over Bluetooth yet, MG4Link calls it after this delay. 15 s leaves the car time to reconnect it by itself; if your car never does, a shorter delay connects sooner.</string>
+    <string name="dset_advanced_summary_general">Fine-tuning and diagnostics. The defaults suit most cars.</string>
 </resources>
