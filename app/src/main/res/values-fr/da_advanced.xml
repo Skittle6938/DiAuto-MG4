@@ -4,6 +4,7 @@
     <string name="dset_advanced_summary">Réglages fins de la connexion sans fil. Les valeurs par défaut conviennent à la plupart des voitures.</string>
     <string name="dset_advanced_show">Afficher</string>
     <string name="dset_advanced_hide">Masquer</string>
+    <string name="dset_battery_waiting">En attente de la voiture…</string>
     <string name="dset_first_call_delay">Premier appel au téléphone après</string>
     <string name="dset_first_call_delay_summary">Au démarrage de la voiture, si le téléphone n\'est pas encore relié en Bluetooth, MG4Link l\'appelle après ce délai. 15 s laisse à la voiture le temps de le reconnecter elle-même ; si votre voiture ne le fait jamais, un délai plus court connecte plus vite.</string>
     <string name="dset_advanced_summary_general">Réglages fins et diagnostic. Les valeurs par défaut conviennent à la plupart des voitures.</string>

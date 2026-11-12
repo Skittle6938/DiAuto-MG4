@@ -78,6 +78,7 @@ class DaSettingsActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
+        list.removeCallbacks(batteryRecheck)
         ota?.stop()
         ota = null
         super.onDestroy()
@@ -351,12 +352,17 @@ class DaSettingsActivity : BaseActivity() {
                 value(getString(R.string.dset_minutes, settings.batteryPreheatMinutes)) { pickPreheatLead() })
         }
         if (!advancedRow()) return
+        // Until the car gives its battery, the default 64 kWh pack would show wrong figures.
+        val waiting = batteryWaiting(battery)
+        list.removeCallbacks(batteryRecheck)
+        if (waiting) list.postDelayed(batteryRecheck, BATTERY_RECHECK_MS)
+        val waitText = getString(R.string.dset_battery_waiting)
         rowText(getString(R.string.dset_variant), getString(R.string.dset_variant_summary),
-            value(variantLabel(battery)) { pickVariant() })
+            value(if (waiting) waitText else variantLabel(battery)) { pickVariant() })
         rowText(getString(R.string.battery_net_capacity_kwh), getString(R.string.battery_net_capacity_enter),
-            value(batteryCapacityText(this, battery)) { editCapacity(battery.netKwh) })
+            value(if (waiting) waitText else batteryCapacityText(this, battery)) { editCapacity(battery.netKwh) })
         rowText(getString(R.string.battery_soh_percent), getString(R.string.dset_soh_summary),
-            value(batterySohText(this, battery)) { editSoh(battery.sohPercent) })
+            value(if (waiting) waitText else batterySohText(this, battery)) { editSoh(battery.sohPercent) })
         val keys = SteeringKeyLog.recent().takeLast(5).joinToString(" · ").ifEmpty { "—" }
         row(R.string.dset_wheel_keys, R.string.dset_wheel_keys_summary, value(keys, null))
         row(R.string.dset_battery_reset, R.string.dset_battery_reset_summary,
@@ -406,6 +412,23 @@ class DaSettingsActivity : BaseActivity() {
     }
 
     // --- Actions ------------------------------------------------------------------------------
+
+    private fun batteryWaiting(battery: com.andrerinas.openheadunit.vehicle.BatteryCapacityResolver.Resolved): Boolean =
+        com.andrerinas.openheadunit.vehicle.BatteryWaitPolicy.waiting(
+            battery.netSource,
+            com.andrerinas.openheadunit.vehicle.Mg4DashBattery.read(this)?.packChosen == true,
+            com.evsuite.hardware.EVHardware.lastVehicleConfigFailure,
+            android.os.SystemClock.elapsedRealtime() - android.os.Process.getStartElapsedRealtime(),
+        )
+
+    /** While the Car tab waits for the car, redrawn once the battery is known (or the wait is over). */
+    private val batteryRecheck: Runnable = object : Runnable {
+        override fun run() {
+            if (isFinishing || Tab.values()[selectedTab] != Tab.CAR || !showAdvanced) return
+            val battery = com.andrerinas.openheadunit.vehicle.BatteryCapacityResolver.current(this@DaSettingsActivity)
+            if (batteryWaiting(battery)) list.postDelayed(this, BATTERY_RECHECK_MS) else showTab(selectedTab)
+        }
+    }
 
     private fun variantLabel(battery: com.andrerinas.openheadunit.vehicle.BatteryCapacityResolver.Resolved): String {
         val chosen = com.andrerinas.openheadunit.vehicle.Mg4Variant.entries.firstOrNull { it.key == settings.mg4Variant }
@@ -942,6 +965,8 @@ class DaSettingsActivity : BaseActivity() {
     private fun dp(v: Int): Int = (v * resources.displayMetrics.density).toInt()
 
     companion object {
+        private const val BATTERY_RECHECK_MS = 3_000L
+
         /**
          * Set when a setting that the phone only reads at connection time changed during a session;
          * the projection screen offers to reconnect when it comes back.
