@@ -324,7 +324,7 @@ class Settings(private val context: Context) {
      * exciter, 3 Opus neural bandwidth extension (see VoiceUpsampler).
      */
     var voiceEnhancement: Int
-        get() = if (testMode) prefs.getInt("voice-enhancement", 0).coerceIn(0, 3) else 0
+        get() = if (testMode) prefs.getInt("voice-enhancement", 3).coerceIn(0, 3) else 3
         set(value) { prefs.edit().putInt("voice-enhancement", value.coerceIn(0, 3)).apply() }
 
     /** Prompts and the assistant turned down by this many dB (0, 3 or 6) to leave headroom. */
