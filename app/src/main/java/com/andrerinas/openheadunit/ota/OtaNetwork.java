@@ -90,9 +90,30 @@ final class OtaNetwork {
         return caps != null && caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI);
     }
 
-    /** Runs {@code attempt} over the Wi-Fi if there is one, then once more over the T-box if it failed. */
+    /** MG4Dash's "Updates on Wi-Fi only" (Settings › 4G data), shared in Settings.Global; off without MG4Dash. */
+    static final String MG4DASH_WIFI_ONLY = "mg4dash_updates_wifi_only";
+
+    static boolean wifiOnly(Context context) {
+        try {
+            return "1".equals(android.provider.Settings.Global.getString(context.getContentResolver(), MG4DASH_WIFI_ONLY));
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Runs {@code attempt} over the Wi-Fi if there is one, then once more over the T-box if it failed.
+     * With MG4Dash's "Wi-Fi only" on, over the Wi-Fi alone.
+     */
     static <T> T wifiFirst(Context context, String what, Attempt<T> attempt) throws Exception {
         Network wifi = validatedWifi(context);
+        if (wifiOnly(context)) {
+            if (wifi == null) {
+                Log.w(TAG, what + ": MG4Dash allows updates on Wi-Fi only, and the car has no Wi-Fi with internet");
+                throw new IOException("Wi-Fi only (MG4Dash): no Wi-Fi");
+            }
+            return runLogged(what, "Wi-Fi (Wi-Fi only in MG4Dash)", wifi, attempt);
+        }
         if (wifi == null) {
             // No Wi-Fi client: Android's default is the T-box if it lists it, else the T-box is asked for
             Network other = otherThanWifi(context);

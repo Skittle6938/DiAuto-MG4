@@ -8,7 +8,7 @@
 - Removed more unused code left from the original app: about twenty files nothing called any more (old settings and battery screens, video file readers, permission and dialog helpers, settings backup, a native hotspot query), with the layouts, images and texts only they used. No visible change.
 - Removed 50 head-up display icons from another car brand that DiAuto never loads.
 - Video always uses the car's hardware decoder. The bundled FFmpeg software decoder (about 3 MB) is removed. If an older version had *software decoding* switched on, it is reset once at the first start. Without a hardware decoder, Android's own software decoder still takes over, as before.
-- Updates: the check and the download go over the car's Wi-Fi when it is connected with internet, and over the T-box 4G only without one. If the Wi-Fi is on but too weak to reach GitHub, the check and the download switch to the T-box 4G (MG4Link asks Android for it for that time; the car's Wi-Fi stays connected). Only one check or update runs at a time, even with the home screen and Settings open together, and a second confirmation never starts a second download.
+- Updates: the check and the download go over the car's Wi-Fi when it is connected with internet, and over the T-box 4G only without one. If the Wi-Fi is on but too weak to reach GitHub, the check and the download switch to the T-box 4G (MG4Link asks Android for it for that time; the car's Wi-Fi stays connected). With *Updates on Wi-Fi only* on in MG4Dash (*Settings › 4G data*), MG4Link follows it and never uses the 4G for updates. Only one check or update runs at a time, even with the home screen and Settings open together, and a second confirmation never starts a second download.
 
 # DiAuto MG4+ 2.2.5-beta8
 
