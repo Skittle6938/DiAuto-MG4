@@ -24,7 +24,7 @@ final class OtaReleaseFetcher {
 
     static OtaUpdateManager.UpdateInfo fetchLatestRelease(Context context, boolean allowBetaUpdates) {
         try {
-            JSONArray releases = new JSONArray(readUrl(GITHUB_RELEASES_URL, "application/vnd.github+json"));
+            JSONArray releases = new JSONArray(readUrl(context, GITHUB_RELEASES_URL, "application/vnd.github+json"));
             JSONObject release = selectGitHubRelease(releases, allowBetaUpdates);
             if (release == null && !allowBetaUpdates && selectGitHubRelease(releases, true) != null) {
                 // Only betas are published: nothing to offer without the beta option.
@@ -79,7 +79,7 @@ final class OtaReleaseFetcher {
                         context.getString(R.string.ota_error_no_hash), prerelease
                 );
             }
-            String hashFileContent = readUrl(hashAsset.downloadUrl, "text/plain, application/octet-stream");
+            String hashFileContent = readUrl(context, hashAsset.downloadUrl, "text/plain, application/octet-stream");
             expectedSha256 = OtaReleaseAssets.parseExpectedSha256(hashFileContent, apkAsset.name);
             if (expectedSha256 == null || expectedSha256.isEmpty()) {
                 return new OtaUpdateManager.UpdateInfo(
@@ -115,10 +115,15 @@ final class OtaReleaseFetcher {
         );
     }
 
-    private static String readUrl(String url, String accept) throws Exception {
+    private static String readUrl(Context context, String url, String accept) throws Exception {
+        return OtaNetwork.wifiFirst(context, "update check " + new URL(url).getHost(),
+                network -> readUrl(network, url, accept));
+    }
+
+    private static String readUrl(android.net.Network network, String url, String accept) throws Exception {
         HttpURLConnection connection = null;
         try {
-            connection = (HttpURLConnection) new URL(url).openConnection();
+            connection = OtaNetwork.open(network, new URL(url));
             connection.setRequestMethod("GET");
             connection.setConnectTimeout(7000);
             connection.setReadTimeout(7000);

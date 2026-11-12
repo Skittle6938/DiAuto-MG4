@@ -56,6 +56,9 @@ public final class OtaController {
     private static long sLastCheckAt;
     /** A download or an install is running. */
     private static boolean sBusy;
+    /** A release check is running; the screens waiting for its answer. Main thread only. */
+    private static boolean sChecking;
+    private static final java.util.List<OtaController> sCheckWaiters = new java.util.ArrayList<>();
     /** The screen that started it, told when Android refuses the install. */
     private static WeakReference<OtaController> sActive = new WeakReference<>(null);
 
@@ -121,6 +124,7 @@ public final class OtaController {
 
     public void stop() {
         stopped = true;
+        sCheckWaiters.remove(this);
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
@@ -148,32 +152,48 @@ public final class OtaController {
     private void check(boolean interactive) {
         // A tap during the silent check gets its answer when that check returns.
         answerWhenChecked |= interactive;
-        if (checking) return;
-        final boolean allowBeta = isAllowBeta();
+        // One check at a time for the whole process (home screen and Settings share it), and none
+        // while an update downloads or installs.
+        if (sBusy) {
+            if (interactive) OtaDialogs.showMessageDialog(activity, activity.getString(R.string.ota_progress_busy));
+            answerWhenChecked = false;
+            return;
+        }
+        if (!sCheckWaiters.contains(this)) sCheckWaiters.add(this);
         checking = true;
         render();
+        if (sChecking) return;
+        sChecking = true;
+        final boolean allowBeta = isAllowBeta();
         OtaUpdateManager.checkForUpdates(activity, allowBeta, info -> {
-            checking = false;
+            sChecking = false;
             sLastInfo = info;
             sLastAllowBeta = allowBeta;
             sLastCheckAt = SystemClock.elapsedRealtime();
-            if (stopped) return;
-            render();
-            boolean answer = answerWhenChecked;
-            answerWhenChecked = false;
-            if (!answer) return;
-            if (info != null && info.success && info.updateAvailable) {
-                confirmInstall(info);
-            } else if (info != null && info.success) {
-                boolean noStable = activity.getString(R.string.ota_status_no_stable).equals(info.message);
-                OtaDialogs.showMessageDialog(activity, activity.getString(noStable
-                        ? R.string.ota_dialog_no_stable_message
-                        : R.string.ota_dialog_up_to_date_version, displayVersion(info.currentVersion)));
-            } else {
-                OtaDialogs.showMessageDialog(activity,
-                        activity.getString(R.string.ota_dialog_check_failed_message));
-            }
+            java.util.List<OtaController> waiters = new java.util.ArrayList<>(sCheckWaiters);
+            sCheckWaiters.clear();
+            for (OtaController c : waiters) c.onChecked(info);
         });
+    }
+
+    private void onChecked(OtaUpdateManager.UpdateInfo info) {
+        checking = false;
+        if (stopped) return;
+        render();
+        boolean answer = answerWhenChecked;
+        answerWhenChecked = false;
+        if (!answer) return;
+        if (info != null && info.success && info.updateAvailable) {
+            confirmInstall(info);
+        } else if (info != null && info.success) {
+            boolean noStable = activity.getString(R.string.ota_status_no_stable).equals(info.message);
+            OtaDialogs.showMessageDialog(activity, activity.getString(noStable
+                    ? R.string.ota_dialog_no_stable_message
+                    : R.string.ota_dialog_up_to_date_version, displayVersion(info.currentVersion)));
+        } else {
+            OtaDialogs.showMessageDialog(activity,
+                    activity.getString(R.string.ota_dialog_check_failed_message));
+        }
     }
 
     private void confirmInstall(OtaUpdateManager.UpdateInfo info) {
@@ -195,6 +215,11 @@ public final class OtaController {
     }
 
     private void startDownload(OtaUpdateManager.UpdateInfo info) {
+        // A second confirmation (two screens, a double tap) never starts a second download.
+        if (sBusy) {
+            OtaDialogs.showMessageDialog(activity, activity.getString(R.string.ota_progress_busy));
+            return;
+        }
         sBusy = true;
         sActive = new WeakReference<>(this);
         OtaDialogs.ProgressDialogHandle handle = OtaDialogs.showProgressDialog(

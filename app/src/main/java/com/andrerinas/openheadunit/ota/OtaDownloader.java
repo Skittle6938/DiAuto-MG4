@@ -47,12 +47,19 @@ final class OtaDownloader {
         }
         File part = new File(dir, APK_NAME + ".part");
         File apk = new File(dir, APK_NAME);
+        // Wi-Fi first; a download cut on the Wi-Fi starts again from zero on the 4G.
+        return OtaNetwork.wifiFirst(context, "update download",
+                network -> downloadOver(network, info, part, apk, progress));
+    }
+
+    private static File downloadOver(android.net.Network network, OtaUpdateManager.UpdateInfo info,
+                                     File part, File apk, Progress progress) throws Exception {
         //noinspection ResultOfMethodCallIgnored
         part.delete();
         //noinspection ResultOfMethodCallIgnored
         apk.delete();
 
-        HttpURLConnection connection = open(info.downloadUrl);
+        HttpURLConnection connection = open(network, info.downloadUrl);
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         long done = 0L;
         try {
@@ -86,14 +93,14 @@ final class OtaDownloader {
     }
 
     /** GitHub answers with a redirect to its file host; followed by hand, as MG4Dash does. */
-    private static HttpURLConnection open(String url) throws Exception {
+    private static HttpURLConnection open(android.net.Network network, String url) throws Exception {
         URL current = new URL(url);
         for (int hops = 0; ; hops++) {
             // HTTPS only, redirects included: an update must never come over plain HTTP.
             if (!"https".equalsIgnoreCase(current.getProtocol())) {
                 throw new IllegalStateException("refusing non-HTTPS URL " + current.getProtocol());
             }
-            HttpURLConnection connection = (HttpURLConnection) current.openConnection();
+            HttpURLConnection connection = OtaNetwork.open(network, current);
             connection.setInstanceFollowRedirects(false);
             connection.setConnectTimeout(8000);
             connection.setReadTimeout(30000);
