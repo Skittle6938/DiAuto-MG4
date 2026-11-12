@@ -87,19 +87,10 @@ class ServiceDiscoveryResponse(private val context: Context)
             val video = Control.Service.newBuilder().also { service ->
                 service.id = Channel.ID_VID
                 service.mediaSinkService = Control.Service.MediaSinkService.newBuilder().also { mediaSinkServiceBuilder ->
-                    val explicitSoftwareHevc =
-                        settings.videoCodec == VideoDecoder.CodecType.H265.settingsValue &&
-                                settings.forceSoftwareDecoding &&
-                                when (settings.softwareVideoDecoder) {
-                                    com.andrerinas.openheadunit.utils.Settings.SoftwareVideoDecoder.BUNDLED_FFMPEG ->
-                                        com.andrerinas.openheadunit.decoder.VideoDecoder.isBundledHevcDecoderAvailable()
-                                    com.andrerinas.openheadunit.utils.Settings.SoftwareVideoDecoder.DEVICE_MEDIACODEC ->
-                                        com.andrerinas.openheadunit.decoder.VideoDecoder.isHevcDecoderAvailable(includeSoftware = true)
-                                }
                     val hevcAvailableForUserChoice =
-                        com.andrerinas.openheadunit.decoder.VideoDecoder.isHevcSupported() || explicitSoftwareHevc
+                        com.andrerinas.openheadunit.decoder.VideoDecoder.isHevcSupported()
                     val hevcAvailableForHighResolution =
-                        com.andrerinas.openheadunit.decoder.VideoDecoder.isHevcReliable() || explicitSoftwareHevc
+                        com.andrerinas.openheadunit.decoder.VideoDecoder.isHevcReliable()
 
                     val codecToRequest = when (settings.videoCodec) {
                         "H.265" -> if (hevcAvailableForUserChoice) {

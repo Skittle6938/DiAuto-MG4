@@ -5,6 +5,7 @@
 - Removed unused code inherited from the original app: a hidden *static audio focus* mode and its audio mixer, which no setting could switch on. Nothing changes in how DiAuto plays or takes the audio focus.
 - Removed more unused code left from the original app: about twenty files nothing called any more (old settings and battery screens, video file readers, permission and dialog helpers, settings backup, a native hotspot query), with the layouts, images and texts only they used. No visible change.
 - Removed 50 head-up display icons from another car brand that DiAuto never loads.
+- Video always uses the car's hardware decoder. The bundled FFmpeg software decoder (about 3 MB) is removed. If an older version had *software decoding* switched on, it is reset once at the first start. Without a hardware decoder, Android's own software decoder still takes over, as before.
 
 # DiAuto MG4+ 2.2.5-beta8
 

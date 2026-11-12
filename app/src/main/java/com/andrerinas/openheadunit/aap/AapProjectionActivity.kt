@@ -587,11 +587,9 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
         val reason = if (collapsed) "$longFramesInWindow slow frames in window" else "no draw for ${now - effectiveDrawn}ms"
 
         val effectiveMode = forcedViewModeOverride ?: settings.viewMode
-        // After a plain rebuild fails to stick, escalate away from a non-SurfaceView backend
-        // (unless the bundled software HEVC decoder is active, which needs the GLES YUV sink).
+        // After a plain rebuild fails to stick, escalate away from a non-SurfaceView backend.
         val shouldFallBack = displayStallRecoveries >= 2 &&
-            effectiveMode != Settings.ViewMode.SURFACE &&
-            !videoDecoder.usingBundledSoftwareHevc
+            effectiveMode != Settings.ViewMode.SURFACE
         if (shouldFallBack) {
             AppLog.w("Display stall ($reason) again on $effectiveMode. Falling back to SurfaceView for this session. See issue #650.")
             forcedViewModeOverride = Settings.ViewMode.SURFACE

@@ -190,14 +190,9 @@ class VideoDecoder(
             }
             return false
         }
-
-        fun isBundledHevcDecoderAvailable(): Boolean {
-            return FfmpegHevcDecoder.isAvailable()
-        }
     }
 
     private var codec: MediaCodec? = null
-    private var softwareHevcDecoder: FfmpegHevcDecoder? = null
     private var codecBufferInfo: MediaCodec.BufferInfo? = null
     private var mSurface: Surface? = null
     /** See [parkFrom]. */
@@ -352,7 +347,6 @@ class VideoDecoder(
     var softwareYuvFrameSink: SoftwareYuvFrameSink? = null
     private var frameCount = 0
     private var lastFpsLogTime = 0L
-    private var loggedFirstSoftwareFrame = false
     private var loggedFirstHardwareFrame = false
     @Volatile var onFirstFrameListener: (() -> Unit)? = null
     @Volatile var lastFrameRenderedMs: Long = 0L
@@ -370,10 +364,6 @@ class VideoDecoder(
     // as opposed to lastFrameRenderedMs (output side). Lets the projection watchdog tell a
     // phone-side pause (no input) apart from a local display stall (input flowing, nothing drawn).
     @Volatile var lastInputBytesReceivedMs: Long = 0L
-
-    // True while the bundled software HEVC decoder is active. That path renders through the
-    // GLES YUV sink, so the projection watchdog must not fall back to a non-GLES backend.
-    val usingBundledSoftwareHevc: Boolean get() = softwareHevcDecoder != null
 
     @Volatile private var decoderNeedsRestart = false
     @Volatile private var decoderRestartReason: String? = null
@@ -510,8 +500,7 @@ class VideoDecoder(
      */
     fun parkFrom(surface: Surface): Boolean = synchronized(this) {
         val current = codec
-        if (Build.VERSION.SDK_INT < 23 || mSurface !== surface || current == null || !running ||
-            bundledHevcSelected()) return false
+        if (Build.VERSION.SDK_INT < 23 || mSurface !== surface || current == null || !running) return false
         return try {
             val texture = android.graphics.SurfaceTexture(0).apply {
                 setDefaultBufferSize(mWidth.coerceAtLeast(1), mHeight.coerceAtLeast(1))
@@ -665,19 +654,12 @@ class VideoDecoder(
             } catch (e: Exception) {
                 AppLog.e("Error releasing decoder", e)
             }
-            try {
-                softwareHevcDecoder?.stop()
-            } catch (e: Exception) {
-                AppLog.e("Error releasing software HEVC decoder", e)
-            }
-
             codec = null
             if (parkedSurface != null) {
                 releaseParking()
                 if (mSurface === parkedSurface) mSurface = null
                 parkedSurface.release()
             }
-            softwareHevcDecoder = null
             inputBuffers = null
             legacyFrameBuffer = null
             codecBufferInfo = null
@@ -720,7 +702,6 @@ class VideoDecoder(
             // pending here would be confirmed by the new codec's very first frame.
             keyframeRepair.reset()
             lastKeyframeStarvedAskMs = 0L
-            loggedFirstSoftwareFrame = false
             loggedFirstHardwareFrame = false
             loggedInputBufferCapacity = false
             loggedDecoderCapability = false
@@ -760,7 +741,7 @@ class VideoDecoder(
      * [notifyFrameDropped] for the shape of that ask and why it stays silent before the first
      * rendered frame.
      */
-    fun decode(buffer: ByteArray, offset: Int, size: Int, forceSoftware: Boolean, codecName: String) {
+    fun decode(buffer: ByteArray, offset: Int, size: Int, codecName: String) {
         synchronized(this) {
             // Input-side liveness: bytes are arriving from the phone right now.
             lastInputBytesReceivedMs = SystemClock.elapsedRealtime()
@@ -838,14 +819,14 @@ class VideoDecoder(
             // Only runs the detection heuristic on the very first init of the session; once a
             // codec type is pinned (see codecTypePinned), restarts reuse it directly instead of
             // re-sniffing arbitrary mid-stream bytes.
-            if (codec == null && softwareHevcDecoder == null) {
+            if (codec == null) {
                 val typeToUse = if (codecTypePinned) {
                     currentCodecType
                 } else {
                     val detectedType = detectCodecType(frameData, frameOffset, size)
                     val requestedType = if (codecName.contains("265")) CodecType.H265 else CodecType.H264
                     val hevcDetectable = isHevcSupported()
-                    val hevcUsable = hevcDetectable || bundledHevcSelected()
+                    val hevcUsable = hevcDetectable
                     val selected = CodecTypeSelectionPolicy.select(
                         detected = detectedType,
                         requested = requestedType,
@@ -882,22 +863,7 @@ class VideoDecoder(
                 if (mSurface == null || !mSurface!!.isValid) return
                 if (mWidth == 0 || mHeight == 0) return
 
-                if (shouldUseBundledHevc(typeToUse, settings.forceSoftwareDecoding || forceSoftware)) {
-                    startBundledHevc(mWidth, mHeight)
-                } else {
-                    start(typeToUse.mimeType, settings.forceSoftwareDecoding || forceSoftware, mWidth, mHeight)
-                }
-            }
-
-            softwareHevcDecoder?.let { decoder ->
-                val renderedFrames = decoder.decode(frameData, frameOffset, size)
-                if (renderedFrames > 0) {
-                    onSoftwareFramesRendered(renderedFrames)
-                } else if (renderedFrames < 0) {
-                    AppLog.e("Bundled HEVC decoder failed with code $renderedFrames")
-                    scheduleRestart("software_hevc_error_$renderedFrames")
-                }
-                return
+                start(typeToUse.mimeType, mWidth, mHeight)
             }
 
             if (codec == null) return
@@ -1063,84 +1029,6 @@ class VideoDecoder(
         while (true) {
             val frame = frameQueue.poll() ?: break
             recycleFrame(frame)
-        }
-    }
-
-    private fun shouldUseBundledHevc(type: CodecType, forceSoftware: Boolean): Boolean {
-        return type == CodecType.H265 &&
-                forceSoftware &&
-                settings.softwareVideoDecoder == Settings.SoftwareVideoDecoder.BUNDLED_FFMPEG &&
-                FfmpegHevcDecoder.isAvailable()
-    }
-
-    /**
-     * True when an explicitly selected software HEVC decoder is available, i.e. H.265 is playable
-     * here even though [isHevcSupported] - which is hardware-only - says no. Mirrors the
-     * `explicitSoftwareHevc` half of the announcement, so the decoder and the codec we asked the
-     * phone for agree about whether H.265 was ever on the table.
-     */
-    private fun bundledHevcSelected(): Boolean =
-        settings.forceSoftwareDecoding && when (settings.softwareVideoDecoder) {
-            Settings.SoftwareVideoDecoder.BUNDLED_FFMPEG -> isBundledHevcDecoderAvailable()
-            Settings.SoftwareVideoDecoder.DEVICE_MEDIACODEC -> isHevcDecoderAvailable(includeSoftware = true)
-        }
-
-    private fun startBundledHevc(width: Int, height: Int) {
-        try {
-            val surface = mSurface ?: return
-            AppLog.i("Configuring bundled FFmpeg HEVC decoder for ${width}x$height")
-            val yuvFrameSink = if (settings.viewMode == Settings.ViewMode.GLES) {
-                softwareYuvFrameSink
-            } else {
-                null
-            }
-            val decoder = FfmpegHevcDecoder(
-                surface = if (yuvFrameSink == null) surface else null,
-                yuvFrameSink = yuvFrameSink,
-                width = width,
-                height = height
-            )
-            if (!decoder.start()) {
-                AppLog.e("Bundled FFmpeg HEVC decoder is unavailable")
-                return
-            }
-            softwareHevcDecoder = decoder
-            currentCodecName = "ffmpeg-hevc"
-            running = true
-            startTime = System.nanoTime()
-            codecTypePinned = true
-            AppLog.i("Bundled FFmpeg HEVC decoder initialized")
-        } catch (e: Exception) {
-            AppLog.e("Failed to start bundled FFmpeg HEVC decoder", e)
-            softwareHevcDecoder = null
-            running = false
-            scheduleRestart("bundled_hevc_start_failed: ${e.message}")
-        }
-    }
-
-    private fun onSoftwareFramesRendered(renderedFrames: Int) {
-        lastFrameRenderedMs = SystemClock.elapsedRealtime()
-        renderedThisSession = true
-        framesRenderedThisSession += renderedFrames
-        if (!loggedFirstSoftwareFrame) {
-            loggedFirstSoftwareFrame = true
-            AppLog.i("First bundled software HEVC frame rendered")
-        }
-        onFirstFrameListener?.let { it(); onFirstFrameListener = null }
-
-        frameCount += renderedFrames
-        // The bundled decoder has no output thread, so drive the throughput tick from here.
-        framesRendered += renderedFrames
-        logThroughput()
-        val now = System.currentTimeMillis()
-        val elapsed = now - lastFpsLogTime
-        if (elapsed >= 1000) {
-            if (lastFpsLogTime != 0L) {
-                val fps = (frameCount * 1000 / elapsed).toInt()
-                onFpsChanged?.invoke(fps)
-            }
-            frameCount = 0
-            lastFpsLogTime = now
         }
     }
 
@@ -1444,12 +1332,13 @@ class VideoDecoder(
     }
 
     /**
-     * Configures and starts the native MediaCodec.
+     * Configures and starts the native MediaCodec, a hardware one when the device has it
+     * (findBestCodec falls back to a software MediaCodec otherwise).
      */
-    private fun start(mimeType: String, forceSoftware: Boolean, width: Int, height: Int) {
+    private fun start(mimeType: String, width: Int, height: Int) {
         try {
             startTime = System.nanoTime()
-            val bestCodec = findBestCodec(mimeType, !forceSoftware)
+            val bestCodec = findBestCodec(mimeType, true)
                 ?: throw IllegalStateException("No decoder available for $mimeType")
             this.currentCodecName = bestCodec
             logDecoderCapability(bestCodec, mimeType, width, height)

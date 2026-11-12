@@ -56,6 +56,15 @@ class App : Application() {
             val settings = Settings(this) // Create a Settings instance
             AppLog.init(settings, this) // Initialize AppLog with settings for conditional logging
 
+            // Once per install: back to hardware video decoding, the FFmpeg decoder is gone.
+            runCatching {
+                val removed = com.andrerinas.openheadunit.utils.HardwareDecodingMigration.apply(
+                    getSharedPreferences(Settings.PREFS_NAME, MODE_PRIVATE))
+                if (removed.isNotEmpty()) {
+                    AppLog.i("Settings: software video decoding removed ($removed) - hardware decoding from now on")
+                }
+            }.onFailure { AppLog.w("Settings: hardware decoding migration failed: ${it.message}") }
+
             if (settings.batteryForGoogleMaps) {
                 com.andrerinas.openheadunit.vehicle.Mg4EnergyProvider.start(this)
             }

@@ -243,7 +243,7 @@ internal class AapVideo(private val videoDecoder: VideoDecoder, private val sett
         return when (val action = decision.action) {
             is VideoFragmentAssembler.Action.DecodeWhole -> {
                 messageBuffer.clear()
-                videoDecoder.decode(buf, action.payloadOffset, len - action.payloadOffset, settings.forceSoftwareDecoding, settings.videoCodec)
+                videoDecoder.decode(buf, action.payloadOffset, len - action.payloadOffset, settings.videoCodec)
                 true
             }
 
@@ -296,9 +296,9 @@ internal class AapVideo(private val videoDecoder: VideoDecoder, private val sett
                         legacyAssembledBuffer = ByteArray(assembledSize + 1024)
                     }
                     messageBuffer.get(legacyAssembledBuffer!!, 0, assembledSize)
-                    videoDecoder.decode(legacyAssembledBuffer!!, 0, assembledSize, settings.forceSoftwareDecoding, settings.videoCodec)
+                    videoDecoder.decode(legacyAssembledBuffer!!, 0, assembledSize, settings.videoCodec)
                 } else {
-                    videoDecoder.decode(messageBuffer.array(), 0, assembledSize, settings.forceSoftwareDecoding, settings.videoCodec)
+                    videoDecoder.decode(messageBuffer.array(), 0, assembledSize, settings.videoCodec)
                 }
 
                 messageBuffer.clear()
