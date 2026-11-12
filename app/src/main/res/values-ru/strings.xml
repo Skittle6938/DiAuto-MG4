@@ -854,7 +854,7 @@
     <string name="playback_focus_mode_always_hint">Всегда приостанавливать другой звук во время Android Auto. Если при включённом Bluetooth музыка останавливается через секунду-две, вернитесь к автоматическому режиму.</string>
     <string name="playback_focus_mode_never_hint">Не изменять аудиофокус системы. Другой звук может продолжать играть поверх Android Auto.</string>
     <string name="playback_focus_mode_static_hint">При статическом аудиофокусе это действует с момента подключения телефона всю сессию, а не только во время воспроизведения.</string>
-    <string name="github_issues_url">https://github.com/Skittle6938/DiAuto-MG4/issues</string>
+    <string name="github_issues_url">https://github.com/Skittle6938/MG4Link/issues</string>
     <string name="support_rules_english_title">All posts in English</string>
     <string name="vehicle_make_hint">Марка автомобиля показывает её логотип на кнопке выхода Android Auto, но скрывает приложения не из Play Store. Верните Google, чтобы они снова появились.</string>
     <string name="external_bt_nativeaa">Штатное беспроводное подключение недоступно на этой системе</string>

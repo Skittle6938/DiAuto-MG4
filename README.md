@@ -144,7 +144,7 @@ export them, and contain no destinations, road names, GPS position, or phone and
 
 ## Install
 
-1. Download `MG4Link_<version>.apk` (older releases: `DiAuto-MG4_<version>.apk`) from the [Releases](https://github.com/Skittle6938/DiAuto-MG4/releases)
+1. Download `MG4Link_<version>.apk` (older releases: `DiAuto-MG4_<version>.apk`) from the [Releases](https://github.com/Skittle6938/MG4Link/releases)
    page and copy it to a USB stick.
 2. On the car, open the **Files** app. If you have never installed an app on the car:
    1. Open **Bluetooth Settings** and select the car's name.
@@ -174,7 +174,7 @@ Uninstall updates*) or with `adb shell pm uninstall com.allgo.app.androidauto`.
 
 ## Reporting a problem
 
-Open an [issue](https://github.com/Skittle6938/DiAuto-MG4/issues) and add:
+Open an [issue](https://github.com/Skittle6938/MG4Link/issues) and add:
 - *Settings → About → Compatibility report*: a short summary of your setup (car firmware, Android,
   MG4Link settings), with no personal data.
 - The log from *Settings → About → Logs → Export*, taken right after the problem. Logs are on by

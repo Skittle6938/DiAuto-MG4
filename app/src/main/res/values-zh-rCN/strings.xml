@@ -854,7 +854,7 @@
     <string name="playback_focus_mode_always_hint">Android Auto 播放时始终暂停其他音频。如果开启蓝牙后音乐在一两秒内停止，请切回自动模式。</string>
     <string name="playback_focus_mode_never_hint">从不更改系统音频焦点。车机上的其他音频可能与 Android Auto 同时播放。</string>
     <string name="playback_focus_mode_static_hint">启用固定音频焦点后，此设置从手机连接起持续整个会话，而非仅在播放音频时生效。</string>
-    <string name="github_issues_url">https://github.com/Skittle6938/DiAuto-MG4/issues</string>
+    <string name="github_issues_url">https://github.com/Skittle6938/MG4Link/issues</string>
     <string name="support_rules_english_title">All posts in English</string>
     <string name="vehicle_make_hint">真实汽车品牌会在 Android Auto 退出按钮上显示品牌标志，但会隐藏 Play 商店以外安装的应用。切回 Google 可重新显示这些应用。</string>
     <string name="external_bt_nativeaa">此车机不支持原生无线连接</string>

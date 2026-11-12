@@ -853,7 +853,7 @@
     <string name="playback_focus_mode_always_hint">يوقف الأصوات الأخرى دائماً أثناء تشغيل Android Auto. إذا توقفت الموسيقى بعد ثانية أو ثانيتين عند تفعيل Bluetooth، عُد إلى الوضع التلقائي.</string>
     <string name="playback_focus_mode_never_hint">لا يغير تركيز صوت النظام أبداً. قد تستمر الأصوات الأخرى فوق صوت Android Auto.</string>
     <string name="playback_focus_mode_static_hint">عند تفعيل تركيز الصوت الثابت، يسري هذا منذ اتصال الهاتف وطوال الجلسة، وليس أثناء تشغيل الصوت فقط.</string>
-    <string name="github_issues_url">https://github.com/Skittle6938/DiAuto-MG4/issues</string>
+    <string name="github_issues_url">https://github.com/Skittle6938/MG4Link/issues</string>
     <string name="support_rules_english_title">All posts in English</string>
     <string name="vehicle_make_hint">تعرض علامة السيارة شعارها على زر الخروج في Android Auto، لكنها تخفي التطبيقات المثبتة من خارج Play Store. أعد اختيار Google لإظهار تلك التطبيقات.</string>
     <string name="external_bt_nativeaa">الاتصال اللاسلكي الأصلي غير مدعوم على هذه الوحدة</string>

@@ -863,7 +863,7 @@
     <string name="playback_focus_mode_always_hint">Pausa siempre otro audio mientras suena Android Auto. Si la música se detiene tras uno o dos segundos al activar Bluetooth, vuelve a Automático.</string>
     <string name="playback_focus_mode_never_hint">Nunca modifica el foco de audio del sistema. Otro audio puede seguir sonando sobre Android Auto.</string>
     <string name="playback_focus_mode_static_hint">Con el foco de audio estático activado, se aplica desde que se conecta el teléfono durante toda la sesión, no solo mientras suena audio.</string>
-    <string name="github_issues_url">https://github.com/Skittle6938/DiAuto-MG4/issues</string>
+    <string name="github_issues_url">https://github.com/Skittle6938/MG4Link/issues</string>
     <string name="support_rules_english_title">All posts in English</string>
     <string name="vehicle_make_hint">Una marca de coche muestra su logotipo en el botón de salida de Android Auto, pero oculta las aplicaciones instaladas fuera de Play Store. Vuelve a Google para mostrarlas.</string>
     <string name="external_bt_nativeaa">La conexión inalámbrica nativa no funciona en esta unidad</string>
