@@ -5,7 +5,7 @@
     <string name="dset_abrp_token">ABRP token</string>
     <string name="dset_abrp_token_summary">In the ABRP app: your car\'s settings, Live data, then Generic. Copy the token shown there.</string>
     <string name="dset_abrp_key">ABRP API key</string>
-    <string name="dset_abrp_key_summary">Identifies DiAuto to ABRP. Leave it as it is unless you use your own telemetry key. If ABRP often refuses the data, create your own free telemetry key at abetterrouteplanner.com/resources/api.</string>
+    <string name="dset_abrp_key_summary">Identifies MG4Link to ABRP. Leave it as it is unless you use your own telemetry key. If ABRP often refuses the data, create your own free telemetry key at abetterrouteplanner.com/resources/api.</string>
     <string name="dset_abrp_not_set">Not set</string>
     <string name="dset_abrp_token_hint">Paste the ABRP token here</string>
     <string name="dset_abrp_save">Save</string>
@@ -14,7 +14,7 @@
     <string name="dset_abrp_testing">Sending one reading to ABRP…</string>
     <string name="dset_abrp_test_ok">ABRP accepted the reading: your car should now show live data in ABRP.</string>
     <string name="dset_abrp_test_refused">ABRP refused the reading (%1$s). Check the token.</string>
-    <string name="dset_abrp_test_rate">ABRP is receiving too many readings on DiAuto\'s key right now. Try again in a minute, or use your own telemetry key.</string>
+    <string name="dset_abrp_test_rate">ABRP is receiving too many readings on MG4Link\'s key right now. Try again in a minute, or use your own telemetry key.</string>
     <string name="dset_abrp_test_offline">No internet in the car right now (T-box without signal or data plan used up). The token is kept, and the readings go out once there is a connection.</string>
     <string name="dset_abrp_test_no_soc">The car has not given its charge level yet. Try again in a few seconds.</string>
 </resources>

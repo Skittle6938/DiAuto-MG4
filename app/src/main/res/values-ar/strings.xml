@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DiAuto MG4+</string>
+    <string name="app_name">MG4Link</string>
     <string name="menu">القائمة</string>
     <string name="settings">الإعدادات</string>
 
@@ -11,7 +11,7 @@
     <string name="video">Android Auto</string>
     <string name="self_mode">الوضع الذاتي</string>
     <string name="to_android_auto">إلى Android Auto</string>
-    <string name="title">DiAuto</string>
+    <string name="title">MG4Link</string>
     <string name="remove">إزالة</string>
     <string name="usb">USB</string>
     <string name="wifi">واي فاي</string>
@@ -162,8 +162,8 @@
 
     <string name="listen_for_usb_devices_label">الاستماع لأجهزة USB</string>
     <string name="listen_for_usb_devices_description">إظهار موجه نظام Android عند توصيل جهاز USB.</string>
-    <string name="block_oem_android_auto_label">حظر OEM Android Auto أثناء تشغيل DiAuto</string>
-    <string name="block_oem_android_auto_description">يوقف AllGo Android Auto الأصلي (com.allgo.app.androidauto / caradapter) أثناء تشغيل DiAuto حتى يفتح الكابل DiAuto أولاً. لا يمس CarPlay ولا خدمة AllGo RUI المشتركة. غير دائم — أزل تثبيت DiAuto ويعود OEM Android Auto للعمل.</string>
+    <string name="block_oem_android_auto_label">حظر OEM Android Auto أثناء تشغيل MG4Link</string>
+    <string name="block_oem_android_auto_description">يوقف AllGo Android Auto الأصلي (com.allgo.app.androidauto / caradapter) أثناء تشغيل MG4Link حتى يفتح الكابل MG4Link أولاً. لا يمس CarPlay ولا خدمة AllGo RUI المشتركة. غير دائم — أزل تثبيت MG4Link ويعود OEM Android Auto للعمل.</string>
     <string name="show_toast_messages">إظهار الرسائل المنبثقة (Toast)</string>
     <string name="show_toast_messages_description">عرض الرسائل المنبثقة للحالة عند الاتصال والانفصال وتغيير الوضع.</string>
     <string name="auto_start_usb_label">تشغيل تلقائي عند توصيل USB</string>
@@ -884,7 +884,7 @@
     <string name="setup_wi_fi_direct">Wi-Fi Direct</string>
     <string name="setup_wifi_direct_hint">خيار بديل · يتطلب تشغيل Wi-Fi في السيارة. قد يتقطع الاتصال بتردد 2.4 غيغاهرتز.</string>
     <string name="setup_configure_hotspot">2 · إعداد نقطة اتصال السيارة</string>
-    <string name="setup_hotspot_instructions">شغّل نقطة الاتصال في إعدادات السيارة واختر 5 غيغاهرتز إن توفر. انسخ الاسم وكلمة المرور بدقة واترك نقطة الاتصال قيد التشغيل أثناء الاتصال. لا يلزم الانضمام إليها يدوياً من الهاتف؛ يرسل DiAuto البيانات عبر Bluetooth بعد الضغط على توصيل الهاتف.</string>
+    <string name="setup_hotspot_instructions">شغّل نقطة الاتصال في إعدادات السيارة واختر 5 غيغاهرتز إن توفر. انسخ الاسم وكلمة المرور بدقة واترك نقطة الاتصال قيد التشغيل أثناء الاتصال. لا يلزم الانضمام إليها يدوياً من الهاتف؛ يرسل MG4Link البيانات عبر Bluetooth بعد الضغط على توصيل الهاتف.</string>
     <string name="setup_hotspot_on">نقطة اتصال السيارة تعمل · تأكد من اختيار 5 غيغاهرتز في إعداداتها.</string>
     <string name="setup_hotspot_off">نقطة اتصال السيارة متوقفة · شغّلها قبل الاتصال.</string>
     <string name="setup_hotspot_unknown">حالة نقطة الاتصال غير متاحة · تحقق منها في إعدادات السيارة.</string>
@@ -901,12 +901,12 @@
     <string name="setup_prepare_car">2 · تجهيز السيارة</string>
     <string name="setup_wifi_direct_instructions">شغّل Wi-Fi في السيارة. اسمح بالموقع والأجهزة القريبة عند الطلب، وفعّل الموقع عندما يطلب Android ذلك. إذا تقطع التشغيل، جرّب نقطة اتصال السيارة بتردد 5 غيغاهرتز.</string>
     <string name="setup_pair_and_connect">3 · الاقتران والاتصال</string>
-    <string name="setup_pair_instructions">أبقِ Bluetooth وWi-Fi مفعّلين على هاتف Android واقترن ببلوتوث السيارة. ارجع إلى DiAuto واضغط توصيل الهاتف واختر هاتفك. وافق على مطالبات Android Auto على الهاتف. لا تحتاج إلى اشتراك إنترنت للسيارة؛ تعتمد بيانات الهاتف على إعدادات شبكته.</string>
+    <string name="setup_pair_instructions">أبقِ Bluetooth وWi-Fi مفعّلين على هاتف Android واقترن ببلوتوث السيارة. ارجع إلى MG4Link واضغط توصيل الهاتف واختر هاتفك. وافق على مطالبات Android Auto على الهاتف. لا تحتاج إلى اشتراك إنترنت للسيارة؛ تعتمد بيانات الهاتف على إعدادات شبكته.</string>
     <string name="setup_open_bluetooth_settings">فتح إعدادات Bluetooth</string>
     <string name="setup_review_app_permissions">مراجعة أذونات التطبيق</string>
-    <string name="setup_done_return_to_diauto">تم · العودة إلى DiAuto</string>
+    <string name="setup_done_return_to_diauto">تم · العودة إلى MG4Link</string>
     <string name="setup_prefer_a_cable">تفضل الاتصال بسلك؟</string>
-    <string name="setup_usb_instructions">استخدم كابل USB لنقل البيانات ومنفذ بيانات USB في السيارة. افتح قفل هاتفك واضغط الاتصال عبر USB في شاشة DiAuto الرئيسية. لا يلزم إعداد نقطة اتصال.</string>
+    <string name="setup_usb_instructions">استخدم كابل USB لنقل البيانات ومنفذ بيانات USB في السيارة. افتح قفل هاتفك واضغط الاتصال عبر USB في شاشة MG4Link الرئيسية. لا يلزم إعداد نقطة اتصال.</string>
     <string name="setup_hotspot_copy_hint">انسخ الاسم وكلمة المرور من إعدادات نقطة اتصال السيارة. الحفظ هنا لا يغير نقطة اتصال السيارة.</string>
     <string name="setup_hotspot_name">اسم نقطة الاتصال</string>
     <string name="setup_hotspot_password">كلمة مرور نقطة الاتصال</string>
@@ -932,13 +932,13 @@
     <string name="da_connection_setup_hint">اختر طريقة الاتصال وأعدّ نقطة اتصال سيارتك.</string>
     <string name="da_diagnostics">التشخيص</string>
     <string name="da_diagnostics_hint">حفظ تقرير الاتصال أو مشاركته.</string>
-    <string name="diagnostic_report_instructions">أعد حدوث مشكلة الاتصال ثم احفظ تقريراً. تتضمن التقارير سجلات التطبيق الحديثة وإعدادات الاتصال، دون بيانات الدخول المحفوظة. في Android 10 أو أحدث، تُحفظ التقارير في Downloads/DiAuto.</string>
+    <string name="diagnostic_report_instructions">أعد حدوث مشكلة الاتصال ثم احفظ تقريراً. تتضمن التقارير سجلات التطبيق الحديثة وإعدادات الاتصال، دون بيانات الدخول المحفوظة. في Android 10 أو أحدث، تُحفظ التقارير في Downloads/MG4Link.</string>
     <string name="save_diagnostic_report">حفظ تقرير التشخيص</string>
     <string name="choose_report_location">اختيار موقع الحفظ</string>
     <string name="native_local_hotspot_wifi_settings">فتح إعدادات Wi-Fi في السيارة</string>
     <string name="native_local_hotspot_wifi_settings_unavailable">افتح Wi-Fi من تطبيق إعدادات السيارة.</string>
     <string name="native_ap_transport_local_hotspot">نقطة اتصال محلية</string>
-    <string name="native_ap_transport_local_hotspot_hint">تجريبي. يستخدم DiAuto نقطة اتصال محلية منفصلة لـ Android Auto؛ لا يلزم اشتراك إنترنت للسيارة. يجب أن تسمح إصدارات Android القديمة للتطبيق بالتحقق من تردد 5 غيغاهرتز عبر برنامج تشغيل Wi-Fi. إذا تقطعت الخرائط أو الموسيقى في DiLink 5.1، جرّب إيقاف Wi-Fi من إعدادات السيارة. أبقِ Bluetooth وWi-Fi الهاتف مفعّلين. التوافق يعتمد على السيارة.</string>
+    <string name="native_ap_transport_local_hotspot_hint">تجريبي. يستخدم MG4Link نقطة اتصال محلية منفصلة لـ Android Auto؛ لا يلزم اشتراك إنترنت للسيارة. يجب أن تسمح إصدارات Android القديمة للتطبيق بالتحقق من تردد 5 غيغاهرتز عبر برنامج تشغيل Wi-Fi. إذا تقطعت الخرائط أو الموسيقى في DiLink 5.1، جرّب إيقاف Wi-Fi من إعدادات السيارة. أبقِ Bluetooth وWi-Fi الهاتف مفعّلين. التوافق يعتمد على السيارة.</string>
     <string name="audio_queue_unbounded">بلا حد (قديم)</string>
     <string name="audio_queue_chunks">مقاطع الصوت: %1$d</string>
     <string name="audio_queue_low">10 مقاطع (تأخير منخفض)</string>
@@ -960,9 +960,9 @@
     <string name="battery_live_from_car">From the car</string>
     <string name="da_no_connected_bluetooth">No phone is currently connected to the car’s Bluetooth. Connect your phone in the MG Bluetooth screen first, then try Android Auto again.</string>
     <string name="launcher_aa_click_label">Open on launcher Android Auto tap</string>
-    <string name="launcher_aa_click_description">When the OEM home-screen Android Auto icon is inactive (USB connect toast), tapping it opens DiAuto instead.</string>
-    <string name="launcher_aa_click_service_label">DiAuto launcher Android Auto shortcut</string>
-    <string name="launcher_aa_click_service_description">Opens DiAuto when the inactive Android Auto button on the MG4 launcher is tapped.</string>
+    <string name="launcher_aa_click_description">When the OEM home-screen Android Auto icon is inactive (USB connect toast), tapping it opens MG4Link instead.</string>
+    <string name="launcher_aa_click_service_label">MG4Link launcher Android Auto shortcut</string>
+    <string name="launcher_aa_click_service_description">Opens MG4Link when the inactive Android Auto button on the MG4 launcher is tapped.</string>
     <string name="check_ota_beta">Also check beta releases</string>
     <string name="check_ota_beta_description">Include GitHub pre-release builds when checking for updates.</string>
     <string name="btn_ota_check">Check for updates</string>

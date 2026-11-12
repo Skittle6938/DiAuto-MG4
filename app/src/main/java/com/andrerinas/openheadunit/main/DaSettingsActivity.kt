@@ -751,7 +751,7 @@ class DaSettingsActivity : BaseActivity() {
         val target = runCatching {
             @Suppress("DEPRECATION")
             val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-            File(dir, "DiAuto-" + source.name).also { source.copyTo(it, overwrite = true) }
+            File(dir, "MG4Link-" + source.name).also { source.copyTo(it, overwrite = true) }
         }.getOrNull()
         Toast.makeText(this,
             getString(R.string.dset_logs_saved, (target ?: source).absolutePath), Toast.LENGTH_LONG).show()

@@ -58,7 +58,7 @@
     <string name="dset_export">Exportálás</string>
     <string name="dset_logs_none">Még nincs napló.</string>
     <string name="dset_logs_saved">Napló mentve: %1$s</string>
-    <string name="dset_restore_summary">Eltávolítja a DiAuto alkalmazást, és visszaállítja az autó AllGo rendszerét.</string>
+    <string name="dset_restore_summary">Eltávolítja az MG4Link alkalmazást, és visszaállítja az autó AllGo rendszerét.</string>
     <string name="dset_restore">Visszaállítás</string>
     <string name="dhome_waiting">Várakozás a telefonra</string>
     <string name="dhome_waiting_hint">Bekapcsolt Bluetooth és Wi‑Fi mellett a telefon magától csatlakozik.</string>
@@ -78,8 +78,8 @@
     <string name="compat_report_share">Megosztás</string>
     <string name="compat_report_copied">Jelentés másolva</string>
     <string name="restore_allgo">Vissza az autó Android Auto rendszeréhez (AllGo)</string>
-    <string name="restore_allgo_message">A DiAuto az autó saját Android Auto rendszere helyére van telepítve. Ez eltávolítja a DiAuto alkalmazást: az autó eredeti Android Auto rendszere pontosan úgy tér vissza, ahogy volt. A DiAuto beállításai elvesznek.</string>
-    <string name="restore_allgo_confirm">DiAuto eltávolítása</string>
+    <string name="restore_allgo_message">Az MG4Link az autó saját Android Auto rendszere helyére van telepítve. Ez eltávolítja az MG4Link alkalmazást: az autó eredeti Android Auto rendszere pontosan úgy tér vissza, ahogy volt. Az MG4Link beállításai elvesznek.</string>
+    <string name="restore_allgo_confirm">MG4Link eltávolítása</string>
     <string name="reconnect_prompt">Egyes beállítások csak újracsatlakozás után lépnek életbe. Újraindítja most a kapcsolatot?</string>
     <string name="reconnect_now">Újracsatlakozás</string>
     <string name="reconnect_later">Később</string>

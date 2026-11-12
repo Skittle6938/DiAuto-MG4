@@ -12,7 +12,7 @@
     <string name="dset_wireless">Android Auto لاسلكي</string>
     <string name="dset_wireless_summary">عبر نقطة اتصال السيارة. كابل USB يعمل دائمًا أيضًا.</string>
     <string name="dset_start_with_car">التشغيل مع السيارة</string>
-    <string name="dset_start_with_car_summary">في الخلفية يتصل الهاتف دون أن يأخذ الشاشة ويظهر كمصدر Android Auto في المشغّلات الأخرى. عند اختيار نعم، يأخذ Android Auto الشاشة أيضًا. عند اختيار لا، لا يتصل شيء حتى تفتح DiAuto.</string>
+    <string name="dset_start_with_car_summary">في الخلفية يتصل الهاتف دون أن يأخذ الشاشة ويظهر كمصدر Android Auto في المشغّلات الأخرى. عند اختيار نعم، يأخذ Android Auto الشاشة أيضًا. عند اختيار لا، لا يتصل شيء حتى تفتح MG4Link.</string>
     <string name="dset_open_background">في الخلفية</string>
     <string name="dset_phone">الهاتف</string>
     <string name="dset_phone_summary">الهاتف الذي يشغّل Android Auto عند تشغيل السيارة.</string>
@@ -58,7 +58,7 @@
     <string name="dset_export">تصدير</string>
     <string name="dset_logs_none">لا توجد سجلات بعد.</string>
     <string name="dset_logs_saved">تم حفظ السجل: %1$s</string>
-    <string name="dset_restore_summary">يزيل DiAuto ويعيد AllGo الأصلي في السيارة.</string>
+    <string name="dset_restore_summary">يزيل MG4Link ويعيد AllGo الأصلي في السيارة.</string>
     <string name="dset_restore">استعادة</string>
     <string name="dhome_waiting">في انتظار الهاتف</string>
     <string name="dhome_waiting_hint">عند تشغيل Bluetooth و Wi‑Fi، يتصل الهاتف تلقائيًا.</string>
@@ -78,8 +78,8 @@
     <string name="compat_report_share">مشاركة</string>
     <string name="compat_report_copied">تم نسخ التقرير</string>
     <string name="restore_allgo">العودة إلى Android Auto الأصلي في السيارة (AllGo)</string>
-    <string name="restore_allgo_message">تم تثبيت DiAuto بدلًا من Android Auto الأصلي في السيارة. سيؤدي هذا إلى إزالة DiAuto: يعود Android Auto الأصلي في السيارة تمامًا كما كان. ستُفقد إعدادات DiAuto.</string>
-    <string name="restore_allgo_confirm">إزالة DiAuto</string>
+    <string name="restore_allgo_message">تم تثبيت MG4Link بدلًا من Android Auto الأصلي في السيارة. سيؤدي هذا إلى إزالة MG4Link: يعود Android Auto الأصلي في السيارة تمامًا كما كان. ستُفقد إعدادات MG4Link.</string>
+    <string name="restore_allgo_confirm">إزالة MG4Link</string>
     <string name="reconnect_prompt">بعض الإعدادات لا تُطبَّق إلا بعد إعادة الاتصال. هل تريد إعادة تشغيل الاتصال الآن؟</string>
     <string name="reconnect_now">إعادة الاتصال</string>
     <string name="reconnect_later">لاحقًا</string>

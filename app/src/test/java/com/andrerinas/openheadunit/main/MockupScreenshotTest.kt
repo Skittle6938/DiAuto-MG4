@@ -132,7 +132,7 @@ class MockupScreenshotTest {
     ), "mockup_settings_voiture.png")
 
     @Test fun settingsAbout() = settings(4, listOf(
-        Row("DiAuto for MG4 2.1.0", "Vous êtes à jour.", Control.Button("Mises à jour")),
+        Row("MG4Link 2.1.0", "Vous êtes à jour.", Control.Button("Mises à jour")),
         Row("Recevoir les bêtas", "Versions de test, avant leur sortie.", Control.Switch(false)),
         Row("Rapport de compatibilité", "Votre configuration en bref, à joindre à une issue GitHub.", Control.Button("Ouvrir")),
         Row("Logs", "Toujours enregistrés. À joindre si quelque chose ne va pas.", Control.Button("Exporter")),

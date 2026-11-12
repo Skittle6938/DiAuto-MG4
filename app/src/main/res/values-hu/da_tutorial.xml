@@ -5,7 +5,7 @@
     <string name="tuto_back">Vissza</string>
     <string name="tuto_next">Tovább</string>
     <string name="tuto_done">Kezdjük</string>
-    <string name="tuto_welcome_title">Üdvözli a DiAuto MG4-hez</string>
+    <string name="tuto_welcome_title">Üdvözöljük az MG4Link alkalmazásban</string>
     <string name="tuto_welcome_text">Vezeték nélküli Android Auto az MG4 kijelzőjén. Ha a telefon Bluetooth-on párosítva van az autóval, csatlakozik az autó Wi-Fi hotspotjához, és az Android Auto magától elindul.\n\nA következő lépések bemutatják az Android Auto felett működő három kézmozdulatot.</string>
     <string name="tuto_menu_title">Két ujj a bal szélről</string>
     <string name="tuto_menu_text">Tegyen két ujjat a képernyő bal széléhez, és húzza jobbra. Megnyílik egy menü két nagy gombbal: Leválasztás és Beállítások.\n\nMáshova koppintva bezárul.</string>
@@ -14,9 +14,9 @@
     <string name="tuto_top_title">Két ujj a felső széltől</string>
     <string name="tuto_top_text">Tegyen két ujjat a képernyő tetejére, és húzza lefelé, hogy visszatérjen az autó kezdőképernyőjére. Az Android Auto csatlakozva marad.</string>
     <string name="tuto_home_title">Három ujj lefelé</string>
-    <string name="tuto_home_text">Húzza lefelé három ujjal az Android Auto leválasztásához és a DiAuto kezdőképernyőjére való visszatéréshez.</string>
+    <string name="tuto_home_text">Húzza lefelé három ujjal az Android Auto leválasztásához és az MG4Link kezdőképernyőjére való visszatéréshez.</string>
     <string name="tuto_tips_title">Jó tudni</string>
-    <string name="tuto_tips_text">• A Google Térkép útvonaltervezővé válik: megkapja az MG4 akkumulátorát, fogyasztását és töltési teljesítményét, és kiválasztja a töltési megállókat.\n• Beállítások → Autó: az MG4 változata, az akkumulátor kapacitása és állapota, automatikusan felismerve és állíthatóan.\n• Az akkumulátor automatikus előmelegítése a Térkép által tervezett töltési megálló előtt. Alapból ki van kapcsolva, bekapcsolható itt: Beállítások → Autó.\n• A DiAuto az autó eredeti Android Autójának (AllGo) frissítéseként települ. Visszatérés hozzá: Beállítások → Névjegy → Visszaállítás, majd indítsa újra a kijelzőt a Home gomb 20 mp-es nyomva tartásával.\n• Beállítások → Névjegy: az útmutató újbóli megtekintése.</string>
+    <string name="tuto_tips_text">• A Google Térkép útvonaltervezővé válik: megkapja az MG4 akkumulátorát, fogyasztását és töltési teljesítményét, és kiválasztja a töltési megállókat.\n• Beállítások → Autó: az MG4 változata, az akkumulátor kapacitása és állapota, automatikusan felismerve és állíthatóan.\n• Az akkumulátor automatikus előmelegítése a Térkép által tervezett töltési megálló előtt. Alapból ki van kapcsolva, bekapcsolható itt: Beállítások → Autó.\n• Az MG4Link az autó eredeti Android Autójának (AllGo) frissítéseként települ. Visszatérés hozzá: Beállítások → Névjegy → Visszaállítás, majd indítsa újra a kijelzőt a Home gomb 20 mp-es nyomva tartásával.\n• Beállítások → Névjegy: az útmutató újbóli megtekintése.</string>
     <string name="tuto_settings_title">Útmutató</string>
     <string name="tuto_settings_summary">A kézmozdulatok az Android Auto felett és a hasznos beállítások, néhány lépésben.</string>
     <string name="tuto_settings_button">Megnyitás</string>

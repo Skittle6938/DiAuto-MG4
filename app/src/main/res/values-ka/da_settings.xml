@@ -12,7 +12,7 @@
     <string name="dset_wireless">უსადენო Android Auto</string>
     <string name="dset_wireless_summary">მანქანის ჰოტსპოტის მეშვეობით. USB კაბელიც ყოველთვის მუშაობს.</string>
     <string name="dset_start_with_car">მანქანასთან ერთად გაშვება</string>
-    <string name="dset_start_with_car_summary">ფონურ რეჟიმში ტელეფონი უკავშირდება ეკრანის დაკავების გარეშე და სხვა ლაუნჩერებში Android Auto-ს წყაროდ ჩანს. „დიახ“-ზე Android Auto ეკრანსაც იკავებს. „არა“-ზე არაფერი უკავშირდება, სანამ DiAuto-ს არ გახსნით.</string>
+    <string name="dset_start_with_car_summary">ფონურ რეჟიმში ტელეფონი უკავშირდება ეკრანის დაკავების გარეშე და სხვა ლაუნჩერებში Android Auto-ს წყაროდ ჩანს. „დიახ“-ზე Android Auto ეკრანსაც იკავებს. „არა“-ზე არაფერი უკავშირდება, სანამ MG4Link-ს არ გახსნით.</string>
     <string name="dset_open_background">ფონურ რეჟიმში</string>
     <string name="dset_phone">ტელეფონი</string>
     <string name="dset_phone_summary">ტელეფონი, რომელიც Android Auto-ს უშვებს მანქანის ჩართვისას.</string>
@@ -58,7 +58,7 @@
     <string name="dset_export">ექსპორტი</string>
     <string name="dset_logs_none">ჟურნალი ჯერ არ არის.</string>
     <string name="dset_logs_saved">ჟურნალი შენახულია: %1$s</string>
-    <string name="dset_restore_summary">შლის DiAuto-ს და აბრუნებს მანქანის AllGo-ს.</string>
+    <string name="dset_restore_summary">შლის MG4Link-ს და აბრუნებს მანქანის AllGo-ს.</string>
     <string name="dset_restore">დაბრუნება</string>
     <string name="dhome_waiting">ტელეფონის მოლოდინი</string>
     <string name="dhome_waiting_hint">ჩართული Bluetooth-ით და Wi‑Fi-ით ტელეფონი თავად დაუკავშირდება.</string>
@@ -78,8 +78,8 @@
     <string name="compat_report_share">გაზიარება</string>
     <string name="compat_report_copied">ანგარიში დაკოპირდა</string>
     <string name="restore_allgo">მანქანის Android Auto-ზე დაბრუნება (AllGo)</string>
-    <string name="restore_allgo_message">DiAuto დაყენებულია მანქანის საკუთარი Android Auto-ს ნაცვლად. ეს წაშლის DiAuto-ს: მანქანის ორიგინალი Android Auto ზუსტად ისე დაბრუნდება, როგორც იყო. DiAuto-ს პარამეტრები დაიკარგება.</string>
-    <string name="restore_allgo_confirm">DiAuto-ს წაშლა</string>
+    <string name="restore_allgo_message">MG4Link დაყენებულია მანქანის საკუთარი Android Auto-ს ნაცვლად. ეს წაშლის MG4Link-ს: მანქანის ორიგინალი Android Auto ზუსტად ისე დაბრუნდება, როგორც იყო. MG4Link-ს პარამეტრები დაიკარგება.</string>
+    <string name="restore_allgo_confirm">MG4Link-ს წაშლა</string>
     <string name="reconnect_prompt">ზოგიერთი პარამეტრი მხოლოდ ხელახალი დაკავშირების შემდეგ მოქმედებს. გადავტვირთო კავშირი ახლა?</string>
     <string name="reconnect_now">ხელახლა დაკავშირება</string>
     <string name="reconnect_later">მოგვიანებით</string>

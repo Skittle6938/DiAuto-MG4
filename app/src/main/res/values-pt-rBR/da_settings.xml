@@ -12,7 +12,7 @@
     <string name="dset_wireless">Android Auto sem fio</string>
     <string name="dset_wireless_summary">Pelo ponto de acesso do carro. Um cabo USB também sempre funciona.</string>
     <string name="dset_start_with_car">Iniciar com o carro</string>
-    <string name="dset_start_with_car_summary">Em segundo plano, o telefone conecta sem ocupar a tela e aparece como fonte Android Auto em outros launchers. Em Sim, o Android Auto também ocupa a tela. Em Não, nada conecta até você abrir o DiAuto.</string>
+    <string name="dset_start_with_car_summary">Em segundo plano, o telefone conecta sem ocupar a tela e aparece como fonte Android Auto em outros launchers. Em Sim, o Android Auto também ocupa a tela. Em Não, nada conecta até você abrir o MG4Link.</string>
     <string name="dset_open_background">Em segundo plano</string>
     <string name="dset_phone">Celular</string>
     <string name="dset_phone_summary">O que inicia o Android Auto quando o carro liga.</string>
@@ -58,7 +58,7 @@
     <string name="dset_export">Exportar</string>
     <string name="dset_logs_none">Nenhum log ainda.</string>
     <string name="dset_logs_saved">Log salvo: %1$s</string>
-    <string name="dset_restore_summary">Remove o DiAuto e traz de volta o AllGo do carro.</string>
+    <string name="dset_restore_summary">Remove o MG4Link e traz de volta o AllGo do carro.</string>
     <string name="dset_restore">Voltar</string>
     <string name="dhome_waiting">Aguardando o celular</string>
     <string name="dhome_waiting_hint">Com Bluetooth e Wi‑Fi ligados, o celular se conecta sozinho.</string>
@@ -78,8 +78,8 @@
     <string name="compat_report_share">Compartilhar</string>
     <string name="compat_report_copied">Relatório copiado</string>
     <string name="restore_allgo">Voltar ao Android Auto do carro (AllGo)</string>
-    <string name="restore_allgo_message">O DiAuto está instalado no lugar do Android Auto original do carro. Isso remove o DiAuto: o Android Auto original do carro volta exatamente como era. As configurações do DiAuto são perdidas.</string>
-    <string name="restore_allgo_confirm">Remover DiAuto</string>
+    <string name="restore_allgo_message">O MG4Link está instalado no lugar do Android Auto original do carro. Isso remove o MG4Link: o Android Auto original do carro volta exatamente como era. As configurações do MG4Link são perdidas.</string>
+    <string name="restore_allgo_confirm">Remover MG4Link</string>
     <string name="reconnect_prompt">Algumas configurações só valem após reconectar. Reiniciar a conexão agora?</string>
     <string name="reconnect_now">Reconectar</string>
     <string name="reconnect_later">Mais tarde</string>

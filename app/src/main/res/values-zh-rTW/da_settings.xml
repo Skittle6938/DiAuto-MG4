@@ -12,7 +12,7 @@
     <string name="dset_wireless">無線 Android Auto</string>
     <string name="dset_wireless_summary">透過車輛熱點連線。USB 傳輸線也隨時可用。</string>
     <string name="dset_start_with_car">隨車啟動</string>
-    <string name="dset_start_with_car_summary">背景模式下，手機連線時不切換螢幕，並在其他啟動器中顯示為 Android Auto 音源。選擇「是」時，Android Auto 也會佔用螢幕。選擇「否」時，在開啟 DiAuto 之前不會連線任何裝置。</string>
+    <string name="dset_start_with_car_summary">背景模式下，手機連線時不切換螢幕，並在其他啟動器中顯示為 Android Auto 音源。選擇「是」時，Android Auto 也會佔用螢幕。選擇「否」時，在開啟 MG4Link 之前不會連線任何裝置。</string>
     <string name="dset_open_background">背景</string>
     <string name="dset_phone">手機</string>
     <string name="dset_phone_summary">車輛啟動時用來啟動 Android Auto 的手機。</string>
@@ -58,7 +58,7 @@
     <string name="dset_export">匯出</string>
     <string name="dset_logs_none">尚無記錄檔。</string>
     <string name="dset_logs_saved">記錄檔已儲存：%1$s</string>
-    <string name="dset_restore_summary">移除 DiAuto 並恢復車輛的 AllGo。</string>
+    <string name="dset_restore_summary">移除 MG4Link 並恢復車輛的 AllGo。</string>
     <string name="dset_restore">還原</string>
     <string name="dhome_waiting">正在等待手機</string>
     <string name="dhome_waiting_hint">開啟 Bluetooth 和 Wi‑Fi 後，手機會自動連線。</string>
@@ -78,8 +78,8 @@
     <string name="compat_report_share">分享</string>
     <string name="compat_report_copied">報告已複製</string>
     <string name="restore_allgo">還原車輛原廠 Android Auto (AllGo)</string>
-    <string name="restore_allgo_message">DiAuto 安裝在車輛原廠 Android Auto 的位置。此操作會移除 DiAuto：車輛原廠 Android Auto 會完全恢復原狀。DiAuto 的設定將會遺失。</string>
-    <string name="restore_allgo_confirm">移除 DiAuto</string>
+    <string name="restore_allgo_message">MG4Link 安裝在車輛原廠 Android Auto 的位置。此操作會移除 MG4Link：車輛原廠 Android Auto 會完全恢復原狀。MG4Link 的設定將會遺失。</string>
+    <string name="restore_allgo_confirm">移除 MG4Link</string>
     <string name="reconnect_prompt">部分設定需重新連線後才會生效。現在重新啟動連線嗎？</string>
     <string name="reconnect_now">重新連線</string>
     <string name="reconnect_later">稍後</string>

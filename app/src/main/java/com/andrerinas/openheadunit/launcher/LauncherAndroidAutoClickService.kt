@@ -125,7 +125,7 @@ class LauncherAndroidAutoClickService : AccessibilityService() {
         if (now - lastLaunchElapsedMs < DEBOUNCE_MS) return
         lastLaunchElapsedMs = now
 
-        AppLog.i("$TAG: inactive Android Auto tile clicked — launching DiAuto")
+        AppLog.i("$TAG: inactive Android Auto tile clicked — launching MG4Link")
         val intent = Intent(this, MainActivity::class.java).apply {
             addFlags(
                 Intent.FLAG_ACTIVITY_NEW_TASK or

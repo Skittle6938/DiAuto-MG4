@@ -240,7 +240,7 @@ object LogExporter {
                 CrashReportSender.send(
                     report = report,
                     fileName = file.name.ifBlank { "diauto_log.txt" },
-                    caption = "DiAuto log: ${file.name}",
+                    caption = "MG4Link log: ${file.name}",
                 )
             }
             main.post {

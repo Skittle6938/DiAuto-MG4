@@ -12,7 +12,7 @@
     <string name="dset_wireless">Android Auto không dây</string>
     <string name="dset_wireless_summary">Qua điểm phát sóng của xe. Cáp USB vẫn luôn dùng được.</string>
     <string name="dset_start_with_car">Khởi động cùng xe</string>
-    <string name="dset_start_with_car_summary">Ở chế độ chạy nền, điện thoại kết nối mà không chiếm màn hình và xuất hiện như nguồn Android Auto trong các launcher khác. Khi chọn Có, Android Auto cũng chiếm màn hình. Khi chọn Không, không có gì kết nối cho đến khi bạn mở DiAuto.</string>
+    <string name="dset_start_with_car_summary">Ở chế độ chạy nền, điện thoại kết nối mà không chiếm màn hình và xuất hiện như nguồn Android Auto trong các launcher khác. Khi chọn Có, Android Auto cũng chiếm màn hình. Khi chọn Không, không có gì kết nối cho đến khi bạn mở MG4Link.</string>
     <string name="dset_open_background">Chạy nền</string>
     <string name="dset_phone">Điện thoại</string>
     <string name="dset_phone_summary">Điện thoại sẽ khởi động Android Auto khi xe khởi động.</string>
@@ -58,7 +58,7 @@
     <string name="dset_export">Xuất</string>
     <string name="dset_logs_none">Chưa có nhật ký.</string>
     <string name="dset_logs_saved">Đã lưu nhật ký: %1$s</string>
-    <string name="dset_restore_summary">Gỡ DiAuto và khôi phục AllGo của xe.</string>
+    <string name="dset_restore_summary">Gỡ MG4Link và khôi phục AllGo của xe.</string>
     <string name="dset_restore">Khôi phục</string>
     <string name="dhome_waiting">Đang chờ điện thoại</string>
     <string name="dhome_waiting_hint">Khi bật Bluetooth và Wi‑Fi, điện thoại sẽ tự kết nối.</string>
@@ -78,8 +78,8 @@
     <string name="compat_report_share">Chia sẻ</string>
     <string name="compat_report_copied">Đã sao chép báo cáo</string>
     <string name="restore_allgo">Quay lại Android Auto của xe (AllGo)</string>
-    <string name="restore_allgo_message">DiAuto được cài thay cho Android Auto gốc của xe. Thao tác này sẽ gỡ DiAuto: Android Auto gốc của xe sẽ trở lại y như cũ. Cài đặt của DiAuto sẽ bị mất.</string>
-    <string name="restore_allgo_confirm">Gỡ DiAuto</string>
+    <string name="restore_allgo_message">MG4Link được cài thay cho Android Auto gốc của xe. Thao tác này sẽ gỡ MG4Link: Android Auto gốc của xe sẽ trở lại y như cũ. Cài đặt của MG4Link sẽ bị mất.</string>
+    <string name="restore_allgo_confirm">Gỡ MG4Link</string>
     <string name="reconnect_prompt">Một số cài đặt chỉ có hiệu lực sau khi kết nối lại. Khởi động lại kết nối ngay?</string>
     <string name="reconnect_now">Kết nối lại</string>
     <string name="reconnect_later">Để sau</string>

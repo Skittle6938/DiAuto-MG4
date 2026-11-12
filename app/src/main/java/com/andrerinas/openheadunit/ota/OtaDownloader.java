@@ -104,7 +104,7 @@ final class OtaDownloader {
             connection.setInstanceFollowRedirects(false);
             connection.setConnectTimeout(8000);
             connection.setReadTimeout(30000);
-            connection.setRequestProperty("User-Agent", "DiAuto-MG4/" + BuildConfig.VERSION_NAME);
+            connection.setRequestProperty("User-Agent", "MG4Link/" + BuildConfig.VERSION_NAME);
             int code = connection.getResponseCode();
             if (code >= 300 && code < 400 && hops < MAX_REDIRECTS) {
                 String location = connection.getHeaderField("Location");

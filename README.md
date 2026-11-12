@@ -1,4 +1,4 @@
-# DiAuto MG4+
+# MG4Link
 
 **Wireless Android Auto for the MG4's screen**, built for the car. It replaces the car's own
 Android Auto, connects by itself when you get in, and gives Google Maps your MG4's battery so Maps
@@ -13,15 +13,15 @@ can plan your charging stops.
 > [!WARNING]
 > **SWI68 R46 and SWI131 (R05) firmwares: wireless Android Auto cannot work.** Their Bluetooth
 > only allows one app connection at a time, so the phone never opens the Android Auto connection
-> ("connecting to Android Auto", then nothing). This is a bug in the car's firmware that DiAuto
+> ("connecting to Android Auto", then nothing). This is a bug in the car's firmware that MG4Link
 > cannot work around. On SWI68, ask your dealer to update the car to **SWI68 R63** or later, where
 > it works; on SWI131, ask whether a newer firmware is available.
 >
-> Another way out: a **USB wireless Android Auto dongle** also works with DiAuto. Early reports and
+> Another way out: a **USB wireless Android Auto dongle** also works with MG4Link. Early reports and
 > our own tests show a more stable and reliable connection than with the car's original Android Auto
 > app.
 
-<p align="center"><img src="docs/screenshots/tutorial_1.png" width="800" alt="DiAuto first-start tutorial"></p>
+<p align="center"><img src="docs/screenshots/tutorial_1.png" width="800" alt="MG4Link first-start tutorial"></p>
 
 ## What it does
 
@@ -34,11 +34,11 @@ can plan your charging stops.
   - **In the background**: the phone connects without taking the screen, and Android Auto shows up
     at once as the Android Auto source in other launchers such as MG4 Dash. Open it with the car's
     Android Auto button.
-  - **No**: nothing connects until you open DiAuto.
-- The car has a single Wi-Fi radio. When your phone connects over Bluetooth, DiAuto switches the
+  - **No**: nothing connects until you open MG4Link.
+- The car has a single Wi-Fi radio. When your phone connects over Bluetooth, MG4Link switches the
   car's own Wi-Fi client off and restarts the hotspot, so Android Auto gets the whole radio (smooth
   picture and sound). The client comes back once no phone is linked (after 10 s by default, 10 s to
-  5 min in *Settings → Connection*). At a car start with no phone linked, DiAuto switches it on, so
+  5 min in *Settings → Connection*). At a car start with no phone linked, MG4Link switches it on, so
   the car joins its own Wi-Fi networks, such as your home network.
 - The hotspot's 5 GHz channel is chosen automatically, or by you in *Settings → Connection*. The
   hotspot only comes up once your phone is linked over Bluetooth, and never at the same time as the
@@ -47,7 +47,7 @@ can plan your charging stops.
   is linked over Bluetooth, the first of the list goes wireless. A phone on USB always comes first.
 - Calls go through the car's hands-free. On SWI69, the car's call window no longer covers Android
   Auto (SWI68 is still being looked at).
-- DiAuto installs as an **update of the car's original Android Auto app** (AllGo). The car's
+- MG4Link installs as an **update of the car's original Android Auto app** (AllGo). The car's
   launcher sees it as its Android Auto: the Android Auto tile works and the media card shows the
   song, artist and cover.
 - Steering wheel keys work as with the original: previous / next, play / pause, voice assistant
@@ -55,13 +55,13 @@ can plan your charging stops.
 
 <p align="center"><img src="docs/screenshots/settings_connection.png" width="800" alt="Settings, Connection tab"></p>
 
-If the phone's own Wi-Fi hotspot is on, it can't join the car's: wireless Android Auto can't start, and DiAuto says so. Turn the hotspot off, or use the USB setup below.
+If the phone's own Wi-Fi hotspot is on, it can't join the car's: wireless Android Auto can't start, and MG4Link says so. Turn the hotspot off, or use the USB setup below.
 
 ### Internet in the car from the phone (Android Auto over USB)
 Many MG4s have their own 4G connection, but not in every country, and it comes with a monthly data
 allowance after which it stops. The phone can take over: with wireless Android Auto the car's Wi-Fi
 is busy being the hotspot your phone joins, but with Android Auto on the **USB cable** it is free.
-DiAuto then switches the car's Wi-Fi client on, and the car joins the networks it knows, such as
+MG4Link then switches the car's Wi-Fi client on, and the car joins the networks it knows, such as
 your phone's Wi-Fi hotspot:
 1. Turn on your phone's Wi-Fi hotspot.
 2. Once, in the car's *Settings → Wi-Fi*, connect to that hotspot (the car remembers it).
@@ -73,7 +73,7 @@ The option is *Settings → Connection → Car Wi-Fi with USB*, on by default. S
 internet over Bluetooth is not possible on the MG4: its Bluetooth stack has no network profile.
 
 ### Google Maps as an EV trip planner
-- DiAuto sends Maps the battery level, range, consumption and the **real fast-charging power of your
+- MG4Link sends Maps the battery level, range, consumption and the **real fast-charging power of your
   MG4 version** (Standard 51 kWh, Comfort / Luxury / XPower 64 kWh, Extended Range 77 kWh). Maps
   then shows the battery at arrival and adds charging stops to long routes.
 - The battery version comes from the car when it reports it, otherwise from your choice in
@@ -93,9 +93,9 @@ internet over Bluetooth is not possible on the MG4: its Bluetooth stack has no n
   speed, climate and temperature, with no position or personal data, and can move the files to a USB
   stick.
 - **Battery preheating before a charging stop** (off by default): when the next stop on the Maps
-  route is a charger, DiAuto turns battery heating on a set time before you arrive (30 min by
+  route is a charger, MG4Link turns battery heating on a set time before you arrive (30 min by
   default, 5 to 60 min) and turns it off again if the route changes. It uses the battery
-  heating switch exactly as the car's own apps do, on every MG4 firmware DiAuto recognises.
+  heating switch exactly as the car's own apps do, on every MG4 firmware MG4Link recognises.
 
 <p align="center"><img src="docs/screenshots/settings_car.png" width="800" alt="Settings, Car tab"></p>
 
@@ -124,7 +124,7 @@ internet over Bluetooth is not possible on the MG4: its Bluetooth stack has no n
 <p align="center"><img src="docs/screenshots/settings_display.png" width="800" alt="Settings, Display tab"></p>
 
 ### Privacy
-DiAuto sends no data anywhere: its only Internet access is checking this repository for updates.
+MG4Link sends no data anywhere: its only Internet access is checking this repository for updates.
 Wireless Android Auto only accepts a phone on the car's own hotspot. Logs stay on the car unless you
 export them, and contain no destinations, road names, GPS position, or phone and Wi-Fi names.
 
@@ -135,7 +135,7 @@ export them, and contain no destinations, road names, GPS position, or phone and
 | Two fingers from the **left** edge, slide right | Menu with **Disconnect** and **Settings** |
 | Two fingers from the **right** edge, slide left | Full screen: hides the car's side bar and top strip (Android Auto reconnects for a few seconds to use the new height). Same gesture to bring them back. |
 | Two fingers from the **top** edge, slide down | Back to the car's launcher, Android Auto stays connected. In MG4 Dash, the same gesture opens Android Auto again. |
-| Three fingers **down** | Disconnects Android Auto and goes back to DiAuto's home screen |
+| Three fingers **down** | Disconnects Android Auto and goes back to MG4Link's home screen |
 
 <p align="center">
   <img src="docs/screenshots/tutorial_2b.png" width="49%" alt="Two fingers from the left edge open the menu">
@@ -144,7 +144,7 @@ export them, and contain no destinations, road names, GPS position, or phone and
 
 ## Install
 
-1. Download `DiAuto-MG4_<version>.apk` from the [Releases](https://github.com/Skittle6938/DiAuto-MG4/releases)
+1. Download `MG4Link_<version>.apk` (older releases: `DiAuto-MG4_<version>.apk`) from the [Releases](https://github.com/Skittle6938/DiAuto-MG4/releases)
    page and copy it to a USB stick.
 2. On the car, open the **Files** app. If you have never installed an app on the car:
    1. Open **Bluetooth Settings** and select the car's name.
@@ -152,15 +152,15 @@ export them, and contain no destinations, road names, GPS position, or phone and
    3. Select **Android Keyboard Settings → Languages**.
    4. Search for **file** with the search box at the top: this opens the **Files** app.
 3. Select the USB stick and install the APK. It installs on top of the car's Android Auto.
-4. Pair your phone with the car over Bluetooth if it is not already, then open DiAuto.
+4. Pair your phone with the car over Bluetooth if it is not already, then open MG4Link.
 
 **Coming from 2.0.x** (`com.drivehub.diauto.mg4`): install the new APK once by hand. At first start
-it takes over the old settings, then removes the old DiAuto.
+it takes over the old settings, then removes the old app.
 
 ## Going back to the car's Android Auto
 
 *Settings → About → Go back to the car's Android Auto (AllGo)*, then restart the screen by holding
-the **Home** button for 20 s. This removes DiAuto and its settings; the original app was never
+the **Home** button for 20 s. This removes MG4Link and its settings; the original app was never
 deleted and comes back as it was. The same can be done in Android's settings (*Apps → Android Auto →
 Uninstall updates*) or with `adb shell pm uninstall com.allgo.app.androidauto`.
 
@@ -176,7 +176,7 @@ Uninstall updates*) or with `adb shell pm uninstall com.allgo.app.androidauto`.
 
 Open an [issue](https://github.com/Skittle6938/DiAuto-MG4/issues) and add:
 - *Settings → About → Compatibility report*: a short summary of your setup (car firmware, Android,
-  DiAuto settings), with no personal data.
+  MG4Link settings), with no personal data.
 - The log from *Settings → About → Logs → Export*, taken right after the problem. Logs are on by
   default (about 0.6 MB per hour of driving, 20 MB at most) and can be switched off.
 
@@ -213,7 +213,7 @@ The most likely values for a new battery, measured from 100 % until the car stop
   - The official 74.4 kWh are probably reached or slightly exceeded, as on the 64 kWh.
   - From 100 % to 0 % shown: about 72.5 kWh.
 
-For range, rely on the "0 % shown" values. These are the ones DiAuto uses by default.
+For range, rely on the "0 % shown" values. These are the ones MG4Link uses by default.
 
 ## License
 

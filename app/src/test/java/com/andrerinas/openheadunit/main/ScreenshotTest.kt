@@ -75,7 +75,7 @@ class ScreenshotTest {
         val activity = Robolectric.buildActivity(FragmentActivity::class.java).setup().get()
         activity.setTheme(R.style.AppTheme)
         val report = listOf(
-            "DiAuto MG4+ 2.1.0-beta10 (2067)",
+            "MG4Link 2.1.0-beta10 (2067)",
             "Firmware: SWI69-29958-1100R45",
             "Car: EH32_CR EUUK",
             "Android: 9 (API 28), mt2712",

@@ -12,7 +12,7 @@
     <string name="dset_wireless">Kablosuz Android Auto</string>
     <string name="dset_wireless_summary">Aracın erişim noktası üzerinden. USB kablosu da her zaman çalışır.</string>
     <string name="dset_start_with_car">Araçla birlikte başlat</string>
-    <string name="dset_start_with_car_summary">Arka planda telefon ekranı almadan bağlanır ve diğer başlatıcılarda Android Auto kaynağı olarak görünür. Evet seçiliyken Android Auto ekranı da alır. Hayır seçiliyken DiAuto\'yu açana kadar hiçbir şey bağlanmaz.</string>
+    <string name="dset_start_with_car_summary">Arka planda telefon ekranı almadan bağlanır ve diğer başlatıcılarda Android Auto kaynağı olarak görünür. Evet seçiliyken Android Auto ekranı da alır. Hayır seçiliyken MG4Link\'i açana kadar hiçbir şey bağlanmaz.</string>
     <string name="dset_open_background">Arka planda</string>
     <string name="dset_phone">Telefon</string>
     <string name="dset_phone_summary">Araç çalıştığında Android Auto’yu başlatan telefon.</string>
@@ -58,7 +58,7 @@
     <string name="dset_export">Dışa aktar</string>
     <string name="dset_logs_none">Henüz günlük yok.</string>
     <string name="dset_logs_saved">Günlük kaydedildi: %1$s</string>
-    <string name="dset_restore_summary">DiAuto’yu kaldırır ve aracın AllGo’sunu geri getirir.</string>
+    <string name="dset_restore_summary">MG4Link’i kaldırır ve aracın AllGo’sunu geri getirir.</string>
     <string name="dset_restore">Geri dön</string>
     <string name="dhome_waiting">Telefon bekleniyor</string>
     <string name="dhome_waiting_hint">Bluetooth ve Wi‑Fi açıkken telefon kendiliğinden bağlanır.</string>
@@ -78,8 +78,8 @@
     <string name="compat_report_share">Paylaş</string>
     <string name="compat_report_copied">Rapor kopyalandı</string>
     <string name="restore_allgo">Aracın Android Auto’suna dön (AllGo)</string>
-    <string name="restore_allgo_message">DiAuto, aracın kendi Android Auto’sunun yerine kurulu. Bu işlem DiAuto’yu kaldırır: aracın orijinal Android Auto’su tam olarak eski hâliyle geri gelir. DiAuto ayarları silinir.</string>
-    <string name="restore_allgo_confirm">DiAuto’yu kaldır</string>
+    <string name="restore_allgo_message">MG4Link, aracın kendi Android Auto’sunun yerine kurulu. Bu işlem MG4Link’i kaldırır: aracın orijinal Android Auto’su tam olarak eski hâliyle geri gelir. MG4Link ayarları silinir.</string>
+    <string name="restore_allgo_confirm">MG4Link’i kaldır</string>
     <string name="reconnect_prompt">Bazı ayarlar yalnızca yeniden bağlandıktan sonra geçerli olur. Bağlantı şimdi yeniden başlatılsın mı?</string>
     <string name="reconnect_now">Yeniden bağlan</string>
     <string name="reconnect_later">Daha sonra</string>

@@ -128,7 +128,7 @@ final class OtaReleaseFetcher {
             connection.setConnectTimeout(7000);
             connection.setReadTimeout(7000);
             connection.setRequestProperty("Accept", accept);
-            connection.setRequestProperty("User-Agent", "DiAuto-MG4/" + BuildConfig.VERSION_NAME);
+            connection.setRequestProperty("User-Agent", "MG4Link/" + BuildConfig.VERSION_NAME);
             int status = connection.getResponseCode();
             if (status < 200 || status >= 300) {
                 throw new IllegalStateException("HTTP " + status);

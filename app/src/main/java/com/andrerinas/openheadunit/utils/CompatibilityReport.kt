@@ -33,7 +33,7 @@ object CompatibilityReport {
     fun build(context: Context): String {
         val settings = App.provide(context).settings
         val lines = mutableListOf<String>()
-        lines += "DiAuto MG4+ ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+        lines += "MG4Link ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
         lines += "Firmware: ${prop("ro.build.mt2712.version") ?: Build.DISPLAY}"
         prop("ro.product.carmode")?.let { lines += "Car: $it" }
         lines += "Android: ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT}), ${Build.HARDWARE}"
@@ -78,7 +78,7 @@ object CompatibilityReport {
 
     private fun copy(context: Context, report: String) {
         val clipboard = context.getSystemService(ClipboardManager::class.java) ?: return
-        clipboard.setPrimaryClip(ClipData.newPlainText("DiAuto compatibility report", report))
+        clipboard.setPrimaryClip(ClipData.newPlainText("MG4Link compatibility report", report))
         Toast.makeText(context, R.string.compat_report_copied, Toast.LENGTH_SHORT).show()
     }
 

@@ -102,6 +102,6 @@ object CrashReportSender {
                     line.startsWith("kotlin.") ||
                     line.startsWith("android.")
             }
-        return "DiAuto crash: ${(exceptionLine ?: "report").take(160)}"
+        return "MG4Link crash: ${(exceptionLine ?: "report").take(160)}"
     }
 }

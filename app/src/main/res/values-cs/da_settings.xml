@@ -12,7 +12,7 @@
     <string name="dset_wireless">Bezdrátové Android Auto</string>
     <string name="dset_wireless_summary">Přes hotspot auta. USB kabel funguje vždy také.</string>
     <string name="dset_start_with_car">Spouštět s autem</string>
-    <string name="dset_start_with_car_summary">Na pozadí se telefon připojí, aniž by převzal obrazovku, a v jiných launcherech se objeví jako zdroj Android Auto. Při Ano převezme Android Auto i obrazovku. Při Ne se nic nepřipojí, dokud neotevřete DiAuto.</string>
+    <string name="dset_start_with_car_summary">Na pozadí se telefon připojí, aniž by převzal obrazovku, a v jiných launcherech se objeví jako zdroj Android Auto. Při Ano převezme Android Auto i obrazovku. Při Ne se nic nepřipojí, dokud neotevřete MG4Link.</string>
     <string name="dset_open_background">Na pozadí</string>
     <string name="dset_phone">Telefon</string>
     <string name="dset_phone_summary">Ten, který spustí Android Auto při nastartování auta.</string>
@@ -58,7 +58,7 @@
     <string name="dset_export">Exportovat</string>
     <string name="dset_logs_none">Zatím žádný log.</string>
     <string name="dset_logs_saved">Log uložen: %1$s</string>
-    <string name="dset_restore_summary">Odebere DiAuto a vrátí AllGo auta.</string>
+    <string name="dset_restore_summary">Odebere MG4Link a vrátí AllGo auta.</string>
     <string name="dset_restore">Vrátit</string>
     <string name="dhome_waiting">Čekání na telefon</string>
     <string name="dhome_waiting_hint">Se zapnutým Bluetooth a Wi‑Fi se telefon připojí sám.</string>
@@ -78,8 +78,8 @@
     <string name="compat_report_share">Sdílet</string>
     <string name="compat_report_copied">Zpráva zkopírována</string>
     <string name="restore_allgo">Zpět na Android Auto auta (AllGo)</string>
-    <string name="restore_allgo_message">DiAuto je nainstalováno místo vlastního Android Auto auta. Tímto se DiAuto odebere: původní Android Auto auta se vrátí přesně tak, jak bylo. Nastavení DiAuto budou ztracena.</string>
-    <string name="restore_allgo_confirm">Odebrat DiAuto</string>
+    <string name="restore_allgo_message">MG4Link je nainstalováno místo vlastního Android Auto auta. Tímto se MG4Link odebere: původní Android Auto auta se vrátí přesně tak, jak bylo. Nastavení MG4Link budou ztracena.</string>
+    <string name="restore_allgo_confirm">Odebrat MG4Link</string>
     <string name="reconnect_prompt">Některá nastavení platí až po novém připojení. Restartovat připojení nyní?</string>
     <string name="reconnect_now">Znovu připojit</string>
     <string name="reconnect_later">Později</string>

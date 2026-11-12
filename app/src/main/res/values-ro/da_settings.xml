@@ -12,7 +12,7 @@
     <string name="dset_wireless">Android Auto wireless</string>
     <string name="dset_wireless_summary">Prin hotspotul mașinii. Un cablu USB funcționează mereu.</string>
     <string name="dset_start_with_car">Pornește odată cu mașina</string>
-    <string name="dset_start_with_car_summary">În fundal, telefonul se conectează fără să preia ecranul și apare ca sursă Android Auto în alte launchere. La Da, Android Auto preia și ecranul. La Nu, nimic nu se conectează până nu deschideți DiAuto.</string>
+    <string name="dset_start_with_car_summary">În fundal, telefonul se conectează fără să preia ecranul și apare ca sursă Android Auto în alte launchere. La Da, Android Auto preia și ecranul. La Nu, nimic nu se conectează până nu deschideți MG4Link.</string>
     <string name="dset_open_background">În fundal</string>
     <string name="dset_phone">Telefon</string>
     <string name="dset_phone_summary">Cel care pornește Android Auto când pornește mașina.</string>
@@ -58,7 +58,7 @@
     <string name="dset_export">Exportă</string>
     <string name="dset_logs_none">Niciun jurnal încă.</string>
     <string name="dset_logs_saved">Jurnal salvat: %1$s</string>
-    <string name="dset_restore_summary">Elimină DiAuto și readuce AllGo-ul mașinii.</string>
+    <string name="dset_restore_summary">Elimină MG4Link și readuce AllGo-ul mașinii.</string>
     <string name="dset_restore">Revino</string>
     <string name="dhome_waiting">Se așteaptă telefonul</string>
     <string name="dhome_waiting_hint">Cu Bluetooth și Wi‑Fi pornite, telefonul se conectează singur.</string>
@@ -78,8 +78,8 @@
     <string name="compat_report_share">Distribuie</string>
     <string name="compat_report_copied">Raport copiat</string>
     <string name="restore_allgo">Revino la Android Auto al mașinii (AllGo)</string>
-    <string name="restore_allgo_message">DiAuto este instalat în locul Android Auto original al mașinii. Această acțiune elimină DiAuto: Android Auto original al mașinii revine exact cum era. Setările DiAuto se pierd.</string>
-    <string name="restore_allgo_confirm">Elimină DiAuto</string>
+    <string name="restore_allgo_message">MG4Link este instalat în locul Android Auto original al mașinii. Această acțiune elimină MG4Link: Android Auto original al mașinii revine exact cum era. Setările MG4Link se pierd.</string>
+    <string name="restore_allgo_confirm">Elimină MG4Link</string>
     <string name="reconnect_prompt">Unele setări se aplică doar după reconectare. Reporniți conexiunea acum?</string>
     <string name="reconnect_now">Reconectare</string>
     <string name="reconnect_later">Mai târziu</string>
