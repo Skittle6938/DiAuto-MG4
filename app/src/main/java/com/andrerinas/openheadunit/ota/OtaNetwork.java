@@ -93,7 +93,17 @@ final class OtaNetwork {
     /** Runs {@code attempt} over the Wi-Fi if there is one, then once more over the T-box if it failed. */
     static <T> T wifiFirst(Context context, String what, Attempt<T> attempt) throws Exception {
         Network wifi = validatedWifi(context);
-        if (wifi == null) return runLogged(what, "default network (4G)", null, attempt);
+        if (wifi == null) {
+            // No Wi-Fi client: Android's default is the T-box if it lists it, else the T-box is asked for
+            Network other = otherThanWifi(context);
+            if (other != null) return runLogged(what, "4G", other, attempt);
+            Log.i(TAG, what + ": no Wi-Fi and no T-box listed, asking Android for the T-box");
+            try {
+                return overRequestedTbox(context, what, attempt, new IOException("no network"));
+            } catch (IOException e) {
+                return runLogged(what, "default network", null, attempt);
+            }
+        }
         try {
             T result = attempt.run(wifi);
             Log.i(TAG, what + " over the Wi-Fi");
