@@ -62,7 +62,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.abs
 
-class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, VideoDimensionsListener {
+open class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, VideoDimensionsListener {
 
     private enum class OverlayState { STARTING, RECONNECTING, HIDDEN }
 
@@ -760,8 +760,12 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
         }
     }
 
+    /** True when this launch only forwards to DiAuto's home screen (see the AllGo-named subclass). */
+    protected open fun redirectsHome(): Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (redirectsHome()) return
         // [FIX] applyOrientationSettings() must be called AFTER super.onCreate() so that the
         // Activity window is fully initialized before we lock the orientation. Calling it before
         // super.onCreate() caused SCREEN_ORIENTATION_LOCKED to inherit the orientation context
@@ -1954,8 +1958,10 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
         @Volatile var pendingStatusText: String? = null
 
         fun intent(context: Context): Intent {
-            val aapIntent = Intent(context, AapProjectionActivity::class.java)
+            // AllGo's class name: the SWI68 SystemUI keeps its call banner away only from it.
+            val aapIntent = Intent(context, com.allgo.app.androidauto.ProjectionActivity::class.java)
             aapIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            aapIntent.putExtra(com.allgo.app.androidauto.ProjectionActivity.EXTRA_FROM_DIAUTO, true)
             return aapIntent
         }
     }

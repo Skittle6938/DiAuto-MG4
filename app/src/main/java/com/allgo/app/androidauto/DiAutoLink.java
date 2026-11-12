@@ -10,7 +10,7 @@ import com.andrerinas.openheadunit.aap.AllgoMediaKeys;
 
 /** What callers of AllGo's Android Auto ask for, done by DiAuto (this app now carries AllGo's name). */
 final class DiAutoLink {
-    private static final String PROJECTION = "com.andrerinas.openheadunit.aap.AapProjectionActivity";
+    private static final String PROJECTION = "com.allgo.app.androidauto.ProjectionActivity";
     private static final String MAIN = "com.andrerinas.openheadunit.main.MainActivity";
 
     private DiAutoLink() {
@@ -83,7 +83,8 @@ final class DiAutoLink {
     /** The Android Auto screen: DiAuto's projection while a phone is connected, else its home. */
     static void openScreen(Context context) {
         Intent intent = new Intent().setClassName(context, RelayState.isActive() ? PROJECTION : MAIN)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                .putExtra(ProjectionActivity.EXTRA_FROM_DIAUTO, true);
         try {
             context.startActivity(intent);
         } catch (Exception e) {

@@ -1,3 +1,7 @@
+# MG4Link 2.2.5-beta10
+
+- Calls on SWI68 (#4): the Android Auto screen now has the exact class name of the car's own Android Auto (com.allgo.app.androidauto.ProjectionActivity). The SWI68 system bar keeps its incoming call banner away only from that screen, so it should no longer sit on top of Android Auto (to be confirmed on SWI68). Nothing changes on other cars.
+
 # MG4Link 2.2.5-beta9
 
 - DiAuto MG4+ is now called **MG4Link**. Same app, same package (com.allgo.app.androidauto): settings are kept and updates keep coming in from the app and from MG4Dash as before.

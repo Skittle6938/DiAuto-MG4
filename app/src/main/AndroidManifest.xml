@@ -97,12 +97,10 @@
         <!-- DiAuto installed as an update of AllGo's Android Auto (com.allgo.app.androidauto): these are
              the components the car, rui and MG4 Dash address by AllGo's exact names. -->
         <service android:name="com.allgo.app.androidauto.AndroidAutoMainService" android:exported="true" />
-        <activity android:name="com.allgo.app.androidauto.ProjectionActivity" android:exported="true"
-            android:theme="@android:style/Theme.NoDisplay" android:excludeFromRecents="true" />
 
 
         <activity
-            android:name=".aap.AapProjectionActivity"
+            android:name="com.allgo.app.androidauto.ProjectionActivity"
             android:configChanges="uiMode|orientation|screenSize|screenLayout|smallestScreenSize"
             android:exported="true"
             android:hardwareAccelerated="true"
