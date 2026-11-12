@@ -1,3 +1,7 @@
+# MG4Link 2.2.5-beta11
+
+- Climate page on SWI68 (#13): when the climate comes back on as the car starts, the car opens its climate page on top of Android Auto. During the first minute after the start, MG4Link now closes it, as the car's own system bar does. A climate page opened by hand later stays open. Nothing changes on other cars.
+
 # MG4Link 2.2.5-beta10
 
 - Calls on SWI68 (#4): the Android Auto screen now has the exact class name of the car's own Android Auto (com.allgo.app.androidauto.ProjectionActivity). The SWI68 system bar keeps its incoming call banner away only from that screen, so it should no longer sit on top of Android Auto (to be confirmed on SWI68). Nothing changes on other cars.

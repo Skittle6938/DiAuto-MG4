@@ -1003,6 +1003,7 @@ open class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks,
         isForeground = true
         AppLog.i("AapProjectionActivity: onResume")
         com.allgo.app.androidauto.RelayState.screen(true)
+        SaicHvacPage.onProjectionShown(this)
         // Show the one-time rename notice even here, on top of an active projection.
         applyStickyOrientation()
         watchdogHandler.postDelayed(watchdogRunnable, 2000)
