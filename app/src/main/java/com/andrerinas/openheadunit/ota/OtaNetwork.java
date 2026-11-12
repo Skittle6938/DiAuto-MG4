@@ -4,11 +4,15 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.util.Log;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Update traffic on the car's Wi-Fi first, the T-box 4G only without one (owner's choice, as in
@@ -96,12 +100,64 @@ final class OtaNetwork {
             return result;
         } catch (IOException e) {
             Network other = otherThanWifi(context);
-            if (other == null) {
-                Log.w(TAG, what + " failed over the Wi-Fi (" + e.getMessage() + "), no other network to try");
-                throw e;
+            if (other != null) {
+                Log.w(TAG, what + " failed over the Wi-Fi (" + e.getMessage() + "), trying the 4G");
+                return runLogged(what, "4G", other, attempt);
             }
-            Log.w(TAG, what + " failed over the Wi-Fi (" + e.getMessage() + "), trying the 4G");
-            return runLogged(what, "4G", other, attempt);
+            Log.w(TAG, what + " failed over the Wi-Fi (" + e.getMessage() + "), asking Android for the T-box");
+            return overRequestedTbox(context, what, attempt, e);
+        }
+    }
+
+    static final long TBOX_WAIT_MS = 10_000;
+
+    /**
+     * With the car's Wi-Fi client on, Android drops the T-box network (an Ethernet link to Android)
+     * because nothing needs it, though tbox0 keeps its address. Asking for a wired network with
+     * internet brings it back next to the Wi-Fi, for this attempt only: the Wi-Fi client and the
+     * default network do not change, and the T-box goes idle again once the request is released.
+     */
+    private static <T> T overRequestedTbox(Context context, String what, Attempt<T> attempt, IOException wifiError) throws Exception {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm == null) throw wifiError;
+        AtomicReference<Network> found = new AtomicReference<>();
+        CountDownLatch ready = new CountDownLatch(1);
+        ConnectivityManager.NetworkCallback callback = new ConnectivityManager.NetworkCallback() {
+            @Override
+            public void onAvailable(Network network) {
+                found.compareAndSet(null, network);
+                ready.countDown();
+            }
+
+            @Override
+            public void onUnavailable() {
+                ready.countDown();
+            }
+        };
+        NetworkRequest request = new NetworkRequest.Builder()
+                .addTransportType(NetworkCapabilities.TRANSPORT_ETHERNET)
+                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                .build();
+        try {
+            cm.requestNetwork(request, callback, (int) TBOX_WAIT_MS);
+        } catch (Exception e) {
+            Log.w(TAG, what + ": T-box request refused (" + e.getMessage() + ")");
+            throw wifiError;
+        }
+        try {
+            ready.await(TBOX_WAIT_MS + 1_000, TimeUnit.MILLISECONDS);
+            Network tbox = found.get();
+            if (tbox == null) {
+                Log.w(TAG, what + ": no T-box network within " + TBOX_WAIT_MS / 1000 + " s, no other network to try");
+                throw wifiError;
+            }
+            return runLogged(what, "4G", tbox, attempt);
+        } finally {
+            try {
+                cm.unregisterNetworkCallback(callback);
+            } catch (Exception ignored) {
+                // already released after a timeout
+            }
         }
     }
 
