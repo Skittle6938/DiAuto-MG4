@@ -64,10 +64,7 @@
     <string name="onb_permissions_title">Enable permissions</string>
     <string name="onb_permissions_help">Turn on the permissions the app needs so everything works without surprise prompts later. You can change these any time.</string>
     <string name="onb_perms_enable_all">Enable all</string>
-    <string name="perm_allow">Allow</string>
-    <string name="perm_granted">Granted</string>
     <!-- %1$s permission name -->
-    <string name="perm_optional_format">%1$s (optional)</string>
     <string name="permissions">Permissions</string>
     <string name="permissions_desc">Review and grant the permissions the app needs</string>
     <string name="perm_mic_title">Microphone</string>
@@ -175,7 +172,6 @@
     <string name="dpi_value_format">%1$d DPI</string>
     <string name="dpi_input_hint">DPI</string>
 
-    <string name="title_activity_settings">SettingsActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="allowed">Allowed</string>
@@ -232,7 +228,6 @@
     <string name="gles_required_message">Monochrome mode needs GLES rendering to apply a grayscale filter on the video output. Enable GLES?</string>
     <string name="enable_gles">Enable GLES</string>
     <string name="category_navigation">Navigation</string>
-    <string name="category_charging_info">Infos de charge</string>
     <string name="da_charging_info_hint">Capacité batterie, SOH et réglages EV Google Maps.</string>
     <string name="category_wireless">Connexion sans fil</string>
 
@@ -241,48 +236,28 @@
 
     <string name="bluetooth_address_s">Bluetooth address</string>
     <string name="enter_bluetooth_mac">Enter bluetooth MAC</string>
-    <string name="reset">Reset</string>
     <string name="reset_settings">Reset to Defaults</string>
     <string name="reset_settings_confirm">Are you sure you want to reset all settings to their default values? This will restart the app.</string>
     <string name="reset_settings_description">Clears all configuration, cached data and auto-connect preferences. The app will restart to apply the factory defaults.</string>
     <string name="gps_for_navigation">Gps for navigation</string>
     <string name="gps_for_navigation_description">Use Gps for navigation</string>
-    <string name="battery_for_google_maps">Batterie pour Google Maps</string>
-    <string name="battery_for_google_maps_description">Envoie le niveau de charge et l’autonomie MG4 à Android Auto pour que Google Maps affiche la batterie. Réglez la capacité nette et le SOH ci-dessous. Nécessite une installation signée plateforme sur la voiture.</string>
     <string name="battery_net_capacity_kwh">Capacité nette (kWh)</string>
     <string name="battery_net_capacity_description">Sélectionnez la capacité utilisable de votre MG4 : 49, 61 ou 72,5 kWh. Maps utilise capacité × SOH.</string>
     <string name="battery_net_capacity_enter">Saisissez la capacité nette (utilisable) à neuf, en kWh</string>
     <string name="battery_soh_percent">SOH batterie (%)</string>
-    <string name="battery_soh_description">Saisissez l’état de santé de la batterie de 1 à 100. Les décimales comme 98,75 sont prises en charge. Capacité utilisable effective = capacité × SOH / 100.</string>
-    <string name="battery_effective_capacity">Capacité utilisable effective</string>
     <string name="battery_value_kwh">%1$.1f kWh</string>
-    <string name="battery_effective_capacity_value">%1$.1f kWh (= net × SOH)</string>
     <string name="battery_value_percent">%1$s %%</string>
     <string name="battery_auto">Automatique</string>
     <string name="battery_auto_value">%1$s · automatique (%2$s)</string>
     <string name="battery_manual_value">%1$s · réglée à la main</string>
     <string name="battery_soh_manual_value">%1$s · réglé à la main</string>
-    <string name="battery_auto_option">Automatique (%1$s, %2$s)</string>
-    <string name="battery_pack_option">Batterie %1$d kWh (%2$.1f kWh utiles)</string>
     <string name="battery_source_car">lue sur la voiture</string>
     <string name="battery_source_default_pack">batterie %1$d kWh par défaut</string>
     <string name="battery_soh_source_default">par défaut</string>
-    <string name="battery_soh_auto_description" formatted="false">Automatique : estimation de MG4 Dash s’il est installé et a déjà mesuré la batterie, sinon 100 %.</string>
     <string name="battery_value_km">%1$d km</string>
     <string name="battery_live_energy_value">%1$.1f / %2$.1f kWh</string>
-    <string name="battery_demo_mode">Valeurs batterie démo</string>
-    <string name="battery_demo_mode_description">Utilise le SoC / l’autonomie définis ci-dessous au lieu de lire la voiture. La capacité nette et le SOH ci-dessus s’appliquent toujours. Pour les tests sans matériel MG4.</string>
-    <string name="battery_demo_percent">SoC démo</string>
-    <string name="battery_demo_range_km">Autonomie démo (km)</string>
-    <string name="battery_demo_enter_range">Saisissez l’autonomie démo en km</string>
     <string name="battery_live_from_car">Depuis la voiture</string>
-    <string name="battery_live_soc">SoC en direct</string>
-    <string name="battery_live_range">Autonomie en direct</string>
-    <string name="battery_live_energy">Énergie en direct</string>
     <string name="da_no_connected_bluetooth">Aucun téléphone n’est connecté au Bluetooth de la voiture. Connectez d’abord votre téléphone dans l’écran Bluetooth MG, puis réessayez Android Auto.</string>
-    <string name="battery_live_waiting">En attente des données véhicule…</string>
-    <string name="battery_live_unavailable">Indisponible (installation MG4 signée plateforme / télémétrie live requise)</string>
-    <string name="battery_live_refresh">Actualiser depuis la voiture</string>
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
     <string name="resolution">Resolution</string>
@@ -425,7 +400,6 @@
     <string name="overlay_permission_title">Background Start Permission</string>
     <string name="overlay_permission_description">To allow Open Headunit to open automatically when Bluetooth connects, please enable the "Display over other apps" permission in the next screen.</string>
     <string name="open_settings">Settings</string>
-    <string name="cannot_open_settings">Could not open system settings</string>
     <string name="right_hand_drive">Right-hand drive</string>
     <string name="right_hand_drive_description">Position UI for right-side driving</string>
     <string name="wireless_connection_settings">Wireless Connection</string>
@@ -466,9 +440,6 @@
     <string name="auto_connect_help">These methods run automatically when the app opens. Enable the ones you want, then drag to set the order. The first enabled method that succeeds will be used.</string>
     <string name="auto_connect_priority">Priority %d</string>
     <string name="auto_connect_all_disabled">All disabled</string>
-    <string name="drag_to_reorder">Drag to reorder</string>
-    <string name="move_up">Move up</string>
-    <string name="move_down">Move down</string>
     <string name="auto_connecting_single_usb">Auto-connecting to USB device…</string>
     <string name="video_codec">Video Codec</string>
     <string name="fps_limit">FPS Limit</string>
@@ -659,11 +630,7 @@
     <string name="scanning_network">Scanning Network…</string>
     <string name="found_connecting">Found %s, connecting…</string>
     <string name="no_devices_found">No devices found</string>
-    <string name="unsaved_changes">Unsaved Changes</string>
-    <string name="unsaved_changes_message">You have unsaved changes. Do you want to discard them?</string>
-    <string name="discard">Discard</string>
     <string name="stopping_service">Stopping service to apply changes…</string>
-    <string name="settings_saved">Paramètres enregistrés</string>
     <string name="category_backup">Backup</string>
     <string name="export_settings">Export settings</string>
     <string name="export_settings_description">Save a settings backup as a JSON file</string>

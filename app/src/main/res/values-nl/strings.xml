@@ -2,7 +2,6 @@
     <string name="app_name">DiAuto MG4+</string>
     <string name="menu">Menu</string>
     <string name="settings">Instellingen</string>
-    <string name="title_activity_settings">Instellingen</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="allowed">Toegestaan</string>
@@ -60,7 +59,6 @@
 
     <string name="bluetooth_address_s">Bluetooth adres</string>
     <string name="enter_bluetooth_mac">Geef bluetooth MAC in</string>
-    <string name="reset">Reset</string>
     <string name="gps_for_navigation">Gps for navigatie</string>
     <string name="gps_for_navigation_description">Gebruik Gps for navigatie</string>
     <string name="enabled">Ingeschakeld</string>
@@ -215,9 +213,6 @@
     <string name="auto_connect_help">Deze methoden worden automatisch uitgevoerd bij het openen van de app. Schakel de gewenste in en sleep om de volgorde te bepalen. De eerste ingeschakelde methode die slaagt, wordt gebruikt.</string>
     <string name="auto_connect_priority">Prioriteit %d</string>
     <string name="auto_connect_all_disabled">Alles uitgeschakeld</string>
-    <string name="drag_to_reorder">Sleep om te herschikken</string>
-    <string name="move_up">Omhoog</string>
-    <string name="move_down">Omlaag</string>
     <string name="auto_connecting_single_usb">Automatisch verbinden met USB-apparaat…</string>
     <string name="video_codec">Video Codec</string>
     <string name="fps_limit">FPS Limiet</string>
@@ -297,11 +292,7 @@
     <string name="scanning_network">Netwerk scannen…</string>
     <string name="found_connecting">Gevonden %s, verbinden…</string>
     <string name="no_devices_found">Geen apparaten gevonden</string>
-    <string name="unsaved_changes">Niet-opgeslagen wijzigingen</string>
-    <string name="unsaved_changes_message">U hebt niet-opgeslagen wijzigingen. Wilt u ze weggooien?</string>
-    <string name="discard">Weggooien</string>
     <string name="stopping_service">Dienst stoppen om wijzigingen toe te passen…</string>
-    <string name="settings_saved">Instellingen opgeslagen</string>
     <string name="logs_exported">Logs geëxporteerd</string>
     <string name="log_saved_to">Log opgeslagen in:\n%s</string>
     <string name="share">Delen</string>
@@ -753,9 +744,6 @@
     <string name="onb_permissions_title">Machtigingen inschakelen</string>
     <string name="onb_permissions_help">Schakel de machtigingen in die de app nodig heeft, zodat alles werkt zonder onverwachte prompts. Je kunt deze altijd later wijzigen.</string>
     <string name="onb_perms_enable_all">Alles inschakelen</string>
-    <string name="perm_allow">Toestaan</string>
-    <string name="perm_granted">Verleend</string>
-    <string name="perm_optional_format">%1$s (optioneel)</string>
     <string name="permissions">Machtigingen</string>
     <string name="permissions_desc">Bekijk en verleen de machtigingen die de app nodig heeft</string>
     <string name="perm_mic_title">Microfoon</string>
@@ -846,7 +834,6 @@
     <string name="dpi_value_format">%1$d DPI</string>
     <string name="pixel_aspect_ratio">Pixel aspect ratio</string>
     <string name="enter_pixel_aspect_ratio_value">Pixel aspect ratio x10000 (10000 = square pixels)</string>
-    <string name="cannot_open_settings">Could not open system settings</string>
     <string name="static_bssid_title">Static BSSID</string>
     <string name="static_bssid_enter_value">Enter BSSID (XX:XX:XX:XX:XX:XX)</string>
     <string name="static_bssid_desc">Manually set the BSSID for the wireless handshake if auto-detection is blocked by system permissions</string>
@@ -891,33 +878,16 @@
     <string name="su_needed_keymaps_warning">Warning: Your headunit must be either rooted, or have Shizuku installed. If that\'s the case, you must allow SU rights, once prompted. Steering keys likely are not functional until this is fixed.</string>
 
     <!-- Lint: MissingTranslation (EN fallback / TR localized) -->
-    <string name="category_charging_info">Charging info</string>
     <string name="da_charging_info_hint">Battery capacity, SOH and Google Maps EV settings.</string>
-    <string name="battery_for_google_maps">Battery for Google Maps</string>
-    <string name="battery_for_google_maps_description">Send MG4 charge and range to Android Auto so Google Maps can show battery level. Set net capacity and SOH below. Needs a platform-signed install on the car.</string>
     <string name="battery_net_capacity_kwh">Net capacity (kWh)</string>
     <string name="battery_net_capacity_description">Select the usable battery capacity for your MG4: 49, 61 or 72.5 kWh. Maps uses capacity × SOH.</string>
     <string name="battery_net_capacity_enter">Enter net (usable) capacity when new, in kWh</string>
     <string name="battery_soh_percent">Battery SOH (%)</string>
-    <string name="battery_soh_description">Enter battery state of health from 1 to 100. Decimal values such as 98.75 are supported. Effective usable capacity = capacity × SOH / 100.</string>
-    <string name="battery_effective_capacity">Effective usable</string>
     <string name="battery_value_kwh">%1$.1f kWh</string>
-    <string name="battery_effective_capacity_value">%1$.1f kWh (= net × SOH)</string>
     <string name="battery_value_km">%1$d km</string>
     <string name="battery_live_energy_value">%1$.1f / %2$.1f kWh</string>
-    <string name="battery_demo_mode">Demo battery values</string>
-    <string name="battery_demo_mode_description">Use the SoC / range you set below instead of reading the car. Net capacity and SOH above still apply. For desk testing without MG4 hardware.</string>
-    <string name="battery_demo_percent">Demo SoC</string>
-    <string name="battery_demo_range_km">Demo range (km)</string>
-    <string name="battery_demo_enter_range">Enter demo range in km</string>
     <string name="battery_live_from_car">From the car</string>
-    <string name="battery_live_soc">Live SoC</string>
-    <string name="battery_live_range">Live range</string>
-    <string name="battery_live_energy">Live energy</string>
     <string name="da_no_connected_bluetooth">No phone is currently connected to the car’s Bluetooth. Connect your phone in the MG Bluetooth screen first, then try Android Auto again.</string>
-    <string name="battery_live_waiting">Waiting for car data…</string>
-    <string name="battery_live_unavailable">Not available (need platform-signed MG4 car install / live telemetry)</string>
-    <string name="battery_live_refresh">Refresh from car</string>
     <string name="launcher_aa_click_label">Open on launcher Android Auto tap</string>
     <string name="launcher_aa_click_description">When the OEM home-screen Android Auto icon is inactive (USB connect toast), tapping it opens DiAuto instead.</string>
     <string name="launcher_aa_click_service_label">DiAuto launcher Android Auto shortcut</string>

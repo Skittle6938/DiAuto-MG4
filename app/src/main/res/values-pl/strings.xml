@@ -3,7 +3,6 @@
     <string name="menu">Menu</string>
     <string name="settings">Ustawienia</string>
 
-    <string name="title_activity_settings">Ustawienia</string>
     <string name="dummy_button">Przycisk testowy</string>
     <string name="dummy_content">TREŚĆ\nTESTOWA</string>
     <string name="allowed">Dozwolone</string>
@@ -61,7 +60,6 @@
 
     <string name="bluetooth_address_s">Adres Bluetooth</string>
     <string name="enter_bluetooth_mac">Wprowadź adres MAC Bluetooth</string>
-    <string name="reset">Resetuj</string>
     <string name="gps_for_navigation">GPS do nawigacji</string>
     <string name="gps_for_navigation_description">Używaj GPS tego urządzenia do nawigacji</string>
     <string name="enabled">Włączone</string>
@@ -216,9 +214,6 @@
     <string name="auto_connect_help">Te metody uruchamiają się automatycznie przy otwieraniu aplikacji. Włącz te, które chcesz, i przeciągnij, aby ustawić kolejność. Zostanie użyta pierwsza włączona metoda, która się powiedzie.</string>
     <string name="auto_connect_priority">Priorytet %d</string>
     <string name="auto_connect_all_disabled">Wszystkie wyłączone</string>
-    <string name="drag_to_reorder">Przeciągnij, aby zmienić kolejność</string>
-    <string name="move_up">Przesuń w górę</string>
-    <string name="move_down">Przesuń w dół</string>
     <string name="auto_connecting_single_usb">Automatyczne łączenie z urządzeniem USB…</string>
     <string name="video_codec">Kodek wideo</string>
     <string name="fps_limit">Limit FPS</string>
@@ -298,11 +293,7 @@
     <string name="scanning_network">Skanowanie sieci…</string>
     <string name="found_connecting">Znaleziono %s, łączenie…</string>
     <string name="no_devices_found">Nie znaleziono urządzeń</string>
-    <string name="unsaved_changes">Niezapisane zmiany</string>
-    <string name="unsaved_changes_message">Masz niezapisane zmiany. Czy chcesz je odrzucić?</string>
-    <string name="discard">Odrzuć</string>
     <string name="stopping_service">Zatrzymywanie usługi w celu zastosowania zmian…</string>
-    <string name="settings_saved">Ustawienia zapisane</string>
     <string name="logs_exported">Logi wyeksportowane</string>
     <string name="log_saved_to">Log zapisany w:\n%s</string>
     <string name="share">Udostępnij</string>
@@ -754,9 +745,6 @@
     <string name="onb_permissions_title">Włącz uprawnienia</string>
     <string name="onb_permissions_help">Włącz uprawnienia potrzebne aplikacji, aby wszystko działało bez niespodziewanych monitów. Możesz je zmienić w dowolnym momencie.</string>
     <string name="onb_perms_enable_all">Włącz wszystkie</string>
-    <string name="perm_allow">Zezwól</string>
-    <string name="perm_granted">Przyznano</string>
-    <string name="perm_optional_format">%1$s (opcjonalne)</string>
     <string name="permissions">Uprawnienia</string>
     <string name="permissions_desc">Przejrzyj i przyznaj uprawnienia potrzebne aplikacji</string>
     <string name="perm_mic_title">Mikrofon</string>
@@ -845,7 +833,6 @@
     <string name="dpi_value_format">%1$d DPI</string>
     <string name="pixel_aspect_ratio">Pixel aspect ratio</string>
     <string name="enter_pixel_aspect_ratio_value">Pixel aspect ratio x10000 (10000 = square pixels)</string>
-    <string name="cannot_open_settings">Could not open system settings</string>
     <string name="static_bssid_title">Static BSSID</string>
     <string name="static_bssid_enter_value">Enter BSSID (XX:XX:XX:XX:XX:XX)</string>
     <string name="static_bssid_desc">Manually set the BSSID for the wireless handshake if auto-detection is blocked by system permissions</string>
@@ -890,33 +877,16 @@
     <string name="su_needed_keymaps_warning">Warning: Your headunit must be either rooted, or have Shizuku installed. If that\'s the case, you must allow SU rights, once prompted. Steering keys likely are not functional until this is fixed.</string>
 
     <!-- Lint: MissingTranslation (EN fallback / TR localized) -->
-    <string name="category_charging_info">Charging info</string>
     <string name="da_charging_info_hint">Battery capacity, SOH and Google Maps EV settings.</string>
-    <string name="battery_for_google_maps">Battery for Google Maps</string>
-    <string name="battery_for_google_maps_description">Send MG4 charge and range to Android Auto so Google Maps can show battery level. Set net capacity and SOH below. Needs a platform-signed install on the car.</string>
     <string name="battery_net_capacity_kwh">Net capacity (kWh)</string>
     <string name="battery_net_capacity_description">Select the usable battery capacity for your MG4: 49, 61 or 72.5 kWh. Maps uses capacity × SOH.</string>
     <string name="battery_net_capacity_enter">Enter net (usable) capacity when new, in kWh</string>
     <string name="battery_soh_percent">Battery SOH (%)</string>
-    <string name="battery_soh_description">Enter battery state of health from 1 to 100. Decimal values such as 98.75 are supported. Effective usable capacity = capacity × SOH / 100.</string>
-    <string name="battery_effective_capacity">Effective usable</string>
     <string name="battery_value_kwh">%1$.1f kWh</string>
-    <string name="battery_effective_capacity_value">%1$.1f kWh (= net × SOH)</string>
     <string name="battery_value_km">%1$d km</string>
     <string name="battery_live_energy_value">%1$.1f / %2$.1f kWh</string>
-    <string name="battery_demo_mode">Demo battery values</string>
-    <string name="battery_demo_mode_description">Use the SoC / range you set below instead of reading the car. Net capacity and SOH above still apply. For desk testing without MG4 hardware.</string>
-    <string name="battery_demo_percent">Demo SoC</string>
-    <string name="battery_demo_range_km">Demo range (km)</string>
-    <string name="battery_demo_enter_range">Enter demo range in km</string>
     <string name="battery_live_from_car">From the car</string>
-    <string name="battery_live_soc">Live SoC</string>
-    <string name="battery_live_range">Live range</string>
-    <string name="battery_live_energy">Live energy</string>
     <string name="da_no_connected_bluetooth">No phone is currently connected to the car’s Bluetooth. Connect your phone in the MG Bluetooth screen first, then try Android Auto again.</string>
-    <string name="battery_live_waiting">Waiting for car data…</string>
-    <string name="battery_live_unavailable">Not available (need platform-signed MG4 car install / live telemetry)</string>
-    <string name="battery_live_refresh">Refresh from car</string>
     <string name="launcher_aa_click_label">Open on launcher Android Auto tap</string>
     <string name="launcher_aa_click_description">When the OEM home-screen Android Auto icon is inactive (USB connect toast), tapping it opens DiAuto instead.</string>
     <string name="launcher_aa_click_service_label">DiAuto launcher Android Auto shortcut</string>

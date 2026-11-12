@@ -3,7 +3,6 @@
     <string name="menu">القائمة</string>
     <string name="settings">الإعدادات</string>
 
-    <string name="title_activity_settings">نشاط الإعدادات</string>
     <string name="dummy_button">زر تجريبي</string>
     <string name="dummy_content">محتوى\nتجريبي</string>
     <string name="allowed">مسموح</string>
@@ -61,7 +60,6 @@
 
     <string name="bluetooth_address_s">عنوان البلوتوث</string>
     <string name="enter_bluetooth_mac">أدخل عنوان MAC للبلوتوث</string>
-    <string name="reset">إعادة تعيين</string>
     <string name="gps_for_navigation">GPS للملاحة</string>
     <string name="gps_for_navigation_description">استخدام GPS للملاحة</string>
     <string name="enabled">مفعل</string>
@@ -216,9 +214,6 @@
     <string name="auto_connect_help">تعمل هذه الطرق تلقائيا عند فتح التطبيق. قم بتمكين الطرق التي تريدها، ثم اسحب لضبط الترتيب. سيتم استخدام أول طريقة ممكّنة تنجح.</string>
     <string name="auto_connect_priority">الأولوية %d</string>
     <string name="auto_connect_all_disabled">الكل معطل</string>
-    <string name="drag_to_reorder">اسحب لإعادة الترتيب</string>
-    <string name="move_up">تحريك للأعلى</string>
-    <string name="move_down">تحريك للأسفل</string>
     <string name="auto_connecting_single_usb">جار الاتصال تلقائيا بجهاز USB…</string>
     <string name="video_codec">ترميز الفيديو</string>
     <string name="fps_limit">حد معدل الإطارات</string>
@@ -298,11 +293,7 @@
     <string name="scanning_network">جار فحص الشبكة…</string>
     <string name="found_connecting">تم العثور على %s، جار الاتصال…</string>
     <string name="no_devices_found">لم يتم العثور على أجهزة</string>
-    <string name="unsaved_changes">تغييرات غير محفوظة</string>
-    <string name="unsaved_changes_message">لديك تغييرات غير محفوظة. هل تريد تجاهلها؟</string>
-    <string name="discard">تجاهل</string>
     <string name="stopping_service">إيقاف الخدمة لتطبيق التغييرات…</string>
-    <string name="settings_saved">تم حفظ الإعدادات</string>
     <string name="logs_exported">تم تصدير السجلات</string>
     <string name="log_saved_to">تم حفظ السجل في:\n%s</string>
     <string name="share">مشاركة</string>
@@ -791,9 +782,6 @@
     <string name="onb_permissions_title">تفعيل الأذونات</string>
     <string name="onb_permissions_help">فعّل الأذونات التي يحتاجها التطبيق لتجنب الطلبات المفاجئة لاحقاً. يمكنك تغييرها في أي وقت.</string>
     <string name="onb_perms_enable_all">تفعيل الكل</string>
-    <string name="perm_allow">سماح</string>
-    <string name="perm_granted">ممنوح</string>
-    <string name="perm_optional_format">%1$s (اختياري)</string>
     <string name="permissions">الأذونات</string>
     <string name="permissions_desc">مراجعة الأذونات التي يحتاجها التطبيق ومنحها</string>
     <string name="perm_mic_title">الميكروفون</string>
@@ -844,7 +832,6 @@
     <string name="dpi_value_format">%1$d DPI</string>
     <string name="pixel_aspect_ratio">نسبة أبعاد البكسل</string>
     <string name="enter_pixel_aspect_ratio_value">نسبة أبعاد البكسل ×10000 (10000 = بكسلات مربعة)</string>
-    <string name="cannot_open_settings">تعذر فتح إعدادات النظام</string>
     <string name="static_bssid_title">BSSID ثابت</string>
     <string name="static_bssid_enter_value">أدخل BSSID ‏(XX:XX:XX:XX:XX:XX)</string>
     <string name="static_bssid_desc">تعيين BSSID يدوياً للاتصال اللاسلكي إذا منعت أذونات النظام اكتشافه تلقائياً</string>
@@ -962,33 +949,16 @@
     <string name="keymap_test_event">الزر: %1$s (%2$d) · %3$s</string>
 
     <!-- Lint: MissingTranslation (EN fallback / TR localized) -->
-    <string name="category_charging_info">Charging info</string>
     <string name="da_charging_info_hint">Battery capacity, SOH and Google Maps EV settings.</string>
-    <string name="battery_for_google_maps">Battery for Google Maps</string>
-    <string name="battery_for_google_maps_description">Send MG4 charge and range to Android Auto so Google Maps can show battery level. Set net capacity and SOH below. Needs a platform-signed install on the car.</string>
     <string name="battery_net_capacity_kwh">Net capacity (kWh)</string>
     <string name="battery_net_capacity_description">Select the usable battery capacity for your MG4: 49, 61 or 72.5 kWh. Maps uses capacity × SOH.</string>
     <string name="battery_net_capacity_enter">Enter net (usable) capacity when new, in kWh</string>
     <string name="battery_soh_percent">Battery SOH (%)</string>
-    <string name="battery_soh_description">Enter battery state of health from 1 to 100. Decimal values such as 98.75 are supported. Effective usable capacity = capacity × SOH / 100.</string>
-    <string name="battery_effective_capacity">Effective usable</string>
     <string name="battery_value_kwh">%1$.1f kWh</string>
-    <string name="battery_effective_capacity_value">%1$.1f kWh (= net × SOH)</string>
     <string name="battery_value_km">%1$d km</string>
     <string name="battery_live_energy_value">%1$.1f / %2$.1f kWh</string>
-    <string name="battery_demo_mode">Demo battery values</string>
-    <string name="battery_demo_mode_description">Use the SoC / range you set below instead of reading the car. Net capacity and SOH above still apply. For desk testing without MG4 hardware.</string>
-    <string name="battery_demo_percent">Demo SoC</string>
-    <string name="battery_demo_range_km">Demo range (km)</string>
-    <string name="battery_demo_enter_range">Enter demo range in km</string>
     <string name="battery_live_from_car">From the car</string>
-    <string name="battery_live_soc">Live SoC</string>
-    <string name="battery_live_range">Live range</string>
-    <string name="battery_live_energy">Live energy</string>
     <string name="da_no_connected_bluetooth">No phone is currently connected to the car’s Bluetooth. Connect your phone in the MG Bluetooth screen first, then try Android Auto again.</string>
-    <string name="battery_live_waiting">Waiting for car data…</string>
-    <string name="battery_live_unavailable">Not available (need platform-signed MG4 car install / live telemetry)</string>
-    <string name="battery_live_refresh">Refresh from car</string>
     <string name="launcher_aa_click_label">Open on launcher Android Auto tap</string>
     <string name="launcher_aa_click_description">When the OEM home-screen Android Auto icon is inactive (USB connect toast), tapping it opens DiAuto instead.</string>
     <string name="launcher_aa_click_service_label">DiAuto launcher Android Auto shortcut</string>

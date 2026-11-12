@@ -32,26 +32,6 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
-    <style name="ThemeOverlay.DiAutoSettings" parent="">
-        <item name="colorPrimary">@color/da_accent</item>
-        <item name="colorOnPrimary">@color/da_background</item>
-        <item name="colorSecondary">@color/da_accent</item>
-        <item name="colorOnSecondary">@color/da_background</item>
-        <item name="colorPrimaryContainer">@color/da_border</item>
-        <item name="colorOnPrimaryContainer">@color/da_text</item>
-        <item name="colorSurface">@color/da_background</item>
-        <item name="colorSurfaceVariant">@color/da_surface</item>
-        <item name="colorOnSurface">@color/da_text</item>
-        <item name="colorOnSurfaceVariant">@color/da_muted</item>
-        <item name="colorOutline">@color/da_border</item>
-        <item name="colorAccent">@color/da_accent</item>
-        <item name="android:colorAccent">@color/da_accent</item>
-        <item name="android:colorBackground">@color/da_background</item>
-        <item name="android:textColorPrimary">@color/da_text</item>
-        <item name="android:textColorSecondary">@color/da_muted</item>
-
-        <item name="android:windowBackground">@color/da_background</item>
-    </style>
     <style name="DiAutoQuickSettings" parent="AppTheme.Fullscreen">
         <item name="colorPrimary">@color/da_accent</item>
         <item name="colorOnPrimary">@color/da_background</item>

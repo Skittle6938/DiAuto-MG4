@@ -735,7 +735,7 @@ class MainActivity : BaseActivity() {
         super.onStop()
         // Free media resources whenever the activity is backgrounded. Covers user
         // pressing Home, AapProjectionActivity coming to front (success), and
-        // navigating to SettingsActivity. The connection itself keeps running in
+        // navigating to DaSettingsActivity. The connection itself keeps running in
         // AapService; this only tears down the visual indicator. The watchdog is
         // intentionally NOT cancelled here so the flag is still cleared if every
         // remaining state transition happens while the activity is stopped.

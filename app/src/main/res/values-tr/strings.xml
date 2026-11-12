@@ -4,7 +4,6 @@
     <string name="menu">Menü</string>
     <string name="settings">Ayarlar</string>
 
-    <string name="title_activity_settings">Ayarlar</string>
     <string name="dummy_button">Taslak Buton</string>
     <string name="dummy_content">TASLAK\nİÇERİK</string>
     <string name="allowed">İzin Verildi</string>
@@ -59,33 +58,16 @@
     <string name="gles_required_message">Siyah-beyaz mod, video çıkışına gri tonlamalı filtre uygulamak için GLES işlemeye ihtiyaç duyar. GLES etkinleştirilsin mi?</string>
     <string name="enable_gles">GLES Etkinleştir</string>
     <string name="category_navigation">Navigasyon</string>
-    <string name="category_charging_info">Şarj bilgileri</string>
     <string name="da_charging_info_hint">Pil kapasitesi, SOH ve Google Maps EV ayarları.</string>
-    <string name="battery_for_google_maps">Google Maps için batarya</string>
-    <string name="battery_for_google_maps_description">MG4 şarj ve menzil bilgisini Android Auto’ya gönderir; Google Maps pil seviyesini gösterebilir. Aşağıda net kapasite ve SOH’u ayarlayın. Araçta platform imzalı kurulum gerekir.</string>
     <string name="battery_net_capacity_kwh">Net kapasite (kWh)</string>
     <string name="battery_net_capacity_description">MG4 için kullanılabilir batarya kapasitesini seçin: 49, 61 veya 72,5 kWh. Maps kapasite × SOH değerini kullanır.</string>
     <string name="battery_net_capacity_enter">Yeni haldeki net (kullanılabilir) kapasiteyi kWh olarak girin</string>
     <string name="battery_soh_percent">Batarya SOH (%)</string>
-    <string name="battery_soh_description">Batarya sağlık oranını 1–100 arasında elle girin. 98,75 gibi ondalıklı değerler desteklenir. Etkin kullanılabilir kapasite = kapasite × SOH / 100.</string>
-    <string name="battery_effective_capacity">Etkin kullanılabilir kapasite</string>
     <string name="battery_value_kwh">%1$.1f kWh</string>
-    <string name="battery_effective_capacity_value">%1$.1f kWh (= net × SOH)</string>
     <string name="battery_value_km">%1$d km</string>
     <string name="battery_live_energy_value">%1$.1f / %2$.1f kWh</string>
-    <string name="battery_demo_mode">Demo batarya değerleri</string>
-    <string name="battery_demo_mode_description">Araçtan okumak yerine aşağıda ayarladığınız SoC / menzili kullanır. Yukarıdaki net kapasite ve SOH yine geçerlidir. MG4 donanımı olmadan masaüstü test için.</string>
-    <string name="battery_demo_percent">Demo SoC</string>
-    <string name="battery_demo_range_km">Demo menzil (km)</string>
-    <string name="battery_demo_enter_range">Demo menzili km olarak girin</string>
     <string name="battery_live_from_car">Araçtan</string>
-    <string name="battery_live_soc">Canlı SoC</string>
-    <string name="battery_live_range">Canlı menzil</string>
-    <string name="battery_live_energy">Canlı enerji</string>
     <string name="da_no_connected_bluetooth">Aracın Bluetooth’una bağlı telefon yok. Önce MG Bluetooth ekranından telefonunu bağla, ardından Android Auto’yu tekrar dene.</string>
-    <string name="battery_live_waiting">Araç verisi bekleniyor…</string>
-    <string name="battery_live_unavailable">Yok (platform imzalı MG4 araç kurulumu / canlı telemetri gerekli)</string>
-    <string name="battery_live_refresh">Araçtan yenile</string>
     <string name="category_wireless">Kablosuz Bağlantı</string>
 
     <string name="reconnection_required_title">Yeniden Bağlantı Gerekli</string>
@@ -93,7 +75,6 @@
 
     <string name="bluetooth_address_s">Bluetooth adresi</string>
     <string name="enter_bluetooth_mac">Bluetooth MAC adresi girin</string>
-    <string name="reset">Sıfırla</string>
     <string name="gps_for_navigation">Navigasyon için GPS</string>
     <string name="gps_for_navigation_description">Navigasyon için GPS kullan</string>
     <string name="enabled">Etkin</string>
@@ -267,9 +248,6 @@
     <string name="auto_connect_help">Bu yöntemler uygulama açıldığında otomatik olarak çalışır. İstediklerinizi etkinleştirin, ardından sırayı ayarlamak için sürükleyin. Başarılı olan ilk etkin yöntem kullanılacaktır.</string>
     <string name="auto_connect_priority">Öncelik %d</string>
     <string name="auto_connect_all_disabled">Hepsi devre dışı</string>
-    <string name="drag_to_reorder">Yeniden sıralamak için sürükleyin</string>
-    <string name="move_up">Yukarı taşı</string>
-    <string name="move_down">Aşağı taşı</string>
     <string name="auto_connecting_single_usb">USB cihazına otomatik bağlanılıyor…</string>
     <string name="video_codec">Video Kodeği</string>
     <string name="fps_limit">FPS Sınırı</string>
@@ -395,11 +373,7 @@
     <string name="scanning_network">Ağ Taranıyor…</string>
     <string name="found_connecting">%s bulundu, bağlanılıyor…</string>
     <string name="no_devices_found">Cihaz bulunamadı</string>
-    <string name="unsaved_changes">Kaydedilmemiş Değişiklikler</string>
-    <string name="unsaved_changes_message">Kaydedilmemiş değişiklikleriniz var. Bunları iptal etmek istiyor musunuz?</string>
-    <string name="discard">İptal Et</string>
     <string name="stopping_service">Değişiklikleri uygulamak için servis durduruluyor…</string>
-    <string name="settings_saved">Ayarlar kaydedildi</string>
     <string name="logs_exported">Günlükler Dışa Aktarıldı</string>
     <string name="log_saved_to">Günlük şuraya kaydedildi:\n%s</string>
     <string name="share">Paylaş</string>
@@ -870,9 +844,6 @@
     <string name="onb_permissions_title">Enable permissions</string>
     <string name="onb_permissions_help">Turn on the permissions the app needs so everything works without surprise prompts later. You can change these any time.</string>
     <string name="onb_perms_enable_all">Enable all</string>
-    <string name="perm_allow">Allow</string>
-    <string name="perm_granted">Granted</string>
-    <string name="perm_optional_format">%1$s (optional)</string>
     <string name="permissions">Permissions</string>
     <string name="permissions_desc">Review and grant the permissions the app needs</string>
     <string name="perm_mic_title">Microphone</string>
@@ -923,7 +894,6 @@
     <string name="dpi_value_format">%1$d DPI</string>
     <string name="pixel_aspect_ratio">Pixel aspect ratio</string>
     <string name="enter_pixel_aspect_ratio_value">Pixel aspect ratio x10000 (10000 = square pixels)</string>
-    <string name="cannot_open_settings">Could not open system settings</string>
     <string name="static_bssid_title">Static BSSID</string>
     <string name="static_bssid_enter_value">Enter BSSID (XX:XX:XX:XX:XX:XX)</string>
     <string name="static_bssid_desc">Manually set the BSSID for the wireless handshake if auto-detection is blocked by system permissions</string>

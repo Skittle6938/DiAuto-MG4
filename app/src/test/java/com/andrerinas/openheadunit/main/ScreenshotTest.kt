@@ -71,65 +71,6 @@ class ScreenshotTest {
         "home_update_available.png",
     )
 
-    @Test fun batterySettings() {
-        val ctx = context
-        val column = LinearLayout(ctx).apply {
-            orientation = LinearLayout.VERTICAL
-            setBackgroundColor(ContextCompat.getColor(ctx, R.color.da_background))
-            setPadding(48, 24, 48, 24)
-        }
-        fun header(text: String) = column.addView(TextView(ctx).apply {
-            this.text = text
-            textSize = 15f
-            setTextColor(ContextCompat.getColor(ctx, R.color.da_accent))
-            setPadding(24, 20, 24, 4)
-        })
-        fun rows(resolved: BatteryCapacityResolver.Resolved) {
-            listOf(
-                R.string.battery_net_capacity_kwh to batteryCapacityText(ctx, resolved),
-                R.string.battery_soh_percent to batterySohText(ctx, resolved),
-                R.string.battery_effective_capacity to
-                    ctx.getString(R.string.battery_effective_capacity_value, resolved.effectiveKwh),
-            ).forEach { (name, value) ->
-                val item = LayoutInflater.from(ctx).inflate(R.layout.layout_setting_item, column, false)
-                item.findViewById<TextView>(R.id.settingName).setText(name)
-                item.findViewById<TextView>(R.id.settingValue).text = value
-                item.setPadding(24, 8, 24, 8)
-                column.addView(item)
-            }
-        }
-        header("Avec MG4 Dash : batterie 51 kWh choisie, 47,0 kWh mesurés")
-        rows(BatteryCapacityResolver.resolve(null, null, null, Mg4DashBattery.Reading(51, true, 47.0f)))
-        header("Sans MG4 Dash, voiture muette")
-        rows(BatteryCapacityResolver.resolve(null, null, null, null))
-        header("Forcé à la main")
-        rows(BatteryCapacityResolver.resolve(49f, 97.5f, null, null))
-        save(column, 1920, 900, "battery_settings.png")
-    }
-
-    @Test fun batteryCapacityDialog() {
-        val activityController = Robolectric.buildActivity(FragmentActivity::class.java)
-        activityController.get().setTheme(R.style.AppTheme)
-        val activity = activityController.setup().get()
-        val auto = BatteryCapacityResolver.resolve(null, null, null, null)
-        val labels = listOf(
-            activity.getString(
-                R.string.battery_auto_option,
-                activity.getString(R.string.battery_value_kwh, auto.netKwh),
-                batteryCapacitySource(activity, auto),
-            ),
-        ) + BatteryCapacityResolver.PACKS.map { (pack, usable) ->
-            activity.getString(R.string.battery_pack_option, pack, usable)
-        }
-        val dialog = MaterialAlertDialogBuilder(activity, R.style.DarkAlertDialog)
-            .setTitle(R.string.battery_net_capacity_kwh)
-            .setSingleChoiceItems(labels.toTypedArray(), 0, null)
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
-        shadowOf(Looper.getMainLooper()).idle()
-        save(dialog.window!!.decorView, 720, 470, "battery_capacity_dialog.png")
-    }
-
     @Test fun compatibilityReport() {
         val activity = Robolectric.buildActivity(FragmentActivity::class.java).setup().get()
         activity.setTheme(R.style.AppTheme)

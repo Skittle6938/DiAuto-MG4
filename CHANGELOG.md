@@ -3,6 +3,7 @@
 - Settings: rows with a value and › (*Advanced options*, phones, battery…) now react to a tap anywhere on the row, not only on the text, which is easier to hit on the car's screen (#17, thanks @Pampel02).
 - Music uncompressed (PCM) by default (#11, thanks @Pampel02): better sound for ~1.5 Mbit/s more, which 5 GHz carries easily. On a 2.4 GHz hotspot the music stays compressed (AAC). If you set *Settings → Sound → Uncompressed music (PCM)* yourself, your choice is kept. The music buffer stays at 1 s.
 - Removed unused code inherited from the original app: a hidden *static audio focus* mode and its audio mixer, which no setting could switch on. Nothing changes in how DiAuto plays or takes the audio focus.
+- Removed more unused code left from the original app: about twenty files nothing called any more (old settings and battery screens, video file readers, permission and dialog helpers, settings backup, a native hotspot query), with the layouts, images and texts only they used. No visible change.
 
 # DiAuto MG4+ 2.2.5-beta8
 

@@ -53,12 +53,6 @@ class LocaleHelperTest {
         assertTrue(manager.applicationLocales.isEmpty)
     }
 
-    @Test fun backupUsesThePlatformChoiceInsteadOfTheRemovedLegacyKey() {
-        Settings(context).appLanguage = "es"
-        val exported = SettingsBackupManager.exportFromContext(context)
-        assertEquals("es", SettingsBackupManager.parseImportJson(exported).values["app-language"])
-    }
-
     @Test
     @Config(sdk = [29], qualifiers = "en")
     fun olderAndroidFollowsTheSystemLanguageWithoutChangingTheProcessDefault() {

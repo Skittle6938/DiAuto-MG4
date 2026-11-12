@@ -3,7 +3,6 @@
     <string name="menu">Menü</string>
     <string name="settings">Einstellungen</string>
 
-    <string name="title_activity_settings">Einstellungen</string>
     <string name="dummy_button">Test Button</string>
     <string name="dummy_content">DUMMY\nINHALT</string>
     <string name="allowed">Erlaubt</string>
@@ -66,7 +65,6 @@
 
     <string name="bluetooth_address_s">Bluetooth Adresse</string>
     <string name="enter_bluetooth_mac">Bluetooth MAC eingeben</string>
-    <string name="reset">Zurücksetzen</string>
     <string name="gps_for_navigation">GPS für Navigation</string>
     <string name="gps_for_navigation_description">Nutze Tablet-GPS für Navigation</string>
     <string name="enabled">Aktiviert</string>
@@ -209,7 +207,6 @@
     <string name="overlay_permission_title">Hintergrund-Start Berechtigung</string>
     <string name="overlay_permission_description">Damit Open Headunit automatisch starten kann, wenn Bluetooth verbindet, aktivieren Sie bitte die Berechtigung \"Über anderen Apps einblenden\" im nächsten Bildschirm.</string>
     <string name="open_settings">Einstellungen</string>
-    <string name="cannot_open_settings">System-Einstellungen konnten nicht geöffnet werden</string>
     <string name="right_hand_drive">Rechtslenker</string>
     <string name="right_hand_drive_description">Benutzeroberfläche für Rechtsverkehr ausrichten</string>
     <string name="wireless_connection_settings">Kabellose Verbindung</string>
@@ -244,9 +241,6 @@
     <string name="auto_connect_help">Diese Methoden werden beim Öffnen der App automatisch ausgeführt. Aktivieren Sie die gewünschten und ziehen Sie sie in die gewünschte Reihenfolge. Die erste erfolgreiche aktivierte Methode wird verwendet.</string>
     <string name="auto_connect_priority">Priorität %d</string>
     <string name="auto_connect_all_disabled">Alle deaktiviert</string>
-    <string name="drag_to_reorder">Zum Sortieren ziehen</string>
-    <string name="move_up">Nach oben</string>
-    <string name="move_down">Nach unten</string>
     <string name="auto_connecting_single_usb">Automatische Verbindung zum USB-Gerät…</string>
     <string name="video_codec">Video Codec</string>
     <string name="fps_limit">FPS Limit</string>
@@ -334,11 +328,7 @@
     <string name="scanning_network">Scanne Netzwerk…</string>
     <string name="found_connecting">Gefunden %s, verbinde…</string>
     <string name="no_devices_found">Keine Geräte gefunden</string>
-    <string name="unsaved_changes">Ungespeicherte Änderungen</string>
-    <string name="unsaved_changes_message">Sie haben ungespeicherte Änderungen. Wollen Sie diese verwerfen?</string>
-    <string name="discard">Verwerfen</string>
     <string name="stopping_service">Stoppe Dienst um Änderungen anzuwenden…</string>
-    <string name="settings_saved">Einstellungen gespeichert</string>
     <string name="logs_exported">Logs exportiert</string>
     <string name="log_saved_to">Log gespeichert in:\n%s</string>
     <string name="share">Teilen</string>
@@ -763,9 +753,6 @@
     <string name="onb_permissions_title">Berechtigungen aktivieren</string>
     <string name="onb_permissions_help">Aktivieren Sie die Berechtigungen, die die App benötigt, damit später keine unerwarteten Aufforderungen erscheinen. Sie können diese jederzeit ändern.</string>
     <string name="onb_perms_enable_all">Alle aktivieren</string>
-    <string name="perm_allow">Erlauben</string>
-    <string name="perm_granted">Erteilt</string>
-    <string name="perm_optional_format">%1$s (optional)</string>
     <string name="permissions">Berechtigungen</string>
     <string name="permissions_desc">Berechtigungen der App prüfen und erteilen</string>
     <string name="perm_mic_title">Mikrofon</string>
@@ -892,33 +879,16 @@
     </string-array>
 
     <!-- Lint: MissingTranslation (EN fallback / TR localized) -->
-    <string name="category_charging_info">Charging info</string>
     <string name="da_charging_info_hint">Battery capacity, SOH and Google Maps EV settings.</string>
-    <string name="battery_for_google_maps">Battery for Google Maps</string>
-    <string name="battery_for_google_maps_description">Send MG4 charge and range to Android Auto so Google Maps can show battery level. Set net capacity and SOH below. Needs a platform-signed install on the car.</string>
     <string name="battery_net_capacity_kwh">Net capacity (kWh)</string>
     <string name="battery_net_capacity_description">Select the usable battery capacity for your MG4: 49, 61 or 72.5 kWh. Maps uses capacity × SOH.</string>
     <string name="battery_net_capacity_enter">Enter net (usable) capacity when new, in kWh</string>
     <string name="battery_soh_percent">Battery SOH (%)</string>
-    <string name="battery_soh_description">Enter battery state of health from 1 to 100. Decimal values such as 98.75 are supported. Effective usable capacity = capacity × SOH / 100.</string>
-    <string name="battery_effective_capacity">Effective usable</string>
     <string name="battery_value_kwh">%1$.1f kWh</string>
-    <string name="battery_effective_capacity_value">%1$.1f kWh (= net × SOH)</string>
     <string name="battery_value_km">%1$d km</string>
     <string name="battery_live_energy_value">%1$.1f / %2$.1f kWh</string>
-    <string name="battery_demo_mode">Demo battery values</string>
-    <string name="battery_demo_mode_description">Use the SoC / range you set below instead of reading the car. Net capacity and SOH above still apply. For desk testing without MG4 hardware.</string>
-    <string name="battery_demo_percent">Demo SoC</string>
-    <string name="battery_demo_range_km">Demo range (km)</string>
-    <string name="battery_demo_enter_range">Enter demo range in km</string>
     <string name="battery_live_from_car">From the car</string>
-    <string name="battery_live_soc">Live SoC</string>
-    <string name="battery_live_range">Live range</string>
-    <string name="battery_live_energy">Live energy</string>
     <string name="da_no_connected_bluetooth">No phone is currently connected to the car’s Bluetooth. Connect your phone in the MG Bluetooth screen first, then try Android Auto again.</string>
-    <string name="battery_live_waiting">Waiting for car data…</string>
-    <string name="battery_live_unavailable">Not available (need platform-signed MG4 car install / live telemetry)</string>
-    <string name="battery_live_refresh">Refresh from car</string>
     <string name="launcher_aa_click_label">Open on launcher Android Auto tap</string>
     <string name="launcher_aa_click_description">When the OEM home-screen Android Auto icon is inactive (USB connect toast), tapping it opens DiAuto instead.</string>
     <string name="launcher_aa_click_service_label">DiAuto launcher Android Auto shortcut</string>

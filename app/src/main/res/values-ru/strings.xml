@@ -3,7 +3,6 @@
     <string name="menu">Меню</string>
     <string name="settings">Настройки</string>
 
-    <string name="title_activity_settings">Настройки</string>
     <string name="dummy_button">Тестовая кнопка</string>
     <string name="dummy_content">ТЕСТОВОЕ\nСОДЕРЖАНИЕ</string>
     <string name="allowed">Разрешить</string>
@@ -61,7 +60,6 @@
 
     <string name="bluetooth_address_s">Адрес Bluetooth</string>
     <string name="enter_bluetooth_mac">Введите MAC-адрес Bluetooth</string>
-    <string name="reset">Сброс</string>
     <string name="gps_for_navigation">Использовать GPS</string>
     <string name="gps_for_navigation_description">Использовать GPS для навигации</string>
     <string name="enabled">Включено</string>
@@ -219,9 +217,6 @@
     <string name="auto_connect_help">Эти методы запускаются автоматически при открытии приложения. Включите нужные и перетащите для установки порядка. Будет использован первый включённый метод, который сработает.</string>
     <string name="auto_connect_priority">Приоритет %d</string>
     <string name="auto_connect_all_disabled">Все отключены</string>
-    <string name="drag_to_reorder">Перетащите для изменения порядка</string>
-    <string name="move_up">Вверх</string>
-    <string name="move_down">Вниз</string>
     <string name="auto_connecting_single_usb">Автоподключение к USB-устройству…</string>
     <string name="video_codec">Видеокодек</string>
     <string name="fps_limit">Ограничение FPS</string>
@@ -301,11 +296,7 @@
     <string name="scanning_network">Сканирование сети…</string>
     <string name="found_connecting">Найдено %s, подключение…</string>
     <string name="no_devices_found">Устройства не найдены</string>
-    <string name="unsaved_changes">Несохраненные изменения</string>
-    <string name="unsaved_changes_message">У вас есть несохраненные изменения. Хотите отменить их?</string>
-    <string name="discard">Отменить</string>
     <string name="stopping_service">Остановка службы для применения изменений…</string>
-    <string name="settings_saved">Настройки сохранены</string>
     <string name="logs_exported">Логи экспортированы</string>
     <string name="log_saved_to">Лог сохранен в:\n%s</string>
     <string name="share">Поделиться</string>
@@ -753,9 +744,6 @@
     <string name="onb_permissions_title">Предоставление разрешений</string>
     <string name="onb_permissions_help">Включите разрешения, необходимые приложению, чтобы в дальнейшем всё работало без неожиданных запросов. Вы можете изменить их в любой момент.</string>
     <string name="onb_perms_enable_all">Разрешить все</string>
-    <string name="perm_allow">Разрешить</string>
-    <string name="perm_granted">Предоставлено</string>
-    <string name="perm_optional_format">%1$s (необязательно)</string>
     <string name="permissions">Разрешения</string>
     <string name="permissions_desc">Просмотр и предоставление разрешений, необходимых приложению</string>
     <string name="perm_mic_title">Микрофон</string>
@@ -845,7 +833,6 @@
     <string name="dpi_value_format">%1$d DPI</string>
     <string name="pixel_aspect_ratio">Соотношение сторон пикселя</string>
     <string name="enter_pixel_aspect_ratio_value">Соотношение сторон пикселя ×10000 (10000 = квадратные пиксели)</string>
-    <string name="cannot_open_settings">Не удалось открыть системные настройки</string>
     <string name="static_bssid_title">Статический BSSID</string>
     <string name="static_bssid_enter_value">Введите BSSID (XX:XX:XX:XX:XX:XX)</string>
     <string name="static_bssid_desc">Укажите BSSID для беспроводного подключения вручную, если системные разрешения мешают автоматическому определению</string>
@@ -963,33 +950,16 @@
     <string name="keymap_test_event">Кнопка: %1$s (%2$d) · %3$s</string>
 
     <!-- Lint: MissingTranslation (EN fallback / TR localized) -->
-    <string name="category_charging_info">Charging info</string>
     <string name="da_charging_info_hint">Battery capacity, SOH and Google Maps EV settings.</string>
-    <string name="battery_for_google_maps">Battery for Google Maps</string>
-    <string name="battery_for_google_maps_description">Send MG4 charge and range to Android Auto so Google Maps can show battery level. Set net capacity and SOH below. Needs a platform-signed install on the car.</string>
     <string name="battery_net_capacity_kwh">Net capacity (kWh)</string>
     <string name="battery_net_capacity_description">Select the usable battery capacity for your MG4: 49, 61 or 72.5 kWh. Maps uses capacity × SOH.</string>
     <string name="battery_net_capacity_enter">Enter net (usable) capacity when new, in kWh</string>
     <string name="battery_soh_percent">Battery SOH (%)</string>
-    <string name="battery_soh_description">Enter battery state of health from 1 to 100. Decimal values such as 98.75 are supported. Effective usable capacity = capacity × SOH / 100.</string>
-    <string name="battery_effective_capacity">Effective usable</string>
     <string name="battery_value_kwh">%1$.1f kWh</string>
-    <string name="battery_effective_capacity_value">%1$.1f kWh (= net × SOH)</string>
     <string name="battery_value_km">%1$d km</string>
     <string name="battery_live_energy_value">%1$.1f / %2$.1f kWh</string>
-    <string name="battery_demo_mode">Demo battery values</string>
-    <string name="battery_demo_mode_description">Use the SoC / range you set below instead of reading the car. Net capacity and SOH above still apply. For desk testing without MG4 hardware.</string>
-    <string name="battery_demo_percent">Demo SoC</string>
-    <string name="battery_demo_range_km">Demo range (km)</string>
-    <string name="battery_demo_enter_range">Enter demo range in km</string>
     <string name="battery_live_from_car">From the car</string>
-    <string name="battery_live_soc">Live SoC</string>
-    <string name="battery_live_range">Live range</string>
-    <string name="battery_live_energy">Live energy</string>
     <string name="da_no_connected_bluetooth">No phone is currently connected to the car’s Bluetooth. Connect your phone in the MG Bluetooth screen first, then try Android Auto again.</string>
-    <string name="battery_live_waiting">Waiting for car data…</string>
-    <string name="battery_live_unavailable">Not available (need platform-signed MG4 car install / live telemetry)</string>
-    <string name="battery_live_refresh">Refresh from car</string>
     <string name="launcher_aa_click_label">Open on launcher Android Auto tap</string>
     <string name="launcher_aa_click_description">When the OEM home-screen Android Auto icon is inactive (USB connect toast), tapping it opens DiAuto instead.</string>
     <string name="launcher_aa_click_service_label">DiAuto launcher Android Auto shortcut</string>
