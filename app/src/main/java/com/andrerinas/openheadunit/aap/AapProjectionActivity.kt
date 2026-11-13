@@ -1000,6 +1000,7 @@ open class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks,
     override fun onResume() {
         startMapsModelOverlay()
         super.onResume()
+        mg4DashPresent = readMg4DashPresent()
         isForeground = true
         AppLog.i("AapProjectionActivity: onResume")
         com.allgo.app.androidauto.RelayState.screen(true)
@@ -1519,7 +1520,68 @@ open class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks,
 
     private val commManager get() = App.provide(this).commManager
 
+    // MG4 Dash's shortcuts menu over the projection: MG4 Dash lets its top strip through here (so the two and three
+    // finger gestures below stay whole) and this activity tells it about a one finger slide down from the very top.
+    private var menuPullCandidate = false
+    private var menuPulling = false
+    private var menuPullDownX = 0f
+    private var menuPullDownY = 0f
+
+    /** MG4 Dash installed and enabled (read at each onResume): without it, nothing changes here. */
+    private var mg4DashPresent = false
+
+    private fun readMg4DashPresent(): Boolean = try {
+        packageManager.getApplicationInfo("app.mg4dash", 0).enabled
+    } catch (_: Exception) { false }
+
+    /** MG4 Dash there and its strip (shortcuts menu, full screen) on: it publishes 1 for that. */
+    private fun mg4DashStripOn(): Boolean = mg4DashPresent && try {
+        android.provider.Settings.Global.getInt(contentResolver, "mg4dash_shortcuts_strip", 0) == 1
+    } catch (_: Exception) { false }
+
+    private fun sendMenuPull(phase: String, dy: Float) {
+        try {
+            sendBroadcast(Intent("app.mg4dash.SHORTCUTS_PULL").setPackage("app.mg4dash").putExtra("phase", phase).putExtra("dy", dy))
+        } catch (e: Exception) { AppLog.w("MG4 Dash menu pull: ${e.message}") }
+    }
+
+    /**
+     * One finger from the top 20 px, clearly down (over 40 dp, sideways less than half): MG4 Dash's menu, the touch is
+     * taken back from Android Auto. A second finger at any moment gives it up (two finger gesture from the top).
+     */
+    private fun menuPull(ev: MotionEvent): Boolean {
+        when (ev.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
+                menuPulling = false
+                menuPullDownX = ev.rawX; menuPullDownY = ev.rawY
+                menuPullCandidate = ev.y <= MENU_PULL_EDGE_PX && mg4DashStripOn()
+            }
+            MotionEvent.ACTION_POINTER_DOWN -> {
+                if (menuPulling) { sendMenuPull("cancel", 0f); menuPulling = false }
+                menuPullCandidate = false
+            }
+            MotionEvent.ACTION_MOVE -> {
+                val dy = ev.rawY - menuPullDownY
+                if (menuPulling) { sendMenuPull("move", dy); return true }
+                val dx = ev.rawX - menuPullDownX
+                if (menuPullCandidate && ev.pointerCount == 1 && dy > MENU_PULL_DP * resources.displayMetrics.density && abs(dx) < dy * 0.5f) {
+                    menuPulling = true; menuPullCandidate = false
+                    super.dispatchTouchEvent(MotionEvent.obtain(ev).apply { action = MotionEvent.ACTION_CANCEL })
+                    AppLog.i("One finger slide from the top: MG4 Dash's shortcuts menu")
+                    sendMenuPull("begin", dy)
+                    return true
+                }
+            }
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                menuPullCandidate = false
+                if (menuPulling) { menuPulling = false; sendMenuPull("end", ev.rawY - menuPullDownY); return true }
+            }
+        }
+        return menuPulling
+    }
+
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (menuPull(ev)) return true
         // 1. 2-finger swipe detection from the left or right edge (to open exit menu or toggle fullscreen),
         // or from the top edge (back to the car's launcher, the session stays up)
         if (ev.pointerCount == 2) {
@@ -1934,6 +1996,8 @@ open class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks,
     }
 
     companion object {
+        private const val MENU_PULL_EDGE_PX = 20
+        private const val MENU_PULL_DP = 40
         /** After the bye-bye, so the service has stopped and re-armed wireless before the call. */
         private const val RECONNECT_POKE_DELAY_MS = 2_500L
         // Settings changes the open projection applies at once (sent by the settings screens).

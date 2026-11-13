@@ -94,6 +94,9 @@
         android:localeConfig="@xml/locales_config"
         tools:targetApi="33"
         tools:ignore="GoogleAppIndexingWarning">
+        <!-- MG4 Dash's shortcuts menu: this version sees the one finger slide from the top itself (AapProjectionActivity),
+             so MG4 Dash lets its strip through over the projection -->
+        <meta-data android:name="mg4dash.shortcuts_pull" android:value="true" />
         <!-- DiAuto installed as an update of AllGo's Android Auto (com.allgo.app.androidauto): these are
              the components the car, rui and MG4 Dash address by AllGo's exact names. -->
         <service android:name="com.allgo.app.androidauto.AndroidAutoMainService" android:exported="true" />

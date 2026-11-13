@@ -135,6 +135,7 @@ export them, and contain no destinations, road names, GPS position, or phone and
 | Two fingers from the **left** edge, slide right | Menu with **Disconnect** and **Settings** |
 | Two fingers from the **right** edge, slide left | Full screen: hides the car's side bar and top strip (Android Auto reconnects for a few seconds to use the new height). Same gesture to bring them back. |
 | Two fingers from the **top** edge, slide down | Back to the car's launcher, Android Auto stays connected. In MG4 Dash, the same gesture opens Android Auto again. |
+| One finger from the very **top** edge, slide down | With [MG4 Dash](https://github.com/Skittle6938/MG4Dash) and its shortcuts menu on (full screen): opens MG4 Dash's shortcuts menu over Android Auto. Without MG4 Dash, nothing changes. |
 | Three fingers **down** | Disconnects Android Auto and goes back to MG4Link's home screen |
 
 <p align="center">
