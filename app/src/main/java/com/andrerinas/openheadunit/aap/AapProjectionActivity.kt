@@ -2023,25 +2023,13 @@ open class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks,
         @Volatile var pendingStatusText: String? = null
 
         /**
-         * Which name the Android Auto screen opens under (#21). AllGo's exact class name lets the SWI68 SystemUI keep
-         * its call banner away (#4), but the A9 SystemUI (SWI69/131/132) then forbids its quick settings pull-down over
-         * it, as over the stock Android Auto (StatusBar.isForbidQsPanel: "com.allgo.app.androidauto" in the class
-         * name). So on A9 the screen opens under its own name, unless MG4 Dash's shortcuts menu is on: that menu then
-         * gives the climate and the other shortcuts over Android Auto.
+         * Which name the Android Auto screen opens under (#4, #21). AllGo's exact class name lets the SWI68 SystemUI
+         * keep its call banner away, but the car's SystemUI then forbids its quick settings pull-down over it, as
+         * over the stock Android Auto; MG4 Dash's shortcuts menu gives the climate there instead. The advanced
+         * option *Car pull-down over Android Auto* opens it under its own name on every car.
          */
-        fun usesAllGoName(context: Context): Boolean {
-            // Chosen in Settings: the car's own pull-down over Android Auto, at the cost of the SWI68 call banner.
-            if (com.andrerinas.openheadunit.utils.Settings(context).carPullDownOverAndroidAuto) return false
-            val gen = com.evsuite.hardware.FirmwareInfo.getGeneration()
-            val a9 = gen == com.evsuite.hardware.FirmwareInfo.Gen.SWI69 || gen == com.evsuite.hardware.FirmwareInfo.Gen.SWI131 ||
-                gen == com.evsuite.hardware.FirmwareInfo.Gen.SWI132
-            if (!a9) return true
-            val mg4DashMenu = try {
-                context.packageManager.getApplicationInfo("app.mg4dash", 0).enabled &&
-                    android.provider.Settings.Global.getInt(context.contentResolver, "mg4dash_shortcuts_strip", 0) == 1
-            } catch (_: Exception) { false }
-            return mg4DashMenu
-        }
+        fun usesAllGoName(context: Context): Boolean =
+            !com.andrerinas.openheadunit.utils.Settings(context).carPullDownOverAndroidAuto
 
         /** The screen's class for [usesAllGoName]. */
         fun screenClass(context: Context): Class<*> =
