@@ -2022,9 +2022,32 @@ open class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks,
          */
         @Volatile var pendingStatusText: String? = null
 
+        /**
+         * Which name the Android Auto screen opens under (#21). AllGo's exact class name lets the SWI68 SystemUI keep
+         * its call banner away (#4), but the A9 SystemUI (SWI69/131/132) then forbids its quick settings pull-down over
+         * it, as over the stock Android Auto (StatusBar.isForbidQsPanel: "com.allgo.app.androidauto" in the class
+         * name). So on A9 the screen opens under its own name, unless MG4 Dash's shortcuts menu is on: that menu then
+         * gives the climate and the other shortcuts over Android Auto.
+         */
+        fun usesAllGoName(context: Context): Boolean {
+            val gen = com.evsuite.hardware.FirmwareInfo.getGeneration()
+            val a9 = gen == com.evsuite.hardware.FirmwareInfo.Gen.SWI69 || gen == com.evsuite.hardware.FirmwareInfo.Gen.SWI131 ||
+                gen == com.evsuite.hardware.FirmwareInfo.Gen.SWI132
+            if (!a9) return true
+            val mg4DashMenu = try {
+                context.packageManager.getApplicationInfo("app.mg4dash", 0).enabled &&
+                    android.provider.Settings.Global.getInt(context.contentResolver, "mg4dash_shortcuts_strip", 0) == 1
+            } catch (_: Exception) { false }
+            return mg4DashMenu
+        }
+
+        /** The screen's class for [usesAllGoName]. */
+        fun screenClass(context: Context): Class<*> =
+            if (usesAllGoName(context)) com.allgo.app.androidauto.ProjectionActivity::class.java else AapProjectionActivity::class.java
+
         fun intent(context: Context): Intent {
-            // AllGo's class name: the SWI68 SystemUI keeps its call banner away only from it.
-            val aapIntent = Intent(context, com.allgo.app.androidauto.ProjectionActivity::class.java)
+            // AllGo's class name or our own, see usesAllGoName (#4, #21)
+            val aapIntent = Intent(context, screenClass(context))
             aapIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             aapIntent.putExtra(com.allgo.app.androidauto.ProjectionActivity.EXTRA_FROM_DIAUTO, true)
             return aapIntent

@@ -102,6 +102,18 @@
         <service android:name="com.allgo.app.androidauto.AndroidAutoMainService" android:exported="true" />
 
 
+        <!-- The same screen under its own name (#21): on A9 without MG4 Dash's shortcuts menu, so the car's quick
+             settings pull-down stays allowed over Android Auto -->
+        <activity
+            android:name="com.andrerinas.openheadunit.aap.AapProjectionActivity"
+            android:configChanges="uiMode|orientation|screenSize|screenLayout|smallestScreenSize"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:supportsPictureInPicture="true"
+            android:theme="@style/AppTheme" />
+
         <activity
             android:name="com.allgo.app.androidauto.ProjectionActivity"
             android:configChanges="uiMode|orientation|screenSize|screenLayout|smallestScreenSize"

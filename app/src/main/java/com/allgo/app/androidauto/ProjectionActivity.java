@@ -15,6 +15,14 @@ public class ProjectionActivity extends AapProjectionActivity {
 
     @Override
     protected boolean redirectsHome() {
+        // A9 without MG4 Dash's shortcuts menu (#21): the screen under its own name, so the car's quick settings
+        // pull-down stays allowed over it; this launch (a launcher, rui, MG4 Dash) is passed on to it.
+        if (!AapProjectionActivity.Companion.usesAllGoName(this) && (getIntent().getBooleanExtra(EXTRA_FROM_DIAUTO, false) || RelayState.isActive())) {
+            Intent own = new Intent(getIntent()).setClass(this, AapProjectionActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(own);
+            finish();
+            return true;
+        }
         // A launcher opening Android Auto with no session gets DiAuto's home screen, as before.
         if (getIntent().getBooleanExtra(EXTRA_FROM_DIAUTO, false) || RelayState.isActive()) return false;
         startActivity(new Intent().setClassName(this, "com.andrerinas.openheadunit.main.MainActivity")
