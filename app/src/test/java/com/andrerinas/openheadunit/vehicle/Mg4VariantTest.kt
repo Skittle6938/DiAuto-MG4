@@ -52,4 +52,11 @@ class Mg4VariantTest {
         // Field 8 (tag 0x42) only once the charge times are asked for.
         assertTrue(bytes(VehicleEnergyModelEncoder.Layout.DC_TIMES).size > vehicle.size + 200)
     }
+
+    @Test
+    fun `a cold 64 kWh pack is told from its net figure, not net x SoH (#22)`() {
+        // 61 kWh net at 88.75 % SoH is 54.1 kWh, nearer the 51 kWh pack's 49 kWh.
+        assertEquals(Mg4Variant.STANDARD, Mg4Variant.detect(54_140))
+        assertEquals(Mg4Variant.LONG_RANGE, Mg4Variant.resolve(Mg4Variant.AUTO, 61_000))
+    }
 }

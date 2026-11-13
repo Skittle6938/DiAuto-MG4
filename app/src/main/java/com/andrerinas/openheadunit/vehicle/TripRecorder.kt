@@ -74,7 +74,8 @@ object TripRecorder {
         val percent = reading.precisePercent ?: reading.percent?.toFloat() ?: return false
         val settings = App.provide(context).settings
         val battery = BatteryCapacityResolver.current(context)
-        val variant = Mg4Variant.resolve(settings.mg4Variant, (battery.effectiveKwh * 1000).toInt())
+        // The net figure, not net x SoH: a cold 64 kWh pack read as a 51 kWh one (#22).
+        val variant = Mg4Variant.resolve(settings.mg4Variant, (battery.netKwh * 1000).toInt())
         val header = JSONObject().apply {
             put("started", SimpleDateFormat("yyyy-MM-dd'T'HH", Locale.US).format(Date()))
             put("startedWhileMoving", (EVHardware.getVehicleSpeedKmh() ?: 0f) >= TripLog.MOVING_KMH)

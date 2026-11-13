@@ -110,8 +110,11 @@ object Mg4EnergyReporter {
             Mg4EnergyProvider.refresh()
             return
         }
-        val variant = App.instance?.let { Mg4Variant.resolve(App.provide(it).settings.mg4Variant, snap.capacityWh) }
-            ?: Mg4Variant.detect(snap.capacityWh)
+        // The version from the net figure, not from snap.capacityWh (net x SoH): a 64 kWh pack at
+        // 88 % SoH (54 kWh) is nearer the 51 kWh pack's 49 kWh and was sent as one (#22).
+        val variant = App.instance?.let {
+            Mg4Variant.resolve(App.provide(it).settings.mg4Variant, (BatteryCapacityResolver.current(it).netKwh * 1000).toInt())
+        } ?: Mg4Variant.detect(snap.capacityWh)
         val layout = App.instance?.let { VehicleEnergyModelEncoder.Layout.of(App.provide(it).settings.evModelLayout) }
             ?: VehicleEnergyModelEncoder.Layout.LEGACY
         val outsideTemp = if (snap.demo || layout == VehicleEnergyModelEncoder.Layout.LEGACY) null else runCatching {
