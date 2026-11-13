@@ -1521,7 +1521,7 @@ class AapService : Service(), UsbReceiver.Listener {
                 softApCredentialsProvider?.stop()
                 when (action) {
                     HotspotExitAction.DISABLE -> if (wifiHandedBackOnExit) {
-                        // Marc's call (2026-11-10): the user said no to Android Auto, so the car's
+                        // Decision (2026-11-10): the user said no to Android Auto, so the car's
                         // Wi-Fi client comes back now. Taking the hotspot down also puts the phone
                         // off it; it comes back up when the user asks for Android Auto again.
                         AppLog.i("AapService: CommManager teardown complete. User exit - switching the hotspot off and the car Wi-Fi back on now.")

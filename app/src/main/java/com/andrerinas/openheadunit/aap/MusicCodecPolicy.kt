@@ -3,7 +3,7 @@ package com.andrerinas.openheadunit.aap
 /**
  * Whether the music comes compressed (AAC) or uncompressed (PCM) in a session. PCM sounds better
  * and needs ~1.5 Mbit/s more, which 5 GHz carries without trouble (a tester, a week of daily
- * drives with no dropout). So PCM by default, except on a 2.4 GHz hotspot (Marc, 2026-11-11).
+ * drives with no dropout). So PCM by default, except on a 2.4 GHz hotspot (test, 2026-11-11).
  * A driver who set the option keeps that choice.
  */
 object MusicCodecPolicy {

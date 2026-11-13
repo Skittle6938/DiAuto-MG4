@@ -201,7 +201,7 @@ object HotspotManager {
         }
 
         // One radio, every start goes through here: the car's Wi-Fi client goes off first, or the
-        // access point follows the client's band and comes up on 2.4 GHz (Marc, 2026-11-11).
+        // access point follows the client's band and comes up on 2.4 GHz (test, 2026-11-11).
         // pauseStation remembers it, so the client comes back once the access point is down.
         val wifi = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         if (wifi.isWifiEnabled) pauseStation(context)

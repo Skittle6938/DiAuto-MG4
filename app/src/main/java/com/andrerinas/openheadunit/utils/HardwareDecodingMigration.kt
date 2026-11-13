@@ -3,7 +3,7 @@ package com.andrerinas.openheadunit.utils
 import android.content.SharedPreferences
 
 /**
- * Once per install: puts every driver back on hardware video decoding (Marc, 2026-11-12). The
+ * Once per install: puts every driver back on hardware video decoding (decision, 2026-11-12). The
  * settings screens of 2.0/2.1 could switch software decoding on, the bundled FFmpeg decoder by
  * default, and that choice outlived the screens. The FFmpeg decoder is gone, so those keys are
  * dropped and the hardware decoder (with Android's own software one as its fallback) is used.
