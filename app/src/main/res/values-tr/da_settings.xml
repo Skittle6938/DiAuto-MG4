@@ -95,4 +95,6 @@
     <string name="dset_battery_reset">Otomatiğe dön</string>
     <string name="dset_battery_reset_summary">Kapasite, batarya sağlığı ve MG4 sürümü aracın bildirdiği gibi.</string>
     <string name="dset_battery_reset_button">Sıfırla</string>
+    <string name="dset_video_res">Video çözünürlüğü (test)</string>
+    <string name="dset_video_res_summary">720p, 1080p\'den çok daha az piksel çözer: görüntü daha akıcı, biraz daha az net olabilir. Bir sonraki bağlantıda geçerli olur.</string>
 </resources>

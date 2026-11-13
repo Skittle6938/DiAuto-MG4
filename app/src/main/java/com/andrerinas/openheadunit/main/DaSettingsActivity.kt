@@ -290,6 +290,13 @@ class DaSettingsActivity : BaseActivity() {
         // Features being tested: only in test mode (Settings > About).
         if (settings.testMode) {
             row(R.string.dset_ev_layout, R.string.dset_ev_layout_summary, value(evLayoutLabel(settings.evModelLayout)) { pickEvLayout() })
+            // 720p crops far less of the 1920x640 picture than 1080p (#23); 1080p stays the default.
+            val res = listOf(Settings.Resolution._1920x1080, Settings.Resolution._1280x720)
+            row(R.string.dset_video_res, R.string.dset_video_res_summary,
+                choices(listOf("1080p", "720p"), if (settings.resolutionId == Settings.Resolution._1280x720.id) 1 else 0) {
+                    settings.resolutionId = res[it].id
+                    appliesOnReconnect()
+                })
         }
         // On by default; off goes back to the car's average. Switching it on first explains what it does.
         row(R.string.trip_option, R.string.trip_option_summary, yesNo(settings.tripRecording) {

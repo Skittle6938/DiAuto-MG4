@@ -102,4 +102,6 @@
     <string name="dset_battery_reset">Back to automatic</string>
     <string name="dset_battery_reset_summary">Capacity, state of health and MG4 version as the car reports them.</string>
     <string name="dset_battery_reset_button">Reset</string>
+    <string name="dset_video_res">Video resolution (test)</string>
+    <string name="dset_video_res_summary">720p decodes far fewer pixels than 1080p, which may give a smoother picture, a little less sharp. Applies at the next connection.</string>
 </resources>

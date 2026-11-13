@@ -95,4 +95,6 @@
     <string name="dset_battery_reset">恢复自动</string>
     <string name="dset_battery_reset_summary">容量、健康度和 MG4 版本恢复为车辆数据。</string>
     <string name="dset_battery_reset_button">重置</string>
+    <string name="dset_video_res">视频分辨率（测试）</string>
+    <string name="dset_video_res_summary">720p 解码的像素远少于 1080p：画面可能更流畅，但清晰度略低。下次连接时生效。</string>
 </resources>

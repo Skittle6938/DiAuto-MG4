@@ -95,4 +95,6 @@
     <string name="dset_battery_reset">Terug naar automatisch</string>
     <string name="dset_battery_reset_summary">Capaciteit, accugezondheid en MG4-versie zoals de auto ze geeft.</string>
     <string name="dset_battery_reset_button">Herstellen</string>
+    <string name="dset_video_res">Videoresolutie (test)</string>
+    <string name="dset_video_res_summary">720p decodeert veel minder pixels dan 1080p: het beeld kan vloeiender zijn, iets minder scherp. Geldt bij de volgende verbinding.</string>
 </resources>

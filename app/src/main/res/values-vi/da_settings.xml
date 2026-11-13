@@ -95,4 +95,6 @@
     <string name="dset_battery_reset">Về tự động</string>
     <string name="dset_battery_reset_summary">Dung lượng, tình trạng pin và phiên bản MG4 theo xe.</string>
     <string name="dset_battery_reset_button">Đặt lại</string>
+    <string name="dset_video_res">Độ phân giải video (thử nghiệm)</string>
+    <string name="dset_video_res_summary">720p giải mã ít điểm ảnh hơn nhiều so với 1080p: hình ảnh có thể mượt hơn, kém sắc nét một chút. Áp dụng từ lần kết nối tiếp theo.</string>
 </resources>

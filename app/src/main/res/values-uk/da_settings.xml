@@ -95,4 +95,6 @@
     <string name="dset_battery_reset">Повернути автоматично</string>
     <string name="dset_battery_reset_summary">Ємність, стан батареї та версія MG4 за даними авто.</string>
     <string name="dset_battery_reset_button">Скинути</string>
+    <string name="dset_video_res">Роздільна здатність відео (тест)</string>
+    <string name="dset_video_res_summary">720p декодує набагато менше пікселів, ніж 1080p: зображення може бути плавнішим, але трохи менш чітким. Діє з наступного підключення.</string>
 </resources>

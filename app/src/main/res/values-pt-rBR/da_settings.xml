@@ -95,4 +95,6 @@
     <string name="dset_battery_reset">Voltar para automático</string>
     <string name="dset_battery_reset_summary">Capacidade, estado de saúde e versão do MG4 conforme o carro.</string>
     <string name="dset_battery_reset_button">Redefinir</string>
+    <string name="dset_video_res">Resolução de vídeo (teste)</string>
+    <string name="dset_video_res_summary">720p decodifica muito menos pixels que 1080p: a imagem pode ficar mais fluida e um pouco menos nítida. Vale a partir da próxima conexão.</string>
 </resources>

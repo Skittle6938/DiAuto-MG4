@@ -95,4 +95,6 @@
     <string name="dset_battery_reset">自動に戻す</string>
     <string name="dset_battery_reset_summary">容量、健全性、MG4 のバージョンを車の値に戻します。</string>
     <string name="dset_battery_reset_button">リセット</string>
+    <string name="dset_video_res">映像の解像度（テスト）</string>
+    <string name="dset_video_res_summary">720p は 1080p よりはるかに少ない画素をデコードします。映像はより滑らかになる可能性がありますが、少し鮮明さが落ちます。次回の接続から適用されます。</string>
 </resources>

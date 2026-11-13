@@ -95,4 +95,6 @@
     <string name="dset_battery_reset">Zurück auf automatisch</string>
     <string name="dset_battery_reset_summary">Kapazität, Akkuzustand und MG4-Version wie vom Auto gemeldet.</string>
     <string name="dset_battery_reset_button">Zurücksetzen</string>
+    <string name="dset_video_res">Videoauflösung (Test)</string>
+    <string name="dset_video_res_summary">720p dekodiert viel weniger Pixel als 1080p: Das Bild kann flüssiger, aber etwas weniger scharf sein. Gilt ab der nächsten Verbindung.</string>
 </resources>

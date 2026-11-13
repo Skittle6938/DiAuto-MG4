@@ -1,3 +1,8 @@
+# MG4Link 2.2.5-beta14
+
+- Battery (#22): the MG4 version is now told from the net capacity, not from the net capacity × battery health. On a cold day, a 64 kWh car at 88 % health read as a 51 kWh one, and Google Maps got the 86 kW charging curve instead of 138 kW.
+- Test mode (#23): *Settings → Car* has a *Video resolution* choice, 1080p (default) or 720p. 720p decodes far fewer pixels for the car's 1920×640 picture, to compare smoothness and sharpness.
+
 # MG4Link 2.2.5-beta12
 
 - Google Maps (#20): MG4Link now always tells Maps the car is electric, with its Type 2 and CCS2 plugs, even with the consumption model for Maps off or before the car has given its battery. Maps can then offer charging stations in its points of interest.
