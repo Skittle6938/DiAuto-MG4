@@ -99,4 +99,6 @@
     <string name="dset_video_res_summary">720p는 1080p보다 훨씬 적은 픽셀을 디코딩합니다. 화면이 더 부드러워질 수 있지만 약간 덜 선명합니다. 다음 연결부터 적용됩니다.</string>
     <string name="dset_car_pulldown">Android Auto 위 차량 패널</string>
     <string name="dset_car_pulldown_summary">Android Auto 위에서 위에서 아래로 쓸어내리면 차량의 빠른 설정(난방 등)이 열립니다. SWI68에서는 차량의 전화 배너가 다시 Android Auto 위에 표시됩니다. 끄기: 대신 MG4 Dash 바로가기 메뉴를 사용하세요.</string>
+    <string name="dset_low_latency">저지연 영상(테스트)</string>
+    <string name="dset_low_latency_summary">지도를 끌 때 더 빠르게 반응하도록 차량의 영상 디코더에 저지연 모드를 요청합니다. 거부되면 MG4Link는 이 모드 없이 시작합니다. 다음 연결부터 적용됩니다.</string>
 </resources>

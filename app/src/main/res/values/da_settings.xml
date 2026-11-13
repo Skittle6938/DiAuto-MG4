@@ -106,4 +106,6 @@
     <string name="dset_video_res_summary">720p decodes far fewer pixels than 1080p, which may give a smoother picture, a little less sharp. Applies at the next connection.</string>
     <string name="dset_car_pulldown">Car pull-down over Android Auto</string>
     <string name="dset_car_pulldown_summary">Opens the car\'s quick settings (heating…) by swiping down from the top over Android Auto. On SWI68, the car\'s incoming call banner then shows over Android Auto again. Off: use MG4 Dash\'s shortcuts menu instead.</string>
+    <string name="dset_low_latency">Low-latency video (test)</string>
+    <string name="dset_low_latency_summary">Asks the car\'s video decoder for its low-latency mode, for a quicker response when dragging the map. If the decoder refuses it, MG4Link starts without it. Applies at the next connection.</string>
 </resources>

@@ -99,4 +99,6 @@
     <string name="dset_video_res_summary">720p dekodiert viel weniger Pixel als 1080p: Das Bild kann flüssiger, aber etwas weniger scharf sein. Gilt ab der nächsten Verbindung.</string>
     <string name="dset_car_pulldown">Fahrzeug-Schnellmenü über Android Auto</string>
     <string name="dset_car_pulldown_summary">Öffnet die Schnelleinstellungen des Autos (Heizung…) durch Wischen von oben über Android Auto. Auf SWI68 erscheint dann das Anrufbanner des Autos wieder über Android Auto. Aus: Nutzen Sie stattdessen das Kurzbefehlmenü von MG4 Dash.</string>
+    <string name="dset_low_latency">Video mit geringer Latenz (Test)</string>
+    <string name="dset_low_latency_summary">Fordert vom Videodecoder des Autos den Modus mit geringer Latenz an, für eine schnellere Reaktion beim Verschieben der Karte. Lehnt der Decoder ab, startet MG4Link ohne. Gilt ab der nächsten Verbindung.</string>
 </resources>

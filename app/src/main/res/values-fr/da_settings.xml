@@ -106,4 +106,6 @@
     <string name="dset_video_res_summary">Le 720p décode beaucoup moins de pixels que le 1080p : l\'image peut être plus fluide, un peu moins nette. S\'applique à la prochaine connexion.</string>
     <string name="dset_car_pulldown">Volet de la voiture sur Android Auto</string>
     <string name="dset_car_pulldown_summary">Ouvre les paramètres rapides de la voiture (chauffage…) en glissant du haut vers le bas sur Android Auto. Sur SWI68, la bannière d\'appel de la voiture s\'affiche alors de nouveau sur Android Auto. Désactivé : utilisez plutôt le menu de raccourcis de MG4 Dash.</string>
+    <string name="dset_low_latency">Vidéo basse latence (test)</string>
+    <string name="dset_low_latency_summary">Demande au décodeur vidéo de la voiture son mode basse latence, pour une réponse plus rapide quand on fait glisser la carte. S\'il le refuse, MG4Link démarre sans. S\'applique à la prochaine connexion.</string>
 </resources>

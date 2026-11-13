@@ -99,4 +99,6 @@
     <string name="dset_video_res_summary">720p 解码的像素远少于 1080p：画面可能更流畅，但清晰度略低。下次连接时生效。</string>
     <string name="dset_car_pulldown">Android Auto 上的车辆下拉面板</string>
     <string name="dset_car_pulldown_summary">在 Android Auto 上从顶部下滑即可打开车辆的快捷设置（暖风等）。在 SWI68 上，车辆的来电横幅会再次显示在 Android Auto 上。关闭：请改用 MG4 Dash 的快捷菜单。</string>
+    <string name="dset_low_latency">低延迟视频（测试）</string>
+    <string name="dset_low_latency_summary">向车辆的视频解码器请求低延迟模式，让拖动地图时响应更快。若解码器拒绝，MG4Link 会在不使用该模式的情况下启动。下次连接时生效。</string>
 </resources>

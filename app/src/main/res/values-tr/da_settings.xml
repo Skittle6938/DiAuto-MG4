@@ -99,4 +99,6 @@
     <string name="dset_video_res_summary">720p, 1080p\'den çok daha az piksel çözer: görüntü daha akıcı, biraz daha az net olabilir. Bir sonraki bağlantıda geçerli olur.</string>
     <string name="dset_car_pulldown">Araç paneli Android Auto üzerinde</string>
     <string name="dset_car_pulldown_summary">Android Auto üzerinde yukarıdan aşağı kaydırarak aracın hızlı ayarlarını (ısıtma…) açar. SWI68\'de aracın arama bildirimi yeniden Android Auto üzerinde görünür. Kapalı: bunun yerine MG4 Dash kısayol menüsünü kullanın.</string>
+    <string name="dset_low_latency">Düşük gecikmeli video (test)</string>
+    <string name="dset_low_latency_summary">Haritayı sürüklerken daha hızlı tepki için aracın video kod çözücüsünden düşük gecikme modunu ister. Reddederse MG4Link onsuz başlar. Bir sonraki bağlantıda geçerli olur.</string>
 </resources>

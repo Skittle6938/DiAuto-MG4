@@ -99,4 +99,6 @@
     <string name="dset_video_res_summary">720p giải mã ít điểm ảnh hơn nhiều so với 1080p: hình ảnh có thể mượt hơn, kém sắc nét một chút. Áp dụng từ lần kết nối tiếp theo.</string>
     <string name="dset_car_pulldown">Bảng của xe trên Android Auto</string>
     <string name="dset_car_pulldown_summary">Mở cài đặt nhanh của xe (sưởi…) bằng cách vuốt từ trên xuống trên Android Auto. Trên SWI68, biểu ngữ cuộc gọi của xe lại hiện trên Android Auto. Tắt: hãy dùng menu phím tắt của MG4 Dash.</string>
+    <string name="dset_low_latency">Video độ trễ thấp (thử nghiệm)</string>
+    <string name="dset_low_latency_summary">Yêu cầu bộ giải mã video của xe bật chế độ độ trễ thấp để bản đồ phản hồi nhanh hơn khi kéo. Nếu bị từ chối, MG4Link khởi động mà không có chế độ này. Áp dụng từ lần kết nối tiếp theo.</string>
 </resources>

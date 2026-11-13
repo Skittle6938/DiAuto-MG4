@@ -99,4 +99,6 @@
     <string name="dset_video_res_summary">720p dekoduje dużo mniej pikseli niż 1080p: obraz może być płynniejszy, nieco mniej ostry. Działa od następnego połączenia.</string>
     <string name="dset_car_pulldown">Panel auta nad Android Auto</string>
     <string name="dset_car_pulldown_summary">Otwiera szybkie ustawienia auta (ogrzewanie…) przesunięciem z góry nad Android Auto. Na SWI68 baner połączeń auta znów pojawia się nad Android Auto. Wyłączone: użyj menu skrótów MG4 Dash.</string>
+    <string name="dset_low_latency">Wideo o niskim opóźnieniu (test)</string>
+    <string name="dset_low_latency_summary">Prosi dekoder wideo auta o tryb niskiego opóźnienia, by mapa szybciej reagowała na przeciąganie. Jeśli go odrzuci, MG4Link uruchamia się bez niego. Działa od następnego połączenia.</string>
 </resources>
