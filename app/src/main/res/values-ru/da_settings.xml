@@ -97,4 +97,6 @@
     <string name="dset_battery_reset_button">Сбросить</string>
     <string name="dset_video_res">Разрешение видео (тест)</string>
     <string name="dset_video_res_summary">720p декодирует гораздо меньше пикселей, чем 1080p: изображение может быть плавнее, но чуть менее чётким. Действует со следующего подключения.</string>
+    <string name="dset_car_pulldown">Шторка автомобиля поверх Android Auto</string>
+    <string name="dset_car_pulldown_summary">Открывает быстрые настройки автомобиля (обогрев…) свайпом сверху вниз поверх Android Auto. На SWI68 баннер вызова автомобиля снова появляется поверх Android Auto. Выкл.: используйте меню ярлыков MG4 Dash.</string>
 </resources>

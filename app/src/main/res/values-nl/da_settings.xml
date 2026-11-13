@@ -97,4 +97,6 @@
     <string name="dset_battery_reset_button">Herstellen</string>
     <string name="dset_video_res">Videoresolutie (test)</string>
     <string name="dset_video_res_summary">720p decodeert veel minder pixels dan 1080p: het beeld kan vloeiender zijn, iets minder scherp. Geldt bij de volgende verbinding.</string>
+    <string name="dset_car_pulldown">Snelmenu van de auto over Android Auto</string>
+    <string name="dset_car_pulldown_summary">Opent de snelle instellingen van de auto (verwarming…) door van boven naar beneden te vegen over Android Auto. Op SWI68 verschijnt de oproepbanner van de auto dan weer over Android Auto. Uit: gebruik het snelkoppelingsmenu van MG4 Dash.</string>
 </resources>

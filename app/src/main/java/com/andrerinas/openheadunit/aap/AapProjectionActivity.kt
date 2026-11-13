@@ -2030,6 +2030,8 @@ open class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks,
          * gives the climate and the other shortcuts over Android Auto.
          */
         fun usesAllGoName(context: Context): Boolean {
+            // Chosen in Settings: the car's own pull-down over Android Auto, at the cost of the SWI68 call banner.
+            if (com.andrerinas.openheadunit.utils.Settings(context).carPullDownOverAndroidAuto) return false
             val gen = com.evsuite.hardware.FirmwareInfo.getGeneration()
             val a9 = gen == com.evsuite.hardware.FirmwareInfo.Gen.SWI69 || gen == com.evsuite.hardware.FirmwareInfo.Gen.SWI131 ||
                 gen == com.evsuite.hardware.FirmwareInfo.Gen.SWI132

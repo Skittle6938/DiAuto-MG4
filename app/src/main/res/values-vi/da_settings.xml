@@ -97,4 +97,6 @@
     <string name="dset_battery_reset_button">Đặt lại</string>
     <string name="dset_video_res">Độ phân giải video (thử nghiệm)</string>
     <string name="dset_video_res_summary">720p giải mã ít điểm ảnh hơn nhiều so với 1080p: hình ảnh có thể mượt hơn, kém sắc nét một chút. Áp dụng từ lần kết nối tiếp theo.</string>
+    <string name="dset_car_pulldown">Bảng của xe trên Android Auto</string>
+    <string name="dset_car_pulldown_summary">Mở cài đặt nhanh của xe (sưởi…) bằng cách vuốt từ trên xuống trên Android Auto. Trên SWI68, biểu ngữ cuộc gọi của xe lại hiện trên Android Auto. Tắt: hãy dùng menu phím tắt của MG4 Dash.</string>
 </resources>

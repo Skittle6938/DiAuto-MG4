@@ -97,4 +97,6 @@
     <string name="dset_battery_reset_button">Obnovit</string>
     <string name="dset_video_res">Rozlišení videa (test)</string>
     <string name="dset_video_res_summary">720p dekóduje mnohem méně pixelů než 1080p: obraz může být plynulejší, o něco méně ostrý. Platí od dalšího připojení.</string>
+    <string name="dset_car_pulldown">Panel vozu nad Android Auto</string>
+    <string name="dset_car_pulldown_summary">Otevře rychlá nastavení vozu (topení…) přejetím shora nad Android Auto. Na SWI68 se pak nad Android Auto znovu zobrazí banner hovoru vozu. Vypnuto: použijte nabídku zkratek MG4 Dash.</string>
 </resources>

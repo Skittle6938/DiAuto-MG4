@@ -97,4 +97,6 @@
     <string name="dset_battery_reset_button">გადატვირთვა</string>
     <string name="dset_video_res">ვიდეოს გარჩევადობა (ტესტი)</string>
     <string name="dset_video_res_summary">720p ბევრად ნაკლებ პიქსელს შიფრავს, ვიდრე 1080p: გამოსახულება შეიძლება უფრო გლუვი, ოდნავ ნაკლებად მკვეთრი იყოს. მოქმედებს შემდეგი დაკავშირებიდან.</string>
+    <string name="dset_car_pulldown">მანქანის პანელი Android Auto-ზე</string>
+    <string name="dset_car_pulldown_summary">ხსნის მანქანის სწრაფ პარამეტრებს (გათბობა…) Android Auto-ზე ზემოდან ქვემოთ გადასმით. SWI68-ზე მანქანის ზარის ბანერი კვლავ ჩნდება Android Auto-ზე. გამორთული: გამოიყენეთ MG4 Dash-ის მალსახმობების მენიუ.</string>
 </resources>

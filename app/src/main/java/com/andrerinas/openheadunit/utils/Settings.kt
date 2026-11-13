@@ -903,6 +903,15 @@ class Settings(private val context: Context) {
      * Android Auto takes the screen when the phone connects; otherwise it stays in the background,
      * offered to the launchers as the Android Auto source, until the car's Android Auto button opens it.
      */
+    /**
+     * The car's quick settings pull-down over Android Auto (#21): the screen then opens under its own name, so
+     * the car allows the pull-down, but the SWI68 incoming call banner shows over it again (#4). Off by default:
+     * MG4 Dash's shortcuts menu gives the climate over Android Auto instead.
+     */
+    var carPullDownOverAndroidAuto: Boolean
+        get() = prefs.getBoolean("car-pulldown-over-aa", false)
+        set(value) { prefs.edit().putBoolean("car-pulldown-over-aa", value).apply() }
+
     var openProjectionOnConnect: Boolean
         get() = prefs.getBoolean("open-projection-on-connect", true)
         set(value) { prefs.edit().putBoolean("open-projection-on-connect", value).apply() }

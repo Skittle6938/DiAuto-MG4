@@ -97,4 +97,6 @@
     <string name="dset_battery_reset_button">リセット</string>
     <string name="dset_video_res">映像の解像度（テスト）</string>
     <string name="dset_video_res_summary">720p は 1080p よりはるかに少ない画素をデコードします。映像はより滑らかになる可能性がありますが、少し鮮明さが落ちます。次回の接続から適用されます。</string>
+    <string name="dset_car_pulldown">Android Auto 上の車のパネル</string>
+    <string name="dset_car_pulldown_summary">Android Auto 上で上から下にスワイプすると、車のクイック設定（暖房など）が開きます。SWI68 では車の着信バナーが再び Android Auto 上に表示されます。オフ：代わりに MG4 Dash のショートカットメニューを使います。</string>
 </resources>

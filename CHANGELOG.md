@@ -1,5 +1,6 @@
 # MG4Link 2.2.5-beta14
 
+- Car pull-down over Android Auto (#21): *Settings → Display → Advanced options* has a new choice, off by default. On, the Android Auto screen opens under its own name, so the car's quick settings pull-down (heating…) works over it again, also on SWI68, but the SWI68 incoming call banner shows over Android Auto again. Off, MG4 Dash's shortcuts menu gives the climate over Android Auto instead.
 - Battery (#22): the MG4 version is now told from the net capacity, not from the net capacity × battery health. On a cold day, a 64 kWh car at 88 % health read as a 51 kWh one, and Google Maps got the 86 kW charging curve instead of 138 kW.
 - Test mode (#23): *Settings → Car* has a *Video resolution* choice, 1080p (default) or 720p. 720p decodes far fewer pixels for the car's 1920×640 picture, to compare smoothness and sharpness.
 

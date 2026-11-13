@@ -215,6 +215,9 @@ class DaSettingsActivity : BaseActivity() {
                 sendBroadcast(Intent(com.andrerinas.openheadunit.aap.AapService.ACTION_REQUEST_NIGHT_MODE_UPDATE).setPackage(packageName))
             })
         if (!advancedRow()) return
+        row(R.string.dset_car_pulldown, R.string.dset_car_pulldown_summary, yesNo(settings.carPullDownOverAndroidAuto) {
+            settings.carPullDownOverAndroidAuto = it
+        })
         row(R.string.dset_fps, R.string.dset_fps_summary,
             choices(listOf("30", "60"), if (settings.fpsLimit == 60) 1 else 0) {
                 settings.fpsLimit = if (it == 1) 60 else 30

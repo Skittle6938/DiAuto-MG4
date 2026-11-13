@@ -104,4 +104,6 @@
     <string name="dset_battery_reset_button">Réinitialiser</string>
     <string name="dset_video_res">Résolution vidéo (test)</string>
     <string name="dset_video_res_summary">Le 720p décode beaucoup moins de pixels que le 1080p : l\'image peut être plus fluide, un peu moins nette. S\'applique à la prochaine connexion.</string>
+    <string name="dset_car_pulldown">Volet de la voiture sur Android Auto</string>
+    <string name="dset_car_pulldown_summary">Ouvre les paramètres rapides de la voiture (chauffage…) en glissant du haut vers le bas sur Android Auto. Sur SWI68, la bannière d\'appel de la voiture s\'affiche alors de nouveau sur Android Auto. Désactivé : utilisez plutôt le menu de raccourcis de MG4 Dash.</string>
 </resources>

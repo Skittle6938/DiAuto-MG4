@@ -97,4 +97,6 @@
     <string name="dset_battery_reset_button">Resetează</string>
     <string name="dset_video_res">Rezoluție video (test)</string>
     <string name="dset_video_res_summary">720p decodează mult mai puțini pixeli decât 1080p: imaginea poate fi mai fluidă, puțin mai puțin clară. Se aplică la următoarea conectare.</string>
+    <string name="dset_car_pulldown">Panoul mașinii peste Android Auto</string>
+    <string name="dset_car_pulldown_summary">Deschide setările rapide ale mașinii (încălzire…) glisând de sus peste Android Auto. Pe SWI68, bannerul de apel al mașinii apare din nou peste Android Auto. Dezactivat: folosiți meniul de comenzi rapide MG4 Dash.</string>
 </resources>

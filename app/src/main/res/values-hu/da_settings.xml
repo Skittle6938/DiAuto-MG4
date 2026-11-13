@@ -97,4 +97,6 @@
     <string name="dset_battery_reset_button">Visszaállítás</string>
     <string name="dset_video_res">Videofelbontás (teszt)</string>
     <string name="dset_video_res_summary">A 720p jóval kevesebb képpontot dekódol, mint az 1080p: a kép gördülékenyebb, kicsit kevésbé éles lehet. A következő csatlakozástól érvényes.</string>
+    <string name="dset_car_pulldown">Az autó panelje az Android Auto felett</string>
+    <string name="dset_car_pulldown_summary">Fentről lefelé húzva megnyitja az autó gyorsbeállításait (fűtés…) az Android Auto felett. SWI68-on az autó hívásértesítője ismét megjelenik az Android Auto felett. Kikapcsolva: használja az MG4 Dash parancsikonmenüjét.</string>
 </resources>

@@ -97,4 +97,6 @@
     <string name="dset_battery_reset_button">Redefinir</string>
     <string name="dset_video_res">Resolução de vídeo (teste)</string>
     <string name="dset_video_res_summary">720p decodifica muito menos pixels que 1080p: a imagem pode ficar mais fluida e um pouco menos nítida. Vale a partir da próxima conexão.</string>
+    <string name="dset_car_pulldown">Painel do carro sobre o Android Auto</string>
+    <string name="dset_car_pulldown_summary">Abre as configurações rápidas do carro (aquecimento…) deslizando de cima para baixo sobre o Android Auto. No SWI68, o aviso de chamada do carro volta a aparecer sobre o Android Auto. Desativado: use o menu de atalhos do MG4 Dash.</string>
 </resources>
