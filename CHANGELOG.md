@@ -1,6 +1,6 @@
 # MG4Link 2.2.5-beta15
 
-- Car pull-down over Android Auto (#21): by default the Android Auto screen now has AllGo's name on every car, as in 2.2.5 beta 10: the SWI68 call banner stays away, and the car's quick settings pull-down is not allowed over Android Auto, as with the stock Android Auto. MG4 Dash's shortcuts menu gives the climate there instead. *Settings → Display → Advanced options → Car pull-down over Android Auto* switches back to MG4Link's own name on every car, with the pull-down and, on SWI68, the call banner.
+- Car pull-down over Android Auto (#21): by default the Android Auto screen now has AllGo's name on every car, as in 2.2.5 beta 10: the SWI68 call banner stays away, and the car's quick settings pull-down is not allowed over Android Auto, as with the stock Android Auto. MG4 Dash's shortcuts menu gives the climate there instead. In test mode (*Settings → About → Test mode*), *Settings → Display → Car pull-down over Android Auto* switches back to MG4Link's own name on every car, with the pull-down and, on SWI68, the call banner.
 
 # MG4Link 2.2.5-beta14
 
