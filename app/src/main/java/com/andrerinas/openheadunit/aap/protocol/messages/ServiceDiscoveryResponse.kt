@@ -46,31 +46,34 @@ class ServiceDiscoveryResponse(private val context: Context)
                     // Announce EV even before the first SoC poll. If we wait for snapshot(),
                     // AA often finishes Service Discovery first and Maps never enables EV routing.
                     // VEM bytes are sent later when Mg4EnergyReporter gets sensor 23/25 + a snapshot.
+                    // The MG4 is always electric: Maps offers charging stations in its points of interest
+                    // only for a car that says so, whatever the consumption model setting (#20).
+                    // Field 2 = supported_fuel_types (ELECTRIC=10), field 3 = EV connectors.
+                    sources.mergeUnknownFields(
+                        UnknownFieldSet.newBuilder()
+                            .addField(
+                                2,
+                                UnknownFieldSet.Field.newBuilder().addVarint(10L).build(),
+                            )
+                            .addField(
+                                3,
+                                UnknownFieldSet.Field.newBuilder()
+                                    .addVarint(2L) // MENNEKES / Type 2
+                                    .addVarint(5L) // COMBO_2 / CCS2
+                                    .build(),
+                            )
+                            .build(),
+                    )
+
                     val announceEv = settings.batteryForGoogleMaps &&
                         Mg4EnergyProvider.available(context)
                     if (announceEv) {
                         sources.addSensors(makeSensorType(Sensors.SensorType.VEHICLE_ENERGY_MODEL))
                         sources.addSensors(makeSensorType(Sensors.SensorType.RAW_VEHICLE_ENERGY_MODEL))
                         sources.addSensors(makeSensorType(Sensors.SensorType.RAW_EV_TRIP_SETTINGS))
-                        // Field 2 = supported_fuel_types (ELECTRIC=10), field 3 = EV connectors.
-                        sources.mergeUnknownFields(
-                            UnknownFieldSet.newBuilder()
-                                .addField(
-                                    2,
-                                    UnknownFieldSet.Field.newBuilder().addVarint(10L).build(),
-                                )
-                                .addField(
-                                    3,
-                                    UnknownFieldSet.Field.newBuilder()
-                                        .addVarint(2L) // MENNEKES / Type 2
-                                        .addVarint(5L) // COMBO_2 / CCS2
-                                        .build(),
-                                )
-                                .build(),
-                        )
                         val snap = Mg4EnergyProvider.snapshot()
                         AppLog.i(
-                            "[ServiceDiscovery] Announcing EV energy sensors (23/25/26) + ELECTRIC " +
+                            "[ServiceDiscovery] Announcing EV energy sensors (23/25/26) " +
                                 "(snapshot=${if (snap != null) "${snap.batteryPercent.toInt()}%" else "pending"})",
                         )
                     } else if (settings.batteryForGoogleMaps) {

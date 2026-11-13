@@ -225,6 +225,8 @@ class VideoDecoder(
     // (e.g. nal_unit_type=1/nal_ref_idc=2 -> byte 0x41 -> 0x41 >> 1 == 32), and re-detecting on
     // every restart let that false positive hijack an otherwise-working H.264 session.
     private var codecTypePinned = false
+    /** The stream's own codec, once its parameter sets have shown it beyond doubt (see [certainStreamType]). */
+    private var streamTypeSeen: CodecType? = null
     // One-shot per session: the parameter sets are re-sent on every keyframe, and the fields we
     // want out of them do not change mid-stream, so logging them once keeps the diagnostic out of
     // the hot path while still putting it in every bug report.
@@ -683,6 +685,7 @@ class VideoDecoder(
             // once per relaunch, on every backend, in every capture of the video-black round 6.
             if (DecoderStopPolicy.endsSession(reason)) {
                 codecTypePinned = false
+                streamTypeSeen = null
                 renderedThisSession = false
                 vps = null
                 sps = null
@@ -745,6 +748,7 @@ class VideoDecoder(
         synchronized(this) {
             // Input-side liveness: bytes are arriving from the phone right now.
             lastInputBytesReceivedMs = SystemClock.elapsedRealtime()
+            certainStreamType(buffer, offset, size)?.let { streamTypeSeen = it }
 
             // Check if a restart was requested by output thread
             if (decoderNeedsRestart) {
@@ -763,7 +767,13 @@ class VideoDecoder(
                     )
                 ) {
                     restartsSinceLastFrame++
-                    if (restartsSinceLastFrame >= MAX_RESTARTS_WITHOUT_FRAME) {
+                    if (restartsSinceLastFrame >= MAX_RESTARTS_WITHOUT_FRAME && streamTypeSeen == currentCodecType) {
+                        // The stream is this codec beyond doubt: the restarts come from frames that
+                        // need a keyframe not received yet (a projection opened over a session left
+                        // in the background), and the other codec could never decode it (2026-11-13).
+                        AppLog.w("${currentCodecType.displayName} failed $restartsSinceLastFrame times without a frame, but the stream is ${currentCodecType.displayName}: waiting for its keyframe instead of switching codec")
+                        restartsSinceLastFrame = 0
+                    } else if (restartsSinceLastFrame >= MAX_RESTARTS_WITHOUT_FRAME) {
                         if (!codecFallbackUsed) {
                             val fallbackType = if (currentCodecType == CodecType.H264) CodecType.H265 else CodecType.H264
                             // Don't burn the one-time fallback on a codec type the device has no
@@ -1029,6 +1039,38 @@ class VideoDecoder(
         while (true) {
             val frame = frameQueue.poll() ?: break
             recycleFrame(frame)
+        }
+    }
+
+    /**
+     * The codec when an access unit carries a full parameter-set group: VPS+SPS+PPS (HEVC) or
+     * SPS+PPS without VPS (AVC). One header byte alone is ambiguous (an AVC slice can read as a
+     * HEVC VPS, see [codecTypePinned]); the whole group is not.
+     */
+    private fun certainStreamType(buffer: ByteArray, offset: Int, size: Int): CodecType? {
+        val limit = offset + minOf(size, 1024)
+        var hevc = 0
+        var avc = 0
+        var i = offset
+        while (i < limit - 4) {
+            if (buffer[i].toInt() == 0 && buffer[i + 1].toInt() == 0) {
+                val headerPos = when {
+                    buffer[i + 2].toInt() == 1 -> i + 3
+                    buffer[i + 2].toInt() == 0 && buffer[i + 3].toInt() == 1 -> i + 4
+                    else -> { i++; continue }
+                }
+                if (headerPos >= limit) break
+                val b = buffer[headerPos].toInt()
+                when ((b and 0x7E) shr 1) { 32 -> hevc = hevc or 1; 33 -> hevc = hevc or 2; 34 -> hevc = hevc or 4 }
+                when (b and 0x1F) { 7 -> avc = avc or 1; 8 -> avc = avc or 2 }
+                i = headerPos
+            }
+            i++
+        }
+        return when {
+            hevc == 7 -> CodecType.H265
+            avc == 3 && hevc and 1 == 0 -> CodecType.H264
+            else -> null
         }
     }
 

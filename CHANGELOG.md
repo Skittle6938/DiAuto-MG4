@@ -1,3 +1,8 @@
+# MG4Link 2.2.5-beta12
+
+- Google Maps (#20): MG4Link now always tells Maps the car is electric, with its Type 2 and CCS2 plugs, even with the consumption model for Maps off or before the car has given its battery. Maps can then offer charging stations in its points of interest.
+- Android Auto opened from MG4 Dash after a session in the background could stay on the connection screen: the video decoder took the missing first picture for a broken H.265 decoder and switched to H.264, which cannot show an H.265 stream. It now waits for the picture instead when the stream is clearly H.265.
+
 # MG4Link 2.2.5-beta11
 
 - Climate page on SWI68 (#13): when the climate comes back on as the car starts, the car opens its climate page on top of Android Auto. During the first minute after the start, MG4Link now closes it, as the car's own system bar does. A climate page opened by hand later stays open. Nothing changes on other cars.
