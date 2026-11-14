@@ -72,10 +72,11 @@ message Service
             required SensorType type = 1;
         }
         repeated Sensor sensors = 1;
-        // FuelType: ELECTRIC = 10 (android.hardware.automotive.vehicle)
-        repeated int32 supported_fuel_types = 2;
-        // EvConnectorType: MENNEKES=2, COMBO_2/CCS2=5
-        repeated int32 supported_ev_connector_types = 3;
+        optional uint32 location_characterization = 2;
+        // FuelType: ELECTRIC = 10
+        repeated int32 supported_fuel_types = 3;
+        // EvConnectorType: MENNEKES (Type 2) = 2, COMBO_2 (CCS2) = 5
+        repeated int32 supported_ev_connector_types = 4;
     }
 
     message MediaSinkService

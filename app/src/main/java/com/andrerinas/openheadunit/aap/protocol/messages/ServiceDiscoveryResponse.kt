@@ -10,6 +10,7 @@ import com.andrerinas.openheadunit.aap.protocol.AudioConfigs
 import com.andrerinas.openheadunit.aap.protocol.Channel
 import com.andrerinas.openheadunit.aap.protocol.proto.Control
 import com.andrerinas.openheadunit.aap.protocol.proto.Media
+import com.google.protobuf.UnknownFieldSet
 import com.andrerinas.openheadunit.aap.protocol.proto.Sensors
 import com.andrerinas.openheadunit.decoder.VideoDecoder
 import com.andrerinas.openheadunit.utils.AppLog
@@ -18,7 +19,6 @@ import com.andrerinas.openheadunit.utils.HeadUnitScreenConfig
 import com.andrerinas.openheadunit.utils.ToastUtils
 import com.andrerinas.openheadunit.vehicle.Mg4EnergyProvider
 import com.google.protobuf.Message
-import com.google.protobuf.UnknownFieldSet
 
 class ServiceDiscoveryResponse(private val context: Context)
     : AapMessage(Channel.ID_CTR, Control.ControlMsgType.MESSAGE_SERVICE_DISCOVERY_RESPONSE_VALUE, makeProto(context)) {
@@ -48,15 +48,18 @@ class ServiceDiscoveryResponse(private val context: Context)
                     // VEM bytes are sent later when Mg4EnergyReporter gets sensor 23/25 + a snapshot.
                     // The MG4 is always electric: Maps offers charging stations in its points of interest
                     // only for a car that says so, whatever the consumption model setting (#20).
-                    // Field 2 = supported_fuel_types (ELECTRIC=10), field 3 = EV connectors.
+                    // Fuel types are field 3 and connectors field 4 (field 2 is location_characterization):
+                    // up to beta18 they went one field too low, so Maps read a leaded petrol and
+                    // biodiesel car and kept offering petrol stations.
+                    // Control.java is pre-generated without these fields, hence the unknown fields.
                     sources.mergeUnknownFields(
                         UnknownFieldSet.newBuilder()
                             .addField(
-                                2,
-                                UnknownFieldSet.Field.newBuilder().addVarint(10L).build(),
+                                3,
+                                UnknownFieldSet.Field.newBuilder().addVarint(10L).build(), // ELECTRIC
                             )
                             .addField(
-                                3,
+                                4,
                                 UnknownFieldSet.Field.newBuilder()
                                     .addVarint(2L) // MENNEKES / Type 2
                                     .addVarint(5L) // COMBO_2 / CCS2

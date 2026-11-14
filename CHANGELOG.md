@@ -1,3 +1,7 @@
+# MG4Link 2.2.5-beta19
+
+- Google Maps charging stations (#20): the car's fuel type and plugs were sent one field too low in the Android Auto handshake, so Maps read a petrol car and kept *Gas stations* in its categories. MG4Link now sends them where Maps reads them: electric, with Type 2 and CCS2 plugs, so *Charging stations* should replace *Gas stations*.
+
 # MG4Link 2.2.5-beta18
 
 - Google Maps consumption (#19): the air drag of the model sent to Maps now uses MG's own drag coefficient (Cd 0.287 instead of 0.27) and the air density at the outside temperature (+7 % at 0 °C, −3 % at 30 °C). On cold motorway trips, Maps under-estimated the battery used, mostly above 100 km/h. It applies to every MG4 version; mass, heating and battery stay specific to each one.
