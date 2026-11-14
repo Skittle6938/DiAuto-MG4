@@ -1,3 +1,8 @@
+# MG4Link 2.2.5-beta17
+
+- USB first: a phone plugged in during a wireless session now takes over at once, whatever its brand (a phone other than Google's was ignored and the session stayed wireless). During a USB session, MG4Link stops waking the Bluetooth phones and switches the hotspot off, so the car's Wi-Fi client comes back on its known networks.
+- Video resolution and low-latency video (#23) moved to *Settings → Display → Advanced options*, without test mode.
+
 # MG4Link 2.2.5-beta16
 
 - Test mode (#23): *Settings → Car* also has *Low-latency video*, off by default: it asks the car's MediaTek decoder for its own low-latency mode (vdec-lowlatency, the Android 9 equivalent of Android 11's low-latency key). If the decoder refuses it, MG4Link starts without it, and the log says which was used.
