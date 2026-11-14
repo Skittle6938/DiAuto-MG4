@@ -218,6 +218,18 @@ class DaSettingsActivity : BaseActivity() {
         row(R.string.dset_car_pulldown, R.string.dset_car_pulldown_summary, yesNo(settings.carPullDownOverAndroidAuto) {
             settings.carPullDownOverAndroidAuto = it
         })
+        // 720p crops far less of the 1920x640 picture than 1080p (#23); 1080p stays the default.
+        val res = listOf(Settings.Resolution._1920x1080, Settings.Resolution._1280x720)
+        row(R.string.dset_video_res, R.string.dset_video_res_summary,
+            choices(listOf("1080p", "720p"), if (settings.resolutionId == Settings.Resolution._1280x720.id) 1 else 0) {
+                settings.resolutionId = res[it].id
+                appliesOnReconnect()
+            })
+        // MediaTek's own low-latency key (vdec-lowlatency) for Android 9; dropped by itself if refused (#23).
+        row(R.string.dset_low_latency, R.string.dset_low_latency_summary, yesNo(settings.debugVideoLowLatency) {
+            settings.debugVideoLowLatency = it
+            appliesOnReconnect()
+        })
         row(R.string.dset_fps, R.string.dset_fps_summary,
             choices(listOf("30", "60"), if (settings.fpsLimit == 60) 1 else 0) {
                 settings.fpsLimit = if (it == 1) 60 else 30
@@ -293,18 +305,6 @@ class DaSettingsActivity : BaseActivity() {
         // Features being tested: only in test mode (Settings > About).
         if (settings.testMode) {
             row(R.string.dset_ev_layout, R.string.dset_ev_layout_summary, value(evLayoutLabel(settings.evModelLayout)) { pickEvLayout() })
-            // 720p crops far less of the 1920x640 picture than 1080p (#23); 1080p stays the default.
-            val res = listOf(Settings.Resolution._1920x1080, Settings.Resolution._1280x720)
-            row(R.string.dset_video_res, R.string.dset_video_res_summary,
-                choices(listOf("1080p", "720p"), if (settings.resolutionId == Settings.Resolution._1280x720.id) 1 else 0) {
-                    settings.resolutionId = res[it].id
-                    appliesOnReconnect()
-                })
-            // MediaTek's own low-latency key (vdec-lowlatency) for Android 9; dropped by itself if refused (#23).
-            row(R.string.dset_low_latency, R.string.dset_low_latency_summary, yesNo(settings.debugVideoLowLatency) {
-                settings.debugVideoLowLatency = it
-                appliesOnReconnect()
-            })
         }
         // On by default; off goes back to the car's average. Switching it on first explains what it does.
         row(R.string.trip_option, R.string.trip_option_summary, yesNo(settings.tripRecording) {
