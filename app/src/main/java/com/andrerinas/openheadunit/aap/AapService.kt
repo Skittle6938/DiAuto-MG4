@@ -1001,7 +1001,7 @@ class AapService : Service(), UsbReceiver.Listener {
      */
     private fun onConnected() {
         joinFailures = 0
-        if (!commManager.isWirelessSession) releaseAccessPoint("USB session")
+        if (!commManager.isWirelessSession) usbTakesTheRadio()
         isSwitchingToAccessory.set(false)
         updateNotification()
         acquireWifiLock()
@@ -2405,8 +2405,8 @@ class AapService : Service(), UsbReceiver.Listener {
             }
         }
 
-        // USB auto-start mode: attempt AOA switch for any single non-accessory device
-        if (usbAutoStart) {
+        // Any single phone not yet in accessory mode is switched: USB comes first (2026-11-14).
+        run {
             val nonAccessoryDevices = deviceList.filter { !UsbDeviceCompat.isInAccessoryMode(it) }
             if (nonAccessoryDevices.size == 1) {
                 performSingleUsbConnect(nonAccessoryDevices[0])
@@ -2844,6 +2844,22 @@ class AapService : Service(), UsbReceiver.Listener {
     }
 
     /** No phone to serve, or a USB session: an access point DiAuto switched on goes off again. */
+    /**
+     * A USB session: no more wake-ups to the Bluetooth phones, and the hotspot goes off whoever
+     * switched it on, so the car's Wi-Fi client can come back on its known networks (one radio).
+     */
+    private fun usbTakesTheRadio() {
+        nativeAaHandshakeManager?.stop()
+        softApCredentialsProvider?.stop()
+        nativeAaHandshakeManager?.invalidateCredentials()
+        serviceScope.launch(Dispatchers.IO) {
+            if (HotspotManager.isApUp(this@AapService)) {
+                AppLog.i("AapService: USB session - switching the hotspot off for the car's Wi-Fi client")
+                HotspotManager.setHotspotEnabled(this@AapService, false)
+            }
+        }
+    }
+
     private fun releaseAccessPoint(reason: String) {
         val provider = softApCredentialsProvider ?: return
         if (!AccessPointPolicy.shouldRelease(commManager.isConnected, commManager.isWirelessSession, provider.running)) return

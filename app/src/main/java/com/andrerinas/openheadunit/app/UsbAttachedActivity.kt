@@ -143,12 +143,9 @@ class UsbAttachedActivity : Activity() {
         // Google VID (0x18D1) devices are almost certainly Android Auto phones or AA dongles
         // (e.g. AAWireless). Always attempt the AOA switch for these — skipping them would
         // break dongle users who haven't explicitly configured allowlists.
-        val isGoogleDevice = device.vendorId == 0x18D1
-        if (!isGoogleDevice && settings != null && !autoStartOnUsb && !settings.isConnectingDevice(deviceCompat)) {
-            AppLog.i("Skipping device ${deviceCompat.uniqueName} (not allowed and USB auto-start disabled)")
-            finish()
-            return
-        }
+        // Any Android phone plugged in takes the session, ahead of wireless: MG4Link has no list of
+        // allowed USB devices, and the hidden USB auto-start is off, so a phone of another brand
+        // than Google was skipped here and wireless carried on (2026-11-14).
         
         if (isLocked && !autoStartOnUsb) {
             AppLog.w("Device is locked and USB auto-start is disabled. Cannot check allowed devices. Finishing.")
