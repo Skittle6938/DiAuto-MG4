@@ -1,3 +1,7 @@
+# MG4Link 2.2.5-beta18
+
+- Google Maps consumption (#19): the air drag of the model sent to Maps now uses MG's own drag coefficient (Cd 0.287 instead of 0.27) and the air density at the outside temperature (+7 % at 0 °C, −3 % at 30 °C). On cold motorway trips, Maps under-estimated the battery used, mostly above 100 km/h. It applies to every MG4 version; mass, heating and battery stay specific to each one.
+
 # MG4Link 2.2.5-beta17
 
 - USB first: a phone plugged in during a wireless session now takes over at once, whatever its brand (a phone other than Google's was ignored and the session stayed wireless). During a USB session, MG4Link stops waking the Bluetooth phones and switches the hotspot off, so the car's Wi-Fi client comes back on its known networks.

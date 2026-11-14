@@ -11,14 +11,23 @@ import kotlin.math.max
  * temperature. Google's servers then work out the energy of each stretch of the route themselves,
  * with the speed they expect there (traffic included) and the climb.
  *
- * Figures (2026-11-01, to be calibrated on the road): A = mass in running order × g × 0.0095;
- * C = ½ · 1.225 · Cd 0.27 · 2.35 m² ≈ 0.39 for every MG4; under 20 °C, A is divided by the cold
- * factor of the automobile-propre simulator, max(0.55, 0.72 + 0.0187 · (T − 5)).
+ * Figures: A = mass in running order × g × 0.0095; under 20 °C, A is divided by the cold factor of
+ * the automobile-propre simulator, max(0.55, 0.72 + 0.0187 · (T − 5)). C = ½ · 1.225 · Cd 0.287
+ * (MG's figure) · 2.36 m² ≈ 0.415 at 20 °C for every MG4, the body being the same, scaled by the air
+ * density at the outside temperature. With Cd 0.27 and no density, two cold motorway trips of a
+ * 64 kWh car used 13 % and 3.5 % more than the model, most of it above 100 km/h (#19).
  */
 object Mg4MapsEnergyModel {
 
-    /** Air, N/(m/s)². */
-    const val C = 0.39f
+    /** Air at 20 °C, N/(m/s)². */
+    const val C = 0.415f
+
+    /** Air density relative to 20 °C (ideal gas): +7 % at 0 °C, −3 % at 30 °C; 1 when unknown. */
+    fun airDensityFactor(tempC: Float?): Float =
+        if (tempC == null) 1f else 293.15f / (273.15f + tempC.coerceIn(-40f, 50f))
+
+    /** Air drag coefficient at [tempC]. */
+    fun c(tempC: Float?): Float = C * airDensityFactor(tempC)
     private const val ROLLING = 0.0095f
     private const val G = 9.81f
 
@@ -93,7 +102,7 @@ object Mg4MapsEnergyModel {
             hasHeatPump(variant) -> AUX_HEAT_PUMP_W
             else -> AUX_W
         }
-        return Model(a(variant, temp) * test.aScale, C * test.cScale, temp, climate, aux)
+        return Model(a(variant, temp) * test.aScale, c(temp) * test.cScale, temp, climate, aux)
     }
 
     /** The temperature to send: [held] until [live] has moved [TEMP_HYSTERESIS_C] away from it. */

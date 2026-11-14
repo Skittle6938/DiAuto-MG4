@@ -41,7 +41,7 @@ class Mg4MapsEnergyModelTest {
         val m = Mg4MapsEnergyModel.build(Mg4Variant.STANDARD, -5f, false, t)
         assertTrue(m.aux.all { it.second == 2500 })
         assertEquals(2 * Mg4MapsEnergyModel.a(Mg4Variant.STANDARD, 20f), m.a, 0.1f)
-        assertEquals(0.195f, m.c, 0.001f)
+        assertEquals(0.2075f, m.c, 0.001f)
         assertEquals(20f, m.tempC!!, 0f)
     }
 
@@ -51,5 +51,13 @@ class Mg4MapsEnergyModelTest {
         assertEquals(13f, Mg4MapsEnergyModel.heldTemp(10f, 13f)!!, 0f)
         assertEquals(10f, Mg4MapsEnergyModel.heldTemp(10f, null)!!, 0f)
         assertNull(Mg4MapsEnergyModel.heldTemp(null, null))
+    }
+
+    @Test
+    fun `cold air is denser and brakes more (#19)`() {
+        assertEquals(0.415f, Mg4MapsEnergyModel.c(20f), 0.001f)
+        assertEquals(0.4455f, Mg4MapsEnergyModel.c(0f), 0.001f)
+        assertEquals(0.4013f, Mg4MapsEnergyModel.c(30f), 0.001f)
+        assertEquals(0.415f, Mg4MapsEnergyModel.c(null), 0.001f)
     }
 }
